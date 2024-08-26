@@ -65,6 +65,15 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.livedata.ktx)
 
+    implementation(libs.androidx.runtime.android)
+
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
+
+    // LiveData (optional)
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx")
+
+    // Coroutine (for StateFlow)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
 }
