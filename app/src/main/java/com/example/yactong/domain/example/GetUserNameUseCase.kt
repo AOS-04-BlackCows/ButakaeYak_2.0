@@ -2,7 +2,6 @@ package com.example.yactong.domain.example
 
 import javax.inject.Inject
 
-
 //UseCase Example!!
 class GetUserNameUseCase @Inject constructor(
     //private val userRepository: UserRepository  //TODO: 이용하는 Repository
