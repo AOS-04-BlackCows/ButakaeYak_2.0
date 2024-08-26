@@ -16,6 +16,8 @@ navigationUiKtx = "2.7.7"
 retrofit = "2.9.0"
 glide = "4.13.0"
 
+runtimeAndroid= "1.6.8"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -32,6 +34,9 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+
+androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
