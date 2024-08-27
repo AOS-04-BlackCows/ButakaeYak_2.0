@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -9,12 +11,18 @@ plugins {
     id("kotlin-parcelize")
     id("kotlin-kapt")
 
-
+    id("com.google.dagger.hilt.android")
 }
 
 android {
     namespace = "com.example.yactong"
     compileSdk = 34
+
+    val properties = Properties()
+    properties.load(project.rootProject.file("local.properties").inputStream())
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.example.yactong"
@@ -24,6 +32,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String",
+            "DRUG_INFO_KEY",
+            properties.getProperty("drug_info_key")
+        )
     }
 
     buildTypes {
@@ -61,6 +74,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    testImplementation(libs.androidx.runtime.android)
 
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
