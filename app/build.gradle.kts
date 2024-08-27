@@ -3,8 +3,6 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    //hilt 추가 내용
-    alias(libs.plugins.dagger.hilt.android)
 
     kotlin("plugin.serialization") version "1.5.0"
 

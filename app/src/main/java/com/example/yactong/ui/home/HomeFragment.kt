@@ -28,9 +28,9 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
+        val viewpager = binding.homeVp
         homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+            viewpager.currentItem
         }
         return root
     }
