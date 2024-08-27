@@ -15,10 +15,11 @@ navigationUiKtx = "2.7.7"
 
 kotlinxCoroutinesTest = "1.5.2"
 
-retrofit = "2.9.0"
+retrofit = "2.11.0"
 glide = "4.13.0"
 
 runtimeAndroid= "1.6.8"
+runner = "1.6.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +41,7 @@ glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 
 
 [plugins]
