@@ -31,15 +31,19 @@ class RepositoryUnitTest {
     }
 
     @Test
-    fun apiTest() = runBlocking {
+    fun apiDrugTest() = runBlocking {
         val drugs = drugRepository.searchDrugs("한미아스피린").onFailure {
-            println("Loading Drugs is Failed...")
+            println("Loading Drugs is Failed) ${it.message}")
         }.onSuccess {
             println("----------------------------------------------")
             it.forEachIndexed { i, it ->
-                println("$i: ${it.name}")
+                println("$i: ${it.name}, ${it.imageUrl?: "없음"}")
             }
         }
+    }
+
+    @Test
+    fun apiPillTest() = runBlocking {
         val pills = drugRepository.searchPills("타이레놀").onFailure {
             println("Loading Pills is Failed...")
         }.onSuccess {
@@ -49,7 +53,5 @@ class RepositoryUnitTest {
             }
             println("----------------------------------------------")
         }
-
-
     }
 }

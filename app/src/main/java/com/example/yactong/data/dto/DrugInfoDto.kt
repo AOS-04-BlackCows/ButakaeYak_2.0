@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.example.yactong.data.models.Drug
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Parcelize
@@ -53,8 +54,8 @@ data class DrugItem(
         interaction = intrcQesitm,
         sideEffect = seQesitm,
         storingMethod = depositMethodQesitm,
-        openDate = LocalDate.parse(openDe, DateTimeFormatter.BASIC_ISO_DATE),
-        updateDate = LocalDate.parse(updateDe, DateTimeFormatter.BASIC_ISO_DATE),
+        openDate = LocalDate.parse(openDe!!.split(" ")[0], DateTimeFormatter.ofPattern("yyyy-MM-dd")) ,
+        updateDate = LocalDate.parse(updateDe!!.split(" ")[0], DateTimeFormatter.ofPattern("yyyy-MM-dd")),
         imageUrl = itemImage
     )
 }

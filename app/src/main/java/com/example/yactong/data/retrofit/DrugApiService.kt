@@ -12,7 +12,7 @@ interface DrugApiService {
 
     @GET("DrbEasyDrugInfoService/getDrbEasyDrugList")
     suspend fun getDrugInfo(
-        @Query("item_name") name: String,
+        @Query("itemName") name: String,
         @Query("pageNo") page: Int = 1,
         @Query("numOfRows") rows: Int = 3,
         @Query("type") type: String = "json",

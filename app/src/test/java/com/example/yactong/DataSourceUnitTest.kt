@@ -12,7 +12,11 @@ class DataSourceUnitTest {
         val instance = RetrofitClient.getInstance(ApiBaseUrl.DrugInfoUrl)
         val retrofit = instance.create(DrugApiService::class.java)
 
-        val result = retrofit.getDrugInfo("한미아스피린")
+        val result = retrofit.getDrugInfo("타이레놀")
+
+        result.body.items.forEachIndexed { i, it ->
+            println("$i: ${it.itemName}, ${it.itemImage?: "없음"}")
+        }
 
         println("resultCode: ${result.header.resultCode}, item: ${result.body.items[0].itemName}")
     }
