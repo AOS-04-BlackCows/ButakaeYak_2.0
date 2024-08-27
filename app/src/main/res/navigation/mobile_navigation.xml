@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_map"
         android:name="com.example.yactong.ui.map.MapFragment"
-        android:label="@string/title_dashboard"
+        android:label="@string/title_map"
         tools:layout="@layout/fragment_map" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_user"
         android:name="com.example.yactong.ui.user.UserFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/title_user"
         tools:layout="@layout/fragment_user" />
 </navigation>
