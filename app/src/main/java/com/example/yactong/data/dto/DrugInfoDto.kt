@@ -1,25 +1,31 @@
 package com.example.yactong.data.dto
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
+@Parcelize
 data class DrugInfoDto(
-    val header: Header,
-    val body: Body
-)
+    val header: DrugHeader,
+    val body: DrugBody
+): Parcelable
 
-data class Header(
+@Parcelize
+data class DrugHeader(
     val resultCode: String,
     val resultMsg: String,
-)
+): Parcelable
 
-data class Body(
+@Parcelize
+data class DrugBody(
     val pageNo: Int,
     val totalCount: Int,
     val numOfRows: Int,
-    val items: List<Item>
-)
+    val items: List<DrugItem>
+): Parcelable
 
-data class Item(
+@Parcelize
+data class DrugItem(
     val entpName: String,
     val itemName: String,
     val itemSeq: String,
@@ -29,7 +35,7 @@ data class Item(
     val atpnQesitm: String,
     val seQesitm: String,
     val depositMethodQesitm: String,
-    val openDe: LocalDate,
-    val updateDe: LocalDate,
+    val openDe: String,
+    val updateDe: String,
     val itemImage: String?
-)
+): Parcelable
