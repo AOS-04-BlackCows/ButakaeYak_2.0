@@ -10,7 +10,6 @@ object RetrofitClient {
     const val DRUG_REST_API_KEY = BuildConfig.DRUG_INFO_KEY
 
     private val retrofitInstances = mutableMapOf<ApiBaseUrl, Retrofit>()
-    private val gson = GsonBuilder().setLenient().create()
 
     fun getInstance(baseUrl: ApiBaseUrl) : Retrofit {
         return retrofitInstances[baseUrl] ?: createRetrofitInstance(baseUrl).also {
@@ -32,10 +31,6 @@ object RetrofitClient {
 
     private fun getOkhttpClient(apiBaseUrl: ApiBaseUrl): OkHttpClient {
         return when(apiBaseUrl) {
-            ApiBaseUrl.PillInfoUrl -> {
-                OkHttpClient().newBuilder().build()
-            }
-
             ApiBaseUrl.DrugInfoUrl -> {
                 OkHttpClient().newBuilder().build()
             }

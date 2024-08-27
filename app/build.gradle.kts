@@ -10,8 +10,6 @@ plugins {
     id("kotlin-kapt")
 
     id("com.google.dagger.hilt.android")
-
-
 }
 
 android {
@@ -73,6 +71,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    testImplementation(libs.androidx.runtime.android)
 
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
