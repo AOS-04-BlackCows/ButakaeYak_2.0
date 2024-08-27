@@ -3,6 +3,8 @@ package com.example.yactong.data.dto
 import android.os.Parcelable
 import com.example.yactong.data.models.Drug
 import kotlinx.parcelize.Parcelize
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Parcelize
 data class DrugInfoDto(
@@ -26,20 +28,33 @@ data class DrugBody(
 
 @Parcelize
 data class DrugItem(
-    val entpName: String,
-    val itemName: String,
-    val itemSeq: String,
-    val efcyQesitm: String,
-    val useMethodQesitm: String,
-    val atpnWarnQesitm: String,
-    val atpnQesitm: String,
-    val seQesitm: String,
-    val depositMethodQesitm: String,
-    val openDe: String,
-    val updateDe: String,
+    val entpName: String?,
+    val itemName: String?,
+    val itemSeq: String?,        // id
+    val efcyQesitm: String?,     //효능
+    val useMethodQesitm: String?,    //사용법
+    val atpnWarnQesitm: String?,     //경고사항
+    val atpnQesitm: String?,         //주의사항
+    val intrcQesitm: String?,        //상호작용
+    val seQesitm: String?,           //부작용
+    val depositMethodQesitm: String?,    //보관법
+    val openDe: String?,
+    val updateDe: String?,
     val itemImage: String?
 ): Parcelable {
     fun toDrug() = Drug(
-        name = itemName
+        id = itemSeq,
+        name = itemName,
+        enterprise = entpName,
+        effect = efcyQesitm,
+        instructions = useMethodQesitm,
+        warning = atpnWarnQesitm,
+        caution = atpnQesitm,
+        interaction = intrcQesitm,
+        sideEffect = seQesitm,
+        storingMethod = depositMethodQesitm,
+        openDate = LocalDate.parse(openDe, DateTimeFormatter.BASIC_ISO_DATE),
+        updateDate = LocalDate.parse(updateDe, DateTimeFormatter.BASIC_ISO_DATE),
+        imageUrl = itemImage
     )
 }

@@ -47,6 +47,21 @@ data class PillItem(
     @SerializedName("ETC_OTC_NAME") val etcOrOtc: String?,  //일반의약품? 전문의약품?
 ): Parcelable {
     fun toPill() = Pill(
-        name = name
+        id = id,
+        name = name,
+        enterprise = entpName,
+        feature = feature,
+        front = front,
+        back = back,
+        shape = shape,
+        color1 = color1,
+        color2 = color2,
+        lineFront = lineFront,
+        lineBack = lineBack,
+        lengthLong = lengthLong,
+        lengthShort = lengthShort,
+        classification = classification,
+        etcOrOtc = etcOrOtc,
+        imageUrl = imageUrl
     )
 }
