@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -7,12 +9,18 @@ plugins {
     id("kotlin-parcelize")
     id("kotlin-kapt")
 
-
+    id("com.google.dagger.hilt.android")
 }
 
 android {
     namespace = "com.example.yactong"
     compileSdk = 34
+
+    val properties = Properties()
+    properties.load(project.rootProject.file("local.properties").inputStream())
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.example.yactong"
@@ -22,6 +30,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String",
+            "DRUG_INFO_KEY",
+            properties.getProperty("drug_info_key")
+        )
     }
 
     buildTypes {
@@ -59,12 +72,23 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    testImplementation(libs.androidx.runtime.android)
+
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.glide)
 
     implementation(libs.androidx.lifecycle.livedata.ktx)
 
+    implementation(libs.androidx.runtime.android)
+
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
+
+    // LiveData (optional)
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx")
+
+    // Coroutine (for StateFlow)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
 }
