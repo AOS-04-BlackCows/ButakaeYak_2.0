@@ -1,6 +1,7 @@
 package com.example.yactong.data.dto
 
 import android.os.Parcelable
+import com.example.yactong.data.models.Pill
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -44,4 +45,8 @@ data class PillItem(
     @SerializedName("LENG_SHORT") val lengthShort: String?,
     @SerializedName("CLASS_NAME") val classification: String?,
     @SerializedName("ETC_OTC_NAME") val etcOrOtc: String?,  //일반의약품? 전문의약품?
-): Parcelable
+): Parcelable {
+    fun toPill() = Pill(
+        name = name
+    )
+}

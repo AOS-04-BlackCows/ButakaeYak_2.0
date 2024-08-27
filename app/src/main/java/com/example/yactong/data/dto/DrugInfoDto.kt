@@ -1,8 +1,8 @@
 package com.example.yactong.data.dto
 
 import android.os.Parcelable
+import com.example.yactong.data.models.Drug
 import kotlinx.parcelize.Parcelize
-import java.time.LocalDate
 
 @Parcelize
 data class DrugInfoDto(
@@ -38,4 +38,8 @@ data class DrugItem(
     val openDe: String,
     val updateDe: String,
     val itemImage: String?
-): Parcelable
+): Parcelable {
+    fun toDrug() = Drug(
+        name = itemName
+    )
+}

@@ -3,8 +3,6 @@ package com.example.yactong.data.retrofit
 import com.example.yactong.BuildConfig
 import com.example.yactong.data.dto.DrugInfoDto
 import com.example.yactong.data.dto.PillInfoDto
-import okhttp3.Response
-import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Query
 
