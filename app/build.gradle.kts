@@ -35,6 +35,10 @@ android {
             "DRUG_INFO_KEY",
             properties.getProperty("drug_info_key")
         )
+        buildConfigField("String",
+            "NATIVE_APP_KEY",
+            properties.getProperty("native_app_key")
+        )
     }
 
     buildTypes {
@@ -91,4 +95,7 @@ dependencies {
     // Coroutine (for StateFlow)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
+
+    // 네이버 지도 SDK
+    implementation("com.naver.maps:map-sdk:3.19.1")
 }
