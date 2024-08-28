@@ -19,6 +19,9 @@ retrofit = "2.9.0"
 glide = "4.13.0"
 
 runtimeAndroid= "1.6.8"
+activity = "1.9.1"
+googleGmsGoogleServices = "4.4.2"
+firebaseFirestore = "25.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,9 +43,12 @@ glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
