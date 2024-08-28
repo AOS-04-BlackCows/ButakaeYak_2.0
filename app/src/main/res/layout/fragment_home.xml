@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="16dp"
     tools:context=".ui.home.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +20,7 @@
         <ImageView
             android:id="@+id/home_iv_logo"
             android:layout_width="64dp"
-            android:layout_height="match_parent"
+            android:layout_height="64dp"
 
             android:scaleType="fitCenter"
             android:src="@drawable/choco"
@@ -28,7 +29,7 @@
 
         <EditText
             android:id="@+id/home_et_searchtext"
-            android:layout_width="254dp"
+            android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/home_iv_logo"
@@ -52,19 +53,25 @@
         android:id="@+id/home_lo_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/teal_200"
         android:translationZ="1dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/home_lo_searchbar"
-        android:background="@color/teal_200"
-        />
+        app:layout_constraintTop_toBottomOf="@id/home_lo_searchbar" />
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/home_vp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="50dp"
-        android:background="@color/teal_700"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/home_lo_tab"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/sp_space"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@id/home_lo_tab" />
+
+    <Space
+        android:id="@+id/sp_space"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
