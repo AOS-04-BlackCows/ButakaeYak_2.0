@@ -9,9 +9,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.yactong.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 import com.example.yactong.firebase.auth.FirebaseAuthManager
 import com.google.firebase.FirebaseApp
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
