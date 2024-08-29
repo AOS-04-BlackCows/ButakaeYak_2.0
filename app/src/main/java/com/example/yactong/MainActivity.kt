@@ -8,6 +8,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.yactong.databinding.ActivityMainBinding
+import com.kakao.vectormap.KakaoMapSdk
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,5 +24,8 @@ class MainActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         navView.setupWithNavController(navController)
+
+        // KakaoMap SDK 초기화
+        KakaoMapSdk.init(this, "d4ce3a86b1d0a8895e9eccdf9fb16fc4")
     }
 }
