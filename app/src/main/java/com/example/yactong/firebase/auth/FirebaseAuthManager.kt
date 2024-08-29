@@ -59,6 +59,18 @@ class FirebaseAuthManager(
         signInWithPhoneAuthCredential(credential)
     }
 
+    /**
+     * onSuccess: 인증에 성공했을 때
+     *
+     * onFail: 인증에 실패했을 때
+     *
+     * @property timer: 남은 시간을 표시할 TextView
+     */
+    abstract class SmsVerificationListener(val timer: TextView) {
+        abstract fun onSuccess()
+        abstract fun onFail(e: Exception)
+    }
+
     companion object {
         private const val TAG = "FirebaseAuthManager"
         private const val TIME_OUT = 60L        //60초 안에 SMS 코드 입력.
@@ -156,10 +168,5 @@ class FirebaseAuthManager(
                     smsVerificationListener.onFail(task.exception?: java.lang.Exception())
                 }
             }
-    }
-
-     abstract class SmsVerificationListener(val timer: TextView) {
-        abstract fun onSuccess()
-        abstract fun onFail(e: Exception)
     }
 }
