@@ -55,7 +55,7 @@
         android:textColorHint="@color/gray"
         android:inputType="text"
         style="@style/body_b"
-        android:background="@drawable/user_tv_stroke_green"
+        android:background="@drawable/user_tv_stroke_light_pink_12dp"
         android:paddingStart="64dp"
         android:paddingTop="4dp"
         app:layout_constraintTop_toTopOf="parent"
