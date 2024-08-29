@@ -15,6 +15,9 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.w3c.dom.Text
 import java.util.Timer
 import java.util.concurrent.TimeUnit
@@ -90,7 +93,6 @@ class FirebaseAuthManager(
     private val callbacks = object: OnVerificationStateChangedCallbacks() {
         override fun onVerificationCompleted(credential: PhoneAuthCredential) {
             Log.d(TAG, "Verification Start When Instance Verification or Auto-Retriever.")
-            finishTimer()
             signInWithPhoneAuthCredential(credential)
         }
 
@@ -101,7 +103,7 @@ class FirebaseAuthManager(
 
         override fun onCodeAutoRetrievalTimeOut(p0: String) {
             super.onCodeAutoRetrievalTimeOut(p0)
-            smsVerificationListener.onFail(TimeoutException())
+            smsVerificationListener.onFail(TimeoutException("Time Out!"))
         }
 
         override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
@@ -114,23 +116,26 @@ class FirebaseAuthManager(
 
     }
 
-    private lateinit var timer: Timer
+    private var timer: Timer? = null
     private fun startTimer() {
         var secondsRemaining = TIME_OUT
         timer = Timer()
-        timer.schedule(object : java.util.TimerTask() {
+        timer!!.schedule(object : java.util.TimerTask() {
             override fun run() {
                 if (secondsRemaining > 0) {
                     secondsRemaining--
-                    smsVerificationListener.timer.text = secondsRemaining.toString()
+                    CoroutineScope(Dispatchers.Main).launch {
+                        smsVerificationListener.timer.text = secondsRemaining.toString()
+                    }
                 } else {
-                    timer.cancel()
+                    timer!!.cancel()
                 }
             }
         }, 0, 1000)
     }
     private fun finishTimer() {
-        timer.cancel()
+        timer?.cancel()
+        timer = null
     }
 
 
@@ -139,6 +144,7 @@ class FirebaseAuthManager(
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         auth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
+                finishTimer()
                 if (task.isSuccessful) {
                     Log.d(TAG, "signInWithCredential:success")
 
