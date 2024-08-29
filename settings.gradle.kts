@@ -16,7 +16,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // Kakao Map repository
         maven("https://devrepo.kakao.com/nexus/repository/kakaomap-releases/")
+        // Kakao SDK repository (if needed)
+        maven("https://devrepo.kakao.com/nexus/content/groups/public/")
     }
 }
 

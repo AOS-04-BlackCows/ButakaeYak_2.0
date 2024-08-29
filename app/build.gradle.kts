@@ -114,6 +114,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
 
     // 카카오 지도 SDK
-    implementation("com.kakao.maps.open:android:2.11.9")
     implementation("com.kakao.sdk:v2-all:2.20.5")
+    implementation("com.kakao.maps.open:android:2.11.9")
+
 }
