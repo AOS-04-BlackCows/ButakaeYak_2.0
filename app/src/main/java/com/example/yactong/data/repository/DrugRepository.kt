@@ -4,6 +4,6 @@ import com.example.yactong.data.models.Drug
 import com.example.yactong.data.models.Pill
 
 interface DrugRepository {
-    suspend fun searchDrugs(name: String): List<Drug>
-    suspend fun searchPills(name: String): List<Pill>
+    fun searchDrugs(name: String, callback: (List<Drug>) -> (Unit))
+    fun searchPills(name: String, callback: (List<Pill>) -> (Unit))
 }
