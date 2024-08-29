@@ -10,6 +10,7 @@ plugins {
     id("kotlin-kapt")
 
     id("com.google.dagger.hilt.android")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -29,7 +30,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.yactong.HiltTestRunner"
 
         buildConfigField("String",
             "DRUG_INFO_KEY",
@@ -68,6 +69,12 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    
+    implementation(libs.androidx.activity)
+    implementation(libs.firebase.firestore)
+    
+    implementation(libs.androidx.runner)
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -83,7 +90,17 @@ dependencies {
     implementation(libs.androidx.runtime.android)
 
     implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
+    kapt("com.google.dagger:hilt-android-compiler:2.47")
+    // For Robolectric tests.
+    testImplementation("com.google.dagger:hilt-android-testing:2.48")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.47")
+    // For instrumented tests.
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.48")
+    // ...with Kotlin.
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.47")
+
+    testImplementation("org.robolectric:robolectric:4.9")
+
 
     // LiveData (optional)
     implementation("androidx.lifecycle:lifecycle-livedata-ktx")
@@ -91,4 +108,8 @@ dependencies {
     // Coroutine (for StateFlow)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }
