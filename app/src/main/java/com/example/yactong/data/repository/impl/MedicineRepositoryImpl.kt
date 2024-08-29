@@ -19,7 +19,15 @@ class MedicineRepositoryImpl @Inject constructor(
     }
 
     override fun searchDrugs(name: String, callback: (List<Drug>) -> Unit) {
-        db.collection("drugs").
+        db.collection("drugs")
+            .whereEqualTo("name", name)
+            .get()
+            .addOnSuccessListener { documents ->
+                val list = documents.toObjects(Drug::class.java)
+                callback(list)
+            }.addOnFailureListener {
+                callback(listOf())
+            }
     }
 
     override fun addPill(pill: Pill, callback: (Boolean) -> Unit) {
@@ -30,7 +38,15 @@ class MedicineRepositoryImpl @Inject constructor(
     }
 
     override fun searchPills(name: String, callback: (List<Pill>) -> Unit) {
-        TODO("Not yet implemented")
+        db.collection("drugs")
+            .whereEqualTo("name", name)
+            .get()
+            .addOnSuccessListener { documents ->
+                val list = documents.toObjects(Pill::class.java)
+                callback(list)
+            }.addOnFailureListener {
+                callback(listOf())
+            }
     }
 
 }
