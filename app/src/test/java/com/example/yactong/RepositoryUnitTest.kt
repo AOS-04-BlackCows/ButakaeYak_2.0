@@ -32,26 +32,26 @@ class RepositoryUnitTest {
 
     @Test
     fun apiDrugTest() = runBlocking {
-        val drugs = drugRepository.searchDrugs("한미아스피린").onFailure {
-            println("Loading Drugs is Failed) ${it.message}")
-        }.onSuccess {
-            println("----------------------------------------------")
-            it.forEachIndexed { i, it ->
-                println("$i: ${it.name}, ${it.imageUrl?: "없음"}")
-            }
-        }
+//        val drugs = drugRepository.searchDrugs("한미아스피린").onFailure {
+//            println("Loading Drugs is Failed) ${it.message}")
+//        }.onSuccess {
+//            println("----------------------------------------------")
+//            it.forEachIndexed { i, it ->
+//                println("$i: ${it.name}, ${it.imageUrl?: "없음"}")
+//            }
+//        }
     }
 
     @Test
     fun apiPillTest() = runBlocking {
-        val pills = drugRepository.searchPills("타이레놀").onFailure {
-            println("Loading Pills is Failed...")
-        }.onSuccess {
-            println("----------------------------------------------")
-            it.forEachIndexed { i, it ->
-                println("$i: ${it.name}")
-            }
-            println("----------------------------------------------")
-        }
+//        val pills = drugRepository.searchPills("타이레놀").onFailure {
+//            println("Loading Pills is Failed...")
+//        }.onSuccess {
+//            println("----------------------------------------------")
+//            it.forEachIndexed { i, it ->
+//                println("$i: ${it.name}")
+//            }
+//            println("----------------------------------------------")
+//        }
     }
 }

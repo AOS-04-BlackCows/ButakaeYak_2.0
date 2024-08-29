@@ -74,7 +74,8 @@ dependencies {
     implementation(libs.firebase.firestore)
     
     implementation(libs.androidx.runner)
-    
+    implementation(libs.androidx.junit.ktx)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -87,8 +88,6 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.livedata.ktx)
 
-    implementation(libs.androidx.runtime.android)
-
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.47")
     // For Robolectric tests.
@@ -100,7 +99,6 @@ dependencies {
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.47")
 
     testImplementation("org.robolectric:robolectric:4.9")
-
 
     // LiveData (optional)
     implementation("androidx.lifecycle:lifecycle-livedata-ktx")
