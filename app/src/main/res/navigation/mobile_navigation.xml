@@ -22,4 +22,8 @@
         android:name="com.example.yactong.ui.user.UserFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user" />
+
+    <action
+        android:id="@+id/action_activity_to_takeFragment"
+        app:destination="@+id/navigation_take"/>
 </navigation>
