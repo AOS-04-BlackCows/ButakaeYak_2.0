@@ -3,6 +3,7 @@ package com.example.yactong.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.yactong.ui.example.UserUiState
 
 class HomeViewModel : ViewModel() {
 
@@ -10,4 +11,13 @@ class HomeViewModel : ViewModel() {
         value = "This is home Fragment"
     }
     val text: LiveData<String> = _text
+    fun getUserName(id: String) {
+        getUserNameUseCase.invoke(id) { userName ->
+            if(userName.isNotEmpty()) {
+
+            } else {
+
+            }
+        }
+    }
 }
