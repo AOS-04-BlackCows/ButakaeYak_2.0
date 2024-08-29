@@ -2,6 +2,8 @@ package com.example.yactong.ui.SignIn
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -28,8 +30,8 @@ class SignUpActivity : AppCompatActivity() {
             btnSignup.setOnClickListener {
                 var userDate = UserData("", 0, "")
                 firestoreManager.trySignUp(userDate,
-                    object : FirestoreManager.ResultListener {
-                        override fun onSuccess() {
+                    object : FirestoreManager.ResultListener<Boolean> {
+                        override fun onSuccess(result: Boolean) {
                             // 회원가입 성공 이벤트
                             Toast.makeText(
                                 this@SignUpActivity,
@@ -48,20 +50,20 @@ class SignUpActivity : AppCompatActivity() {
 
                     }
                 )
+            }
 
+            fun formatPhoneNumber(phoneNumber : String, isDeleting : Boolean) : String {
+                // 숫자만 남기기
+                var digits = phoneNumber.replace(Regex("\\D"), "")
+                if (isDeleting && digits.isNotEmpty()) {
+                    digits = digits.substring(0, digits.length -1)
+                }
+                return when {
+                    digits.length <= 3 -> digits
+                    digits.length <= 7 -> "010-${digits.substring(0, 4)}-${digits.substring(4)}"
+                    else -> "010-${digits.substring(0, 4)}-${digits.substring(4, 8)}"
+                }
             }
         }
     }
-
-
-//    private fun isSignUpValid() : Boolean {
-//        with(binding) {
-//            val inputId = inputId.text.toString()
-//            val inputName = inputName.text.toString()
-//            val inputAge = inputAge.text.toString()
-//            val inputPw = inputPw.text.toString()
-//
-//            return inputId.isBlank() || inputName.isBlank() || inputAge.isBlank() || inputPw.isBlank()
-//        }
-//    }
 }
