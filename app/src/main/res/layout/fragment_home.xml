@@ -75,17 +75,22 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="모양" />
+
                 <Button
                     android:id="@+id/btn_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="색깔" />
+
+                <Button
+                    android:id="@+id/btn_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="분활선" />
             </LinearLayout>
         </HorizontalScrollView>
-
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

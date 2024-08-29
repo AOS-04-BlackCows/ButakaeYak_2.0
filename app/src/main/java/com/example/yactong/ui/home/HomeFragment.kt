@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.example.yactong.databinding.FragmentHomeBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -14,7 +14,8 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val homeViewPager by lazy { HomeViewPager(this) }
+    //코드 변경 내용
+    private lateinit var viewPager : ViewPager2
 
     private val homeViewModel: HomeViewModel by activityViewModels()
 
@@ -23,10 +24,6 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // 계속 이용해야 할 수도 있으니 클래스 프로퍼티로 선언해주기.
-//        val homeViewModel =
-//            ViewModelProvider(this).get(HomeViewModel::class.java)
-
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -41,9 +38,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.homeVp.adapter = homeViewPager
+        viewPager = binding.homeVp
+        binding.homeVp.adapter = HomeViewPager(this@HomeFragment)
         TabLayoutMediator(binding.homeLoTab, binding.homeVp) { tab, position ->
-            tab.text = homeViewPager.pageTag[position]
+            tab.text = HomeViewPager(this).pageTag[position]
         }.attach()
 
         binding.homeBtnSearch.setOnClickListener {
