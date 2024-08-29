@@ -16,6 +16,4 @@ data class Drug(
     val openDate: LocalDate,
     val updateDate: LocalDate,
     val imageUrl: String?
-
-
 )
