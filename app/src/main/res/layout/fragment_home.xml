@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/home_lo_searchbar"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="0dp"
         android:background="@color/purple_200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
         <EditText
             android:id="@+id/home_et_searchtext"
             android:layout_width="250dp"
-            android:layout_height="match_parent"
+            android:layout_height="64dp"
             android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/home_iv_logo"
             app:layout_constraintStart_toEndOf="@+id/home_iv_logo"
@@ -47,6 +47,39 @@
             app:layout_constraintBottom_toBottomOf="@+id/home_et_searchtext"
             app:layout_constraintStart_toEndOf="@+id/home_et_searchtext"
             app:layout_constraintTop_toTopOf="@+id/home_et_searchtext" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:paddingVertical="4dp"
+            app:layout_constraintStart_toStartOf="@+id/home_iv_logo"
+            app:layout_constraintTop_toBottomOf="@+id/home_iv_logo">
+            <Button
+                android:id="@+id/btn_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="식별자"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </ScrollView>
+
+
+        <Button
+            android:id="@+id/btn_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="제형"
+            app:layout_constraintStart_toEndOf="@+id/btn_1"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_1" />
+        <Button
+            android:id="@+id/btn_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="모양"
+            app:layout_constraintStart_toEndOf="@+id/btn_2"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.tabs.TabLayout
