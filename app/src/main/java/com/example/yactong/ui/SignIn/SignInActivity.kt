@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.yactong.databinding.ActivitySignInBinding
 import com.example.yactong.firebase.firebase_store.FirestoreManager
 import com.example.yactong.firebase.firebase_store.models.UserData
+import com.google.firebase.firestore.auth.User
 
 class SignInActivity : AppCompatActivity() {
 
@@ -27,8 +28,8 @@ class SignInActivity : AppCompatActivity() {
                 val userPhoneNumber = inputPhoneNumber.text.toString()
 
                 firestoreManager.trySignIn(userPhoneNumber,
-                    object : FirestoreManager.ResultListener {
-                        override fun onSuccess() {
+                    object : FirestoreManager.ResultListener<UserData> {
+                        override fun onSuccess(result: UserData) {
                             // 회원가입 성공 이벤트
                             Toast.makeText(
                                 this@SignInActivity,
