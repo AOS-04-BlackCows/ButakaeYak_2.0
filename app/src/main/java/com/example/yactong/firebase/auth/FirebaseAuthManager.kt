@@ -2,6 +2,8 @@ package com.example.yactong.firebase.auth
 
 import android.app.Activity
 import android.util.Log
+import android.view.View
+import android.widget.TextView
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
@@ -13,7 +15,10 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks
 import com.google.firebase.auth.auth
+import org.w3c.dom.Text
+import java.util.Timer
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class FirebaseAuthManager(
     private val smsVerificationListener: SmsVerificationListener
@@ -85,19 +90,49 @@ class FirebaseAuthManager(
     private val callbacks = object: OnVerificationStateChangedCallbacks() {
         override fun onVerificationCompleted(credential: PhoneAuthCredential) {
             Log.d(TAG, "Verification Start When Instance Verification or Auto-Retriever.")
+            finishTimer()
             signInWithPhoneAuthCredential(credential)
         }
 
         override fun onVerificationFailed(e: FirebaseException) {
             Log.i(TAG, "Verification Failed.")
+            finishTimer()
+        }
+
+        override fun onCodeAutoRetrievalTimeOut(p0: String) {
+            super.onCodeAutoRetrievalTimeOut(p0)
+            smsVerificationListener.onFail(TimeoutException())
         }
 
         override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
             // 문자로 여섯 자리 숫자 코드를 보낸 뒤 호출되는 함수.
             Log.d(TAG, "Please Enter the Code.")
             storedVerificationId = verificationId
+
+            startTimer()
         }
+
     }
+
+    private lateinit var timer: Timer
+    private fun startTimer() {
+        var secondsRemaining = TIME_OUT
+        timer = Timer()
+        timer.schedule(object : java.util.TimerTask() {
+            override fun run() {
+                if (secondsRemaining > 0) {
+                    secondsRemaining--
+                    smsVerificationListener.timer.text = secondsRemaining.toString()
+                } else {
+                    timer.cancel()
+                }
+            }
+        }, 0, 1000)
+    }
+    private fun finishTimer() {
+        timer.cancel()
+    }
+
 
 
 
@@ -117,8 +152,8 @@ class FirebaseAuthManager(
             }
     }
 
-    interface SmsVerificationListener {
-        fun onSuccess()
-        fun onFail(e: Exception)
+     abstract class SmsVerificationListener(val timer: TextView) {
+        abstract fun onSuccess()
+        abstract fun onFail(e: Exception)
     }
 }
