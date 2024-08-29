@@ -4,6 +4,9 @@ import com.example.yactong.data.models.Drug
 import com.example.yactong.data.models.Pill
 
 interface MedicineRepository {
-    fun searchDrugs(name: String, callback: (List<Drug>) -> (Unit))
-    fun searchPills(name: String, callback: (List<Pill>) -> (Unit))
+    fun addDrug(drug: Drug, callback: (Boolean) -> Unit)
+    fun searchDrugs(name: String, callback: (List<Drug>) -> Unit)
+
+    fun addPill(pill: Pill, callback: (Boolean) -> Unit)
+    fun searchPills(name: String, callback: (List<Pill>) -> Unit)
 }
