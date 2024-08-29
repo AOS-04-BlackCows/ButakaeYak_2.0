@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
@@ -54,6 +53,7 @@ class UserFragment : Fragment() {
             ivArrow1.setOnClickListener{
                 val intent = Intent(requireContext(),TakeActivity::class.java)
                 startActivity(intent)
+                requireActivity().overridePendingTransition(R.anim.alpha,R.anim.none)
             }
         }
     }
@@ -63,6 +63,7 @@ class UserFragment : Fragment() {
         _binding = null
     }
 
+    //ViewPager 스와이프 시 화면 애니메이션
     inner class ZoomOutPageTransformer : ViewPager2.PageTransformer {
         override fun transformPage(view: View, position: Float) {
             view.apply {

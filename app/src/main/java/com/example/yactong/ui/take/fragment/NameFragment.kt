@@ -1,6 +1,7 @@
 package com.example.yactong.ui.take.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
@@ -13,8 +14,12 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.fragment.app.activityViewModels
 import com.example.yactong.R
 import com.example.yactong.databinding.FragmentNameBinding
+import com.example.yactong.ui.take.TakeActivity
+import com.example.yactong.ui.take.TakeAddActivity
+import com.example.yactong.ui.take.TakeViewModel
 
 class NameFragment : Fragment() {
 
@@ -22,9 +27,8 @@ class NameFragment : Fragment() {
     private var _binding: FragmentNameBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    //viewModel 설정
+    private val viewModel: TakeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +46,12 @@ class NameFragment : Fragment() {
             binding.etMedicineSearch.text = null
         }
 
+        binding.ivBack.setOnClickListener {
+            val intent = Intent(requireContext(), TakeActivity::class.java)
+            startActivity(intent)
+            requireActivity().overridePendingTransition(R.anim.move_end,R.anim.none)
+        }
+
         binding.etMedicineSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -51,9 +61,10 @@ class NameFragment : Fragment() {
                         isEnabled = true
                         setBackgroundResource(R.drawable.user_cl_bg_green)
                         setTextColor(Color.WHITE)
-//                        setOnClickListener {
-//                            var current =
-//                        }
+                        setOnClickListener {
+                            (requireActivity() as TakeAddActivity).moveToNextPage()
+                            viewModel.updateItem(binding.etMedicineSearch.text.toString())
+                        }
                     }
                 }
                 else{
