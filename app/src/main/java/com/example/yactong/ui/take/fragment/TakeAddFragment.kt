@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
+import com.example.yactong.MainActivity
 import com.example.yactong.databinding.FragmentTakeAddBinding
 import com.example.yactong.ui.take.TakeViewModel
 import com.example.yactong.ui.take.TakeViewPagerAdapter
@@ -31,6 +32,9 @@ class TakeAddFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val mainActivity = activity as MainActivity
+        mainActivity.hideBottomNavigation(true)
+
         _binding = FragmentTakeAddBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
