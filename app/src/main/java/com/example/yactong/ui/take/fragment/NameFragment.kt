@@ -15,6 +15,7 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.yactong.R
 import com.example.yactong.databinding.FragmentNameBinding
 import com.example.yactong.ui.take.TakeActivity
@@ -47,31 +48,41 @@ class NameFragment : Fragment() {
         }
 
         binding.ivBack.setOnClickListener {
-            val intent = Intent(requireContext(), TakeActivity::class.java)
-            startActivity(intent)
-            requireActivity().overridePendingTransition(R.anim.move_end,R.anim.none)
+            //NameFragment는 ViewPager2 안에 감싸져 있는 Fragment
+            //ViewPager2의 layout은 TakeAddFragment에 있음
+            //Fragment layout은 MainActivity 한 곳에만 있음
+//            val takeFragment = TakeFragment()
+//
+//            requireActivity().supportFragmentManager.beginTransaction()
+//                .replace(R.id.nav_host_fragment_activity_main, takeFragment)
+//                .addToBackStack(null)
+//                .commit()
+//            findNavController().navigate(R.id.)
         }
 
         binding.etMedicineSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(binding.etMedicineSearch.length() > 0){
-                    binding.btnNext.apply{
-                        isEnabled = true
-                        setBackgroundResource(R.drawable.user_cl_bg_green)
-                        setTextColor(Color.WHITE)
-                        setOnClickListener {
-                            (requireActivity() as TakeAddActivity).moveToNextPage()
-                            viewModel.updateItem(binding.etMedicineSearch.text.toString())
+                binding.apply{
+                    if(etMedicineSearch.length() > 0){
+                        btnNext.apply{
+                            isEnabled = true
+                            setBackgroundResource(R.drawable.user_cl_bg_green)
+                            setTextColor(Color.WHITE)
+                            setOnClickListener {
+                                viewModel.moveToNextPage()
+//                                (requireParentFragment() as TakeAddFragment).moveToNextPage()
+                                viewModel.updateItem(etMedicineSearch.text.toString())
+                            }
                         }
                     }
-                }
-                else{
-                    binding.btnNext.apply{
-                        isEnabled = false
-                        setBackgroundResource(R.drawable.user_cl_bg_gray)
-                        setTextColor(Color.DKGRAY)
+                    else{
+                        btnNext.apply{
+                            isEnabled = false
+                            setBackgroundResource(R.drawable.user_cl_bg_gray)
+                            setTextColor(Color.DKGRAY)
+                        }
                     }
                 }
             }

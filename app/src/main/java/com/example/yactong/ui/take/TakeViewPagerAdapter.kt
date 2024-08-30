@@ -8,8 +8,8 @@ import com.example.yactong.ui.take.fragment.FormFragment
 import com.example.yactong.ui.take.fragment.NameFragment
 import com.example.yactong.ui.take.fragment.TimeFragment
 
-class TakeViewPagerAdapter(fragmentActivity: FragmentActivity) :
-    FragmentStateAdapter(fragmentActivity){
+class TakeViewPagerAdapter(fragment: Fragment) :
+    FragmentStateAdapter(fragment){
     private lateinit var takeViewPagerAdapter: TakeViewPagerAdapter
     val fragments = listOf<Fragment>(NameFragment(), FormFragment(), TimeFragment(), CycleFragment())
 
