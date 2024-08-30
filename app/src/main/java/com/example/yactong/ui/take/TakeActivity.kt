@@ -32,6 +32,7 @@ class TakeActivity : AppCompatActivity() {
                 startActivity(intent)
                 overridePendingTransition(R.anim.alpha,R.anim.none)
                 finish()
+
             }
         }
     }
