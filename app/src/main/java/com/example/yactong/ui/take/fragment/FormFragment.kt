@@ -54,7 +54,7 @@ class FormFragment : Fragment() {
 
         binding.apply {
             ivBack.setOnClickListener {
-                (requireActivity() as TakeAddActivity).moveToPreviousPage()
+                viewModel.moveToPreviousPage()
             }
 
             val adapter = FormAdapter(dataForm,requireContext())
