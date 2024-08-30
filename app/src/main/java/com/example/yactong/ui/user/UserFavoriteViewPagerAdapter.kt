@@ -1,6 +1,7 @@
 package com.example.yactong.ui.user
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yactong.R

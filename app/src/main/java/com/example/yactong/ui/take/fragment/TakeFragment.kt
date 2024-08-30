@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.yactong.R
 import com.example.yactong.databinding.FragmentTakeBinding
+import com.example.yactong.databinding.FragmentUserBinding
 
 class TakeFragment : Fragment() {
 
@@ -32,6 +33,8 @@ class TakeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             btnAdd.setOnClickListener {
+                //navigate를 통해서 TakeFragment에서 TakeAddFragment로 이동
+                //TakeAddFragment는 layout에 ViewPager2가 있음
                 findNavController().navigate(R.id.action_navigation_take_to_navigation_take_add)
             }
         }
