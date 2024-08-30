@@ -5,12 +5,12 @@ import androidx.lifecycle.ViewModel
 
 class TakeViewModel : ViewModel() {
 
-    private val fragmentText : MutableLiveData<String> = MutableLiveData()
+    private val nameFragmentEditText : MutableLiveData<String> = MutableLiveData()
 
-    fun getData(): MutableLiveData<String> = fragmentText
+    fun getData(): MutableLiveData<String> = nameFragmentEditText
 
     fun updateItem(text :String) {
-        fragmentText.value = text
+        nameFragmentEditText.value = text
     }
 
 }

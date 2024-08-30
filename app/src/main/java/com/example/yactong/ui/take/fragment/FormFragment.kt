@@ -45,8 +45,12 @@ class FormFragment : Fragment() {
         dataForm.add(FormItem(R.drawable.medicine_type_6,"정제 [마름모]"))
         dataForm.add(FormItem(R.drawable.medicine_type_7,"정제 [오각형]"))
         dataForm.add(FormItem(R.drawable.medicine_type_8,"정제 [육각형]"))
-        dataForm.add(FormItem(R.drawable.medicine_type_9,"정제 [기타]"))
         dataForm.add(FormItem(R.drawable.medicine_type_10,"캡슐"))
+        dataForm.add(FormItem(R.drawable.medicine_type_11,"주사"))
+        dataForm.add(FormItem(R.drawable.medicine_type_12,"가루"))
+        dataForm.add(FormItem(R.drawable.medicine_type_13,"스프레이"))
+        dataForm.add(FormItem(R.drawable.medicine_type_15,"액체"))
+        dataForm.add(FormItem(R.drawable.medicine_type_14,"기타"))
 
         binding.apply {
             ivBack.setOnClickListener {
@@ -56,6 +60,7 @@ class FormFragment : Fragment() {
             val adapter = FormAdapter(dataForm,requireContext())
             recyclerviewForm.adapter = adapter
             recyclerviewForm.layoutManager = LinearLayoutManager(requireContext())
+            recyclerviewForm.itemAnimator = null
 
             viewModel.getData().observe(viewLifecycleOwner, Observer {
                 tvMedicineName.text = it.toString()
