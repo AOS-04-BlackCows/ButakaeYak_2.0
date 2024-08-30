@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+  
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -17,8 +17,8 @@
         android:theme="@style/Theme.YacTong"
         tools:targetApi="31">
         <meta-data
-            android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="cimn27aj2e" />
+            android:name="com.kakao.sdk.AppKey"
+            android:value="d4ce3a86b1d0a8895e9eccdf9fb16fc4"/>
         <activity
             android:name=".ui.take.TakeAddActivity"
             android:windowSoftInputMode="adjustResize"

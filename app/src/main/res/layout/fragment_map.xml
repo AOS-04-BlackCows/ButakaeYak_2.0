@@ -6,20 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.map.MapFragment">
 
-<!--    <androidx.fragment.app.FragmentContainerView-->
-<!--        android:id="@+id/map_fragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:name="com.naver.maps.map.MapFragment"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent" />-->
-    <com.naver.maps.map.MapView
+    <com.kakao.vectormap.MapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.naver.maps.map.MapFragment"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
