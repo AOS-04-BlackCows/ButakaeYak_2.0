@@ -48,16 +48,7 @@ class NameFragment : Fragment() {
         }
 
         binding.ivBack.setOnClickListener {
-            //NameFragment는 ViewPager2 안에 감싸져 있는 Fragment
-            //ViewPager2의 layout은 TakeAddFragment에 있음
-            //Fragment layout은 MainActivity 한 곳에만 있음
-//            val takeFragment = TakeFragment()
-//
-//            requireActivity().supportFragmentManager.beginTransaction()
-//                .replace(R.id.nav_host_fragment_activity_main, takeFragment)
-//                .addToBackStack(null)
-//                .commit()
-//            findNavController().navigate(R.id.)
+            findNavController().popBackStack()
         }
 
         binding.etMedicineSearch.addTextChangedListener(object : TextWatcher {
@@ -72,7 +63,6 @@ class NameFragment : Fragment() {
                             setTextColor(Color.WHITE)
                             setOnClickListener {
                                 viewModel.moveToNextPage()
-//                                (requireParentFragment() as TakeAddFragment).moveToNextPage()
                                 viewModel.updateItem(etMedicineSearch.text.toString())
                             }
                         }
@@ -88,27 +78,6 @@ class NameFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {}
-        })
-
-        //키보드 위에 버튼 올리는 코드
-        binding.root.viewTreeObserver.addOnGlobalLayoutListener(object :
-            ViewTreeObserver.OnGlobalLayoutListener {
-            private var isKeyboardShown = false
-
-            override fun onGlobalLayout() {
-                val r = Rect()
-                binding.root.getWindowVisibleDisplayFrame(r)
-                val heightDiff = binding.root.bottom - r.bottom + 80
-                isKeyboardShown = heightDiff > 100
-                val constraintSet = ConstraintSet()
-                constraintSet.clone(binding.root)
-                constraintSet.setMargin(
-                    R.id.btn_next,
-                    ConstraintSet.BOTTOM,
-                    if (isKeyboardShown) heightDiff else 20
-                )
-                constraintSet.applyTo(binding.root)
-            }
         })
 
         //editText 클릭 시 키보드 올리는 코드
