@@ -3,14 +3,18 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    //hilt 추가 내용
+    alias(libs.plugins.dagger.hilt.android)
 
     kotlin("plugin.serialization") version "1.5.0"
 
     id("kotlin-parcelize")
     id("kotlin-kapt")
 
+
     id("com.google.dagger.hilt.android")
     alias(libs.plugins.google.gms.google.services)
+   
 }
 
 android {
@@ -35,6 +39,10 @@ android {
         buildConfigField("String",
             "DRUG_INFO_KEY",
             properties.getProperty("drug_info_key")
+        )
+        buildConfigField("String",
+            "NATIVE_APP_KEY",
+            properties.getProperty("native_app_key")
         )
     }
 
@@ -74,14 +82,18 @@ dependencies {
     implementation(libs.firebase.firestore)
     
     implementation(libs.androidx.runner)
+    
     implementation(libs.androidx.junit.ktx)
-
+    
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.fragment.ktx)
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
     testImplementation(libs.androidx.runtime.android)
-
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.glide)
@@ -106,6 +118,10 @@ dependencies {
     // Coroutine (for StateFlow)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
+
+    // 카카오 지도 SDK
+    implementation("com.kakao.sdk:v2-all:2.20.5")
+    implementation("com.kakao.maps.open:android:2.11.9")
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
