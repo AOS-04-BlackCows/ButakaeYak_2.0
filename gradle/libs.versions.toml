@@ -16,6 +16,11 @@ kotlinxCoroutinesTest = "1.5.2"
 retrofit = "2.11.0"
 glide = "4.13.0"
 runtimeAndroid= "1.6.8"
+
+activity = "1.9.1"
+googleGmsGoogleServices = "4.4.2"
+firebaseFirestore = "25.1.0"
+
 runner = "1.6.2"
 activity = "1.9.1"
 legacySupportV4 = "1.0.0"
@@ -41,6 +46,10 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
+
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
@@ -52,6 +61,7 @@ androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", ve
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
 #추가내용
 dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

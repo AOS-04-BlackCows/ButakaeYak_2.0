@@ -11,7 +11,12 @@ plugins {
     id("kotlin-parcelize")
     id("kotlin-kapt")
 
+<<<<<<< HEAD
+    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.google.gms.google.services)
+=======
 //    id("com.google.dagger.hilt.android")
+>>>>>>> dev
 }
 
 android {
@@ -74,11 +79,19 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    
+    implementation(libs.androidx.activity)
+    implementation(libs.firebase.firestore)
+    
     implementation(libs.androidx.runner)
+<<<<<<< HEAD
+    
+=======
     implementation(libs.androidx.activity)
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.fragment.ktx)
+>>>>>>> dev
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -111,6 +124,12 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
 
+<<<<<<< HEAD
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
+    implementation("com.google.firebase:firebase-analytics")
+=======
     // 네이버 지도 SDK
     implementation("com.naver.maps:map-sdk:3.19.1")
+>>>>>>> dev
 }
