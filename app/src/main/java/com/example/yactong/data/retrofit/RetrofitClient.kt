@@ -40,6 +40,9 @@ object RetrofitClient {
             ApiBaseUrl.DrugInfoUrl -> {
                 OkHttpClient().newBuilder().build()
             }
+            ApiBaseUrl.KakaoPlaceSearchUrl -> {
+                OkHttpClient().newBuilder().addInterceptor(KakaoInterceptor.getInterceptor()).build()
+            }
         }
     }
 

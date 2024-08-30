@@ -41,6 +41,10 @@ android {
             "NATIVE_APP_KEY",
             properties.getProperty("native_app_key")
         )
+        buildConfigField("String",
+            "REST_API_KEY",
+            properties.getProperty("rest_api_key")
+        )
     }
 
     buildTypes {
