@@ -6,6 +6,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.yactong.databinding.ActivitySignUpBinding
 import com.example.yactong.firebase.firebase_store.FirestoreManager
@@ -15,6 +17,21 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
     private val firestoreManager = FirestoreManager()
 
+    private val userPhoneNumber by lazy { binding.inputPhoneNumber }
+    private val userPw by lazy { binding.inputPw }
+
+    private val resultLaunch = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) {result ->
+
+        if(result.resultCode == RESULT_OK) {
+            val data : Intent? =result.data
+            val phoneNumber = result.data?.getStringExtra("phoneNumber") ?: "none"
+            val pw = result.data?.getStringExtra("pw") ?: "none"
+
+            userPhoneNumber.setText(phoneNumber)
+            userPw.setText(pw)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +44,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun initView() {
         with(binding) {
+
             btnSignup.setOnClickListener {
                 var userDate = UserData("", 0, "")
                 firestoreManager.trySignUp(userDate,
@@ -38,9 +56,12 @@ class SignUpActivity : AppCompatActivity() {
                                 "회원가입 성공",
                                 Toast.LENGTH_LONG
                             ).show()
+
                             // 로그인에 전화번호 & 비밀번호 전달
-                            val intent = Intent(this@SignUpActivity, SignInActivity::class.java)
-                            startActivity(intent)
+                            val intent = Intent(this@SignUpActivity,SignInActivity::class.java)
+                            intent.putExtra("phoneNumber",userPhoneNumber.text.toString())
+                            intent.putExtra("pw", inputPw.text.toString())
+                            resultLaunch.launch(intent)
                             finish()
                         }
 

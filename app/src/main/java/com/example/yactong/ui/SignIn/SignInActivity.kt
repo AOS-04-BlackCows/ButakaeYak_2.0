@@ -1,26 +1,22 @@
 package com.example.yactong.ui.SignIn
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.text.set
 import com.example.yactong.R
 import com.example.yactong.databinding.ActivitySignInBinding
 import com.example.yactong.firebase.firebase_store.FirestoreManager
 import com.example.yactong.firebase.firebase_store.models.UserData
-import com.google.firebase.firestore.auth.User
+
 
 class SignInActivity : AppCompatActivity() {
 
@@ -34,6 +30,15 @@ class SignInActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initView()
+        setSignUpTextView()
+
+        val inPutPhoneNumber = intent.getStringExtra("phoneNumber")
+        val inPutPw = intent.getStringExtra("pw")
+
+        binding.inputPhoneNumber.setText(inPutPhoneNumber)
+        binding.inputPw.setText(inPutPw)
+
+
     }
 
     private fun initView() {
@@ -52,6 +57,7 @@ class SignInActivity : AppCompatActivity() {
                             ).show()
                             //val intent = Intent(this@SignInActivity, MyPage::class.java)
                             //startActivity(intent)
+
                             finish()
                         }
 
@@ -62,16 +68,17 @@ class SignInActivity : AppCompatActivity() {
                     }
                 )
             }
+        }
+    }
+
+    private fun setSignUpTextView() {
+        with(binding) {
 
             val fullText = "계정이 없으신가요? 회원가입"
             val spannableString = SpannableString(fullText)
 
             val signUpStart = fullText.indexOf("회원가입")
             val signUpEnd = signUpStart + "회원가입".length
-
-            // ForegroundColorSpan
-            val foregroundColorSpan =
-                ForegroundColorSpan(getColor(R.color.any_500))
 
             val signUpClickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
@@ -80,13 +87,14 @@ class SignInActivity : AppCompatActivity() {
                 }
             }
 
-            // span 적용
-            spannableString.setSpan(signUpClickableSpan, signUpStart, signUpEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-            spannableString.setSpan(foregroundColorSpan, signUpStart, signUpEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(
+                signUpClickableSpan,
+                signUpStart,
+                signUpEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE
+            )
 
-            // textView에 적용
-            tvSignup.text = spannableString
             tvSignup.movementMethod = LinkMovementMethod.getInstance() // 클릭 가능하게 설정
+            tvSignup.text = spannableString
         }
     }
 }
