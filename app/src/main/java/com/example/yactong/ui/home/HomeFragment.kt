@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.yactong.databinding.FragmentHomeBinding
@@ -15,16 +16,15 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    //viewPager 변경 내용
     private lateinit var viewPager : ViewPager2
+
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -33,18 +33,24 @@ class HomeFragment : Fragment() {
         homeViewModel.text.observe(viewLifecycleOwner) {
             viewpager.currentItem
         }
+
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //viewPager 코드 변경 내용
+
         viewPager = binding.homeVp
         binding.homeVp.adapter = HomeViewPager(this@HomeFragment)
 
         TabLayoutMediator(binding.homeLoTab, binding.homeVp) { tab, position ->
             tab.text = HomeViewPager(this).pageTag[position]
         }.attach()
+
+        binding.homeBtnSearch.setOnClickListener {
+            val query = binding.homeEtSearchtext.text.toString()
+            homeViewModel.searchPills(query)
+        }
     }
 
     override fun onDestroyView() {

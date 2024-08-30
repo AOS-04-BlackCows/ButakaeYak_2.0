@@ -5,8 +5,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class HomeViewPager(fragment: Fragment): FragmentStateAdapter(fragment) {
     //TODO: update list.
-    private val pages = listOf<Fragment>(ResultsFragment())
-    val pageTag = listOf(ResultsFragment.TAB_NAME)
+    private val pages by lazy { listOf(PillResultFragment(), FeedFragment()) }
+    val pageTag = listOf(PillResultFragment.TAB_NAME,FeedFragment.TAB_NAME)
 
     override fun getItemCount() = pages.size
     override fun createFragment(position: Int) = pages[position]
