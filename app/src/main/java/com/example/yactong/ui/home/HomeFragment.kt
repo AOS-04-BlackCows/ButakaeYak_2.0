@@ -14,7 +14,7 @@ import com.example.yactong.firebase.auth.FirebaseAuthManager
 import com.google.firebase.FirebaseApp
 import com.google.android.material.tabs.TabLayoutMediator
 
-class HomeFragment(timer: TextView) : Fragment() {
+class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
