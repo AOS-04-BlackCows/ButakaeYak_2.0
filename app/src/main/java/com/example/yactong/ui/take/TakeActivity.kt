@@ -24,8 +24,6 @@ class TakeActivity : AppCompatActivity() {
             insets
         }
 
-
-
         binding.apply {
             btnAdd.setOnClickListener {
                 val intent = Intent(this@TakeActivity,TakeAddActivity::class.java)

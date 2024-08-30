@@ -25,13 +25,13 @@ class TakeAddActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        viewPager = binding.vp2Add
-        binding.apply {
-            if (viewPager.adapter == null) {
-                vp2Add.adapter = TakeViewPagerAdapter(this@TakeAddActivity)
-                vp2Add.isUserInputEnabled = false
-            }
-        }
+//        viewPager = binding.vp2Add
+//        binding.apply {
+//            if (viewPager.adapter == null) {
+//                vp2Add.adapter = TakeViewPagerAdapter(this@TakeAddActivity)
+//                vp2Add.isUserInputEnabled = false
+//            }
+//        }
     }
 
     // 다음 fragment로 이동
