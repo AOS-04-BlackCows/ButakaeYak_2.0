@@ -12,6 +12,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import org.jetbrains.annotations.TestOnly
 
 @Module
@@ -21,5 +23,11 @@ class ProvideModule {
     //@ViewModelScoped
     fun provideRetrofitService() : DrugApiService {
         return RetrofitClient.getInstance(ApiBaseUrl.DrugInfoUrl).create(DrugApiService::class.java)
+    }
+
+    @Provides
+    //@ViewModelScoped
+    fun provideIoDispatcher(): CoroutineDispatcher {
+        return Dispatchers.IO
     }
 }

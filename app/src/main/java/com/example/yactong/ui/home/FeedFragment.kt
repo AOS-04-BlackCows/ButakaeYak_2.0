@@ -14,9 +14,9 @@ import com.example.yactong.ui.home.placeholder.PlaceholderContent
 /**
  * A fragment representing a list of Items.
  */
-class ResultsFragment : Fragment() {
+class FeedFragment : Fragment() {
 
-    private var columnCount = 1
+    private var columnCount = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +30,7 @@ class ResultsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_results_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_feed_list, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -39,21 +39,20 @@ class ResultsFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = ResultsRecyclerViewAdapter(PlaceholderContent.ITEMS)
+                adapter = HomeRecyclerAdapter(PlaceholderContent.ITEMS)
             }
         }
         return view
     }
 
     companion object {
-        const val ARG_COLUMN_COUNT = "column-count"
-        const val TAB_NAME = "결과 화면"
 
-        //
+        const val ARG_COLUMN_COUNT = "column-count"
+        const val TAB_NAME = "약사 피드"
 
         @JvmStatic
         fun newInstance(columnCount: Int) =
-            ResultsFragment().apply {
+            FeedFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }
