@@ -12,9 +12,7 @@ plugins {
     id("kotlin-kapt")
 
 
-    id("com.google.dagger.hilt.android")
     alias(libs.plugins.google.gms.google.services)
-   
 }
 
 android {
@@ -87,6 +85,8 @@ dependencies {
     
     implementation(libs.androidx.runner)
     
+    implementation(libs.androidx.junit.ktx)
+    
     implementation(libs.androidx.activity)
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.recyclerview)
@@ -102,8 +102,6 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.livedata.ktx)
 
-    implementation(libs.androidx.runtime.android)
-
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.47")
     // For Robolectric tests.
@@ -115,7 +113,6 @@ dependencies {
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.47")
 
     testImplementation("org.robolectric:robolectric:4.9")
-
 
     // LiveData (optional)
     implementation("androidx.lifecycle:lifecycle-livedata-ktx")
@@ -131,4 +128,5 @@ dependencies {
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth-ktx")     //인증
 }

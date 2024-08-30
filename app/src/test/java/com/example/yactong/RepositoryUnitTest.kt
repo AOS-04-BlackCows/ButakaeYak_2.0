@@ -1,10 +1,15 @@
 package com.example.yactong
 
+import com.example.yactong.data.models.Drug
 import com.example.yactong.data.repository.DrugRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNotNull
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -12,6 +17,8 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 //TODO: Java 17 is Required to Run this Code.
 
@@ -28,30 +35,47 @@ class RepositoryUnitTest {
     @Before
     fun setUp() {
         hiltRule.inject()
+        println("--------------------------------------------------------------------------------------")
+    }
+
+    @After
+    fun after() {
+        println("--------------------------------------------------------------------------------------")
     }
 
     @Test
     fun apiDrugTest() = runBlocking {
-//        val drugs = drugRepository.searchDrugs("한미아스피린").onFailure {
-//            println("Loading Drugs is Failed) ${it.message}")
-//        }.onSuccess {
-//            println("----------------------------------------------")
-//            it.forEachIndexed { i, it ->
-//                println("$i: ${it.name}, ${it.imageUrl?: "없음"}")
-//            }
-//        }
+        val result = suspendCoroutine { continuation ->
+            drugRepository.searchDrugs("한미아스피린") { drugs ->
+                // callback 내용 작성
+                continuation.resume(drugs)
+            }
+        }
+
+        assertNotNull(result)
+        assertTrue(result.isNotEmpty())
+
+        result.forEachIndexed { i, it ->
+            println("$i: ${it.name}")
+        }
     }
+
+
 
     @Test
     fun apiPillTest() = runBlocking {
-//        val pills = drugRepository.searchPills("타이레놀").onFailure {
-//            println("Loading Pills is Failed...")
-//        }.onSuccess {
-//            println("----------------------------------------------")
-//            it.forEachIndexed { i, it ->
-//                println("$i: ${it.name}")
-//            }
-//            println("----------------------------------------------")
-//        }
+        val result = suspendCoroutine { continuation ->
+            drugRepository.searchPills("타이레놀") { pills ->
+                // callback 내용 작성
+                continuation.resume(pills)
+            }
+        }
+
+        assertNotNull(result)
+        assertTrue(result.isNotEmpty())
+
+        result.forEachIndexed { i, it ->
+            println("$i: ${it.name}")
+        }
     }
 }

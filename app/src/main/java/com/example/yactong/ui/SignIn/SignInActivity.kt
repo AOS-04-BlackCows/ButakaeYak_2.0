@@ -71,7 +71,7 @@ class SignInActivity : AppCompatActivity() {
 
             // ForegroundColorSpan
             val foregroundColorSpan =
-                ForegroundColorSpan(getColor(R.color.purple_500))
+                ForegroundColorSpan(getColor(R.color.any_500))
 
             val signUpClickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {

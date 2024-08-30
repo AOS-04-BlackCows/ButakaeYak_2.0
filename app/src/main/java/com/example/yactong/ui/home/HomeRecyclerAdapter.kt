@@ -41,8 +41,9 @@ class HomeRecyclerAdapter( private val values: List<PlaceholderItem> ) : ListAda
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            TYPE_PIll -> PillResultHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_results, parent, false))
-            TYPE_FEED -> FeedHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_feed, parent, false))
+            //TODO: 고치기
+            //TYPE_PIll -> PillResultHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_results, parent, false))
+            //TYPE_FEED -> FeedHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_feed, parent, false))
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
