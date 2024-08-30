@@ -65,7 +65,6 @@ class HomeRecyclerAdapter( private val values: List<PlaceholderItem> ) : ListAda
 
         fun bind(pillitem: ListItem.PillResultItem){
             when(pillitem){
-                Glide.with(itemView).load(pillPicture).into(pillPicture)
             }
 
         }
@@ -77,7 +76,10 @@ class HomeRecyclerAdapter( private val values: List<PlaceholderItem> ) : ListAda
         val feedname: TextView = binding.feedTvName
         val feedwriter: TextView = binding.feedTvWriter
 
+        fun bind(pillitem: ListItem.FeedItem){
+            when(pillitem){
+            }
+
+        }
     }
-
-
 }
