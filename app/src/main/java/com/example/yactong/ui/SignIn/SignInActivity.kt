@@ -1,10 +1,22 @@
 package com.example.yactong.ui.SignIn
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.text.set
+import com.example.yactong.R
 import com.example.yactong.databinding.ActivitySignInBinding
 import com.example.yactong.firebase.firebase_store.FirestoreManager
 import com.example.yactong.firebase.firebase_store.models.UserData
@@ -20,6 +32,8 @@ class SignInActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        initView()
     }
 
     private fun initView() {
@@ -47,8 +61,32 @@ class SignInActivity : AppCompatActivity() {
 
                     }
                 )
-
             }
+
+            val fullText = "계정이 없으신가요? 회원가입"
+            val spannableString = SpannableString(fullText)
+
+            val signUpStart = fullText.indexOf("회원가입")
+            val signUpEnd = signUpStart + "회원가입".length
+
+            // ForegroundColorSpan
+            val foregroundColorSpan =
+                ForegroundColorSpan(getColor(R.color.purple_500))
+
+            val signUpClickableSpan = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    val intent = Intent(this@SignInActivity, SignUpActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+
+            // span 적용
+            spannableString.setSpan(signUpClickableSpan, signUpStart, signUpEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(foregroundColorSpan, signUpStart, signUpEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+
+            // textView에 적용
+            tvSignup.text = spannableString
+            tvSignup.movementMethod = LinkMovementMethod.getInstance() // 클릭 가능하게 설정
         }
     }
 }
