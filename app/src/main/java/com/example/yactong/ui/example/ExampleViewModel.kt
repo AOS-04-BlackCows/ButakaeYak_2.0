@@ -2,10 +2,12 @@ package com.example.yactong.ui.example
 
 import androidx.lifecycle.ViewModel
 import com.example.yactong.domain.example.GetUserNameUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
+@HiltViewModel
 class ExampleViewModel @Inject constructor(
     private val getUserNameUseCase: GetUserNameUseCase
 ): ViewModel() {
