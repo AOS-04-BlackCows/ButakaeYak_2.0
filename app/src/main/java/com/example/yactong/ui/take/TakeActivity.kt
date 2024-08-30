@@ -6,7 +6,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.findNavController
 import com.example.yactong.R
 import com.example.yactong.databinding.ActivityTakeBinding
 
@@ -31,6 +30,7 @@ class TakeActivity : AppCompatActivity() {
             btnAdd.setOnClickListener {
                 val intent = Intent(this@TakeActivity,TakeAddActivity::class.java)
                 startActivity(intent)
+                overridePendingTransition(R.anim.alpha,R.anim.none)
                 finish()
             }
         }
