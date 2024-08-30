@@ -1,6 +1,7 @@
 package com.example.yactong
 
 import android.os.Bundle
+import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -25,5 +26,10 @@ class MainActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         navView.setupWithNavController(navController)
+    }
+
+    //navigation bar 안 보이게 할 때 쓰는 메소드
+    fun hideBottomNavigation(state:Boolean){
+        if(state) binding.navView.visibility = View.GONE else binding.navView.visibility=View.VISIBLE
     }
 }

@@ -50,12 +50,6 @@
         android:name="com.example.yactong.ui.take.fragment.TakeAddFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_take_add" >
-<!--        <action-->
-<!--            android:id="@+id/action_navigation_take_add_to_navigation_name"-->
-<!--            app:destination="@id/navigation_name" />-->
-<!--        <action-->
-<!--            android:id="@+id/action_navigation_take_add_to_navigation_take2"-->
-<!--            app:destination="@id/navigation_take" />-->
         <action
             android:id="@+id/action_navigation_take_add_to_navigation_name"
             app:destination="@+id/navigation_name"
