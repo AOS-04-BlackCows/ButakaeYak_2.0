@@ -1,6 +1,5 @@
 package com.example.yactong.ui.user
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.yactong.R
 import com.example.yactong.databinding.FragmentUserBinding
-import com.example.yactong.ui.take.TakeActivity
 
 class UserFragment : Fragment() {
 
