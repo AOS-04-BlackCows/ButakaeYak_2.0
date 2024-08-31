@@ -109,7 +109,6 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
         }
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
