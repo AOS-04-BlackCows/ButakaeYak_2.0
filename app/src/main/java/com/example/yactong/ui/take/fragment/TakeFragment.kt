@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.yactong.R
 import com.example.yactong.databinding.FragmentTakeBinding
-import com.example.yactong.databinding.FragmentUserBinding
 
 class TakeFragment : Fragment() {
 
