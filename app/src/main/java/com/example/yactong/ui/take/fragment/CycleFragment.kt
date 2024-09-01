@@ -7,11 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.example.yactong.R
+import com.example.yactong.databinding.FragmentCycleBinding
 import com.example.yactong.ui.take.TakeViewModel
 
 class CycleFragment : Fragment() {
+
+    //binding 설정
+    private var _binding: FragmentCycleBinding? = null
+    private val binding get() = _binding!!
 
     //viewModel 설정
     private val viewModel: TakeViewModel by activityViewModels()
@@ -23,7 +28,7 @@ class CycleFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val current = viewModel.currentPage.value ?: 0
@@ -36,7 +41,30 @@ class CycleFragment : Fragment() {
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-        return inflater.inflate(R.layout.fragment_cycle, container, false)
+        _binding = FragmentCycleBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+        return root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.apply {
+            ivBack.setOnClickListener {
+                viewModel.moveToPreviousPage()
+            }
+
+            viewModel.getData().observe(viewLifecycleOwner, Observer {
+                tvCycleName.text = "약 이름 : ${it}"
+            })
+
+            viewModel.getTextData().observe(viewLifecycleOwner, Observer{
+                tvCycleForm.text = "약 모형 : " + it
+            })
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

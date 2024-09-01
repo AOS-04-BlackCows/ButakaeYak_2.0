@@ -14,6 +14,10 @@ class FormAdapter(val mItems:MutableList<FormItem>,val context: Context, private
         fun onItemChecked(position: Int, isChecked: Boolean)
     }
 
+    interface itemTextListener{
+        fun itemTextListener(position: Int)
+    }
+
     private var mSelectedItem = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FormHolder {
