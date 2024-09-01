@@ -3,30 +3,33 @@ package com.example.yactong.ui.take
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.yactong.ui.take.data.FormItem
 
 class TakeViewModel : ViewModel() {
 
     //editText
     private val nameFragmentEditText : MutableLiveData<String> = MutableLiveData()
 
+    //recyclerView textView
+    private val formFragmentText : MutableLiveData<String?> = MutableLiveData()
+
     //viewPager2
     private val _currentPage = MutableLiveData<Int>()
     val currentPage : LiveData<Int> get() = _currentPage
 
-    //checkbox
-    val checkboxItem = MutableLiveData<List<FormItem>>()
-
     //editText 데이터 받기
     fun getData(): MutableLiveData<String> = nameFragmentEditText
+
+    //recyclerView Text 내용 넘기기
+    fun getTextData(): MutableLiveData<String?> = formFragmentText
 
     //editText 내용 넘기기
     fun updateItem(text :String) {
         nameFragmentEditText.value = text
     }
 
-    fun updateCheckboxItem(item : List<FormItem>){
-        checkboxItem.value = item
+    //recyclerView textView 내용 넘기기
+    fun updateFormItem(text:String?){
+        formFragmentText.value = text
     }
 
     fun moveToNextPage(){

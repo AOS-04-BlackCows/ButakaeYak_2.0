@@ -10,7 +10,7 @@ import com.example.yactong.ui.take.fragment.TimeFragment
 class TakeViewPagerAdapter(fragment: Fragment) :
     FragmentStateAdapter(fragment){
     private lateinit var takeViewPagerAdapter: TakeViewPagerAdapter
-    val fragments = listOf<Fragment>(NameFragment(), FormFragment(), TimeFragment(), CycleFragment())
+    val fragments = listOf<Fragment>(NameFragment(), FormFragment(), CycleFragment(), TimeFragment())
 
     override fun getItemCount(): Int {
         return fragments.size
