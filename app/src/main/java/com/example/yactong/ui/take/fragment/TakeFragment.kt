@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.example.yactong.MainActivity
 import com.example.yactong.R
 import com.example.yactong.databinding.FragmentTakeBinding
 
@@ -23,6 +24,9 @@ class TakeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val mainActivity = activity as MainActivity
+        mainActivity.hideBottomNavigation(false)
+
         _binding = FragmentTakeBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
@@ -35,5 +39,9 @@ class TakeFragment : Fragment() {
                 findNavController().navigate(R.id.action_navigation_take_to_navigation_take_add)
             }
         }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
