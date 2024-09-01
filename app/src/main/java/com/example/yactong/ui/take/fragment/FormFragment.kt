@@ -23,6 +23,8 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
     private var _binding: FragmentFormBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var adapter : FormAdapter
+
     //viewModel 설정
     private val viewModel: TakeViewModel by activityViewModels()
 
@@ -70,13 +72,13 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
             ivBack.setOnClickListener {
                 viewModel.moveToPreviousPage()
             }
-            val adapter = FormAdapter(dataForm, requireContext(), this@FormFragment)
+            adapter = FormAdapter(dataForm, requireContext(), this@FormFragment)
             recyclerviewForm.adapter = adapter
             recyclerviewForm.layoutManager = LinearLayoutManager(requireContext())
             recyclerviewForm.itemAnimator = null
 
             viewModel.getData().observe(viewLifecycleOwner, Observer {
-                tvMedicineName.text = "약 이름:"+"${it}"
+                tvMedicineName.text = "약 이름 : "+"${it}"
             })
 
             }
@@ -87,11 +89,13 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
         binding.apply {
             if (isChecked) {
                 btnNext.apply {
+                    val selectName = adapter.mItems[position].aName
                     isEnabled = true
                     setBackgroundResource(R.drawable.user_cl_bg_green)
                     setTextColor(Color.WHITE)
                     setOnClickListener {
                         viewModel.moveToNextPage()
+                        viewModel.updateFormItem(selectName)
                     }
                 }
             }
