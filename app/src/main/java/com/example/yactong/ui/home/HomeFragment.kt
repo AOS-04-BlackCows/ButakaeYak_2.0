@@ -14,7 +14,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.yactong.R
+import com.example.yactong.data.models.SearchCategory
+import com.example.yactong.data.models.SearchCategoryDataSource
 import com.example.yactong.databinding.FragmentHomeBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment() {
@@ -22,7 +27,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewPager : ViewPager2
+    private lateinit var viewPager: ViewPager2
 
     private val homeViewModel: HomeViewModel by activityViewModels()
 
@@ -45,22 +50,34 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val keyWords = listOf("머리","얼굴","목","가슴/흉부","복부","'등/허리","다리/발","피부")
-        for (keyWord in keyWords) {
-            val keyButton = Button(requireContext())
-            keyButton.apply {
-                text = keyWord
-                textSize = 14F
-                setTextColor(Color.WHITE)
-                background = getDrawable(requireContext(),R.drawable.selector_key_button)
-                isClickable = false
-                setOnClickListener {
-                    isClickable = !isClickable
-                    setTextColor(Color.BLACK)
-                }
-            }
-            binding.searchLoKeyword.addView(keyButton)
-        }
+        initView()
+
+            //listOf("머리", "얼굴", "목", "가슴/흉부", "복부", "등/허리", "다리/발", "피부")
+//        val chipGroup = binding.searchCgKeyword
+
+//        for (i in keyWords) {
+//            chipGroup.addView(Chip(this.context).apply {
+//                text = i.name // text 세팅
+//                setTextColor(resources.getColor(R.color.white, null)) // 텍스트 색상 설정
+//                setChipDrawable(ChipDrawable.createFromAttributes(context, null, 0, R.style.CustomChipStyle_Off))
+//                with(this) {
+//                    chipStrokeWidth = 0.0f
+//                    setOnClickListener {
+////                        this.isEnabled = !this.isEnabled //활성화 여부임!!!
+//                        if(this.isEnabled){
+//                            setChipDrawable(ChipDrawable.createFromAttributes(context, null, 0,R.style.CustomChipStyle_Off))
+//                        }else{
+//                            setChipDrawable(ChipDrawable.createFromAttributes(context, null, 0,R.style.CustomChipStyle_On))
+//                        }
+//                        //binding.searchEt.setText(i.name)
+//                        chipGroup.removeAllViews()
+//                        Log.d("키워드 눌림", "${i.name}")
+////                        binding.searchCategory.visibility = View.GONE
+////                        binding.searchChip.visibility = View.GONE
+//                    }
+//                }
+//            })
+//        }
 
         viewPager = binding.searchVp
         binding.searchVp.adapter = HomeViewPager(this@HomeFragment)
@@ -78,5 +95,37 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun initView(){
+        // 카테고리 클릭 시 변경
+        val categoryArr = arrayOf(
+            binding.searchCategory1, binding.searchCategory2, binding.searchCategory3, binding.searchCategory4,
+            binding.searchCategory5, binding.searchCategory6, binding.searchCategory7, binding.searchCategory8,
+        )
+        for (i in categoryArr) {
+            i.setOnClickListener{
+
+                clickedCategory(i)
+                i.isCheckable = !i.isCheckable
+                Log.d("키워드 눌림", "${i.text} Checkable: ${i.isCheckable}")
+
+            }
+        }
+    }
+    private fun clickedCategory (view: View) {
+        val selectStatus: SearchCategory = when (view) {
+            binding.searchCategory1 -> SearchCategory.HEAD
+            binding.searchCategory2 -> SearchCategory.FACE
+            binding.searchCategory3 -> SearchCategory.NECK
+            binding.searchCategory4 -> SearchCategory.CHEST_THORAX
+            binding.searchCategory5 -> SearchCategory.ABDOMEN
+            binding.searchCategory6 -> SearchCategory.BACK_WAIST
+            binding.searchCategory7 -> SearchCategory.LEGS_FEET
+            binding.searchCategory8 -> SearchCategory.SKIN
+            else -> SearchCategory.HEAD
+        }
+        val keyWords = SearchCategoryDataSource.getSearchSubCategory(selectStatus)
+
     }
 }

@@ -6,8 +6,9 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="16dp"
     android:paddingVertical="16dp"
-    tools:context=".ui.home.HomeFragment">
-  
+    tools:context=".ui.home.HomeFragment"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/search_lo_searchbar"
         android:layout_width="match_parent"
@@ -40,9 +41,12 @@
                 android:id="@+id/search_et_searchtext"
                 android:layout_width="250dp"
                 android:layout_height="40dp"
-                android:hint="검색어를 적어 주세요."
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="1dp"
                 android:background="@null"
+                android:hint="검색어를 적어 주세요."
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/search_btn_search"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,11 +55,10 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:background="@android:color/transparent"
-                android:layout_marginStart="8dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/baseline_search_24"
                 app:layout_constraintBottom_toBottomOf="@+id/search_et_searchtext"
-                app:layout_constraintStart_toEndOf="@+id/search_et_searchtext"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/search_et_searchtext" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -63,15 +66,78 @@
             android:id="@+id/search_sv_keywords"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="4dp"
+            android:padding="4dp"
             app:layout_constraintStart_toStartOf="@+id/search_iv_logo"
             app:layout_constraintTop_toBottomOf="@+id/search_iv_logo">
-            <LinearLayout
-                android:id="@+id/search_lo_keyword"
+
+            <android.support.design.chip.ChipGroup
+                android:id="@+id/search_cg_keyword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-            </LinearLayout>
+                app:singleSelection="true"
+                app:singleLine="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <android.support.design.chip.Chip
+                    android:id="@+id/searchCategory1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:background="@drawable/selector_key_button"
+                    android:text="머리"/>
+
+                <android.support.design.chip.Chip
+                    android:id="@+id/searchCategory2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:background="@drawable/selector_key_button"
+                    android:text="얼굴"/>
+                <android.support.design.chip.Chip
+                    android:id="@+id/searchCategory3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:background="@drawable/selector_key_button"
+                    android:text="목"/>
+                <android.support.design.chip.Chip
+                    android:id="@+id/searchCategory4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:background="@drawable/selector_key_button"
+                    android:text="가슴/흉부"/>
+                <android.support.design.chip.Chip
+                    android:id="@+id/searchCategory5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:background="@drawable/selector_key_button"
+                    android:text="복부"/>
+                <android.support.design.chip.Chip
+                    android:id="@+id/searchCategory6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:background="@drawable/selector_key_button"
+                    android:text="등/허리"/>
+                <android.support.design.chip.Chip
+                    android:id="@+id/searchCategory7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:background="@drawable/selector_key_button"
+                    android:text="다리/발"/>
+                <android.support.design.chip.Chip
+                    android:id="@+id/searchCategory8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:background="@drawable/selector_key_button"
+                    android:text="피부"/>
+
+            </android.support.design.chip.ChipGroup>
         </HorizontalScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
