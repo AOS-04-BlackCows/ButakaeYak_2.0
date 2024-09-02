@@ -28,7 +28,6 @@ import kotlin.coroutines.resumeWithException
 
 
 class MedicineDataSource @Inject constructor(
-    private val dispatcher: CoroutineDispatcher,
     private val retrofit: DrugApiService,
     private val algoliaClient: Client
 ) {
@@ -41,7 +40,7 @@ class MedicineDataSource @Inject constructor(
         algoliaClient.getIndex(INDEX_NAME)
     }
 
-    suspend fun searchMedicinesByName(name: String): List<Medicine> = withContext(dispatcher) {
+    suspend fun searchMedicinesByName(name: String): List<Medicine> {
         val result = mutableListOf<Medicine>()
         val settingsJson = JSONObject()
         settingsJson.put("searchableAttributes", JSONArray(listOf("name")))
@@ -62,7 +61,7 @@ class MedicineDataSource @Inject constructor(
             }
         }
 
-        result
+        return result
     }
 
     private suspend fun getImageUrl(medicine: Medicine): Medicine {
