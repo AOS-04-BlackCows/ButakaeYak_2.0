@@ -49,9 +49,7 @@
     </style>
 
 <!-- 칩 관련 스타일   -->
-    <style name="AppTheme">
-        <item name="chipIconVisible">false</item>
-    </style>
+
     <style name="CustomChipStyle_On" parent="Widget.MaterialComponents.Chip.Filter">
         <item name="chipBackgroundColor">@color/any_200</item>
         <item name="android:textColor">@color/black</item>

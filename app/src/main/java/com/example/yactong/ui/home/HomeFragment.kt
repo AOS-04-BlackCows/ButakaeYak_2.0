@@ -34,6 +34,7 @@ class HomeFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by activityViewModels()
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,30 +56,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initView()
 
-//        for (i in keyWords) {
-//            chipGroup.addView(Chip(this.context).apply {
-//                text = i.name // text 세팅
-//                setTextColor(resources.getColor(R.color.white, null)) // 텍스트 색상 설정
-//                setChipDrawable(ChipDrawable.createFromAttributes(context, null, 0, R.style.CustomChipStyle_Off))
-//                with(this) {
-//                    chipStrokeWidth = 0.0f
-//                    setOnClickListener {
-////                        this.isEnabled = !this.isEnabled //활성화 여부임!!!
-//                        if(this.isEnabled){
-//                            setChipDrawable(ChipDrawable.createFromAttributes(context, null, 0,R.style.CustomChipStyle_Off))
-//                        }else{
-//                            setChipDrawable(ChipDrawable.createFromAttributes(context, null, 0,R.style.CustomChipStyle_On))
-//                        }
-//                        //binding.searchEt.setText(i.name)
-//                        chipGroup.removeAllViews()
-//                        Log.d("키워드 눌림", "${i.name}")
-////                        binding.searchCategory.visibility = View.GONE
-////                        binding.searchChip.visibility = View.GONE
-//                    }
-//                }
-//            })
-//        }
-
         viewPager = binding.searchVp
         binding.searchVp.adapter = HomeViewPager(this@HomeFragment)
 
@@ -99,8 +76,8 @@ class HomeFragment : Fragment() {
 
     private fun initView(){
         val bottomSheetView = BottomsheetSearchfilterBinding.inflate(layoutInflater)
-        val filterItem = ItemSearchfilterBinding.inflate(layoutInflater)
         val bottomSheetDialog = BottomSheetDialog(requireContext())
+
         bottomSheetDialog.setContentView(bottomSheetView.root)
         // 카테고리 클릭 시 변경
         val categoryArr = arrayOf(
@@ -109,7 +86,7 @@ class HomeFragment : Fragment() {
         )
         for (i in categoryArr) {
             i.setOnCheckedChangeListener { chip, isChecked ->
-                clickedCategory(i)
+                bottomSheetView.effectList.addView(clickedCategory(i,i.text.toString()))
                 if (isChecked){
                     bottomSheetDialog.show()
                 }else{
@@ -120,7 +97,9 @@ class HomeFragment : Fragment() {
             }
         }
     }
-    private fun clickedCategory (view: View) {
+    private fun clickedCategory (view: View, title: String) : View {
+        val filterItem = ItemSearchfilterBinding.inflate(layoutInflater)
+        filterItem.effectTitle.text = title
         val selectStatus: SearchCategory = when (view) {
             binding.searchCategory1 -> SearchCategory.HEAD
             binding.searchCategory2 -> SearchCategory.FACE
@@ -133,5 +112,19 @@ class HomeFragment : Fragment() {
             else -> SearchCategory.HEAD
         }
         val keyWords = SearchCategoryDataSource.getSearchSubCategory(selectStatus)
+        for ( k in keyWords){
+            filterItem.effectChipgroup.addView(Chip(this.context).apply {
+                text = k.name
+                setChipDrawable(ChipDrawable.createFromAttributes(context, null, 0, R.style.CustomChipStyle_On))
+                with(this) {
+                    chipStrokeWidth = 0.0f
+                    setOnClickListener {
+                        binding.searchEtSearchtext.setText(k.name)
+                        Log.d("chip누른다!!","이거 누름 ${k.name}")
+                    }
+                }
+            })
+        }
+        return filterItem.root
     }
 }
