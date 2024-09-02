@@ -62,83 +62,88 @@
                 app:layout_constraintTop_toTopOf="@+id/search_et_searchtext" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <HorizontalScrollView
-            android:id="@+id/search_sv_keywords"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
+            android:orientation="vertical"
             app:layout_constraintStart_toStartOf="@+id/search_iv_logo"
             app:layout_constraintTop_toBottomOf="@+id/search_iv_logo">
 
-            <android.support.design.chip.ChipGroup
-                android:id="@+id/search_cg_keyword"
-                android:layout_width="wrap_content"
+            <HorizontalScrollView
+                android:id="@+id/search_sv_keywords"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:singleSelection="true"
-                app:singleLine="true"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:padding="4dp">
 
-                <android.support.design.chip.Chip
-                    android:id="@+id/searchCategory1"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/search_cg_keyword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:background="@drawable/selector_key_button"
-                    android:text="머리"/>
+                    app:singleLine="true"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <android.support.design.chip.Chip
-                    android:id="@+id/searchCategory2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:background="@drawable/selector_key_button"
-                    android:text="얼굴"/>
-                <android.support.design.chip.Chip
-                    android:id="@+id/searchCategory3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:background="@drawable/selector_key_button"
-                    android:text="목"/>
-                <android.support.design.chip.Chip
-                    android:id="@+id/searchCategory4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:background="@drawable/selector_key_button"
-                    android:text="가슴/흉부"/>
-                <android.support.design.chip.Chip
-                    android:id="@+id/searchCategory5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:background="@drawable/selector_key_button"
-                    android:text="복부"/>
-                <android.support.design.chip.Chip
-                    android:id="@+id/searchCategory6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:background="@drawable/selector_key_button"
-                    android:text="등/허리"/>
-                <android.support.design.chip.Chip
-                    android:id="@+id/searchCategory7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:background="@drawable/selector_key_button"
-                    android:text="다리/발"/>
-                <android.support.design.chip.Chip
-                    android:id="@+id/searchCategory8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:background="@drawable/selector_key_button"
-                    android:text="피부"/>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/searchCategory1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:background="@drawable/selector_key_button"
+                        android:text="머리"/>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/searchCategory2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:background="@drawable/selector_key_button"
+                        android:text="얼굴"/>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/searchCategory3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:background="@drawable/selector_key_button"
+                        android:text="목"/>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/searchCategory4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:background="@drawable/selector_key_button"
+                        android:text="가슴/흉부"/>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/searchCategory5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:background="@drawable/selector_key_button"
+                        android:text="복부"/>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/searchCategory6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:background="@drawable/selector_key_button"
+                        android:text="등/허리"/>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/searchCategory7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:background="@drawable/selector_key_button"
+                        android:text="다리/발"/>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/searchCategory8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:background="@drawable/selector_key_button"
+                        android:text="피부"/>
 
-            </android.support.design.chip.ChipGroup>
-        </HorizontalScrollView>
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+        </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

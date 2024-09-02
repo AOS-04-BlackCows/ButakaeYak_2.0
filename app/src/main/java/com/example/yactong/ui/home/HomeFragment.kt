@@ -16,8 +16,11 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.yactong.R
 import com.example.yactong.data.models.SearchCategory
 import com.example.yactong.data.models.SearchCategoryDataSource
+import com.example.yactong.databinding.BottomsheetSearchfilterBinding
 import com.example.yactong.databinding.FragmentHomeBinding
+import com.example.yactong.databinding.ItemSearchfilterBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.tabs.TabLayoutMediator
@@ -51,9 +54,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-
-            //listOf("머리", "얼굴", "목", "가슴/흉부", "복부", "등/허리", "다리/발", "피부")
-//        val chipGroup = binding.searchCgKeyword
 
 //        for (i in keyWords) {
 //            chipGroup.addView(Chip(this.context).apply {
@@ -98,17 +98,24 @@ class HomeFragment : Fragment() {
     }
 
     private fun initView(){
+        val bottomSheetView = BottomsheetSearchfilterBinding.inflate(layoutInflater)
+        val filterItem = ItemSearchfilterBinding.inflate(layoutInflater)
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(bottomSheetView.root)
         // 카테고리 클릭 시 변경
         val categoryArr = arrayOf(
             binding.searchCategory1, binding.searchCategory2, binding.searchCategory3, binding.searchCategory4,
             binding.searchCategory5, binding.searchCategory6, binding.searchCategory7, binding.searchCategory8,
         )
         for (i in categoryArr) {
-            i.setOnClickListener{
-
+            i.setOnCheckedChangeListener { chip, isChecked ->
                 clickedCategory(i)
-                i.isCheckable = !i.isCheckable
-                Log.d("키워드 눌림", "${i.text} Checkable: ${i.isCheckable}")
+                if (isChecked){
+                    bottomSheetDialog.show()
+                }else{
+                    bottomSheetDialog.hide()
+
+                }
 
             }
         }
@@ -126,6 +133,5 @@ class HomeFragment : Fragment() {
             else -> SearchCategory.HEAD
         }
         val keyWords = SearchCategoryDataSource.getSearchSubCategory(selectStatus)
-
     }
 }
