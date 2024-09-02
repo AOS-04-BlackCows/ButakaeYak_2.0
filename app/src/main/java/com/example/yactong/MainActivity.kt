@@ -26,10 +26,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-
         navView.setupWithNavController(navController)
-
-
     }
 
     //navigation bar 안 보이게 할 때 쓰는 메소드
