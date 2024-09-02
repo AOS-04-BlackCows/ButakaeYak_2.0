@@ -79,6 +79,9 @@ class HomeFragment : Fragment() {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
 
         bottomSheetDialog.setContentView(bottomSheetView.root)
+        bottomSheetView.filterClose.setOnClickListener {
+            bottomSheetDialog.hide()
+        }
         // 카테고리 클릭 시 변경
         val categoryArr = arrayOf(
             binding.searchCategory1, binding.searchCategory2, binding.searchCategory3, binding.searchCategory4,
@@ -91,9 +94,7 @@ class HomeFragment : Fragment() {
                     bottomSheetDialog.show()
                 }else{
                     bottomSheetDialog.hide()
-
                 }
-
             }
         }
     }
