@@ -46,6 +46,15 @@ android {
             "REST_API_KEY",
             properties.getProperty("rest_api_key")
         )
+
+        buildConfigField("String",
+            "ALGORIA_APP_KEY",
+            properties.getProperty("algoria_app_key")
+        )
+        buildConfigField("String",
+            "ALGORIA_SEARCH_KEY",
+            properties.getProperty("algoria_search_key")
+        )
     }
 
     buildTypes {
