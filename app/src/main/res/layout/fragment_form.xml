@@ -59,7 +59,7 @@
         android:enabled="false"
         style="@style/subtitle_b"
         android:textColor="@color/dark_gray"
-        android:background="@drawable/user_cl_bg_gray"
+        android:background="@color/gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

@@ -1,13 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.take.fragment.TimeFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/baseline_arrow_back_24dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tv_medicine_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="약 알림 설정"
+        style="@style/subtitle_b"
+        android:textColor="@color/dark_gray"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toTopOf="@id/iv_back"
+        app:layout_constraintBottom_toBottomOf="@id/iv_back"
+        app:layout_constraintStart_toEndOf="@id/iv_back"/>
+
+    <TextView
+        android:id="@+id/tv_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/dark_gray"
+        style="@style/body_b"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_medicine_alarm"
+        app:layout_constraintStart_toStartOf="@+id/iv_back"/>
+
+    <TimePicker
+        android:id="@+id/timepicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:timePickerMode="spinner"
+        android:layout_marginHorizontal="32dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

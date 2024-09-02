@@ -1,5 +1,6 @@
 package com.example.yactong.ui.user
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.yactong.R
 import com.example.yactong.databinding.FragmentUserBinding
+import com.example.yactong.ui.SignIn.SignInActivity
 
 class UserFragment : Fragment() {
 
@@ -57,6 +59,10 @@ class UserFragment : Fragment() {
 //                startActivity(intent)
 //                requireActivity().overridePendingTransition(R.anim.alpha,R.anim.none)
 //            }
+            clMyLogin.setOnClickListener {
+                val intent = Intent(requireActivity(),SignInActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 

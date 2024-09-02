@@ -91,7 +91,7 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
                 btnNext.apply {
                     val selectName = adapter.mItems[position].aName
                     isEnabled = true
-                    setBackgroundResource(R.drawable.user_cl_bg_green)
+                    setBackgroundResource(R.color.green)
                     setTextColor(Color.WHITE)
                     setOnClickListener {
                         viewModel.moveToNextPage()
@@ -102,7 +102,7 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
             else{
                 btnNext.apply{
                     isEnabled = false
-                    setBackgroundResource(R.drawable.user_cl_bg_gray)
+                    setBackgroundResource(R.color.gray)
                     setTextColor(Color.DKGRAY)
                 }
             }

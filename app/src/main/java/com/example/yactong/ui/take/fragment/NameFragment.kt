@@ -54,7 +54,7 @@ class NameFragment : Fragment() {
                     if(etMedicineName.length() > 0){
                         btnNext.apply{
                             isEnabled = true
-                            setBackgroundResource(R.drawable.user_cl_bg_green)
+                            setBackgroundResource(R.color.green)
                             setTextColor(Color.WHITE)
                             setOnClickListener {
                                 viewModel.moveToNextPage()
@@ -65,7 +65,7 @@ class NameFragment : Fragment() {
                     else{
                         btnNext.apply{
                             isEnabled = false
-                            setBackgroundResource(R.drawable.user_cl_bg_gray)
+                            setBackgroundResource(R.color.gray)
                             setTextColor(Color.DKGRAY)
                         }
                     }
