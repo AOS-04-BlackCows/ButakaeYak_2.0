@@ -1,6 +1,7 @@
 package com.example.yactong.data.repository.impl
 
 import com.example.yactong.data.models.Drug
+import com.example.yactong.data.models.Medicine
 import com.example.yactong.data.models.Pill
 import com.example.yactong.data.repository.MedicineRepository
 import com.example.yactong.data.toMap
@@ -43,6 +44,18 @@ class MedicineRepositoryImpl @Inject constructor(
             .get()
             .addOnSuccessListener { documents ->
                 val list = documents.toObjects(Pill::class.java)
+                callback(list)
+            }.addOnFailureListener {
+                callback(listOf())
+            }
+    }
+
+    override fun searchMedicinesByName(name: String, callback: (List<Medicine>) -> Unit) {
+        db.collection("medicines")
+            .whereEqualTo("name", name)     //TODO: Elastic 으로 contain query로 변경하기
+            .get()
+            .addOnSuccessListener { documents ->
+                val list = documents.toObjects(Medicine::class.java)
                 callback(list)
             }.addOnFailureListener {
                 callback(listOf())

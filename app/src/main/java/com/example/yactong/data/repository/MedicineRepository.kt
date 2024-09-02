@@ -11,5 +11,5 @@ interface MedicineRepository {
     fun addPill(pill: Pill, callback: (Boolean) -> Unit)
     fun searchPills(name: String, callback: (List<Pill>) -> Unit)
 
-    fun getMedicines(name: String, callback: (List<Medicine>) -> Unit)
+    fun searchMedicinesByName(name: String, callback: (List<Medicine>) -> Unit)
 }
