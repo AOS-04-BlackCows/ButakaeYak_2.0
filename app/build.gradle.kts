@@ -67,6 +67,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
 }
 
 dependencies {
@@ -91,7 +92,7 @@ dependencies {
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.fragment.ktx)
-    
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -124,6 +125,8 @@ dependencies {
     // 카카오 지도 SDK
     implementation("com.kakao.sdk:v2-all:2.20.5")
     implementation("com.kakao.maps.open:android:2.11.9")
+
+    implementation("com.google.android.gms:play-services-location:18.0.0")
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
