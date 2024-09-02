@@ -1,5 +1,6 @@
 package com.example.yactong.data.source.firebase
 
+import android.util.Log
 import com.algolia.search.dsl.searchableAttributes
 import com.algolia.search.dsl.settings
 import com.algolia.search.model.search.ResponseFields
@@ -18,6 +19,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -31,41 +34,35 @@ class MedicineDataSource @Inject constructor(
 ) {
     companion object {
         private const val INDEX_NAME = "medicines"
+        private const val TAG = "MedicineDataSource"
     }
 
     private val medicineIndex by lazy {
         algoliaClient.getIndex(INDEX_NAME)
     }
 
-    suspend fun searchMedicinesByName(name: String) = suspendCancellableCoroutine<List<Medicine>> { continuation ->
+    suspend fun searchMedicinesByName(name: String): List<Medicine> = withContext(dispatcher) {
         val result = mutableListOf<Medicine>()
-        val setting = settings {
-            searchableAttributes { +"name" }
-        }
+        val settingsJson = JSONObject()
+        settingsJson.put("searchableAttributes", JSONArray(listOf("name")))
 
         //TODO: 이게 맞나? 확인해야함.
-        medicineIndex.setSettings(JSONObject(setting.toMap()))
+        medicineIndex.setSettings(settingsJson)
 
-        //TODO: Query 확인해야함. or and 필요
-        medicineIndex.searchAsync(Query(name)) { jsonArray, exception ->
-            if (exception != null) {
-                continuation.resumeWithException(exception)
-            } else {
-                jsonArray?.getJSONArray(INDEX_NAME)?.let { medicines ->
-                    CoroutineScope(dispatcher).launch {
-                        val gson = Gson()
+        val jsonArray = medicineIndex.searchSync(Query(name))
 
-                        val seq = (0 until medicines.length()).asSequence().map { medicines.getJSONObject(it) }
-                        for(json in seq) {
-                            val data = gson.fromJson(json.toString(), Medicine::class.java)
-                            result.add(getImageUrl(data))
-                        }
-                    }
-                } ?: continuation.resumeWithException(RuntimeException("No Medicine found."))
+        jsonArray?.getJSONArray("hits")?.let { medicines ->
+            Log.d(TAG, "hits size: ${medicines.length()}")
+            val gson = Gson()
+
+            val seq = (0 until medicines.length()).asSequence().map { medicines.getJSONObject(it) }
+            for(json in seq) {
+                val data = gson.fromJson(json.toString(), Medicine::class.java)
+                result.add(getImageUrl(data))
             }
         }
 
-        continuation.resume(result)
+        result
     }
 
     private suspend fun getImageUrl(medicine: Medicine): Medicine {
