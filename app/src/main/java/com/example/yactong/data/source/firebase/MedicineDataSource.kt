@@ -1,30 +1,12 @@
 package com.example.yactong.data.source.firebase
 
 import android.util.Log
-import com.algolia.search.dsl.searchableAttributes
-import com.algolia.search.dsl.settings
-import com.algolia.search.model.search.ResponseFields
 import com.algolia.search.saas.Client
-import com.algolia.search.saas.Index
 import com.algolia.search.saas.Query
-import com.example.yactong.BuildConfig
 import com.example.yactong.data.models.Medicine
 import com.example.yactong.data.retrofit.DrugApiService
-import com.example.yactong.data.toMap
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
-import org.json.JSONArray
-import org.json.JSONObject
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 
 class MedicineDataSource @Inject constructor(
@@ -42,15 +24,29 @@ class MedicineDataSource @Inject constructor(
 
     suspend fun searchMedicinesByName(name: String): List<Medicine> {
         val result = mutableListOf<Medicine>()
-        val settingsJson = JSONObject()
-        settingsJson.put("searchableAttributes", JSONArray(listOf("name")))
 
-        //TODO: 이게 맞나? 확인해야함.
-        medicineIndex.setSettings(settingsJson)
+//        val settingsJson = JSONObject()
+//        settingsJson.put("attributesForFaceting", JSONArray(listOf("name")))
+//
+//        //TODO: 이게 맞나? 확인해야함.
+//        medicineIndex.setSettings(settingsJson)
 
-        val jsonArray = medicineIndex.searchSync(Query(name))
+
+        val facet = "name"
+        val nameFilter = "$facet:$name"
+
+        val query = Query(name).apply {
+            advancedSyntax = true
+            setRestrictSearchableAttributes("name")
+        }
+
+        println("Query: $query")
+        println("Filters: $nameFilter")
+
+        val jsonArray = medicineIndex.searchSync(query)
 
         jsonArray?.getJSONArray("hits")?.let { medicines ->
+            println("hits size: ${medicines.length()}")
             Log.d(TAG, "hits size: ${medicines.length()}")
             val gson = Gson()
 

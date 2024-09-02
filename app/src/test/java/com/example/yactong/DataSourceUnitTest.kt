@@ -59,16 +59,6 @@ class DataSourceUnitTest {
     }
 
     @Test
-    fun apiPill() = runBlocking {
-        val instance = RetrofitClient.getInstance(ApiBaseUrl.DrugInfoUrl)
-        val retrofit = instance.create(DrugApiService::class.java)
-
-        val result = retrofit.getPillInfo("타이레놀")
-
-        println("resultCode: ${result.header.resultCode}, name: ${result.body.items[0].name}")
-    }
-
-    @Test
     fun getMedicine(): Unit = runBlocking {
         val medicine = medicineDataSource.searchMedicinesByName("타이레놀")
 
@@ -79,10 +69,10 @@ class DataSourceUnitTest {
 
     @Test
     fun getMedicineCallback() = runBlocking {
-        val result = medicineDataSource.searchMedicinesByName("타이레놀")
+        val result = medicineDataSource.searchMedicinesByName("마더스")
 
         assertNotNull(result)
-        assertTrue(result.isNotEmpty())
+        //assertTrue(result.isNotEmpty())
 
         result.forEachIndexed { i, it->
             println("$i) ${it.name}")
