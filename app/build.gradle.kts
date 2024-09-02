@@ -12,9 +12,7 @@ plugins {
     id("kotlin-kapt")
 
 
-    id("com.google.dagger.hilt.android")
     alias(libs.plugins.google.gms.google.services)
-   
 }
 
 android {
@@ -43,6 +41,10 @@ android {
         buildConfigField("String",
             "NATIVE_APP_KEY",
             properties.getProperty("native_app_key")
+        )
+        buildConfigField("String",
+            "REST_API_KEY",
+            properties.getProperty("rest_api_key")
         )
     }
 

@@ -6,10 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.yactong.BuildConfig
 import com.example.yactong.R
 import com.example.yactong.databinding.FragmentMapBinding
+import com.example.yactong.ui.home.HomeViewModel
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMap
@@ -24,15 +27,15 @@ import com.kakao.vectormap.MapViewInfo
 class MapFragment : Fragment() {
 
     private var _binding: FragmentMapBinding? = null
-
     private val binding get() = _binding!!
+    private val mapViewModel: MapViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
-        val mapViewModel = ViewModelProvider(this).get(MapViewModel::class.java)
+//        val mapViewModel = ViewModelProvider(this).get(MapViewModel::class.java)
         _binding = FragmentMapBinding.inflate(inflater, container, false)
         val root: View = binding.root
         KakaoSdk.init(requireContext(), BuildConfig.NATIVE_APP_KEY)
@@ -53,6 +56,11 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fragmentInit()
+        viewModelInit()
+    }
+
+    private fun fragmentInit () {
         // KakaoMap SDK 초기화
         KakaoMapSdk.init(requireContext(), BuildConfig.NATIVE_APP_KEY)
         val mapView: MapView = binding.mapView
@@ -104,5 +112,7 @@ class MapFragment : Fragment() {
             }
         })
     }
-
+    private fun viewModelInit () {
+        mapViewModel.communicateNetWork("")
+    }
 }
