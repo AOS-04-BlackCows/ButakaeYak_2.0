@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_user">
-    <!--TODO: startDestination: Home으로 고치기-->
+    app:startDestination="@+id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -22,9 +21,45 @@
         android:id="@+id/navigation_user"
         android:name="com.example.yactong.ui.user.UserFragment"
         android:label="@string/title_user"
-        tools:layout="@layout/fragment_user" />
+        tools:layout="@layout/fragment_user" >
+        <action
+            android:id="@+id/action_navigation_user_to_navigation_take"
+            app:destination="@id/navigation_take"
+            app:enterAnim="@anim/alpha"
+            app:exitAnim="@anim/none"
+            app:popEnterAnim="@anim/move_end"
+            app:popExitAnim="@anim/none"/>
+    </fragment>
 
-    <action
-        android:id="@+id/action_activity_to_takeFragment"
-        app:destination="@+id/navigation_take"/>
+    <fragment
+        android:id="@+id/navigation_take"
+        android:name="com.example.yactong.ui.take.fragment.TakeFragment"
+        android:label="@string/title_user"
+        tools:layout="@layout/fragment_take" >
+        <action
+            android:id="@+id/action_navigation_take_to_navigation_take_add"
+            app:destination="@id/navigation_take_add"
+            app:enterAnim="@anim/alpha"
+            app:exitAnim="@anim/none"
+            app:popEnterAnim="@anim/move_end"
+            app:popExitAnim="@anim/none"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_take_add"
+        android:name="com.example.yactong.ui.take.fragment.TakeAddFragment"
+        android:label="@string/title_user"
+        tools:layout="@layout/fragment_take_add" >
+        <action
+            android:id="@+id/action_navigation_take_add_to_navigation_name"
+            app:destination="@+id/navigation_name"
+            app:popUpTo="@+id/navigation_take"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_name"
+        android:name="com.example.yactong.ui.take.fragment.NameFragment"
+        android:label="name"
+        tools:layout="@layout/fragment_name">
+    </fragment>
 </navigation>

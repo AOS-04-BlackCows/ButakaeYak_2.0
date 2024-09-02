@@ -2,16 +2,21 @@ package com.example.yactong.ui.take.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.yactong.databinding.ItemRecyclerviewFormBinding
 import com.example.yactong.ui.take.data.FormItem
 
-class FormAdapter(val mItems:MutableList<FormItem>,val context: Context):RecyclerView.Adapter<FormAdapter.FormHolder>() {
+class FormAdapter(val mItems:MutableList<FormItem>,val context: Context, private val listener: checkBoxChangeListener):RecyclerView.Adapter<FormAdapter.FormHolder>() {
 
-    private var itemClickListner : ItemClickListener? = null
+    interface checkBoxChangeListener {
+        fun onItemChecked(position: Int, isChecked: Boolean)
+    }
+
+    interface itemTextListener{
+        fun itemTextListener(position: Int)
+    }
 
     private var mSelectedItem = -1
 
@@ -37,26 +42,27 @@ class FormAdapter(val mItems:MutableList<FormItem>,val context: Context):Recycle
     }
 
     inner class FormHolder(val binding : ItemRecyclerviewFormBinding) : RecyclerView.ViewHolder(binding.root) {
+
         val image = binding.ivMedicineForm
         val name = binding.tvMedicineFormName
         val checkBox = binding.cbMedicineForm
 
         fun bind(position: Int) {
-
             checkBox.isChecked = position == mSelectedItem
 
             checkBox.setOnClickListener {
-                mSelectedItem = position
-                itemClickListner?.onClick(it)
-                notifyItemRangeChanged(0, mItems.size)
+                if(mSelectedItem == position){
+                    mSelectedItem = -1
+                    checkBox.isChecked = false
+                    notifyItemChanged(position)
+                    listener.onItemChecked(position, false)
+                }
+                else{
+                    mSelectedItem = position
+                    notifyItemRangeChanged(0, mItems.size)
+                    listener.onItemChecked(position, true)
+                }
             }
         }
-    }
-
-    interface ItemClickListener {
-        fun onClick(view: View)
-    }
-    fun setItemClickListener(itemClickListener: ItemClickListener) {
-        this.itemClickListner = itemClickListener
     }
 }

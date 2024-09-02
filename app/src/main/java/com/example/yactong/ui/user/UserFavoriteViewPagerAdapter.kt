@@ -33,5 +33,6 @@ class UserFavoriteViewPagerAdapter(val items : MutableList<test>) : RecyclerView
         val aImage = binding.ivMedicine
         val aName = binding.tvMedicineNameInfo
         val aGroup = binding.tvMedicineGroupInfo
+
     }
 }

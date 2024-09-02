@@ -15,7 +15,7 @@
             <item>
                 <shape>
                     <corners android:radius="4dp"/>
-                    <solid android:color="#FFC20D"/>
+                    <solid android:color="@color/green"/>
                 </shape>
             </item>
             <!--이미지 영역-->

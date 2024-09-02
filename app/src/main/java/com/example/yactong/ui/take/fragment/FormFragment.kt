@@ -1,25 +1,29 @@
 package com.example.yactong.ui.take.fragment
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yactong.R
 import com.example.yactong.databinding.FragmentFormBinding
-import com.example.yactong.ui.take.TakeAddActivity
 import com.example.yactong.ui.take.TakeViewModel
 import com.example.yactong.ui.take.adapter.FormAdapter
 import com.example.yactong.ui.take.data.FormItem
 
-class FormFragment : Fragment() {
+class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
 
     //binding 설정
     private var _binding: FragmentFormBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var adapter : FormAdapter
 
     //viewModel 설정
     private val viewModel: TakeViewModel by activityViewModels()
@@ -28,6 +32,18 @@ class FormFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val current = viewModel.currentPage.value ?: 0
+                if (current > 0) {
+                    viewModel.moveToPreviousPage()
+                } else {
+                    // NavController를 통해 뒤로 가기
+                    findNavController().popBackStack()
+                }
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         _binding = FragmentFormBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
@@ -54,19 +70,45 @@ class FormFragment : Fragment() {
 
         binding.apply {
             ivBack.setOnClickListener {
-                (requireActivity() as TakeAddActivity).moveToPreviousPage()
+                viewModel.moveToPreviousPage()
             }
-
-            val adapter = FormAdapter(dataForm,requireContext())
+            adapter = FormAdapter(dataForm, requireContext(), this@FormFragment)
             recyclerviewForm.adapter = adapter
             recyclerviewForm.layoutManager = LinearLayoutManager(requireContext())
             recyclerviewForm.itemAnimator = null
 
             viewModel.getData().observe(viewLifecycleOwner, Observer {
-                tvMedicineName.text = it.toString()
+                tvMedicineName.text = "약 이름 : "+"${it}"
             })
+
+            }
+        }
+
+    override fun onItemChecked(position: Int, isChecked: Boolean) {
+
+        binding.apply {
+            if (isChecked) {
+                btnNext.apply {
+                    val selectName = adapter.mItems[position].aName
+                    isEnabled = true
+                    setBackgroundResource(R.color.green)
+                    setTextColor(Color.WHITE)
+                    setOnClickListener {
+                        viewModel.moveToNextPage()
+                        viewModel.updateFormItem(selectName)
+                    }
+                }
+            }
+            else{
+                btnNext.apply{
+                    isEnabled = false
+                    setBackgroundResource(R.color.gray)
+                    setTextColor(Color.DKGRAY)
+                }
+            }
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
