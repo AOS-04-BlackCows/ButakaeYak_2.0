@@ -9,8 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_my_info"
-        android:layout_width="140dp"
-        android:layout_height="50dp"
+        android:layout_width="108dp"
+        android:layout_height="40dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/user_cl_bg_green_radius"
@@ -20,8 +20,8 @@
 
         <ImageView
             android:id="@+id/iv_my_info"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginStart="4dp"
             android:src="@drawable/account_circle"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -31,7 +31,7 @@
 
         <TextView
             android:id="@+id/tv_my_info"
-            style="@style/subtitle_b"
+            style="@style/body_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -53,8 +53,8 @@
         app:layout_constraintTop_toBottomOf="@id/cl_my_info">
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:src="@drawable/sparta" />
     </androidx.cardview.widget.CardView>
 
@@ -127,7 +127,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/user_cl_bg_white_gradient_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -173,7 +173,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/user_cl_bg_white_gradient_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -219,7 +219,7 @@
             android:layout_width="match_parent"
             android:layout_height="270dp"
             android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/user_cl_bg_white_gradient_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
