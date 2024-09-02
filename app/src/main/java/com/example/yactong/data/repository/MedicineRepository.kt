@@ -1,6 +1,7 @@
 package com.example.yactong.data.repository
 
 import com.example.yactong.data.models.Drug
+import com.example.yactong.data.models.Medicine
 import com.example.yactong.data.models.Pill
 
 interface MedicineRepository {
@@ -9,4 +10,6 @@ interface MedicineRepository {
 
     fun addPill(pill: Pill, callback: (Boolean) -> Unit)
     fun searchPills(name: String, callback: (List<Pill>) -> Unit)
+
+    fun getMedicines(name: String, callback: (List<Medicine>) -> Unit)
 }
