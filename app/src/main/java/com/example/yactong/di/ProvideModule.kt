@@ -1,5 +1,7 @@
 package com.example.yactong.di
 
+import com.algolia.search.saas.Client
+import com.example.yactong.BuildConfig
 import com.example.yactong.data.repository.DrugRepository
 import com.example.yactong.data.repository.impl.DrugRepositoryImpl
 import com.example.yactong.data.retrofit.ApiBaseUrl
@@ -29,5 +31,11 @@ class ProvideModule {
     //@ViewModelScoped
     fun provideIoDispatcher(): CoroutineDispatcher {
         return Dispatchers.IO
+    }
+
+    @Provides
+    //@ViewModelScoped
+    fun provideAlgoliaClient(): Client {
+        return Client(BuildConfig.ALGORIA_APP_ID, BuildConfig.ALGORIA_SEARCH_KEY)
     }
 }

@@ -48,8 +48,8 @@ android {
         )
 
         buildConfigField("String",
-            "ALGORIA_APP_KEY",
-            properties.getProperty("algoria_app_key")
+            "ALGORIA_APP_ID",
+            properties.getProperty("algoria_app_id")
         )
         buildConfigField("String",
             "ALGORIA_SEARCH_KEY",
@@ -111,6 +111,9 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.livedata.ktx)
 
+    //async
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.47")
     // For Robolectric tests.
@@ -138,4 +141,9 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth-ktx")     //인증
+
+    //Algoria
+    implementation ("com.algolia:algoliasearch-android:3.27.0")
+    implementation ("com.algolia:algoliasearch-client-kotlin:2.1.9")
+
 }
