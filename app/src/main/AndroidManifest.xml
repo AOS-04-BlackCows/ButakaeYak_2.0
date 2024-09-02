@@ -21,9 +21,6 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="d4ce3a86b1d0a8895e9eccdf9fb16fc4"/>
-<!--        <meta-data-->
-<!--            android:name="com.naver.maps.map.CLIENT_ID"-->
-<!--            android:value="cimn27aj2e" />-->
         <activity
             android:name=".ui.splash.LoadingActivity"
             android:exported="false" />
