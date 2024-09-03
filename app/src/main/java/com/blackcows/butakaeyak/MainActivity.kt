@@ -7,11 +7,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import com.blackcows.butakaeyak.firebase.auth.FirebaseAuthManager
+import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.google.firebase.FirebaseApp
 import com.kakao.sdk.user.UserApiClient
+import com.blackcows.butakaeyak.firebase.auth.FirebaseAuthManager
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
