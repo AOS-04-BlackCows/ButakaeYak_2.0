@@ -17,6 +17,8 @@ import com.blackcows.butakaeyak.ui.home.data.ListItem
 import com.blackcows.butakaeyak.ui.home.placeholder.PlaceholderContent.PlaceholderItem
 import com.bumptech.glide.Glide
 
+// 이전 코드 -                        values: MutableList<PlaceholderItem>
+// 안되는 코드 class HomeRecyclerAdapter(private val onClick: (ListItem) -> Unit)
 class HomeRecyclerAdapter(private val values: MutableList<PlaceholderItem>) :
     ListAdapter<ListItem, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
@@ -64,10 +66,15 @@ class HomeRecyclerAdapter(private val values: MutableList<PlaceholderItem>) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (val item = getItem(position)) {
-            is ListItem.PillResultItem -> (holder as PillResultHolder).bind(item)
-            is ListItem.FeedItem -> (holder as FeedHolder).bind(item)
+        runCatching {
+            when (val item = getItem(position)) {
+                is ListItem.PillResultItem -> (holder as PillResultHolder).bind(item)
+                is ListItem.FeedItem -> (holder as FeedHolder).bind(item)
+            }
+        }.onFailure { exception ->
+            Log.e("VideoListAdapter", "Exception! ${exception.message}")
         }
+
     }
 
     inner class PillResultHolder(pillView: ItemResultsBinding) :
@@ -85,9 +92,11 @@ class HomeRecyclerAdapter(private val values: MutableList<PlaceholderItem>) :
                 tvPilltype.text = pillType
                 btnFavoritepill.setOnClickListener {
                     Log.d("아이템 좋아요 누름","${pillName}")
+//                    onClick(this)
                 }
                 btnMypill.setOnClickListener {
                     Log.d("아이템 복용약 누름","${pillName}")
+//                    onClick(this)
                 }
             }
 

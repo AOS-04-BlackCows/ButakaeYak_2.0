@@ -48,6 +48,7 @@ class PillResultFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
+                adapter = HomeRecyclerAdapter(PlaceholderContent.ITEMS)
             }
         }
         return root
