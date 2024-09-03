@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.take.TakeActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.take.fragment.TakeFragment">
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_add"
@@ -14,7 +13,7 @@
         android:text="+  약 추가"
         style="@style/subtitle_b"
         android:textColor="@color/white"
-        android:background="@drawable/user_cl_bg_green"
+        android:background="@drawable/user_cl_bg_green_radius"
         android:layout_marginHorizontal="48dp"
         android:layout_marginTop="40dp"
         app:layout_constraintTop_toTopOf="parent"

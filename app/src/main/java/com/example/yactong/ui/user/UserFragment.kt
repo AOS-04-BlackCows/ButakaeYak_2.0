@@ -7,10 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.yactong.R
 import com.example.yactong.databinding.FragmentUserBinding
-import com.example.yactong.ui.take.TakeActivity
+import com.example.yactong.ui.SignIn.SignInActivity
 
 class UserFragment : Fragment() {
 
@@ -50,10 +51,17 @@ class UserFragment : Fragment() {
             setPageTransformer(ZoomOutPageTransformer())
             }
 
-            ivArrow1.setOnClickListener{
-                val intent = Intent(requireContext(),TakeActivity::class.java)
+            clMyMedicine.setOnClickListener{
+                findNavController().navigate(R.id.action_navigation_user_to_navigation_take)
+            }
+//            ivArrow1.setOnClickListener{
+//                val intent = Intent(requireContext(),TakeActivity::class.java)
+//                startActivity(intent)
+//                requireActivity().overridePendingTransition(R.anim.alpha,R.anim.none)
+//            }
+            clMyLogin.setOnClickListener {
+                val intent = Intent(requireActivity(),SignInActivity::class.java)
                 startActivity(intent)
-                requireActivity().overridePendingTransition(R.anim.alpha,R.anim.none)
             }
         }
     }
