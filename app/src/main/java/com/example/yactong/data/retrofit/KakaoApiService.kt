@@ -1,7 +1,7 @@
-package com.example.yactong.data.retrofit
+package com.blackcows.butakaeyak.data.retrofit
 
-import com.example.yactong.BuildConfig
-import com.example.yactong.data.dto.KakaoMapDTO
+import com.blackcows.butakaeyak.BuildConfig
+import com.blackcows.butakaeyak.data.dto.KakaoMapDTO
 import retrofit2.http.GET
 import retrofit2.http.Query
 

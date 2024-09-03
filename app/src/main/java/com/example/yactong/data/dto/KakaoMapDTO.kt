@@ -1,8 +1,8 @@
-package com.example.yactong.data.dto
+package com.blackcows.butakaeyak.data.dto
 
 
 import android.os.Parcelable
-import com.example.yactong.data.models.KakaoPlace
+import com.blackcows.butakaeyak.data.models.KakaoPlace
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 

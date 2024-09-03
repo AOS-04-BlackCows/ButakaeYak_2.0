@@ -1,4 +1,4 @@
-package com.example.yactong.ui.user
+package com.blackcows.butakaeyak.ui.user
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

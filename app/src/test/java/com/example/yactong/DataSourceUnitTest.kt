@@ -1,9 +1,9 @@
-package com.example.yactong
+package com.blackcows.butakaeyak
 
-import com.example.yactong.data.retrofit.ApiBaseUrl
-import com.example.yactong.data.retrofit.DrugApiService
-import com.example.yactong.data.retrofit.RetrofitClient
-import com.example.yactong.data.source.firebase.MedicineDataSource
+import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
+import com.blackcows.butakaeyak.data.retrofit.DrugApiService
+import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
+import com.blackcows.butakaeyak.data.source.firebase.MedicineDataSource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication

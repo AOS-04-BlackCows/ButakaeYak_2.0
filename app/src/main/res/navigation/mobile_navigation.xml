@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.yactong.ui.home.HomeFragment"
+        android:name="com.blackcows.butakaeyak.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_map"
-        android:name="com.example.yactong.ui.map.MapFragment"
+        android:name="com.blackcows.butakaeyak.ui.map.MapFragment"
         android:label="@string/title_map"
         tools:layout="@layout/fragment_map" />
 
     <fragment
         android:id="@+id/navigation_user"
-        android:name="com.example.yactong.ui.user.UserFragment"
+        android:name="com.blackcows.butakaeyak.ui.user.UserFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user" >
         <action
@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/navigation_take"
-        android:name="com.example.yactong.ui.take.fragment.TakeFragment"
+        android:name="com.blackcows.butakaeyak.ui.take.fragment.TakeFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_take" >
         <action
@@ -47,7 +47,7 @@
 
     <fragment
         android:id="@+id/navigation_take_add"
-        android:name="com.example.yactong.ui.take.fragment.TakeAddFragment"
+        android:name="com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_take_add" >
         <action
@@ -58,7 +58,7 @@
 
     <fragment
         android:id="@+id/navigation_name"
-        android:name="com.example.yactong.ui.take.fragment.NameFragment"
+        android:name="com.blackcows.butakaeyak.ui.take.fragment.NameFragment"
         android:label="name"
         tools:layout="@layout/fragment_name">
     </fragment>

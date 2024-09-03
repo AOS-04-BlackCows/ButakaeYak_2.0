@@ -1,10 +1,10 @@
-package com.example.yactong.data.source.firebase
+package com.blackcows.butakaeyak.data.source.firebase
 
 import android.util.Log
 import com.algolia.search.saas.Client
 import com.algolia.search.saas.Query
-import com.example.yactong.data.models.Medicine
-import com.example.yactong.data.retrofit.DrugApiService
+import com.blackcows.butakaeyak.data.models.Medicine
+import com.blackcows.butakaeyak.data.retrofit.DrugApiService
 import com.google.gson.Gson
 import javax.inject.Inject
 

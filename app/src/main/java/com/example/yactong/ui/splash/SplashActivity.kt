@@ -1,4 +1,4 @@
-package com.example.yactong.ui.splash
+package com.blackcows.butakaeyak.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,8 +6,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.yactong.R
-import com.example.yactong.databinding.ActivitySplashBinding
+import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.databinding.ActivitySplashBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

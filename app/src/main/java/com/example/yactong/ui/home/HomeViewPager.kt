@@ -1,4 +1,4 @@
-package com.example.yactong.ui.home
+package com.blackcows.butakaeyak.ui.home
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

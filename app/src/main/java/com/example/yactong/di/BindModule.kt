@@ -1,7 +1,7 @@
-package com.example.yactong.di
+package com.blackcows.butakaeyak.di
 
-import com.example.yactong.data.repository.DrugRepository
-import com.example.yactong.data.repository.impl.DrugRepositoryImpl
+import com.blackcows.butakaeyak.data.repository.DrugRepository
+import com.blackcows.butakaeyak.data.repository.impl.DrugRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -8,7 +8,7 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.yactong" />
+                  <option name="appId" value="com.blackcows.butakaeyak" />
                   <option name="mobileSdkAppId" value="1:442334124744:android:62526702308b821b87a3fd" />
                   <option name="projectId" value="yaktong-6651a" />
                   <option name="projectNumber" value="442334124744" />

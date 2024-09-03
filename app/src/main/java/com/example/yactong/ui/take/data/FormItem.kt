@@ -1,4 +1,4 @@
-package com.example.yactong.ui.take.data
+package com.blackcows.butakaeyak.ui.take.data
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

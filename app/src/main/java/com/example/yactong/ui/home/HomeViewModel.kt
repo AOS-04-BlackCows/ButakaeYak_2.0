@@ -1,13 +1,13 @@
-package com.example.yactong.ui.home
+package com.blackcows.butakaeyak.ui.home
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.yactong.data.models.Drug
-import com.example.yactong.data.models.Pill
-import com.example.yactong.domain.home.GetPillUseCase
-import com.example.yactong.ui.example.UserUiState
+import com.blackcows.butakaeyak.data.models.Drug
+import com.blackcows.butakaeyak.data.models.Pill
+import com.blackcows.butakaeyak.domain.home.GetPillUseCase
+import com.blackcows.butakaeyak.ui.example.UserUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

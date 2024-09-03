@@ -1,7 +1,7 @@
-package com.example.yactong.firebase.firebase_store
+package com.blackcows.butakaeyak.firebase.firebase_store
 
 import android.util.Log
-import com.example.yactong.firebase.firebase_store.models.UserData
+import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.auth.User
 import com.google.firebase.firestore.firestore

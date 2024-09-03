@@ -1,9 +1,9 @@
-package com.example.yactong.data.source.api
+package com.blackcows.butakaeyak.data.source.api
 
 import android.util.Log
-import com.example.yactong.data.models.Drug
-import com.example.yactong.data.models.Pill
-import com.example.yactong.data.retrofit.DrugApiService
+import com.blackcows.butakaeyak.data.models.Drug
+import com.blackcows.butakaeyak.data.models.Pill
+import com.blackcows.butakaeyak.data.retrofit.DrugApiService
 import retrofit2.Retrofit
 import javax.inject.Inject
 

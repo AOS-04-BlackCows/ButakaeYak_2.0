@@ -1,4 +1,4 @@
-package com.example.yactong.ui.SignIn
+package com.blackcows.butakaeyak.ui.SignIn
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,12 +15,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.yactong.MainActivity
-import com.example.yactong.R
-import com.example.yactong.databinding.ActivitySignInBinding
-import com.example.yactong.firebase.firebase_store.FirestoreManager
-import com.example.yactong.firebase.firebase_store.models.UserData
-import com.example.yactong.ui.user.UserFragment
+import com.blackcows.butakaeyak.MainActivity
+import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.databinding.ActivitySignInBinding
+import com.blackcows.butakaeyak.firebase.firebase_store.FirestoreManager
+import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
+import com.blackcows.butakaeyak.ui.user.UserFragment
 
 
 class SignInActivity : AppCompatActivity() {

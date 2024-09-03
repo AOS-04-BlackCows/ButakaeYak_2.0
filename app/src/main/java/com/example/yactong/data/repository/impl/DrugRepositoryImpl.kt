@@ -1,9 +1,9 @@
-package com.example.yactong.data.repository.impl
+package com.blackcows.butakaeyak.data.repository.impl
 
-import com.example.yactong.data.models.Drug
-import com.example.yactong.data.models.Pill
-import com.example.yactong.data.repository.DrugRepository
-import com.example.yactong.data.source.api.DrugDataSource
+import com.blackcows.butakaeyak.data.models.Drug
+import com.blackcows.butakaeyak.data.models.Pill
+import com.blackcows.butakaeyak.data.repository.DrugRepository
+import com.blackcows.butakaeyak.data.source.api.DrugDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

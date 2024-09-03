@@ -1,4 +1,4 @@
-package com.example.yactong.data.models
+package com.blackcows.butakaeyak.data.models
 
 import java.time.LocalDate
 

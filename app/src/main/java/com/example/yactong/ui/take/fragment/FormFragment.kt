@@ -1,4 +1,4 @@
-package com.example.yactong.ui.take.fragment
+package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.graphics.Color
 import android.os.Bundle
@@ -11,11 +11,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.yactong.R
-import com.example.yactong.databinding.FragmentFormBinding
-import com.example.yactong.ui.take.TakeViewModel
-import com.example.yactong.ui.take.adapter.FormAdapter
-import com.example.yactong.ui.take.data.FormItem
+import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.databinding.FragmentFormBinding
+import com.blackcows.butakaeyak.ui.take.TakeViewModel
+import com.blackcows.butakaeyak.ui.take.adapter.FormAdapter
+import com.blackcows.butakaeyak.ui.take.data.FormItem
 
 class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
 

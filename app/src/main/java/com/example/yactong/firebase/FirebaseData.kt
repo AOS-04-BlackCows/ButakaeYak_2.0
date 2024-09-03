@@ -1,4 +1,4 @@
-package com.example.yactong.firebase
+package com.blackcows.butakaeyak.firebase
 
 data class FirebaseData(
     val sampleName: String,

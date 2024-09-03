@@ -1,4 +1,4 @@
-package com.example.yactong.ui.SignIn
+package com.blackcows.butakaeyak.ui.SignIn
 
 object SignUpValidation {
     // 010-xxxx-xxxx

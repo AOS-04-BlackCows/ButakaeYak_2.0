@@ -1,4 +1,4 @@
-package com.example.yactong.data
+package com.blackcows.butakaeyak.data
 
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson

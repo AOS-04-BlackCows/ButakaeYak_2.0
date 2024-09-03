@@ -1,7 +1,7 @@
-package com.example.yactong.data.retrofit
+package com.blackcows.butakaeyak.data.retrofit
 
-import com.example.yactong.BuildConfig
-import com.example.yactong.data.retrofit.interceptors.MedicineInterceptor
+import com.blackcows.butakaeyak.BuildConfig
+import com.blackcows.butakaeyak.data.retrofit.interceptors.MedicineInterceptor
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

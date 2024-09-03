@@ -1,4 +1,4 @@
-package com.example.yactong.ui.home
+package com.blackcows.butakaeyak.ui.home
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 

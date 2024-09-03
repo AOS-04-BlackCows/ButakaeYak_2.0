@@ -1,4 +1,4 @@
-package com.example.yactong.ui.home
+package com.blackcows.butakaeyak.ui.home
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -9,11 +9,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.example.yactong.R
-import com.example.yactong.databinding.FragmentFeedListBinding
-import com.example.yactong.databinding.FragmentResultListBinding
+import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.databinding.FragmentFeedListBinding
+import com.blackcows.butakaeyak.databinding.FragmentResultListBinding
 
-import com.example.yactong.ui.home.placeholder.PlaceholderContent.PlaceholderItem
+import com.blackcows.butakaeyak.ui.home.placeholder.PlaceholderContent.PlaceholderItem
 
 class HomeRecyclerAdapter(private val values: List<PlaceholderItem>) :
     ListAdapter<ListItem, RecyclerView.ViewHolder>(DIFF_CALLBACK) {

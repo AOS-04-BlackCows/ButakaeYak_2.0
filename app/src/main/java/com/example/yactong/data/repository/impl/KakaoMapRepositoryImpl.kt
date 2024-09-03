@@ -1,8 +1,8 @@
-package com.example.yactong.data.repository.impl
+package com.blackcows.butakaeyak.data.repository.impl
 
-import com.example.yactong.data.models.KakaoPlace
-import com.example.yactong.data.repository.KakaoMapRepository
-import com.example.yactong.data.source.api.KakaoMapSource
+import com.blackcows.butakaeyak.data.models.KakaoPlace
+import com.blackcows.butakaeyak.data.repository.KakaoMapRepository
+import com.blackcows.butakaeyak.data.source.api.KakaoMapSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

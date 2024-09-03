@@ -1,4 +1,4 @@
-package com.example.yactong.firebase.firebase_store.models
+package com.blackcows.butakaeyak.firebase.firebase_store.models
 
 
 // 사용자 데이터를 포함하는 객체 생성

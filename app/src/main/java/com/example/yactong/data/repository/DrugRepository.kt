@@ -1,7 +1,7 @@
-package com.example.yactong.data.repository
+package com.blackcows.butakaeyak.data.repository
 
-import com.example.yactong.data.models.Drug
-import com.example.yactong.data.models.Pill
+import com.blackcows.butakaeyak.data.models.Drug
+import com.blackcows.butakaeyak.data.models.Pill
 
 interface DrugRepository {
     fun searchDrugs(name: String, callback: (List<Drug>) -> (Unit))

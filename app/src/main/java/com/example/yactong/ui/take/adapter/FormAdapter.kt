@@ -1,12 +1,12 @@
-package com.example.yactong.ui.take.adapter
+package com.blackcows.butakaeyak.ui.take.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.yactong.databinding.ItemRecyclerviewFormBinding
-import com.example.yactong.ui.take.data.FormItem
+import com.blackcows.butakaeyak.databinding.ItemRecyclerviewFormBinding
+import com.blackcows.butakaeyak.ui.take.data.FormItem
 
 class FormAdapter(val mItems:MutableList<FormItem>,val context: Context, private val listener: checkBoxChangeListener):RecyclerView.Adapter<FormAdapter.FormHolder>() {
 

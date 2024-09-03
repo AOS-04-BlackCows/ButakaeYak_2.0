@@ -1,4 +1,4 @@
-package com.example.yactong.domain.example
+package com.blackcows.butakaeyak.domain.example
 
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.example.yactong.ui.take.fragment
+package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
-import com.example.yactong.MainActivity
-import com.example.yactong.databinding.FragmentTakeAddBinding
-import com.example.yactong.ui.take.TakeViewModel
-import com.example.yactong.ui.take.TakeViewPagerAdapter
+import com.blackcows.butakaeyak.MainActivity
+import com.blackcows.butakaeyak.databinding.FragmentTakeAddBinding
+import com.blackcows.butakaeyak.ui.take.TakeViewModel
+import com.blackcows.butakaeyak.ui.take.TakeViewPagerAdapter
 
 class TakeAddFragment : Fragment() {
 

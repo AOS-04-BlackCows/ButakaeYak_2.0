@@ -1,8 +1,8 @@
-package com.example.yactong.data.repository
+package com.blackcows.butakaeyak.data.repository
 
-import com.example.yactong.data.models.Drug
-import com.example.yactong.data.models.KakaoPlace
-import com.example.yactong.data.models.Pill
+import com.blackcows.butakaeyak.data.models.Drug
+import com.blackcows.butakaeyak.data.models.KakaoPlace
+import com.blackcows.butakaeyak.data.models.Pill
 
 interface KakaoMapRepository {
     fun searchCategory(x: String,y: String, callback: (List<KakaoPlace>) -> (Unit))

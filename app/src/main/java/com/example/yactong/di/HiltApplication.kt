@@ -1,4 +1,4 @@
-package com.example.yactong.di
+package com.blackcows.butakaeyak.di
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

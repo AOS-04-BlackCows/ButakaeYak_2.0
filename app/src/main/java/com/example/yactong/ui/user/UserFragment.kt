@@ -1,4 +1,4 @@
-package com.example.yactong.ui.user
+package com.blackcows.butakaeyak.ui.user
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import com.example.yactong.R
-import com.example.yactong.databinding.FragmentUserBinding
-import com.example.yactong.ui.SignIn.SignInActivity
+import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.databinding.FragmentUserBinding
+import com.blackcows.butakaeyak.ui.SignIn.SignInActivity
 
 class UserFragment : Fragment() {
 

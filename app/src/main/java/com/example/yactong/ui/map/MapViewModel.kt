@@ -1,15 +1,15 @@
-package com.example.yactong.ui.map
+package com.blackcows.butakaeyak.ui.map
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.yactong.data.models.KakaoPlace
-import com.example.yactong.data.retrofit.ApiBaseUrl
-import com.example.yactong.data.retrofit.KakaoApiService
-import com.example.yactong.data.retrofit.KakaoInterceptor
-import com.example.yactong.data.retrofit.RetrofitClient
+import com.blackcows.butakaeyak.data.models.KakaoPlace
+import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
+import com.blackcows.butakaeyak.data.retrofit.KakaoApiService
+import com.blackcows.butakaeyak.data.retrofit.KakaoInterceptor
+import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

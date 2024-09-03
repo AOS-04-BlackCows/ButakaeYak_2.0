@@ -1,4 +1,4 @@
-package com.example.yactong.ui.take
+package com.blackcows.butakaeyak.ui.take
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

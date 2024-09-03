@@ -1,10 +1,10 @@
-package com.example.yactong.ui.user
+package com.blackcows.butakaeyak.ui.user
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.yactong.R
-import com.example.yactong.databinding.MypageItemFavoriteBinding
+import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.databinding.MypageItemFavoriteBinding
 
 class UserFavoriteViewPagerAdapter(val items : MutableList<test>) : RecyclerView.Adapter<UserFavoriteViewPagerAdapter.ViewPagerHolder>(){
     override fun onCreateViewHolder(

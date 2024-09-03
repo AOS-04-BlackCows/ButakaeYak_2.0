@@ -1,11 +1,11 @@
-package com.example.yactong.ui.take.fragment
+package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.yactong.R
+import com.blackcows.butakaeyak.R
 
 class TimeFragment : Fragment() {
 

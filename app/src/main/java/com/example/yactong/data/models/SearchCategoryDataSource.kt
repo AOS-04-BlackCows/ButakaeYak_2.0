@@ -1,4 +1,4 @@
-package com.example.yactong.data.models
+package com.blackcows.butakaeyak.data.models
 
 //세부 증상 모음
 data class Symptoms(val name: List<String>)

@@ -1,13 +1,13 @@
-package com.example.yactong.di
+package com.blackcows.butakaeyak.di
 
 import com.algolia.search.saas.Client
-import com.example.yactong.BuildConfig
-import com.example.yactong.data.repository.DrugRepository
-import com.example.yactong.data.repository.impl.DrugRepositoryImpl
-import com.example.yactong.data.retrofit.ApiBaseUrl
-import com.example.yactong.data.retrofit.DrugApiService
-import com.example.yactong.data.retrofit.RetrofitClient
-import com.example.yactong.data.source.api.DrugDataSource
+import com.blackcows.butakaeyak.BuildConfig
+import com.blackcows.butakaeyak.data.repository.DrugRepository
+import com.blackcows.butakaeyak.data.repository.impl.DrugRepositoryImpl
+import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
+import com.blackcows.butakaeyak.data.retrofit.DrugApiService
+import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
+import com.blackcows.butakaeyak.data.source.api.DrugDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

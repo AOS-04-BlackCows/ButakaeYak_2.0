@@ -1,4 +1,4 @@
-package com.example.yactong.data.models
+package com.blackcows.butakaeyak.data.models
 
 data class KakaoPlace(
     val placeName: String,

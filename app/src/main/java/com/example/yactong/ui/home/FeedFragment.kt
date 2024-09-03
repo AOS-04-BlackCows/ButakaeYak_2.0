@@ -1,4 +1,4 @@
-package com.example.yactong.ui.home
+package com.blackcows.butakaeyak.ui.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.yactong.R
-import com.example.yactong.ui.home.placeholder.PlaceholderContent
+import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.ui.home.placeholder.PlaceholderContent
 
 /**
  * A fragment representing a list of Items.

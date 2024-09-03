@@ -1,11 +1,11 @@
-package com.example.yactong.ui.take
+package com.blackcows.butakaeyak.ui.take
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import com.example.yactong.R
+import com.blackcows.butakaeyak.R
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {

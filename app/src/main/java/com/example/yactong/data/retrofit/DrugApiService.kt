@@ -1,8 +1,8 @@
-package com.example.yactong.data.retrofit
+package com.blackcows.butakaeyak.data.retrofit
 
-import com.example.yactong.BuildConfig
-import com.example.yactong.data.dto.DrugInfoDto
-import com.example.yactong.data.dto.PillInfoDto
+import com.blackcows.butakaeyak.BuildConfig
+import com.blackcows.butakaeyak.data.dto.DrugInfoDto
+import com.blackcows.butakaeyak.data.dto.PillInfoDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 

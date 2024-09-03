@@ -1,6 +1,6 @@
-package com.example.yactong.data.retrofit
+package com.blackcows.butakaeyak.data.retrofit
 
-import com.example.yactong.BuildConfig
+import com.blackcows.butakaeyak.BuildConfig
 
 sealed class ApiBaseUrl(val url: String) {
     data object DrugInfoUrl: ApiBaseUrl("http://apis.data.go.kr/1471000/")

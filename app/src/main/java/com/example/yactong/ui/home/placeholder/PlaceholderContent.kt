@@ -1,4 +1,4 @@
-package com.example.yactong.ui.home.placeholder
+package com.blackcows.butakaeyak.ui.home.placeholder
 
 import java.util.ArrayList
 import java.util.HashMap

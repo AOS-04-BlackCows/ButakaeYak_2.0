@@ -1,4 +1,4 @@
-package com.example.yactong.data.models
+package com.blackcows.butakaeyak.data.models
 
 data class Pill (
     val id: String?,

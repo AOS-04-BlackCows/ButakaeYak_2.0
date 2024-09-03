@@ -1,6 +1,6 @@
-package com.example.yactong.data.retrofit.interceptors
+package com.blackcows.butakaeyak.data.retrofit.interceptors
 
-import com.example.yactong.BuildConfig
+import com.blackcows.butakaeyak.BuildConfig
 import okhttp3.Interceptor
 
 object MedicineInterceptor {

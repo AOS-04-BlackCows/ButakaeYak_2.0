@@ -1,4 +1,4 @@
-package com.example.yactong.ui.example
+package com.blackcows.butakaeyak.ui.example
 
 
 sealed class UserUiState {

@@ -1,11 +1,11 @@
-package com.example.yactong.ui.take
+package com.blackcows.butakaeyak.ui.take
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.yactong.ui.take.fragment.CycleFragment
-import com.example.yactong.ui.take.fragment.FormFragment
-import com.example.yactong.ui.take.fragment.NameFragment
-import com.example.yactong.ui.take.fragment.TimeFragment
+import com.blackcows.butakaeyak.ui.take.fragment.CycleFragment
+import com.blackcows.butakaeyak.ui.take.fragment.FormFragment
+import com.blackcows.butakaeyak.ui.take.fragment.NameFragment
+import com.blackcows.butakaeyak.ui.take.fragment.TimeFragment
 
 class TakeViewPagerAdapter(fragment: Fragment) :
     FragmentStateAdapter(fragment){

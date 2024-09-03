@@ -1,4 +1,4 @@
-package com.example.yactong
+package com.blackcows.butakaeyak
 
 import android.os.Bundle
 import android.view.View
@@ -7,9 +7,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.yactong.databinding.ActivityMainBinding
+import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import com.example.yactong.firebase.auth.FirebaseAuthManager
+import com.blackcows.butakaeyak.firebase.auth.FirebaseAuthManager
 import com.google.firebase.FirebaseApp
 
 @AndroidEntryPoint

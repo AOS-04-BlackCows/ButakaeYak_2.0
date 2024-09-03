@@ -1,8 +1,8 @@
-package com.example.yactong.firebase
+package com.blackcows.butakaeyak.firebase
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.yactong.databinding.FirebaseSampleLayoutBinding
+import com.blackcows.butakaeyak.databinding.FirebaseSampleLayoutBinding
 import com.google.firebase.firestore.FirebaseFirestore
 
 class FirebaseTestActivity : AppCompatActivity() {

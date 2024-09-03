@@ -1,4 +1,4 @@
-package com.example.yactong.ui.take.fragment
+package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.app.AlertDialog
 import android.graphics.Color
@@ -16,9 +16,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.example.yactong.R
-import com.example.yactong.databinding.FragmentCycleBinding
-import com.example.yactong.ui.take.TakeViewModel
+import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
+import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import java.util.Calendar
 
 class CycleFragment : Fragment() {

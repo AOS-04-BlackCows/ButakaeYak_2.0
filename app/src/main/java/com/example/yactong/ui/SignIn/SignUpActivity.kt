@@ -1,4 +1,4 @@
-package com.example.yactong.ui.SignIn
+package com.blackcows.butakaeyak.ui.SignIn
 
 import android.content.Intent
 import android.net.Uri
@@ -15,9 +15,9 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.yactong.databinding.ActivitySignUpBinding
-import com.example.yactong.firebase.firebase_store.FirestoreManager
-import com.example.yactong.firebase.firebase_store.models.UserData
+import com.blackcows.butakaeyak.databinding.ActivitySignUpBinding
+import com.blackcows.butakaeyak.firebase.firebase_store.FirestoreManager
+import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.google.firebase.firestore.auth.User
 
 class SignUpActivity : AppCompatActivity() {

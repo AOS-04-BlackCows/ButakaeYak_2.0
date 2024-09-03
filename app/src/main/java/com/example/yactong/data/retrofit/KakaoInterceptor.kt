@@ -1,6 +1,6 @@
-package com.example.yactong.data.retrofit
+package com.blackcows.butakaeyak.data.retrofit
 
-import com.example.yactong.BuildConfig
+import com.blackcows.butakaeyak.BuildConfig
 import okhttp3.Interceptor
 
 object KakaoInterceptor {

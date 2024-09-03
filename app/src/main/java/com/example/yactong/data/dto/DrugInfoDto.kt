@@ -1,7 +1,7 @@
-package com.example.yactong.data.dto
+package com.blackcows.butakaeyak.data.dto
 
 import android.os.Parcelable
-import com.example.yactong.data.models.Drug
+import com.blackcows.butakaeyak.data.models.Drug
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 import java.time.LocalDateTime

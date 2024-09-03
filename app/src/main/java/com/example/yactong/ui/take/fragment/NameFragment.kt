@@ -1,4 +1,4 @@
-package com.example.yactong.ui.take.fragment
+package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.content.Context
 import android.graphics.Color
@@ -12,9 +12,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.yactong.R
-import com.example.yactong.databinding.FragmentNameBinding
-import com.example.yactong.ui.take.TakeViewModel
+import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.databinding.FragmentNameBinding
+import com.blackcows.butakaeyak.ui.take.TakeViewModel
 
 class NameFragment : Fragment() {
 

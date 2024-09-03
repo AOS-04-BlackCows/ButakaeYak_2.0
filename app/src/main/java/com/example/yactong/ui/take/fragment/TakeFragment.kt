@@ -1,4 +1,4 @@
-package com.example.yactong.ui.take.fragment
+package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.example.yactong.MainActivity
-import com.example.yactong.R
-import com.example.yactong.databinding.FragmentTakeBinding
+import com.blackcows.butakaeyak.MainActivity
+import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.databinding.FragmentTakeBinding
 
 class TakeFragment : Fragment() {
 
