@@ -1,17 +1,19 @@
 package com.blackcows.butakaeyak
 
 import android.os.Bundle
-import android.view.View
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
+import android.os.StrictMode.VmPolicy
 import android.util.Log
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.databinding.ActivityMainBinding
+import com.blackcows.butakaeyak.ui.navigation.MainViewpager
 import dagger.hilt.android.AndroidEntryPoint
-import com.blackcows.butakaeyak.firebase.auth.FirebaseAuthManager
-import com.google.firebase.FirebaseApp
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -26,11 +28,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        binding.bottomMenuBar.setupWithNavController(navController)
-
+        initViewPager()
+        initNavigation()
 
         // 인텐트에서 navigateTo 값을 가져옴
         val navigateTo = intent.getStringExtra("navigateTo")
@@ -38,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         if (navigateTo == "user") {
             Log.d(TAG, "Navigating to UserFragment")
-            navController.navigate(R.id.navigation_user)
+            //navController.navigate(R.id.navigation_user)
         }
     }
 
@@ -46,5 +45,39 @@ class MainActivity : AppCompatActivity() {
     fun hideBottomNavigation(state: Boolean) {
         if (state) binding.bottomMenuBar.visibility = View.GONE else binding.bottomMenuBar.visibility =
             View.VISIBLE
+    }
+
+    private fun initViewPager() {
+        val viewPager = binding.viewPager
+        val viewPagerAdapter = MainViewpager(this)
+        viewPager.adapter = viewPagerAdapter
+
+        viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                binding.bottomMenuBar.menu.getItem(position).isChecked = true
+            }
+        })
+    }
+    private fun initNavigation() {
+        binding.bottomMenuBar.setOnItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.navigation_take -> {
+                    binding.viewPager.currentItem = 0
+                }
+                R.id.navigation_home -> {
+                    binding.viewPager.currentItem = 1
+                }
+                R.id.navigation_map -> {
+                    binding.viewPager.currentItem = 2
+                }
+                R.id.navigation_user -> {
+                    binding.viewPager.currentItem = 3
+                }
+                else -> return@setOnItemSelectedListener false
+            }
+
+            true
+        }
     }
 }

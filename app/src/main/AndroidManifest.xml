@@ -19,6 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.YacTong"
         tools:targetApi="31">
+
+
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="d4ce3a86b1d0a8895e9eccdf9fb16fc4"/>
