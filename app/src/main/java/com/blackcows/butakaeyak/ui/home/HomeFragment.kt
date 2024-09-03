@@ -1,17 +1,12 @@
 package com.blackcows.butakaeyak.ui.home
 
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.SearchCategory
@@ -19,8 +14,8 @@ import com.blackcows.butakaeyak.data.models.SearchCategoryDataSource
 import com.blackcows.butakaeyak.databinding.BottomsheetSearchfilterBinding
 import com.blackcows.butakaeyak.databinding.FragmentHomeBinding
 import com.blackcows.butakaeyak.databinding.ItemSearchfilterBinding
+import com.blackcows.butakaeyak.ui.home.adapter.HomeViewPager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.tabs.TabLayoutMediator

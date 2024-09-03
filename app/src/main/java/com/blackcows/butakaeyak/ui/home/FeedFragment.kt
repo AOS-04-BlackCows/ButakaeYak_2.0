@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
 import com.blackcows.butakaeyak.ui.home.placeholder.PlaceholderContent
 
 /**

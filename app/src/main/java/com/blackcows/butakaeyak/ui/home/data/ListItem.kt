@@ -1,4 +1,4 @@
-package com.blackcows.butakaeyak.ui.home
+package com.blackcows.butakaeyak.ui.home.data
 
 sealed class ListItem {
     data class PillResultItem(val name : String) : ListItem()
