@@ -11,16 +11,11 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.collection.intFloatMapOf
-import androidx.core.content.ContextCompat
-import com.example.yactong.Manifest
 import com.example.yactong.databinding.ActivitySignUpBinding
 import com.example.yactong.firebase.firebase_store.FirestoreManager
 import com.example.yactong.firebase.firebase_store.models.UserData
-import com.google.firebase.firestore.auth.User
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -41,7 +36,6 @@ class SignUpActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            val data: Intent? = result.data
             val phoneNumber = result.data?.getStringExtra("phoneNumber") ?: "none"
             val pw = result.data?.getStringExtra("pw") ?: "none"
 
