@@ -16,6 +16,26 @@ class TakeViewModel : ViewModel() {
     private val _currentPage = MutableLiveData<Int>()
     val currentPage : LiveData<Int> get() = _currentPage
 
+    //timepicker dialog
+    private val _selectedTimes = MutableLiveData<MutableList<Pair<Int, Int>>>().apply { value = mutableListOf() }
+    val selectedTimes: LiveData<MutableList<Pair<Int, Int>>> get() = _selectedTimes
+
+    //timepicker dialog 데이터 추가하기
+    fun addTime(hour: Int, minute: Int) {
+        val currentList = _selectedTimes.value ?: mutableListOf()
+        currentList.add(Pair(hour, minute))
+        _selectedTimes.value = currentList
+    }
+
+    //timepicker dialog 데이터 제거하기
+    fun removeTime(position: Int) {
+        val currentList = _selectedTimes.value ?: mutableListOf()
+        if (position >= 0 && position < currentList.size) {
+            currentList.removeAt(position)
+            _selectedTimes.value = currentList
+        }
+    }
+
     //editText 데이터 받기
     fun getData(): MutableLiveData<String> = nameFragmentEditText
 
