@@ -8,15 +8,23 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.databinding.FragmentPillResultBinding
+import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
 import com.blackcows.butakaeyak.ui.home.placeholder.PlaceholderContent
 
-/**
- * A fragment representing a list of Items.
- */
 class PillResultFragment : Fragment() {
+    //binding 설정
+    private var _binding: FragmentPillResultBinding?=null
+    private val binding get() = _binding!!
 
-    private var columnCount = 1
+    private lateinit var adapter : HomeRecyclerAdapter
+
+    //viewModel 설정
+    private val homeViewModel : HomeViewModel by activityViewModels()
+
+    private var columnCount = 1 //컬럼 갯수 = 1 리니어
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,11 +38,12 @@ class PillResultFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_result_list, container, false)
+        _binding = FragmentPillResultBinding.inflate(inflater,container,false)
+        val root = binding.root
 
         // Set the adapter
-        if (view is RecyclerView) {
-            with(view) {
+        if (root is RecyclerView) {
+            with(root) {
                 layoutManager = when {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
@@ -42,7 +51,18 @@ class PillResultFragment : Fragment() {
                 adapter = HomeRecyclerAdapter(PlaceholderContent.ITEMS)
             }
         }
-        return view
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.apply {
+            adapter = HomeRecyclerAdapter(PlaceholderContent.ITEMS)
+            resultlist.adapter = adapter
+            resultlist.itemAnimator = null
+            //TODO 여기 수정해야될듯...왜 리스트가 안뜨지???
+
+        }
     }
 
     companion object {
