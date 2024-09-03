@@ -78,4 +78,9 @@
         parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bottom_sheet_white_20</item>
     </style>
+
+    <style name="NumberPicker">
+        <item name="colorControlNormal">@color/green</item>
+        <item name="android:textColorPrimary">@color/dark_gray</item>
+    </style>
 </resources>
