@@ -29,6 +29,10 @@ class HomeFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by activityViewModels()
 
+    private object homeData{
+        var userEffectList = mutableListOf<Pair<String,String>>()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -73,9 +77,6 @@ class HomeFragment : Fragment() {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
 
         bottomSheetDialog.setContentView(bottomSheetView.root)
-        bottomSheetView.filterClose.setOnClickListener {
-            bottomSheetDialog.hide()
-        }
         // 카테고리 클릭 시 변경
         val categoryArr = arrayOf(
             binding.searchCategory1, binding.searchCategory2, binding.searchCategory3, binding.searchCategory4,
@@ -83,8 +84,9 @@ class HomeFragment : Fragment() {
         )
         for (i in categoryArr) {
             i.setOnCheckedChangeListener { chip, isChecked ->
-                bottomSheetView.effectList.addView(clickedCategory(i,i.text.toString()))
+                bottomSheetView.effectList.removeAllViews()
                 if (isChecked){
+                    bottomSheetView.effectList.addView(clickedCategory(i,i.text.toString()))
                     bottomSheetDialog.show()
                 }else{
                     bottomSheetDialog.hide()
@@ -95,6 +97,7 @@ class HomeFragment : Fragment() {
     private fun clickedCategory (view: View, title: String) : View {
         val filterItem = ItemSearchfilterBinding.inflate(layoutInflater)
         filterItem.effectTitle.text = title
+        filterItem.effectChipgroup.setChipSpacing(1)
         val selectStatus: SearchCategory = when (view) {
             binding.searchCategory1 -> SearchCategory.HEAD
             binding.searchCategory2 -> SearchCategory.FACE
@@ -114,7 +117,18 @@ class HomeFragment : Fragment() {
                 with(this) {
                     chipStrokeWidth = 0.0f
                     setOnClickListener {
-                        binding.searchEtSearchtext.setText(k.name)
+                        var str = ""
+                        if (isChecked){
+                            homeData.userEffectList.add(Pair(title,k.name))
+                        }else{
+                            homeData.userEffectList.remove(Pair(title,k.name))
+                        }
+                        for ((index,i) in homeData.userEffectList.withIndex()){
+                            Log.d("누른거","모음 ${homeData.userEffectList}, ${i.first} : ${i.second} [${index}] ")
+                            if (index != 0) str += ", "
+                            str += i.second
+                        }
+                        binding.searchEtSearchtext.setText(str)
                         Log.d("chip누른다!!","이거 누름 ${k.name}")
                     }
                 }

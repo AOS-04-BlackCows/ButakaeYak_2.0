@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="증상을 선택해 주세요"
+            android:text="증상 혹은 부위를 선택해 주세요"
             android:layout_weight="1"
             style="@style/subtitle_b"
             android:textAlignment="center"/>
@@ -29,7 +29,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="300dp"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -59,6 +59,8 @@ class PillResultFragment : Fragment() {
             adapter = HomeRecyclerAdapter(PlaceholderContent.ITEMS)
             resultlist.adapter = adapter
             resultlist.itemAnimator = null
+            //TODO 여기 수정해야될듯...왜 리스트가 안뜨지???
+
         }
     }
 
