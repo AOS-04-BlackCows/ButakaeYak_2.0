@@ -253,5 +253,4 @@ class SignUpActivity : AppCompatActivity() {
         val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         pickImageLauncher.launch(gallery)
     }
-
 }
