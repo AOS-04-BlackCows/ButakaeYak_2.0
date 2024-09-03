@@ -17,7 +17,7 @@ import com.blackcows.butakaeyak.ui.home.placeholder.PlaceholderContent
  */
 class FeedFragment : Fragment() {
 
-    private var columnCount = 2
+    private var columnCount = 2 //컬럼 갯수 = 2 그리드
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

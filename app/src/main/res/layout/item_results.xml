@@ -11,11 +11,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center_vertical"
-        android:layout_weight="1">
+        android:layout_weight="10">
 
         <ImageView
             android:id="@+id/iv_pill"
-            android:layout_width="70dp"
+            android:layout_width="100dp"
             android:layout_height="70dp"
             android:padding="8dp"
             android:scaleType="fitCenter"
@@ -40,15 +40,33 @@
             app:layout_constraintBottom_toBottomOf="@+id/iv_pill" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <ImageButton
-        android:id="@+id/btn_pillfavoriteadd"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="end|center_vertical"
-        android:translationZ="1dp"
-        android:src="@drawable/baseline_add_box_24"
-        android:scaleType="fitCenter"
-        android:background="@android:color/transparent"
-        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/btn_favoritepill"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_horizontal|top"
+            android:translationZ="1dp"
+            android:src="@drawable/ic_baseline_star_24dp"
+            android:scaleType="fitCenter"
+            android:background="@android:color/transparent"
+            app:tint="@color/any_200"/>
+        <ImageButton
+            android:id="@+id/btn_mypill"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:translationZ="1dp"
+            android:src="@drawable/baseline_add_box_24"
+            android:scaleType="fitCenter"
+            android:background="@android:color/transparent"
+            app:tint="@color/any_200" />
+    </LinearLayout>
+
 
 </LinearLayout>
