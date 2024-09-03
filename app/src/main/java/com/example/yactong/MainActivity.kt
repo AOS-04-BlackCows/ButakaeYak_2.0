@@ -39,10 +39,11 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "Navigating to UserFragment")
             navController.navigate(R.id.navigation_user)
         }
-         //navigation bar 안 보이게 할 때 쓰는 메소드
-        fun hideBottomNavigation(state: Boolean) {
-            if (state) binding.navView.visibility = View.GONE else binding.navView.visibility =
-                View.VISIBLE
-        }
+    }
+
+    //navigation bar 안 보이게 할 때 쓰는 메소드
+    fun hideBottomNavigation(state: Boolean) {
+        if (state) binding.navView.visibility = View.GONE else binding.navView.visibility =
+            View.VISIBLE
     }
 }
