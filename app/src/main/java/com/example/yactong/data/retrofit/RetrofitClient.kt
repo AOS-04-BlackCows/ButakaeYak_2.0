@@ -1,6 +1,7 @@
 package com.example.yactong.data.retrofit
 
 import com.example.yactong.BuildConfig
+import com.example.yactong.data.retrofit.interceptors.MedicineInterceptor
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -42,6 +43,10 @@ object RetrofitClient {
             }
             ApiBaseUrl.KakaoPlaceSearchUrl -> {
                 OkHttpClient().newBuilder().addInterceptor(KakaoInterceptor.getInterceptor()).build()
+            }
+
+            ApiBaseUrl.MedicineUrl -> {
+                OkHttpClient().newBuilder().addInterceptor(MedicineInterceptor.get()).build()
             }
         }
     }
