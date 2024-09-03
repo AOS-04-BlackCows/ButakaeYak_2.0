@@ -1,11 +1,15 @@
 package com.blackcows.butakaeyak.ui.SignIn
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract.CommonDataKinds.Phone
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
@@ -22,19 +26,22 @@ import com.google.firebase.firestore.auth.User
 
 class SignUpActivity : AppCompatActivity() {
 
+    private val TAG = "SignUpActivity"
+
     private lateinit var binding: ActivitySignUpBinding
 
     private val firestoreManager = FirestoreManager()
 
-    private lateinit var imageView : ImageView
-    private lateinit var button : Button
-    private var imageUri : Uri? = null
+    private lateinit var imageView: ImageView
+    private lateinit var button: Button
+    private var imageUri: Uri? = null
 
     private val userPhoneNumber by lazy { binding.inputPhoneNumber }
     private val userName by lazy { binding.inputName }
     private val userAge by lazy { binding.inputAge }
     private val userPw by lazy { binding.inputPw }
 
+    // 데이터 전달
     private val resultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -48,6 +55,7 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,9 +64,7 @@ class SignUpActivity : AppCompatActivity() {
 
         initView()
         setupFocusChangeListeners()
-        openGerally()
-        getImg()
-        setImg()
+        setImgUri()
     }
 
     private fun initView() {
@@ -90,7 +96,7 @@ class SignUpActivity : AppCompatActivity() {
 
                             override fun onFailure(e: Exception) {
                                 //실패 시 처리
-                                if(e.message == "이미 가입된 번호입니다") {
+                                if (e.message == "이미 가입된 번호입니다") {
                                     binding.tiPhoneNumber.error = e.message
                                 } else {
                                     Toast.makeText(
@@ -141,7 +147,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     // 모든 입력 값을 한 번에 검사!
-    private fun validateAllFields() : Boolean {
+    private fun validateAllFields(): Boolean {
         var isValid = true
         isValid = validatePhoneNumber() && isValid
         isValid = validateName() && isValid
@@ -152,7 +158,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     // 핸드폰 번호에 대한 유효성 검사
-    private fun validatePhoneNumber() :Boolean {
+    private fun validatePhoneNumber(): Boolean {
         val phoneNumber = userPhoneNumber.text.toString()
         return if (phoneNumber.isEmpty() || !SignUpValidation.isValidPhoneNumber(phoneNumber)) {
             binding.tiPhoneNumber.error = "유효한 전화번호를 입력해주세요. (예: 010-1234-5678)"
@@ -164,7 +170,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     // 이름에 대한 유효성 검사
-    private fun validateName() : Boolean {
+    private fun validateName(): Boolean {
         val name = userName.text.toString()
         return if (name.isEmpty() || !SignUpValidation.isValidName(name)) {
             binding.tiName.error = "이름은 한글만 입력 가능합니다."
@@ -199,52 +205,52 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    // 프로필 사진 지정 -> 갤러리 open
-    private fun openGerally() {
-
-    }
+    // 갤러리 open
+    private val requestPermissionLauncher: ActivityResultLauncher<String> =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            Log.d(TAG, "권한 승인 : $isGranted")
+            if (isGranted) {
+                openGallery()
+            }
+        }
 
     // 가져온 사진 보여주기
-    private fun getImg() {
-
-    }
-
-    // 이미지 처리? 설정?
-    private fun setImg() {
-
-        val requestPermissionLauncher : ActivityResultLauncher<String> =
-            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-                if (isGranted) {
-                    openGerally()
+    private val pickImageLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            Log.d(TAG, "결과 코드 : ${result.resultCode}")
+            if (result.resultCode == RESULT_OK) {
+                val data: Intent? = result.data
+                data?.data?.let {
+                    Log.d(TAG, "이미지 URI : $it")
+                    imageUri = it
+                    imageView.setImageURI(imageUri)
                 }
             }
+        }
 
-        val pickImgLauncher : ActivityResultLauncher<Intent> =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == RESULT_OK) {
-                    val data : Intent? = result.data
-                    data?.data?.let {
-                        imageUri = it
-                        imageView.setImageURI(imageUri)
-                    }
-                }
-            }
-
+    private fun setImgUri() {
         title = "Edit Profile"
         imageView = binding.ivProfile
-
-        // 이미지 동글게 표현하기
         imageView.clipToOutline = true
         button = binding.btnProfile
-//        button.setOnClickListener {
-//            if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE) == packageManager.PERMISSION_GRANTED)
-//                openGerally()
-//            button.text = null
-//        } else {
-//            requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-//        }
+        button.setOnClickListener {
+            Log.d(TAG, "버튼 클릭 이벤트 발생!!")
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) // 에러 왜 뜨는지..
+                == PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.d(TAG, "이미지 권한이 승인됨")
+                openGallery()
+                button.text = null
+            } else {
+                Log.d(TAG, "권한 요청 중")
+                requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
+        }
     }
-    private fun openGallery() {
 
+    private fun openGallery() {
+        Log.d(TAG, "갤러리 오픈!!!!")
+        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        pickImageLauncher.launch(gallery)
     }
 }

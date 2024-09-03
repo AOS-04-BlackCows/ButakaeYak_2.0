@@ -11,6 +11,7 @@ import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import com.blackcows.butakaeyak.firebase.auth.FirebaseAuthManager
 import com.google.firebase.FirebaseApp
+import com.kakao.sdk.user.UserApiClient
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
