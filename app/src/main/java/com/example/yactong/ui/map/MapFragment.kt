@@ -84,11 +84,10 @@ class MapFragment : Fragment() {
 
         // 버튼 이벤트를 통해 현재 위치 찾기
         binding.testBtn1.setOnClickListener {
-            Log.d(TAG, "위도 myPlaceX : $myPlaceX |&| 경도 myPlaceY : $myPlaceY")
-            CameraUpdateFactory.newCenterPosition(LatLng.from(myPlaceX, myPlaceY))
+            Log.d(TAG, "test_btn_1_clicked")
         }
         binding.testBtn2.setOnClickListener {
-            Log.d(TAG, "위도 myPlaceX : $myPlaceX |&| 경도 myPlaceY : $myPlaceY")
+            Log.d(TAG, "test_btn_2_clicked")
 
         }
         // 최초 X, Y 경도 위도 구현
