@@ -3,7 +3,7 @@ package com.example.yactong.ui.SignIn
 object SignUpValidation {
     // 010-xxxx-xxxx
     fun isValidPhoneNumber(phoneNumber: String): Boolean {
-        val phoneNumberPattern = "^(010-\\d{4}-\\d{4}\$)".toRegex()
+        val phoneNumberPattern = "^(010\\d{4}\\d{4}\$)".toRegex()
         return phoneNumberPattern.matches(phoneNumber)
     }
 
@@ -20,7 +20,7 @@ object SignUpValidation {
 
     // 영어, .!@#$만 가능
     fun isValidPw(pw : String) : Boolean {
-        val pwPattern = "^([a-zA-Z.!@#$]+$)".toRegex()
+        val pwPattern = "^([a-zA-Z0-9.!@#$]+$)".toRegex()
         return pwPattern.matches(pw)
     }
 }
