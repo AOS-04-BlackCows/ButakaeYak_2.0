@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/dialog_custom_time_picker.xml -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="300dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        style="@style/subtitle_b"
+        android:background="@drawable/user_cl_bg_green_radius_top"
+        android:text="알림 시간 설정하기"
+        android:textColor="@color/white"
+        android:padding="16dp"
+        android:textSize="18sp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- TimePicker -->
+    <TimePicker
+        android:id="@+id/customTimePicker"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:timePickerMode="spinner"
+        android:background="@color/white"
+        android:theme="@style/NumberPicker"
+        app:layout_constraintTop_toBottomOf="@id/dialogTitle"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/user_cl_bg_white_radius_bot"
+        app:layout_constraintTop_toBottomOf="@id/customTimePicker">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="취소"
+            android:textColor="@color/white"
+            style="@style/body_b"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/user_cl_bg_green_radius"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="저장"
+            android:textColor="@color/white"
+            style="@style/body_b"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/user_cl_bg_green_radius"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
