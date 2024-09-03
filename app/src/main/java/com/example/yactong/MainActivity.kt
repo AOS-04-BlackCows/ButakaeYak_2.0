@@ -18,6 +18,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private val TAG = "MainActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,7 +32,13 @@ class MainActivity : AppCompatActivity() {
         
         navView.setupWithNavController(navController)
 
+        // 인텐트에서 navigateTo 값을 가져옴
+        val navigateTo = intent.getStringExtra("navigateTo")
+        Log.d(TAG, "navigateTo: $navigateTo")
 
+        if (navigateTo == "user") {
+            Log.d(TAG, "Navigating to UserFragment")
+            navController.navigate(R.id.navigation_user)
+        }
     }
-
 }

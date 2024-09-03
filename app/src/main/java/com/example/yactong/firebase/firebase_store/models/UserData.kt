@@ -3,15 +3,16 @@ package com.example.yactong.firebase.firebase_store.models
 
 // 사용자 데이터를 포함하는 객체 생성
 data class UserData(
-    val name : String,
-    val age : Int,
-    val phoneNumber : String
+    val phoneNumber : String = "",
+    val age : String = "",
+    val name : String = ""
 ) {
+    constructor() : this(", 0, ")
     fun toMap() : HashMap<String, String>{
         return hashMapOf(
-            "name" to name,
+            "phoneNumber" to phoneNumber,
             "age" to age.toString(),
-            "phoneNumber" to phoneNumber
-        )
+            "name" to name
+            )
     }
 }
