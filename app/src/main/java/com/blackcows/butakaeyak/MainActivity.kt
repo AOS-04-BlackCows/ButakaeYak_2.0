@@ -10,6 +10,7 @@ import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.google.firebase.FirebaseApp
+import com.kakao.sdk.user.UserApiClient
 import com.blackcows.butakaeyak.firebase.auth.FirebaseAuthManager
 
 @AndroidEntryPoint
