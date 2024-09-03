@@ -47,4 +47,40 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">12sp</item>
     </style>
+
+<!-- 칩 관련 스타일   -->
+
+    <style name="CustomChipStyle_On" parent="Widget.MaterialComponents.Chip.Filter">
+        <item name="chipBackgroundColor">@color/any_200</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="chipMinHeight">32dp</item>
+        <item name="chipIconVisible">false</item>
+        <item name="closeIconVisible">false</item>
+        <item name="checkedIconVisible">false</item>
+
+    </style>
+    <style name="CustomChipStyle_Off" parent="Widget.MaterialComponents.Chip.Filter">
+        <item name="chipBackgroundColor">@color/back_500</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="chipMinHeight">32dp</item>
+        <item name="chipIconVisible">false</item>
+        <item name="closeIconVisible">false</item>
+        <item name="checkedIconVisible">false</item>
+    </style>
+
+    <!-- bottomSheetFragment border 20dp 전용 테마 -->
+    <style name="AppBottomSheetDialogBorder20WhiteTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalBorder20WhiteStyle</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+    <style name="AppModalBorder20WhiteStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_white_20</item>
+    </style>
+
+    <style name="NumberPicker">
+        <item name="colorControlNormal">@color/green</item>
+        <item name="android:textColorPrimary">@color/dark_gray</item>
+    </style>
 </resources>

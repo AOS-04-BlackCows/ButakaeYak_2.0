@@ -16,7 +16,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.yactong"
+    namespace = "com.blackcows.butakaeyak"
     compileSdk = 34
 
     val properties = Properties()
@@ -26,13 +26,13 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.yactong"
+        applicationId = "com.blackcows.butakaeyak"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "com.example.yactong.HiltTestRunner"
+        testInstrumentationRunner = "com.blackcows.butakaeyak.HiltTestRunner"
 
         buildConfigField("String",
             "DRUG_INFO_KEY",
@@ -45,6 +45,15 @@ android {
         buildConfigField("String",
             "REST_API_KEY",
             properties.getProperty("rest_api_key")
+        )
+
+        buildConfigField("String",
+            "ALGORIA_APP_ID",
+            properties.getProperty("algoria_app_id")
+        )
+        buildConfigField("String",
+            "ALGORIA_SEARCH_KEY",
+            properties.getProperty("algoria_search_key")
         )
     }
 
@@ -89,7 +98,6 @@ dependencies {
     implementation(libs.androidx.junit.ktx)
     
     implementation(libs.androidx.activity)
-    implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.fragment.ktx)
 
@@ -102,6 +110,9 @@ dependencies {
     implementation(libs.glide)
 
     implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    //async
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.47")
@@ -132,4 +143,9 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth-ktx")     //인증
+
+    //Algoria
+    implementation ("com.algolia:algoliasearch-android:3.27.0")
+    implementation ("com.algolia:algoliasearch-client-kotlin:2.1.9")
+
 }
