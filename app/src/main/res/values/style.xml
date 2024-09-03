@@ -83,4 +83,9 @@
         <item name="colorControlNormal">@color/green</item>
         <item name="android:textColorPrimary">@color/dark_gray</item>
     </style>
+
+    <style name="NumberPicker">
+        <item name="colorControlNormal">@color/green</item>
+        <item name="android:textColorPrimary">@color/dark_gray</item>
+    </style>
 </resources>
