@@ -15,14 +15,3 @@ data class MedicineAtTime(
     val list: List<Medicine>
 )
 
-fun WeekDay.fromKorean(str: String): WeekDay
-= when(str) {
-    "월요일" -> MONDAY
-    "화요일" -> TUESDAY
-    "수요일" -> WEDNESDAY
-    "목요일" -> THURSDAY
-    "금요일" -> FRIDAY
-    "토요일" -> SATURDAY
-    "일요일" -> SUNDAY
-    else -> throw Exception("Invalid day of week: $value")
-}

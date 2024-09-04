@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.take
 
+import androidx.lifecycle.ViewModel
 import com.blackcows.butakaeyak.domain.take.GetMyMedicinesUseCase
 import com.blackcows.butakaeyak.domain.take.GetTodayMedicineUseCase
 import com.blackcows.butakaeyak.ui.example.UserUiState
@@ -13,7 +14,7 @@ import javax.inject.Inject
 class MyTakeViewModel @Inject constructor(
     private val getTodayMedicineUseCase: GetTodayMedicineUseCase,
     private val getMyMedicinesUseCase: GetMyMedicinesUseCase
-) {
+): ViewModel() {
     private val _uiState = MutableStateFlow<TakeUiState>(TakeUiState.Init)
     val uiState = _uiState.asStateFlow()
 
