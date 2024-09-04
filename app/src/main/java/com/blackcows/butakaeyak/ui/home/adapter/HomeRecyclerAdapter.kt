@@ -13,8 +13,6 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentFeedListBinding
 import com.blackcows.butakaeyak.databinding.ItemResultsBinding
 import com.blackcows.butakaeyak.ui.home.data.ListItem
-
-import com.blackcows.butakaeyak.ui.home.placeholder.PlaceholderContent.PlaceholderItem
 import com.bumptech.glide.Glide
 
 // 이전 코드 -                        values: MutableList<PlaceholderItem>
