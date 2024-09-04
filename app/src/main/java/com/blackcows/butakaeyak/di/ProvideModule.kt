@@ -30,6 +30,12 @@ class ProvideModule {
 
     @Provides
     //@ViewModelScoped
+    fun provideKakaoApiService() : KakaoApiService {
+        return RetrofitClient.getInstance(ApiBaseUrl.KakaoPlaceSearchUrl).create(KakaoApiService::class.java)
+    }
+
+    @Provides
+    //@ViewModelScoped
     fun provideIoDispatcher(): CoroutineDispatcher {
         return Dispatchers.IO
     }
@@ -39,10 +45,11 @@ class ProvideModule {
     fun provideAlgoliaClient(): Client {
         return Client(BuildConfig.ALGORIA_APP_ID, BuildConfig.ALGORIA_SEARCH_KEY)
     }
-
+    
     @Provides
     //@ViewModelScoped
     fun provideKakaoApiService() : KakaoApiService {
         return RetrofitClient.getInstance(ApiBaseUrl.KakaoPlaceSearchUrl).create(KakaoApiService::class.java)
     }
+    
 }

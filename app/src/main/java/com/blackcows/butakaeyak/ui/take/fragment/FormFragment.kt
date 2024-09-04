@@ -90,12 +90,14 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
             if (isChecked) {
                 btnNext.apply {
                     val selectName = adapter.mItems[position].aName
+                    val selectImage = adapter.mItems[position].aImage
                     isEnabled = true
                     setBackgroundResource(R.color.green)
                     setTextColor(Color.WHITE)
                     setOnClickListener {
                         viewModel.moveToNextPage()
                         viewModel.updateFormItem(selectName)
+                        viewModel.updateFormImageItem(selectImage)
                     }
                 }
             }

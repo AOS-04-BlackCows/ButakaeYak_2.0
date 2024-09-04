@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.MainActivity
+import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentTakeAddBinding
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.TakeViewPagerAdapter
@@ -52,6 +54,10 @@ class TakeAddFragment : Fragment() {
                 viewPager?.currentItem = page
             }
         }
+    }
+
+    fun navigateToTakeFragment() {
+        findNavController().navigate(R.id.action_navigation_take_add_to_navigation_take)
     }
 
     override fun onDestroyView() {
