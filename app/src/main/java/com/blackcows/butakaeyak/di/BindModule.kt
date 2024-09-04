@@ -4,6 +4,7 @@ import com.blackcows.butakaeyak.data.repository.DrugRepository
 import com.blackcows.butakaeyak.data.repository.KakaoMapRepository
 import com.blackcows.butakaeyak.data.repository.LocalRepository
 import com.blackcows.butakaeyak.data.repository.impl.DrugRepositoryImpl
+import com.blackcows.butakaeyak.data.repository.impl.LocalRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -20,5 +21,5 @@ abstract class BindModule {
 
     @Binds
     //@ViewModelScoped
-    abstract fun provideLocalRepository(impl: DrugRepositoryImpl): LocalRepository
+    abstract fun provideLocalRepository(impl: LocalRepositoryImpl): LocalRepository
 }

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.R
@@ -22,6 +23,7 @@ import com.blackcows.butakaeyak.ui.take.adapter.MyMedicinesRvAdapter
 import com.blackcows.butakaeyak.ui.take.adapter.TakeRvDecorator
 import com.blackcows.butakaeyak.ui.take.adapter.TodayMedicineRvAdapter
 import com.blackcows.butakaeyak.ui.take.toKorean
+import com.google.api.Distribution.BucketOptions.Linear
 import io.ktor.util.date.WeekDay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -80,15 +82,15 @@ class TakeFragment : Fragment() {
                 findNavController().navigate(R.id.action_navigation_take_to_navigation_take_add)
             }
 
-            myMedicineRv.run {
-                layoutManager = LinearLayoutManager(requireContext())
-                adapter = myMedicinesAdapter
-                addItemDecoration(TakeRvDecorator.getLinearDeco())
-            }
             todayMedicineRv.run {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = todayMedicinesAdapter
                 addItemDecoration(TakeRvDecorator.getLinearDeco())
+            }
+            myMedicineRv.run {
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter = myMedicinesAdapter
+                addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
             }
         }
     }

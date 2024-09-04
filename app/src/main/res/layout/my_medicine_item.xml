@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/round_rect_light_gray"
     android:paddingHorizontal="16dp"
-    android:paddingVertical="10dp">
+    android:paddingVertical="10dp"
+    >
 
     <ImageView
         android:id="@+id/medicine_iv"
@@ -66,5 +66,7 @@
 
         android:src="@drawable/bell"
         />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

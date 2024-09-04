@@ -72,7 +72,7 @@
 
         tools:listitem="@layout/today_medicine_item"
         tools:itemCount="2"
-        />
+       />
 
     <TextView
         android:id="@+id/my_medicine_tv"
@@ -87,6 +87,7 @@
         android:text="@string/my_medicine"
         style="@style/subtitle"
         />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_medicine_rv"
         android:layout_width="match_parent"
