@@ -1,14 +1,19 @@
 package com.blackcows.butakaeyak
 
 import android.os.Bundle
-import android.view.View
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
+import android.os.StrictMode.VmPolicy
 import android.util.Log
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import dagger.hilt.android.AndroidEntryPoint
+import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.databinding.ActivityMainBinding
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.navigation.MainViewpager
+import dagger.hilt.android.AndroidEntryPoint
 import com.google.firebase.FirebaseApp
 import com.kakao.sdk.user.UserApiClient
 import com.blackcows.butakaeyak.firebase.auth.FirebaseAuthManager
@@ -26,11 +31,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navView: BottomNavigationView = binding.navView
-
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        navView.setupWithNavController(navController)
-
+        MainNavigation.initialize(this, binding)
 
         // 인텐트에서 navigateTo 값을 가져옴
         val navigateTo = intent.getStringExtra("navigateTo")
@@ -38,13 +39,13 @@ class MainActivity : AppCompatActivity() {
 
         if (navigateTo == "user") {
             Log.d(TAG, "Navigating to UserFragment")
-            navController.navigate(R.id.navigation_user)
+            //navController.navigate(R.id.navigation_user)
         }
     }
 
     //navigation bar 안 보이게 할 때 쓰는 메소드
     fun hideBottomNavigation(state: Boolean) {
-        if (state) binding.navView.visibility = View.GONE else binding.navView.visibility =
+        if (state) binding.bottomMenuBar.visibility = View.GONE else binding.bottomMenuBar.visibility =
             View.VISIBLE
     }
 }

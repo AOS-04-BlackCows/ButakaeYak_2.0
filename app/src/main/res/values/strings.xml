@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">ButakaeYak</string>
+
     <string name="title_home">Home</string>
+    <string name="title_search">Search</string>
     <string name="title_map">map</string>
     <string name="title_user">user</string>
 
