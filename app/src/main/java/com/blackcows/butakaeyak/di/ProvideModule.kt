@@ -6,6 +6,7 @@ import com.blackcows.butakaeyak.data.repository.DrugRepository
 import com.blackcows.butakaeyak.data.repository.impl.DrugRepositoryImpl
 import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
 import com.blackcows.butakaeyak.data.retrofit.DrugApiService
+import com.blackcows.butakaeyak.data.retrofit.KakaoApiService
 import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
 import com.blackcows.butakaeyak.data.source.api.DrugDataSource
 import dagger.Module
@@ -25,6 +26,12 @@ class ProvideModule {
     //@ViewModelScoped
     fun provideRetrofitService() : DrugApiService {
         return RetrofitClient.getInstance(ApiBaseUrl.DrugInfoUrl).create(DrugApiService::class.java)
+    }
+
+    @Provides
+    //@ViewModelScoped
+    fun provideKakaoApiService() : KakaoApiService {
+        return RetrofitClient.getInstance(ApiBaseUrl.KakaoPlaceSearchUrl).create(KakaoApiService::class.java)
     }
 
     @Provides
