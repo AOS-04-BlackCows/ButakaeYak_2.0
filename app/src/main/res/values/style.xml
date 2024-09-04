@@ -56,8 +56,9 @@
         <item name="chipMinHeight">32dp</item>
         <item name="chipIconVisible">false</item>
         <item name="closeIconVisible">false</item>
-        <item name="checkedIconVisible">false</item>
+        <item name="checkedIconVisible">true</item>
 
+        <item name="chipSpacing">4dp</item>
     </style>
     <style name="CustomChipStyle_Off" parent="Widget.MaterialComponents.Chip.Filter">
         <item name="chipBackgroundColor">@color/back_500</item>

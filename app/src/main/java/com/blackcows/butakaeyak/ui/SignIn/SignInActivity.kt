@@ -2,6 +2,7 @@ package com.blackcows.butakaeyak.ui.SignIn
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.ContactsContract.CommonDataKinds.Nickname
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
@@ -21,14 +22,29 @@ import com.blackcows.butakaeyak.databinding.ActivitySignInBinding
 import com.blackcows.butakaeyak.firebase.firebase_store.FirestoreManager
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.blackcows.butakaeyak.ui.user.UserFragment
+import com.kakao.sdk.auth.AuthApiClient
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.KakaoSdk
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.user.UserApi
+import com.kakao.sdk.user.UserApiClient
 
 
-class SignInActivity : AppCompatActivity() {
+class SignInActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivitySignInBinding
     private val firestoreManager = FirestoreManager()
     private val TAG = "SignIpActivity"
 
+    // 이메일 로그인 콜백
+    private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+        if (error != null) {
+            Log.e(TAG, "로그인 실패${error}")
+        } else if (token != null) {
+            Log.e(TAG, "로그인 성공${token.accessToken}")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +55,16 @@ class SignInActivity : AppCompatActivity() {
         initView()
         setSignUpTextView()
 
+        KakaoSdk.init(this, "d4ce3a86b1d0a8895e9eccdf9fb16fc4")
+        if (AuthApiClient.instance.hasToken()) {
+            UserApiClient.instance.accessTokenInfo { _, error ->
+                if (error == null) {
+                    nextUserFragment()
+                }
+            }
+        }
+        binding.ivKakao.setOnClickListener(this)
+
         val inPutPhoneNumber = intent.getStringExtra("phoneNumber")
         val inPutPw = intent.getStringExtra("pw")
 
@@ -46,6 +72,44 @@ class SignInActivity : AppCompatActivity() {
         binding.inputPw.setText(inPutPw)
 
 
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            binding.ivKakao.id -> {
+
+                // 카카오톡 설치 확인
+                // 설치 true -> 카카오톡 로그인
+                // 설치 false -> 카카오 이메일 로그인
+                // 로그인 실패하게 된다면 if문 타고 사용자가 취소했을 때는 그대로 return하여 login이 취소되고 -> 사용자가 취소한거 아니면 이메일 로그인
+                if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+                    // 카카오톡 로그인
+                    UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
+                        // 로그인 실패 부분
+                        if (error != null) {
+                            Log.e(TAG, "로그인 실패${error}")
+                            // 사용자 취소 부분
+                            if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                                return@loginWithKakaoTalk
+                            } else {
+                                // 카카오 이메일 로그인
+                                UserApiClient.instance.loginWithKakaoAccount(
+                                    this,
+                                    callback = mCallback
+                                )
+                            }
+                        } else if (token != null) {
+                            Log.e(TAG, "로그인 성공${token.accessToken}")
+                            Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
+                            nextUserFragment()
+                        }
+                    }
+                } else {
+                    // 카카오 이메일 로그인
+                    UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
+                }
+            }
+        }
     }
 
     private fun initView() {
@@ -66,11 +130,7 @@ class SignInActivity : AppCompatActivity() {
                                     Toast.LENGTH_LONG
                                 ).show()
 
-                                // MainActivity로 이동하고 UserFragment를 표시
-                                val intent = Intent(this@SignInActivity, MainActivity::class.java)
-                                intent.putExtra("navigateTo", "user")
-                                startActivity(intent)
-                                finish()
+                                nextUserFragment()
                                 Log.d(TAG, "로그인 페이지로 이동")
                             }
 
@@ -86,7 +146,8 @@ class SignInActivity : AppCompatActivity() {
                     Toast.makeText(
                         this@SignInActivity,
                         "전화번호와 비밀번호를 입력해주세요.",
-                        Toast.LENGTH_LONG)
+                        Toast.LENGTH_LONG
+                    )
                         .show()
                 }
                 Log.d(TAG, "전화번호와 비밀번호 입력해주세요. ")
@@ -142,5 +203,12 @@ class SignInActivity : AppCompatActivity() {
         // TextView에 적용
         textSignUp.movementMethod = LinkMovementMethod.getInstance() // 클릭 가능하게 설정
         textSignUp.text = spannableString
+    }
+
+    // MainActivity로 이동하고 UserFragment를 표시
+    private fun nextUserFragment() {
+        val intent = Intent(this@SignInActivity, MainActivity::class.java)
+        intent.putExtra("navigateTo", "user")
+        finish()
     }
 }

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
 import com.blackcows.butakaeyak.ui.home.placeholder.PlaceholderContent
 
 /**
@@ -16,7 +17,7 @@ import com.blackcows.butakaeyak.ui.home.placeholder.PlaceholderContent
  */
 class FeedFragment : Fragment() {
 
-    private var columnCount = 2
+    private var columnCount = 2 //컬럼 갯수 = 2 그리드
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

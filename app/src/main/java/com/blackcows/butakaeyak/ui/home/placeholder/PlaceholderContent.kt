@@ -3,26 +3,15 @@ package com.blackcows.butakaeyak.ui.home.placeholder
 import java.util.ArrayList
 import java.util.HashMap
 
-/**
- * Helper class for providing sample content for user interfaces created by
- * Android template wizards.
- *
- * TODO: Replace all uses of this class before publishing your app.
- */
 object PlaceholderContent {
 
     val ITEMS: MutableList<PlaceholderItem> = ArrayList()
-
-    /**
-     * A map of sample (placeholder) items, by ID.
-     */
     val ITEM_MAP: MutableMap<String, PlaceholderItem> = HashMap()
 
     private val COUNT = 25
 
     init {
-        // Add some sample items.
-        for (i in 1..COUNT) {
+        for (i in 1..COUNT) {//sample Data
             addItem(createPlaceholderItem(i))
         }
     }

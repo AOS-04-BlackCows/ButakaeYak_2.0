@@ -14,7 +14,9 @@ import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.navigation.MainViewpager
 import dagger.hilt.android.AndroidEntryPoint
-
+import com.google.firebase.FirebaseApp
+import com.kakao.sdk.user.UserApiClient
+import com.blackcows.butakaeyak.firebase.auth.FirebaseAuthManager
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
