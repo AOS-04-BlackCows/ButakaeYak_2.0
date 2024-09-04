@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.fragment.app.activityViewModels
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentPillResultBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
 import com.blackcows.butakaeyak.ui.home.data.DataSource
@@ -57,23 +59,26 @@ class PillResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //더미 데이터
         val dataSource = DataSource.getDataSoures().getPillList()
-
         binding.apply {
-            pillAdapter = HomeRecyclerAdapter()
+            pillAdapter = HomeRecyclerAdapter(object : HomeRecyclerAdapter.ClickListener{
+                override fun onItemClick(item: Medicine) {
+                    TODO("디테일 화면 띄움")
+                }
+
+                override fun onFavoriteClick(item: Medicine, needAdd: Boolean) {
+                    TODO("즐겨찾기 약 추가/삭제")
+
+                }
+
+                override fun onMyPillClick(item: Medicine, needAdd: Boolean) {
+                    TODO("복용중인 약 추가/삭제")
+                }
+
+            })
             resultlist.adapter = pillAdapter
             resultlist.itemAnimator = null
             pillAdapter.submitList(dataSource)
         }
-    }
-
-    private fun adapterClick(pill: ListItem.PillResultItem) {
-        // Detail로 이동
-//        val intent = Intent(this, DetailActivity::class.java)
-//        val bundle = Bundle().apply {
-//            putParcelable(DetailActivity.EXTRA_CARD, pill)
-//        }
-//        intent.putExtras(bundle)
-//        startActivity(intent)
     }
 
     companion object {

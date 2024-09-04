@@ -7,34 +7,39 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.ToggleButton
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentFeedListBinding
 import com.blackcows.butakaeyak.databinding.ItemResultsBinding
+import com.blackcows.butakaeyak.ui.home.data.DataSource
 import com.blackcows.butakaeyak.ui.home.data.ListItem
 import com.bumptech.glide.Glide
+import kotlin.coroutines.coroutineContext
 
 // 이전 코드 -                        values: MutableList<PlaceholderItem>
 // 안되는 코드 class HomeRecyclerAdapter(private val onClick: (ListItem) -> Unit)
-class HomeRecyclerAdapter :
-    ListAdapter<ListItem, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+class HomeRecyclerAdapter(private val clickListener: ClickListener) :
+    ListAdapter<Medicine, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListItem>() {
-            override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Medicine>() {
+            override fun areItemsTheSame(oldItem: Medicine, newItem: Medicine): Boolean {
                 return when {
-                    oldItem is ListItem.PillResultItem && newItem is ListItem.PillResultItem ->
-                        oldItem.itemSeq == newItem.itemSeq
+                    oldItem is Medicine && newItem is Medicine ->
+                        oldItem.id == newItem.id
 
-                    oldItem is ListItem.FeedItem && newItem is ListItem.FeedItem ->
-                        oldItem.name == newItem.name
+//                    oldItem is ListItem.FeedItem && newItem is ListItem.FeedItem ->
+//                        oldItem.name == newItem.name
 
                     else -> false
                 }
             }
 
-            override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
+            override fun areContentsTheSame(oldItem: Medicine, newItem: Medicine): Boolean {
                 return oldItem == newItem
             }
         }
@@ -45,8 +50,9 @@ class HomeRecyclerAdapter :
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is ListItem.PillResultItem -> TYPE_PIll
-            is ListItem.FeedItem -> TYPE_FEED
+            is Medicine -> TYPE_PIll
+//            is ListItem.FeedItem -> TYPE_FEED
+            else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
@@ -66,8 +72,8 @@ class HomeRecyclerAdapter :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         runCatching {
             when (val item = getItem(position)) {
-                is ListItem.PillResultItem -> (holder as PillResultHolder).bind(item)
-                is ListItem.FeedItem -> (holder as FeedHolder).bind(item)
+                is Medicine -> (holder as PillResultHolder).bind(item)
+//                is ListItem.FeedItem -> (holder as FeedHolder).bind(item)
             }
         }.onFailure { exception ->
             Log.e("VideoListAdapter", "Exception! ${exception.message}")
@@ -79,21 +85,22 @@ class HomeRecyclerAdapter :
         private val ivPill: ImageView = pillView.ivPill
         private val tvPillname: TextView = pillView.tvPillname
         private val tvPilltype: TextView = pillView.tvPilltype
-        private val btnFavoritepill: ImageButton = pillView.btnFavoritepill
-        private val btnMypill: ImageButton = pillView.btnMypill
+        private val btnFavoritepill: ToggleButton = pillView.btnFavoritepill
+        private val btnMyPill: ToggleButton = pillView.btnMypill
 
-        fun bind(pillitem: ListItem.PillResultItem) {
+        fun bind(pillitem: Medicine) {
+
             with(pillitem) {
-                Glide.with(itemView).load(R.drawable.choco).into(ivPill)
-                tvPillname.text = itemName
-                tvPilltype.text = entpName
-                btnFavoritepill.setOnClickListener {
-                    Log.d("아이템 좋아요 누름","${itemName}")
-//                    onClick(this)
+                Glide.with(itemView).load(imageUrl).into(ivPill)
+                tvPillname.text = name
+                tvPilltype.text = effect
+                btnFavoritepill.setOnCheckedChangeListener { buttonView, isChecked ->
+                    clickListener.onFavoriteClick(pillitem,isChecked)
+                    Log.d("아이템 좋아요 누름","${name}")
                 }
-                btnMypill.setOnClickListener {
-                    Log.d("아이템 복용약 누름","${entpName}")
-//                    onClick(this)
+                btnMyPill.setOnCheckedChangeListener { buttonView, isChecked ->
+                    clickListener.onMyPillClick(pillitem,isChecked)
+                    Log.d("아이템 복용약 누름","${name}")
                 }
             }
         }
@@ -110,5 +117,10 @@ class HomeRecyclerAdapter :
             }
 
         }
+    }
+    interface ClickListener{
+        fun onItemClick(item: Medicine)
+        fun onFavoriteClick(item: Medicine,needAdd :Boolean)
+        fun onMyPillClick(item: Medicine,needAdd :Boolean)
     }
 }
