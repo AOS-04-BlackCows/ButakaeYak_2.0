@@ -12,15 +12,16 @@ import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.MyMedicineItemBinding
 import com.blackcows.butakaeyak.databinding.TodayMedicineItemBinding
 import com.blackcows.butakaeyak.ui.take.data.MedicineAtTime
+import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 
 class MyMedicinesRvAdapter:
-    ListAdapter<Medicine, MyMedicinesRvAdapter.MedicineViewHolder>(
-        object: DiffUtil.ItemCallback<Medicine>() {
-            override fun areItemsTheSame(oldItem: Medicine, newItem: Medicine): Boolean {
+    ListAdapter<MyMedicine, MyMedicinesRvAdapter.MedicineViewHolder>(
+        object: DiffUtil.ItemCallback<MyMedicine>() {
+            override fun areItemsTheSame(oldItem: MyMedicine, newItem: MyMedicine): Boolean {
                 //Log.d("DiffUtil", "old: ${oldItem.imageUrl}, new: ${newItem.imageUrl}}")
-                return  (oldItem.id == newItem.id)
+                return  (oldItem.medicine.id == newItem.medicine.id)
             }
-            override fun areContentsTheSame(oldItem: Medicine, newItem: Medicine): Boolean {
+            override fun areContentsTheSame(oldItem: MyMedicine, newItem: MyMedicine): Boolean {
                 //Log.d("DiffUtil", "old is same with new: ${oldItem == newItem}")
                 return oldItem == newItem
             }
@@ -28,14 +29,14 @@ class MyMedicinesRvAdapter:
     ) {
 
         inner class MedicineViewHolder(private val binding: MyMedicineItemBinding): RecyclerView.ViewHolder(binding.root) {
-            fun bind(item: Medicine) {
+            fun bind(item: MyMedicine) {
                 //TODO: 이미지 넣어주기
 //            GlideApp.with(binding.root)
 //                .load(item.imageUrl)
 //                .into(binding.image)
                 with(binding) {
-                    medicineNameTv.text = item.name
-                    medicineEffectTv.text = item.effect
+                    medicineNameTv.text = item.medicine.name
+                    medicineEffectTv.text = item.medicine.effect
 
                     tvMedicineAlarmIv.setOnClickListener {
                         //TODO: navigate to MyMedicineDetailPage.

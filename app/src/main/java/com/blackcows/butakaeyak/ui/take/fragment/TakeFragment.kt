@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import com.blackcows.butakaeyak.ui.take.TakeUiState
 import com.blackcows.butakaeyak.ui.take.adapter.MyMedicinesRvAdapter
 import com.blackcows.butakaeyak.ui.take.adapter.TakeRvDecorator
 import com.blackcows.butakaeyak.ui.take.adapter.TodayMedicineRvAdapter
+import com.blackcows.butakaeyak.ui.take.toKorean
 import io.ktor.util.date.WeekDay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -32,10 +34,11 @@ import java.util.Locale
 
 
 class TakeFragment : Fragment() {
-
     //binding 설정
     private var _binding: FragmentTakeBinding? = null
     private val binding get() = _binding!!
+
+    private val TAG = "TakeFragment"
 
     private val todayDate = Calendar.getInstance().time
     private val todayWeekDay by lazy {
@@ -71,6 +74,8 @@ class TakeFragment : Fragment() {
         initUiState()
 
         with(binding) {
+            todayDateTv.text = "${todayDate.toKorean()} ${todayWeekDay.toKorean()}"
+
             btnAdd.setOnClickListener {
                 findNavController().navigate(R.id.action_navigation_take_to_navigation_take_add)
             }
@@ -103,16 +108,16 @@ class TakeFragment : Fragment() {
     = lifecycleScope.launch {
         myTakeViewModel.uiState.collectLatest {
             when(it) {
-                is TakeUiState.GetMyMedicinesSuccess -> {
-
+                is TakeUiState.GetTodayMedicinesSuccess -> {
+                    todayMedicinesAdapter.submitList(it.medicineAtTimes)
                 }
 
-                is TakeUiState.GetTodayMedicinesSuccess -> {
-
+                is TakeUiState.GetMyMedicinesSuccess -> {
+                    myMedicinesAdapter.submitList(it.medicines)
                 }
 
                 is TakeUiState.Failure -> {
-
+                    Log.d(TAG, "In $TAG, UiState Failed...")
                 }
 
                 else -> null
