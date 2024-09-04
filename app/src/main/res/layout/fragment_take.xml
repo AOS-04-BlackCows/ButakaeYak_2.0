@@ -60,15 +60,43 @@
         style="@style/subtitle"
         />
 
-    <ListView
-        android:id="@+id/today_medicine_lv"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/today_medicine_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         app:layout_constraintTop_toBottomOf="@id/today_medicine_tv"
         app:layout_constraintStart_toStartOf="parent"
+
+        android:layout_marginTop="5dp"
+
+        tools:listitem="@layout/today_medicine_item"
+        tools:itemCount="2"
         />
 
+    <TextView
+        android:id="@+id/my_medicine_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/today_medicine_rv"
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:layout_marginTop="20dp"
+
+        android:text="@string/my_medicine"
+        style="@style/subtitle"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/my_medicine_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/my_medicine_tv"
+
+        android:layout_marginTop="5dp"
+
+        />
 
 
 
