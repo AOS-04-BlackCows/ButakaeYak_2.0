@@ -6,31 +6,65 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blackcows.butakaeyak.data.models.KakaoPlace
+import com.blackcows.butakaeyak.data.repository.KakaoMapRepository
+import com.blackcows.butakaeyak.data.repository.PharmacyInfoRepository
 import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
-import com.blackcows.butakaeyak.data.retrofit.KakaoApiService
-import com.blackcows.butakaeyak.data.retrofit.KakaoInterceptor
-import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
+import com.blackcows.butakaeyak.data.retrofit.PharmacyInfoApiService
+import com.blackcows.butakaeyak.data.retrofit.RetrofitClientXml
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.create
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
+private const val TAG = "k3f_MapViewModel"
+
 @HiltViewModel
-class MapViewModel @Inject constructor() : ViewModel() {
+class MapViewModel @Inject constructor(
+    private val kakaoRepository: KakaoMapRepository
+) : ViewModel() {
+    private var pharmacyInfoRepository: PharmacyInfoRepository? = null
 
     private val _items = MutableLiveData<List<KakaoPlace>>()
     val items: LiveData<List<KakaoPlace>>
         get() = _items
 
-    fun communicateNetWork(param: String) {
+//    fun apiPharmacyInfoList() = runBlocking {
+//        val result = suspendCoroutine { continuation ->
+//            pharmacyInfoRepository?.searchPharmacyInfo("성남시 분당구") { drugs ->
+//                // callback 내용 작성
+//                continuation.resume(drugs)
+//            }
+//        }
+//
+//        assertNotNull(result)
+//        assertTrue(result.isNotEmpty())
+//
+//        result.forEachIndexed { i, it ->
+//            Log.d(TAG,"$i: ${it.dutyName}")
+//        }
+//    }
+
+    fun apiPharmacyInfoList() = runBlocking {
+        val instance = RetrofitClientXml.getInstance(ApiBaseUrl.PharmacyListInfoUrl)
+        val retrofit = instance.create(PharmacyInfoApiService::class.java)
+        Log.d(TAG, "retrofit")
+        val result = retrofit.getPharmacyInfo("경기도 성남시", null, null, null, null)
+
+        Log.d(TAG, "result")
+        result.body.items?.forEachIndexed { i, it ->
+            Log.d(TAG, "$i: ${it.dutyName}, ${it}")
+        }
+
+        Log.d(
+            TAG,
+            "resultCode: ${result.header.resultCode}, item: ${result.body.items?.get(0)?.dutyAddr}"
+        )
+    }
+
+    fun communicateNetWork(x: Double, y: Double) {
         viewModelScope.launch {
-            val instance = RetrofitClient.getInstance(ApiBaseUrl.KakaoPlaceSearchUrl)
-            val retrofit = instance.create(KakaoApiService::class.java)
-            val result = retrofit.getCategoryInfo("126.9795003", "37.5668114")
-            result.documents.forEachIndexed {i, it ->
-                Log.d("제발나와주세요 카카오맵정보님","$i: ${it}")
-            }
+            _items.value = kakaoRepository.searchCategory(x.toString(), y.toString())
+            Log.d(TAG, "${_items.value}")
         }
     }
 }
