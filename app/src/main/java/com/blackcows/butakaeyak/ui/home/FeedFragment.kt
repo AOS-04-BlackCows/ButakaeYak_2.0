@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
-import com.blackcows.butakaeyak.ui.home.placeholder.PlaceholderContent
 
 /**
  * A fragment representing a list of Items.
@@ -40,7 +39,7 @@ class FeedFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = HomeRecyclerAdapter(PlaceholderContent.ITEMS)
+//                adapter = HomeRecyclerAdapter(PlaceholderContent.ITEMS)
             }
         }
         return view

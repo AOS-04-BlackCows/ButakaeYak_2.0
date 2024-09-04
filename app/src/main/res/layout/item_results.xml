@@ -8,6 +8,7 @@
     android:padding="4dp"
     android:orientation="horizontal">
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lo_pillinfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center_vertical"
@@ -45,27 +46,29 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
-        <ImageButton
+        <ToggleButton
             android:id="@+id/btn_favoritepill"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center_horizontal|top"
             android:translationZ="1dp"
-            android:src="@drawable/ic_baseline_star_24dp"
+            android:checked="false"
+            android:textOn=""
+            android:textOff=""
             android:scaleType="fitCenter"
-            android:background="@android:color/transparent"
-            app:tint="@color/any_200"/>
-        <ImageButton
+            android:background="@drawable/selector_favorite"/>
+        <ToggleButton
             android:id="@+id/btn_mypill"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:layout_gravity="bottom|center_horizontal"
             android:translationZ="1dp"
-            android:src="@drawable/baseline_add_box_24"
+            android:checked="false"
+            android:textOn=""
+            android:textOff=""
             android:scaleType="fitCenter"
-            android:background="@android:color/transparent"
-            app:tint="@color/any_200" />
+            android:background="@drawable/selector_mypill" />
     </LinearLayout>
 
 

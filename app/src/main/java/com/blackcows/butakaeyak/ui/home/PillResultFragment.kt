@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -8,21 +9,23 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.fragment.app.activityViewModels
-import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentPillResultBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
-import com.blackcows.butakaeyak.ui.home.placeholder.PlaceholderContent
+import com.blackcows.butakaeyak.ui.home.data.DataSource
+import com.blackcows.butakaeyak.ui.home.data.ListItem
 
 class PillResultFragment : Fragment() {
     //binding 설정
-    private var _binding: FragmentPillResultBinding?=null
+    private var _binding: FragmentPillResultBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter : HomeRecyclerAdapter
+    private lateinit var pillAdapter : HomeRecyclerAdapter
 
     //viewModel 설정
-    private val homeViewModel : HomeViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     private var columnCount = 1 //컬럼 갯수 = 1 리니어
 
@@ -38,7 +41,7 @@ class PillResultFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentPillResultBinding.inflate(inflater,container,false)
+        _binding = FragmentPillResultBinding.inflate(inflater, container, false)
         val root = binding.root
 
         // Set the adapter
@@ -48,7 +51,6 @@ class PillResultFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = HomeRecyclerAdapter(PlaceholderContent.ITEMS)
             }
         }
         return root
@@ -56,12 +58,43 @@ class PillResultFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //더미 데이터
+        val dataSource = DataSource.getDataSoures().getPillList()
         binding.apply {
-            adapter = HomeRecyclerAdapter(PlaceholderContent.ITEMS)
-            resultlist.adapter = adapter
-            resultlist.itemAnimator = null
-            //TODO 여기 수정해야될듯...왜 리스트가 안뜨지???
+            pillAdapter = HomeRecyclerAdapter(object : HomeRecyclerAdapter.ClickListener{
+                override fun onItemClick(item: Medicine) {
+                    //("디테일 화면 띄움")
+                    Log.d("아이템 누름","${item.id}, ${item.name} ")
+                }
 
+                override fun onFavoriteClick(item: Medicine, needAdd: Boolean) {
+                    //("즐겨찾기 약 추가/삭제")
+                    Log.d("아이템 좋아요 누름","${item.id}, ${item.name}, ${needAdd}")
+
+                    DataSource.saveData(requireContext(),"FavoriteData", setOf(
+                        item.id.toString(), item.name.toString(),item.enterprise.toString(),
+                        item.effect.toString(), item.instructions.toString(),item.warning.toString(),
+                        item.caution.toString(), item.interaction.toString(),
+                        item.sideEffect.toString(), item.storingMethod.toString(),item.imageUrl.toString(),
+                    ),needAdd)
+
+                }
+
+                override fun onMyPillClick(item: Medicine, needAdd: Boolean) {
+                    //("복용중인 약 추가/삭제")
+                    Log.d("아이템 복용약 누름","${item.id}, ${item.name}, ${needAdd}")
+                    DataSource.saveData(requireContext(),"MyPillData", setOf(
+                        item.id.toString(), item.name.toString(),item.enterprise.toString(),
+                        item.effect.toString(), item.instructions.toString(),item.warning.toString(),
+                        item.caution.toString(), item.interaction.toString(),
+                        item.sideEffect.toString(), item.storingMethod.toString(),item.imageUrl.toString(),
+                    ),needAdd)
+                }
+
+            })
+            resultlist.adapter = pillAdapter
+            resultlist.itemAnimator = null
+            pillAdapter.submitList(dataSource)
         }
     }
 
