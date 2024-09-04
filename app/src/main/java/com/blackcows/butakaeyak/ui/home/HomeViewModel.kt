@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.blackcows.butakaeyak.data.models.Drug
 import com.blackcows.butakaeyak.data.models.Pill
+import com.blackcows.butakaeyak.data.repository.LocalRepository
+import com.blackcows.butakaeyak.domain.GetMedicinesNameUseCase
 import com.blackcows.butakaeyak.domain.home.GetPillUseCase
 import com.blackcows.butakaeyak.ui.example.UserUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getPillUseCase: GetPillUseCase
+    private val getPillUseCase: GetPillUseCase,
+    private val getMedicinesNameUseCase: GetMedicinesNameUseCase
 ) : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
@@ -33,6 +36,16 @@ class HomeViewModel @Inject constructor(
                 pillResult.value = list.toMutableList()
             } else {
                 // 검색 결과 없음.
+            }
+        }
+    }
+
+    fun searchMedicinesWithName(name: String) {
+        getMedicinesNameUseCase.invoke(name) {
+            if(it.isNotEmpty()) {
+                //결과가 있을때
+            } else {
+                //결과가 없을때
             }
         }
     }
