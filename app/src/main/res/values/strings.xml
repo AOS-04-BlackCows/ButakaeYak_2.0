@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">YacTong</string>
+    <string name="app_name">ButakaeYak</string>
+
     <string name="title_home">Home</string>
+    <string name="title_search">Search</string>
     <string name="title_map">map</string>
     <string name="title_user">user</string>
 
@@ -19,6 +21,10 @@
     <string name="btn_signup">회원가입</string>
 
     <string name="autologin">자동 로그인</string>
+
+    <string name="today_medicine">오늘 먹어야 할 약</string>
+    <string name="neighbor">내 지인</string>
+    <string name="my_medicine">복용 중인 약</string>
 
 
     <string name="title_take">take</string>
