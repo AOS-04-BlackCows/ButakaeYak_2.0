@@ -1,4 +1,4 @@
-package com.blackcows.butakaeyak.ui.take.data
+package com.blackcows.butakaeyak.ui.take.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,7 +8,6 @@ import android.widget.BaseAdapter
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.MedicineSimpleItemBinding
-import com.blackcows.butakaeyak.databinding.TodayMedicineItemBinding
 
 class TodayMedicineLvAdapter(
     private val todayMedicines: List<Medicine>

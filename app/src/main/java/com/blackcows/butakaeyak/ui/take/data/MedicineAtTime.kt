@@ -10,6 +10,11 @@ import io.ktor.util.date.WeekDay.TUESDAY
 import io.ktor.util.date.WeekDay.SATURDAY
 import io.ktor.util.date.WeekDay.SUNDAY
 
+/**
+ * @property weekDay: 먹어야 하는 요일
+ * @property time: 복용해야 하는 시간
+ * @property list: 시간에 맞춰 먹어야 할 약들
+ */
 data class MedicineAtTime(
     val weekDay: WeekDay,
     val time: String,
