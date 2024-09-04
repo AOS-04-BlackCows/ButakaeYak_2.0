@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.take
 
+import com.blackcows.butakaeyak.domain.take.GetMyMedicinesUseCase
 import com.blackcows.butakaeyak.domain.take.GetTodayMedicineUseCase
 import com.blackcows.butakaeyak.ui.example.UserUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,7 +11,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyTakeViewModel @Inject constructor(
-    private val getTodayMedicineUseCase: GetTodayMedicineUseCase
+    private val getTodayMedicineUseCase: GetTodayMedicineUseCase,
+    private val getMyMedicinesUseCase: GetMyMedicinesUseCase
 ) {
     private val _uiState = MutableStateFlow<TakeUiState>(TakeUiState.Init)
     val uiState = _uiState.asStateFlow()
@@ -25,5 +27,13 @@ class MyTakeViewModel @Inject constructor(
         }
     }
 
-
+    fun loadMyMedicines() {
+        getMyMedicinesUseCase.invoke { myMedicines ->
+            if(myMedicines.isNotEmpty()) {
+                _uiState.value = TakeUiState.GetMyMedicinesSuccess(myMedicines)
+            } else {
+                _uiState.value = TakeUiState.Failure
+            }
+        }
+    }
 }
