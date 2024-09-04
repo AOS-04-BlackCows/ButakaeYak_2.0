@@ -14,7 +14,6 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentTakeBinding
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.adapter.TakeAdapter
-import com.blackcows.butakaeyak.ui.take.data.CycleItem
 
 class TakeFragment : Fragment(), TakeAdapter.OnItemDeleteListener {
 
@@ -53,7 +52,6 @@ class TakeFragment : Fragment(), TakeAdapter.OnItemDeleteListener {
 
         viewModel._cycleFragment.observe(viewLifecycleOwner, Observer { cycleItem ->
             cycleItem?.let {
-                for(item in it)
                     adapter.updateData(it)
             }
         })

@@ -1,12 +1,9 @@
 package com.blackcows.butakaeyak.ui.take
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.blackcows.butakaeyak.ui.take.data.CycleItem
-import com.blackcows.butakaeyak.ui.take.data.FormItem
-import io.ktor.http.ContentType.MultiPart.FormData
 
 class TakeViewModel : ViewModel() {
 
@@ -35,7 +32,7 @@ class TakeViewModel : ViewModel() {
 
     fun removeCycleItem(position: Int) {
         val updatedList = cycleFragment.value
-        if (updatedList != null && position >= 0 && position < updatedList.size) {
+        if (updatedList != null && position >= 0 && position <= updatedList.size) {
             updatedList.removeAt(position)
             cycleFragment.value = updatedList
         }
