@@ -92,13 +92,13 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
         private val loPillinfo: ConstraintLayout = pillView.loPillinfo
 
         fun bind(pillitem: Medicine) {
-
             with(pillitem) {
                 Glide.with(itemView).load(imageUrl).into(ivPill)
                 tvPillname.text = name
                 tvPilltype.text = effect
                 loPillinfo.setOnClickListener {
                     clickListener.onItemClick(pillitem)
+                    Log.d("아이템 좋아요 누름", getItem(1).toString())
                 }
                 btnFavoritepill.setOnCheckedChangeListener { buttonView, isChecked ->
                     clickListener.onFavoriteClick(pillitem,isChecked)

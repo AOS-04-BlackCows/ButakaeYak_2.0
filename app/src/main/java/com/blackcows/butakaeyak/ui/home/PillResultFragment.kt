@@ -70,12 +70,14 @@ class PillResultFragment : Fragment() {
                 override fun onFavoriteClick(item: Medicine, needAdd: Boolean) {
                     //("즐겨찾기 약 추가/삭제")
                     Log.d("아이템 좋아요 누름","${item.id}, ${item.name}, ${needAdd}")
+
                     DataSource.saveData(requireContext(),"FavoriteData", setOf(
                         item.id.toString(), item.name.toString(),item.enterprise.toString(),
                         item.effect.toString(), item.instructions.toString(),item.warning.toString(),
                         item.caution.toString(), item.interaction.toString(),
                         item.sideEffect.toString(), item.storingMethod.toString(),item.imageUrl.toString(),
-                    ))
+                    ),needAdd)
+
                 }
 
                 override fun onMyPillClick(item: Medicine, needAdd: Boolean) {
@@ -86,7 +88,7 @@ class PillResultFragment : Fragment() {
                         item.effect.toString(), item.instructions.toString(),item.warning.toString(),
                         item.caution.toString(), item.interaction.toString(),
                         item.sideEffect.toString(), item.storingMethod.toString(),item.imageUrl.toString(),
-                    ))
+                    ),needAdd)
                 }
 
             })

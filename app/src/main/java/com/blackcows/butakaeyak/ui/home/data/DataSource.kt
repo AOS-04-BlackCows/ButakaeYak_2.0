@@ -19,16 +19,14 @@ class DataSource {
         }
 
         //SharedPreferences
-        fun saveData(context: android.content.Context, key:String, data: Set<String>) {
-            val edit = context?.getSharedPreferences(key, MODE_PRIVATE)?.edit()
-            edit!!.putStringSet(data.first(),data)
-            edit!!.apply() // 저장완료
+        fun saveData(context: android.content.Context, key:String, data: Set<String>,needAdd :Boolean) {
+            context.getSharedPreferences(key, MODE_PRIVATE).edit().putStringSet(data.first(),data).apply() // 저장완료
+            context.getSharedPreferences(key, MODE_PRIVATE).edit().putBoolean(data.first(),needAdd).apply() // 저장완료
         }
 
-//        fun loadData() {
-//            val pref = getSharedPreferences("pref", MODE_PRIVATE)
-//            binding.mainEtTitleEdit.setText(pref.getString("name",""))
-//        }
+        fun loadData(context: android.content.Context,key:String) {
+            val pref = context.getSharedPreferences(key, MODE_PRIVATE)
+        }
     }
 
     // MVVM패턴에서 Model에 해당한다고 볼 수 있음
