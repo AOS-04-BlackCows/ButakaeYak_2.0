@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.blackcows.butakaeyak.R
@@ -39,11 +40,14 @@ class TodayMedicineRvAdapter:
                 visibleItems.clear()
                 visibleItems.addAll(item.list.take(2))
 
-                val adapter = ArrayAdapter(binding.root.context, android.R.layout.simple_list_item_1, visibleItems)
-                medicineLv.adapter = adapter
+                val adapter = SimpleMedicineRvAdapter()
+                medicineRv.run {
+                    layoutManager = LinearLayoutManager(binding.root.context)
+                    this.adapter = adapter
+                    addItemDecoration(TakeRvDecorator.getLinearDeco())
+                }
 
-
-                // 남은 아이템이 있으면 "더보기" 버튼 표시
+                adapter.submitList(visibleItems)
                 expandButton.visibility = if (item.list.size > 2) View.VISIBLE else View.GONE
 
                 //TODO: 접기 버튼도 넣기
@@ -52,7 +56,7 @@ class TodayMedicineRvAdapter:
                     visibleItems.addAll(item.list)
 
                     expandButton.visibility = View.GONE
-                    adapter.notifyDataSetChanged()
+                    adapter.submitList(visibleItems)
                 }
             }
         }

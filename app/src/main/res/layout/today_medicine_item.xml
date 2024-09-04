@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/round_rect_500">
+    android:background="@drawable/round_rect_500"
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/alarm_time_tv"
@@ -15,8 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
 
         android:text="18:50"
         android:textStyle="bold"
@@ -24,8 +24,8 @@
         android:textSize="18sp" 
         />
 
-    <ListView
-        android:id="@+id/medicine_lv"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/medicine_rv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
@@ -34,8 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
 
-        android:layout_marginHorizontal="15dp"
-        android:dividerHeight="5dp"
+        android:layout_marginHorizontal="20dp"
          />
 
     <TextView
@@ -43,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        app:layout_constraintTop_toBottomOf="@id/medicine_lv"
+        app:layout_constraintTop_toBottomOf="@id/medicine_rv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 
