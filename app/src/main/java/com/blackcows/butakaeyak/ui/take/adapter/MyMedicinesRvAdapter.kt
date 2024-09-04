@@ -11,8 +11,11 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.MyMedicineItemBinding
 import com.blackcows.butakaeyak.databinding.TodayMedicineItemBinding
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.data.MedicineAtTime
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
+import com.blackcows.butakaeyak.ui.take.fragment.CycleFragment
 
 class MyMedicinesRvAdapter:
     ListAdapter<MyMedicine, MyMedicinesRvAdapter.MedicineViewHolder>(
@@ -40,13 +43,16 @@ class MyMedicinesRvAdapter:
 
                     tvMedicineAlarmIv.setOnClickListener {
                         //TODO: navigate to MyMedicineDetailPage.
+                        MainNavigation.addFragment(
+                            CycleFragment.newInstance(item.medicine), FragmentTag.CycleFragment
+                        )
                     }
                 }
             }
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MedicineViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.today_medicine_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.my_medicine_item, parent, false)
         return MedicineViewHolder(MyMedicineItemBinding.bind(view))
     }
 

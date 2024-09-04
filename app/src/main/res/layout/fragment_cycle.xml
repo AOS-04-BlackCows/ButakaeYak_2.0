@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.take.fragment.CycleFragment">
+    tools:context=".ui.take.fragment.CycleFragment"
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/iv_back"

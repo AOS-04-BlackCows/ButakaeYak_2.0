@@ -5,25 +5,31 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
 import com.blackcows.butakaeyak.ui.take.data.CycleItem
+
 
 class CycleFragment : Fragment() {
 
@@ -39,6 +45,16 @@ class CycleFragment : Fragment() {
 
     //viewModel 설정
     private val viewModel: TakeViewModel by activityViewModels()
+
+    //bundle에서 medicine 가져오기
+    private val medicine: Medicine by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(MEDICINE_DATA, Medicine::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            arguments?.getParcelable(MEDICINE_DATA)!!
+        }
+    }
 
 
     override fun onCreateView(
@@ -64,6 +80,9 @@ class CycleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d("CycleFragment", "${medicine.name}, ${medicine.id}")
+
         binding.apply {
             ivBack.setOnClickListener {
                 viewModel.moveToPreviousPage()
@@ -187,5 +206,17 @@ class CycleFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val MEDICINE_DATA = "medicine_data"
+
+        @JvmStatic
+        fun newInstance(medicine: Medicine) =
+            CycleFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(MEDICINE_DATA, medicine)
+                }
+            }
     }
 }

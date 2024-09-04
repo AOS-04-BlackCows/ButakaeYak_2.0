@@ -108,6 +108,7 @@ class TakeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         myTakeViewModel.loadTodayMedicines(todayWeekDay)
+        myTakeViewModel.loadMyMedicines()
     }
 
     override fun onDestroyView() {
