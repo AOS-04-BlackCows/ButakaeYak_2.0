@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ToggleButton
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -87,6 +89,7 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
         private val tvPilltype: TextView = pillView.tvPilltype
         private val btnFavoritepill: ToggleButton = pillView.btnFavoritepill
         private val btnMyPill: ToggleButton = pillView.btnMypill
+        private val loPillinfo: ConstraintLayout = pillView.loPillinfo
 
         fun bind(pillitem: Medicine) {
 
@@ -94,6 +97,9 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
                 Glide.with(itemView).load(imageUrl).into(ivPill)
                 tvPillname.text = name
                 tvPilltype.text = effect
+                loPillinfo.setOnClickListener {
+                    clickListener.onItemClick(pillitem)
+                }
                 btnFavoritepill.setOnCheckedChangeListener { buttonView, isChecked ->
                     clickListener.onFavoriteClick(pillitem,isChecked)
                     Log.d("아이템 좋아요 누름","${name}")

@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -62,16 +63,30 @@ class PillResultFragment : Fragment() {
         binding.apply {
             pillAdapter = HomeRecyclerAdapter(object : HomeRecyclerAdapter.ClickListener{
                 override fun onItemClick(item: Medicine) {
-                    TODO("디테일 화면 띄움")
+                    //("디테일 화면 띄움")
+                    Log.d("아이템 누름","${item.id}, ${item.name} ")
                 }
 
                 override fun onFavoriteClick(item: Medicine, needAdd: Boolean) {
-                    TODO("즐겨찾기 약 추가/삭제")
-
+                    //("즐겨찾기 약 추가/삭제")
+                    Log.d("아이템 좋아요 누름","${item.id}, ${item.name}, ${needAdd}")
+                    DataSource.saveData(requireContext(),"FavoriteData", setOf(
+                        item.id.toString(), item.name.toString(),item.enterprise.toString(),
+                        item.effect.toString(), item.instructions.toString(),item.warning.toString(),
+                        item.caution.toString(), item.interaction.toString(),
+                        item.sideEffect.toString(), item.storingMethod.toString(),item.imageUrl.toString(),
+                    ))
                 }
 
                 override fun onMyPillClick(item: Medicine, needAdd: Boolean) {
-                    TODO("복용중인 약 추가/삭제")
+                    //("복용중인 약 추가/삭제")
+                    Log.d("아이템 복용약 누름","${item.id}, ${item.name}, ${needAdd}")
+                    DataSource.saveData(requireContext(),"MyPillData", setOf(
+                        item.id.toString(), item.name.toString(),item.enterprise.toString(),
+                        item.effect.toString(), item.instructions.toString(),item.warning.toString(),
+                        item.caution.toString(), item.interaction.toString(),
+                        item.sideEffect.toString(), item.storingMethod.toString(),item.imageUrl.toString(),
+                    ))
                 }
 
             })
