@@ -19,7 +19,7 @@ import com.bumptech.glide.Glide
 
 // 이전 코드 -                        values: MutableList<PlaceholderItem>
 // 안되는 코드 class HomeRecyclerAdapter(private val onClick: (ListItem) -> Unit)
-class HomeRecyclerAdapter(private val values: MutableList<PlaceholderItem>) :
+class HomeRecyclerAdapter :
     ListAdapter<ListItem, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
@@ -27,7 +27,7 @@ class HomeRecyclerAdapter(private val values: MutableList<PlaceholderItem>) :
             override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
                 return when {
                     oldItem is ListItem.PillResultItem && newItem is ListItem.PillResultItem ->
-                        oldItem.pillName == newItem.pillName
+                        oldItem.itemSeq == newItem.itemSeq
 
                     oldItem is ListItem.FeedItem && newItem is ListItem.FeedItem ->
                         oldItem.name == newItem.name
@@ -52,9 +52,9 @@ class HomeRecyclerAdapter(private val values: MutableList<PlaceholderItem>) :
         }
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            //TODO: 고치기
             TYPE_PIll -> {
                 val pillbinding =
                     ItemResultsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -74,7 +74,6 @@ class HomeRecyclerAdapter(private val values: MutableList<PlaceholderItem>) :
         }.onFailure { exception ->
             Log.e("VideoListAdapter", "Exception! ${exception.message}")
         }
-
     }
 
     inner class PillResultHolder(pillView: ItemResultsBinding) :
@@ -88,20 +87,18 @@ class HomeRecyclerAdapter(private val values: MutableList<PlaceholderItem>) :
         fun bind(pillitem: ListItem.PillResultItem) {
             with(pillitem) {
                 Glide.with(itemView).load(R.drawable.choco).into(ivPill)
-                tvPillname.text = pillName
-                tvPilltype.text = pillType
+                tvPillname.text = itemName
+                tvPilltype.text = entpName
                 btnFavoritepill.setOnClickListener {
-                    Log.d("아이템 좋아요 누름","${pillName}")
+                    Log.d("아이템 좋아요 누름","${itemName}")
 //                    onClick(this)
                 }
                 btnMypill.setOnClickListener {
-                    Log.d("아이템 복용약 누름","${pillName}")
+                    Log.d("아이템 복용약 누름","${entpName}")
 //                    onClick(this)
                 }
             }
-
         }
-
     }
 
     inner class FeedHolder(feedView: FragmentFeedListBinding) :

@@ -9,20 +9,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentPillResultBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
-import com.blackcows.butakaeyak.ui.home.placeholder.PlaceholderContent
+import com.blackcows.butakaeyak.ui.home.data.DataSource
+import com.blackcows.butakaeyak.ui.home.data.ListItem
 
 class PillResultFragment : Fragment() {
     //binding 설정
-    private var _binding: FragmentPillResultBinding?=null
+    private var _binding: FragmentPillResultBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter : HomeRecyclerAdapter
+    private lateinit var pillAdapter : HomeRecyclerAdapter
 
     //viewModel 설정
-    private val homeViewModel : HomeViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     private var columnCount = 1 //컬럼 갯수 = 1 리니어
 
@@ -38,7 +38,7 @@ class PillResultFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentPillResultBinding.inflate(inflater,container,false)
+        _binding = FragmentPillResultBinding.inflate(inflater, container, false)
         val root = binding.root
 
         // Set the adapter
@@ -48,7 +48,6 @@ class PillResultFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = HomeRecyclerAdapter(PlaceholderContent.ITEMS)
             }
         }
         return root
@@ -56,13 +55,25 @@ class PillResultFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.apply {
-            adapter = HomeRecyclerAdapter(PlaceholderContent.ITEMS)
-            resultlist.adapter = adapter
-            resultlist.itemAnimator = null
-            //TODO 여기 수정해야될듯...왜 리스트가 안뜨지???
+        //더미 데이터
+        val dataSource = DataSource.getDataSoures().getPillList()
 
+        binding.apply {
+            pillAdapter = HomeRecyclerAdapter()
+            resultlist.adapter = pillAdapter
+            resultlist.itemAnimator = null
+            pillAdapter.submitList(dataSource)
         }
+    }
+
+    private fun adapterClick(pill: ListItem.PillResultItem) {
+        // Detail로 이동
+//        val intent = Intent(this, DetailActivity::class.java)
+//        val bundle = Bundle().apply {
+//            putParcelable(DetailActivity.EXTRA_CARD, pill)
+//        }
+//        intent.putExtras(bundle)
+//        startActivity(intent)
     }
 
     companion object {
