@@ -24,12 +24,14 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
+import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
+import kotlinx.coroutines.delay
 
 private const val TAG = "k3f_MapFragment"
 class MapFragment : Fragment() {
@@ -112,8 +114,10 @@ class MapFragment : Fragment() {
     // 시스템으로 부터 받은 위치정보를 갱신해주는 메소드
     fun onLocationChanged(location: Location) {
         mLastLocation = location
-        myPlaceX = mLastLocation.latitude // 갱신 된 위도 37.40754692649233
-        myPlaceY = mLastLocation.longitude // 갱신 된 경도 127.11547410533494
+        // longitude = 경도 = x
+        // latitude = 위도 = y
+        myPlaceX = mLastLocation.longitude // 갱신 된 경도 127.11547410533494
+        myPlaceY = mLastLocation.latitude // 갱신 된 위도 37.40754692649233
         Log.d(TAG, "위도 myPlaceX : $myPlaceX |&| 경도 myPlaceY : $myPlaceY")
         kakaoMapInit()
     }
@@ -127,9 +131,8 @@ class MapFragment : Fragment() {
                 if (checkPermissionForLocation(this)) {
                     // 버튼 이벤트를 통해 현재 위치 찾기
                     startLocationUpdates()
-                    var cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(myPlaceX, myPlaceY))
+                    var cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(myPlaceY, myPlaceX))
                     kakaoMap.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
-                    kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(LatLng.from(myPlaceX, myPlaceY)), CameraAnimation.from(500, true, true));
                 }
             }
             // 약국의 데이터가 들어오면 라벨을 찍어준다
@@ -139,13 +142,14 @@ class MapFragment : Fragment() {
                 kakaoMap.labelManager!!.getLodLayer()
                 for (item in items) {
                     val styles = kakaoMap.labelManager!!.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.marker_pill)))
-                    val options = LabelOptions.from(LatLng.from(item.x.toDouble(), item.y.toDouble())).setStyles(styles)
+                    val options = LabelOptions.from(LatLng.from(item.y.toDouble(), item.x.toDouble())).setStyles(styles).setClickable(true)
                     val layer = kakaoMap.labelManager!!.layer
                     layer?.addLabel(options)
                 }
             }
             // 현재 위치를 중심으로한 약국 좌표를 저장한다.
-            mapViewModel.communicateNetWork("37.40754692649233", "127.11547410533494")
+            mapViewModel.communicateNetWork(myPlaceX, myPlaceY)
+//            kakaoMap.setOnLabelClickListener()
         }
     }
 
@@ -191,3 +195,6 @@ class MapFragment : Fragment() {
 
 
 }
+
+
+

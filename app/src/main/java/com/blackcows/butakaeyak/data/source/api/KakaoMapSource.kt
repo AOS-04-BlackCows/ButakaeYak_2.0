@@ -13,7 +13,7 @@ class KakaoMapSource @Inject constructor(
 
     suspend fun searchCategoryPlace(x: String,y: String): List<KakaoPlace> {
         val list = mutableListOf<KakaoPlace>()
-        val result = retrofit.getCategoryInfo(x, y)
+        val result = retrofit.getCategoryInfo()
         result.documents.forEach {
             list.add(it.toKakaoPlace())
         }

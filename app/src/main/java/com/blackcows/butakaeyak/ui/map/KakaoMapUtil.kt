@@ -44,7 +44,7 @@ class KakaoMapUtil (private val context: Context) {
 
             override fun getPosition(): LatLng {
                 // 지도 시작 시 위치 좌표를 설정
-                return LatLng.from(myPlaceX, myPlaceY)
+                return LatLng.from(myPlaceY, myPlaceX)
             }
 
             override fun getZoomLevel(): Int {
