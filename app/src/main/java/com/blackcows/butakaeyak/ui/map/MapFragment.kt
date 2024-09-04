@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.BuildConfig
+import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -24,15 +25,15 @@ import com.google.android.gms.location.LocationServices
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMap
-import com.kakao.vectormap.KakaoMapReadyCallback
-import com.kakao.vectormap.KakaoMapSdk
 import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.MapLifeCycleCallback
-import com.kakao.vectormap.MapView
-import com.kakao.vectormap.MapViewInfo
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
-private const val TAG = "k3f_KakaoMap"
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
+import kotlinx.coroutines.delay
+
+private const val TAG = "k3f_MapFragment"
 class MapFragment : Fragment() {
 
     private var _binding: FragmentMapBinding? = null
@@ -52,29 +53,21 @@ class MapFragment : Fragment() {
 //        val mapViewModel = ViewModelProvider(this).get(MapViewModel::class.java)
         _binding = FragmentMapBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        KakaoSdk.init(requireContext(), BuildConfig.NATIVE_APP_KEY)
-        val keyHash = Utility.getKeyHash(requireContext())
-        Log.d(TAG, keyHash)
-        // 위치를 찍는다.
-        locationInit()
-        // 현재 위치를 중심으로한 약국 좌표도 구한다.
-        viewModelInit()
         return root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        binding.mapView.resume() // MapView 의 resume 호출
-    }
-
-    override fun onPause() {
-        super.onPause()
-        binding.mapView.pause() // MapView 의 pause 호출
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        kakaoMapInit()
+        KakaoSdk.init(requireContext(), BuildConfig.NATIVE_APP_KEY)
+
+        // 키해쉬 발급 ( 디버그 )
+        // val keyHash = Utility.getKeyHash(requireContext())
+        // Log.d(TAG, keyHash)
+
+        // 위치를 찍는다.
+        locationInit()
+
+        mapViewModel.apiPharmacyInfoList()
     }
     private fun locationInit() {
         mLocationRequest = LocationRequest.create().apply {
@@ -84,11 +77,10 @@ class MapFragment : Fragment() {
 
         // 버튼 이벤트를 통해 현재 위치 찾기
         binding.testBtn1.setOnClickListener {
-            Log.d(TAG, "위도 myPlaceX : $myPlaceX |&| 경도 myPlaceY : $myPlaceY")
-            CameraUpdateFactory.newCenterPosition(LatLng.from(myPlaceX, myPlaceY))
+            Log.d(TAG, "test_btn_1_clicked")
         }
         binding.testBtn2.setOnClickListener {
-            Log.d(TAG, "위도 myPlaceX : $myPlaceX |&| 경도 myPlaceY : $myPlaceY")
+            Log.d(TAG, "test_btn_2_clicked")
 
         }
         // 최초 X, Y 경도 위도 구현
@@ -97,71 +89,6 @@ class MapFragment : Fragment() {
         }
     }
 
-    private fun viewModelInit() {
-        mapViewModel.communicateNetWork("")
-    }
-
-    private fun kakaoMapInit() {
-        // KakaoMap SDK 초기화
-        KakaoMapSdk.init(requireContext(), BuildConfig.NATIVE_APP_KEY)
-        val mapView: MapView = binding.mapView
-        mapView.start(object : MapLifeCycleCallback() {
-            override fun onMapDestroy() {
-                // 지도 API 가 정상적으로 종료될 때 호출됨
-                Log.d(TAG, "인증_실패_및_지도_사용_중_에러가_발생할_때_호출됨")
-            }
-
-            override fun onMapError(error: Exception) {
-                // 인증 실패 및 지도 사용 중 에러가 발생할 때 호출됨
-                Log.d(TAG, "인증_실패_및_지도_사용_중_에러가_발생할_때_호출됨 : $error")
-            }
-        }, object : KakaoMapReadyCallback() {
-            override fun onMapReady(kakaoMap: KakaoMap) {
-                // 인증 후 API가 정상적으로 실행될 때 호출됨
-                Log.d(TAG, "인증_후_API가_정상적으로_실행될_때_호출됨")
-                // 버튼 이벤트를 통해 현재 위치 찾기
-                var cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(myPlaceX, myPlaceY))
-                kakaoMap.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true));
-                binding.btnLocation.setOnClickListener {
-                    if (checkPermissionForLocation(this@MapFragment)) {
-                        startLocationUpdates()
-                        cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(myPlaceX, myPlaceY))
-                        kakaoMap.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true));
-                    }
-                }
-            }
-
-            override fun getPosition(): LatLng {
-                // 지도 시작 시 위치 좌표를 설정
-                return LatLng.from(myPlaceX, myPlaceY)
-            }
-
-            override fun getZoomLevel(): Int {
-                // 지도 시작 시 확대/축소 줌 레벨 설정
-                return 15
-            }
-
-            override fun getMapViewInfo(): MapViewInfo {
-                // 지도 시작 시 App 및 MapType 설정
-                return MapViewInfo.from("")
-            }
-
-            override fun getViewName(): String {
-                // KakaoMap의 고유한 이름을 설정
-                return "MyFirstMap"
-            }
-
-            override fun isVisible(): Boolean {
-                // 지도 시작 시 visible 여부를 설정
-                return true
-            }
-
-            override fun getTag(): String {
-                // KakaoMap의 tag을 설정
-                return "FirstMapTag"
-            }
-        })
-    }
 
     private fun startLocationUpdates() {
         //FusedLocationProviderClient의 인스턴스를 생성.
@@ -184,16 +111,50 @@ class MapFragment : Fragment() {
         }
     }
 
-    // 시스템으로 부터 받은 위치정보를 화면에 갱신해주는 메소드
+    // 시스템으로 부터 받은 위치정보를 갱신해주는 메소드
     fun onLocationChanged(location: Location) {
         mLastLocation = location
-        myPlaceX = mLastLocation.latitude // 갱신 된 위도 37.40754692649233
-        myPlaceY = mLastLocation.longitude // 갱신 된 경도 127.11547410533494
+        // longitude = 경도 = x
+        // latitude = 위도 = y
+        myPlaceX = mLastLocation.longitude // 갱신 된 경도 127.11547410533494
+        myPlaceY = mLastLocation.latitude // 갱신 된 위도 37.40754692649233
         Log.d(TAG, "위도 myPlaceX : $myPlaceX |&| 경도 myPlaceY : $myPlaceY")
+        kakaoMapInit()
+    }
+
+    // 카카오맵
+    private fun kakaoMapInit() {
+        // 카카오맵 실행
+        KakaoMapUtil(requireContext()).kakaoMapInit(binding.mapView, myPlaceX, myPlaceY, mapViewModel) { kakaoMap ->
+            // 버튼 이벤트 설정
+            binding.btnLocation.setOnClickListener {
+                if (checkPermissionForLocation(this)) {
+                    // 버튼 이벤트를 통해 현재 위치 찾기
+                    startLocationUpdates()
+                    var cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(myPlaceY, myPlaceX))
+                    kakaoMap.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
+                }
+            }
+            // 약국의 데이터가 들어오면 라벨을 찍어준다
+            mapViewModel.items.observe(viewLifecycleOwner) { items ->
+                Log.d(TAG,"mapViewModel.items Changed")
+                kakaoMap.labelManager!!.getLayer()
+                kakaoMap.labelManager!!.getLodLayer()
+                for (item in items) {
+                    val styles = kakaoMap.labelManager!!.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.marker_pill)))
+                    val options = LabelOptions.from(LatLng.from(item.y.toDouble(), item.x.toDouble())).setStyles(styles).setClickable(true)
+                    val layer = kakaoMap.labelManager!!.layer
+                    layer?.addLabel(options)
+                }
+            }
+            // 현재 위치를 중심으로한 약국 좌표를 저장한다.
+            mapViewModel.communicateNetWork(myPlaceX, myPlaceY)
+//            kakaoMap.setOnLabelClickListener()
+        }
     }
 
     // 위치 권한이 있는지 확인하는 메서드
-    fun checkPermissionForLocation(fragment: Fragment): Boolean {
+    private fun checkPermissionForLocation(fragment: Fragment): Boolean {
         // Android 6.0 Marshmallow 이상에서는 위치 권한에 추가 런타임 권한이 필요
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (fragment.context?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -222,5 +183,18 @@ class MapFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.mapView.resume() // MapView 의 resume 호출
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.mapView.pause() // MapView 의 pause 호출
+    }
+
 
 }
+
+
+

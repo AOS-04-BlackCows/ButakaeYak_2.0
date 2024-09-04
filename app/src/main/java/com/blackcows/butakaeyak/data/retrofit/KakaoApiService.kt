@@ -8,11 +8,11 @@ import retrofit2.http.Query
 interface KakaoApiService {
     @GET("category.json")
     suspend fun getCategoryInfo(
-        @Query("x") x: String,
-        @Query("y") y: String,
+        @Query("x") x: String = "127.133021745674",
+        @Query("y") y: String = "37.4130202914964",
+        @Query("radius") radius: Int = 2000,
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 15,
-        @Query("radius") radius: Int = 1000,
         @Query("sort") sort: String = "distance",
         @Query("category_group_code") category_group_code: String = "PM9"
     ): KakaoMapDTO
