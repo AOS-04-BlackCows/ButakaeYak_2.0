@@ -38,10 +38,8 @@ import java.util.Locale
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.adapter.TakeAdapter
 
-class TakeFragment : Fragment(), TakeAdapter.OnItemDeleteListener {
-  
-
 class TakeFragment : Fragment() {
+
     //binding 설정
     private var _binding: FragmentTakeBinding? = null
     private val binding get() = _binding!!
@@ -63,7 +61,8 @@ class TakeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-    private lateinit var adapter : TakeAdapter
+
+    private lateinit var adapter: TakeAdapter
 
     //viewModel 설정
     private val viewModel: TakeViewModel by activityViewModels()
@@ -88,10 +87,6 @@ class TakeFragment : Fragment() {
         with(binding) {
             todayDateTv.text = "${todayDate.toKorean()} ${todayWeekDay.toKorean()}"
 
-            btnAdd.setOnClickListener {
-                findNavController().navigate(R.id.action_navigation_take_to_navigation_take_add)
-            }
-
             todayMedicineRv.run {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = todayMedicinesAdapter
@@ -100,29 +95,19 @@ class TakeFragment : Fragment() {
             myMedicineRv.run {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = myMedicinesAdapter
-                addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
+                addItemDecoration(
+                    DividerItemDecoration(
+                        requireContext(),
+                        LinearLayoutManager.VERTICAL
+                    )
+                )
             }
-            adapter = TakeAdapter(this@TakeFragment,requireContext())
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            adapter.notifyDataSetChanged()
         }
-
-        viewModel._cycleFragment.observe(viewLifecycleOwner, Observer { cycleItem ->
-            cycleItem?.let {
-                    adapter.updateData(it)
-            }
-        })
     }
 
     override fun onResume() {
         super.onResume()
-
         myTakeViewModel.loadTodayMedicines(todayWeekDay)
-        
-    override fun onItemDelete(position: Int) {
-        viewModel.removeCycleItem(position)
-        
     }
 
     override fun onDestroyView() {
@@ -130,10 +115,9 @@ class TakeFragment : Fragment() {
         _binding = null
     }
 
-    private fun initUiState()
-    = lifecycleScope.launch {
+    private fun initUiState() = lifecycleScope.launch {
         myTakeViewModel.uiState.collectLatest {
-            when(it) {
+            when (it) {
                 is TakeUiState.GetTodayMedicinesSuccess -> {
                     todayMedicinesAdapter.submitList(it.medicineAtTimes)
                 }
@@ -150,5 +134,4 @@ class TakeFragment : Fragment() {
             }
         }
     }
-
 }
