@@ -3,13 +3,14 @@ package com.blackcows.butakaeyak.data.retrofit
 import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.data.retrofit.interceptors.MedicineInterceptor
 import com.google.gson.GsonBuilder
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitClient {
+object RetrofitClientXml {
     const val DRUG_REST_API_KEY = BuildConfig.DRUG_INFO_KEY
 
     private val retrofitInstances = mutableMapOf<ApiBaseUrl, Retrofit>()
@@ -25,12 +26,12 @@ object RetrofitClient {
     }
 
     private fun createRetrofitInstance(baseUrl: ApiBaseUrl): Retrofit {
-        val okHttpClient=  getOkhttpClient(baseUrl)
+        val okHttpClient = getOkhttpClient(baseUrl)
 
         return Retrofit.Builder()
             .baseUrl(baseUrl.url)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(TikXmlConverterFactory.create(TikXml.Builder().exceptionOnUnreadXml(false).build()))
             .build()
     }
 

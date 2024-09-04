@@ -12,7 +12,7 @@ interface KakaoApiService {
         @Query("y") y: String,
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 15,
-        @Query("radius") radius: Int = 1000,
+        @Query("radius") radius: Int = 2000,
         @Query("sort") sort: String = "distance",
         @Query("category_group_code") category_group_code: String = "PM9"
     ): KakaoMapDTO

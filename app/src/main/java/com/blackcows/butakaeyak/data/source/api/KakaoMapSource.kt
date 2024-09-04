@@ -17,15 +17,6 @@ class KakaoMapSource @Inject constructor(
         result.documents.forEach {
             list.add(it.toKakaoPlace())
         }
-// 대 승모의 오류를 처리하며 작성하던 코드
-//        if(result.header.resultCode == "00") {
-//            result.body.items.forEach {
-//                list.add(it.toKakaoPlace())
-//            }
-//        } else {
-//            Log.d(tag, "SearchDrugs(code: ${result.header.resultCode}): ${result.header.resultMsg}")
-//        }
-
         return list
     }
 }
