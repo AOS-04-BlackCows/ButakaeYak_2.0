@@ -2,6 +2,7 @@ package com.blackcows.butakaeyak.di
 
 import com.blackcows.butakaeyak.data.repository.DrugRepository
 import com.blackcows.butakaeyak.data.repository.KakaoMapRepository
+import com.blackcows.butakaeyak.data.repository.LocalRepository
 import com.blackcows.butakaeyak.data.repository.impl.DrugRepositoryImpl
 import dagger.Binds
 import dagger.Module
@@ -17,4 +18,7 @@ abstract class BindModule {
     //@ViewModelScoped
     abstract fun provideDrugRepository(impl: DrugRepositoryImpl): DrugRepository
 
+    @Binds
+    //@ViewModelScoped
+    abstract fun provideLocalRepository(impl: DrugRepositoryImpl): LocalRepository
 }

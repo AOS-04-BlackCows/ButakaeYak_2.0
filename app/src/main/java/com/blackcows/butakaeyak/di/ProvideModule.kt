@@ -45,4 +45,6 @@ class ProvideModule {
     fun provideAlgoliaClient(): Client {
         return Client(BuildConfig.ALGORIA_APP_ID, BuildConfig.ALGORIA_SEARCH_KEY)
     }
+
+
 }

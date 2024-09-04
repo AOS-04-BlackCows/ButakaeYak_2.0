@@ -11,6 +11,7 @@ import io.ktor.util.date.WeekDay.SATURDAY
 import io.ktor.util.date.WeekDay.SUNDAY
 
 data class MedicineAtTime(
+    val weekDay: WeekDay,
     val time: String,
     val list: List<Medicine>
 )
