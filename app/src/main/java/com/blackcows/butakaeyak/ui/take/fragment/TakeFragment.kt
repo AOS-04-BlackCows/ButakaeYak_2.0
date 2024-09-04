@@ -11,6 +11,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.R
@@ -32,8 +35,11 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import com.blackcows.butakaeyak.ui.take.TakeViewModel
+import com.blackcows.butakaeyak.ui.take.adapter.TakeAdapter
 
-
+class TakeFragment : Fragment(), TakeAdapter.OnItemDeleteListener {
+  
 
 class TakeFragment : Fragment() {
     //binding 설정
@@ -57,6 +63,10 @@ class TakeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+    private lateinit var adapter : TakeAdapter
+
+    //viewModel 설정
+    private val viewModel: TakeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -92,13 +102,27 @@ class TakeFragment : Fragment() {
                 adapter = myMedicinesAdapter
                 addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
             }
+            adapter = TakeAdapter(this@TakeFragment,requireContext())
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            adapter.notifyDataSetChanged()
         }
+
+        viewModel._cycleFragment.observe(viewLifecycleOwner, Observer { cycleItem ->
+            cycleItem?.let {
+                    adapter.updateData(it)
+            }
+        })
     }
 
     override fun onResume() {
         super.onResume()
 
         myTakeViewModel.loadTodayMedicines(todayWeekDay)
+        
+    override fun onItemDelete(position: Int) {
+        viewModel.removeCycleItem(position)
+        
     }
 
     override fun onDestroyView() {

@@ -51,82 +51,38 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_cycle_name"
         app:layout_constraintStart_toStartOf="@+id/tv_cycle_name"/>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView"
+    <ImageView
+        android:id="@+id/iv_cycle_form"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="12dp"
+        app:layout_constraintTop_toTopOf="@id/tv_cycle_form"
+        app:layout_constraintBottom_toBottomOf="@id/tv_cycle_form"
+        app:layout_constraintStart_toEndOf="@id/tv_cycle_form"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="120dp"
-        android:background="@drawable/user_cl_bg_light_gray"        android:fillViewport="true"
+        android:background="@drawable/user_cl_bg_light_gray"
+        android:fillViewport="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_back"
         app:layout_constraintBottom_toTopOf="@id/btn_next">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
-
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_cycle_one"
-            android:layout_width="match_parent"
+            android:id="@+id/cl_cycle_alarm_add"
+            android:layout_width="175dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/user_cl_bg_white_gradient_gray"
-            android:padding="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="12dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/iv_cycle_one"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/baseline_calendar_today_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_cycle_one"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginBottom="12dp"
-                android:text="매일 1회"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_cycle_one"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/iv_arrow_1"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/baseline_arrow_circle_down_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_cycle_one_alarm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/user_cl_bg_white_gradient_gray"
-            android:padding="16dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_cycle_one">
-
-            <ImageView
-                android:id="@+id/iv_cycle_one_alarm"
+                android:id="@+id/iv_cycle_alarm_add"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginBottom="12dp"
@@ -136,7 +92,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_cycle_one_alarm"
+                android:id="@+id/tv_cycle_alarm_add"
                 style="@style/body_b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -144,344 +100,54 @@
                 android:layout_marginBottom="12dp"
                 android:text="알림 추가하기"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_cycle_one_alarm"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_cycle_one_alarm_time"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="12dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_cycle_alarm_add"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_cycle_two"
-            android:layout_width="match_parent"
+            android:id="@+id/cl_cycle_alarm_delete"
+            android:layout_width="175dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/user_cl_bg_white_gradient_gray"
-            android:padding="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_cycle_one_alarm">
-
-            <ImageView
-                android:id="@+id/iv_cycle_two"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/baseline_calendar_today_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_cycle_two"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginBottom="12dp"
-                android:text="매일 2회"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_cycle_two"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/iv_arrow_2"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/baseline_arrow_circle_down_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_cycle_two_alarm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="16dp"
             android:visibility="gone"
             android:background="@drawable/user_cl_bg_white_gradient_gray"
-            android:padding="16dp"
+            android:padding="12dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_cycle_two">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/iv_cycle_two_alarm"
+                android:id="@+id/iv_cycle_alarm_delete"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/baseline_access_time_24dp"
+                android:layout_marginBottom="12dp"
+                android:src="@drawable/baseline_cancel_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_cycle_two_alarm"
+                android:id="@+id/tv_cycle_alarm_delete"
                 style="@style/body_b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="알림 추가하기"
-                app:layout_constraintBottom_toBottomOf="@id/iv_cycle_two_alarm"
-                app:layout_constraintStart_toEndOf="@id/iv_cycle_two_alarm"
-                app:layout_constraintTop_toTopOf="@id/iv_cycle_two_alarm" />
-
-            <TextView
-                android:id="@+id/tv_cycle_two_alarm_time"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                app:layout_constraintBottom_toBottomOf="@id/iv_cycle_two_alarm"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/iv_cycle_two_alarm" />
-
-            <ImageView
-                android:id="@+id/iv_cycle_two_alarm_2"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginBottom="12dp"
-                android:src="@drawable/baseline_access_time_24dp"
+                android:text="알림 제거하기"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_cycle_two_alarm" />
-
-            <TextView
-                android:id="@+id/tv_cycle_two_alarm_2"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="알림 추가하기"
-                app:layout_constraintBottom_toBottomOf="@id/iv_cycle_two_alarm_2"
-                app:layout_constraintStart_toEndOf="@id/iv_cycle_two_alarm_2"
-                app:layout_constraintTop_toTopOf="@id/iv_cycle_two_alarm_2" />
-
-            <TextView
-                android:id="@+id/tv_cycle_two_alarm_time_2"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                app:layout_constraintBottom_toBottomOf="@id/iv_cycle_two_alarm_2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/iv_cycle_two_alarm_2" />
+                app:layout_constraintStart_toEndOf="@id/iv_cycle_alarm_delete"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_cycle_three"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/user_cl_bg_white_gradient_gray"
-            android:padding="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_cycle_two_alarm">
-
-            <ImageView
-                android:id="@+id/iv_cycle_three"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/baseline_calendar_today_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_cycle_three"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginBottom="12dp"
-                android:text="매일 3회"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_cycle_three"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/iv_arrow_3"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/baseline_arrow_circle_down_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_cycle_three_alarm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/user_cl_bg_white_gradient_gray"
-            android:padding="16dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_cycle_three">
-
-            <ImageView
-                android:id="@+id/iv_cycle_three_alarm"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/baseline_access_time_24dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_cycle_three_alarm"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="알림 추가하기"
-                app:layout_constraintBottom_toBottomOf="@id/iv_cycle_three_alarm"
-                app:layout_constraintStart_toEndOf="@id/iv_cycle_three_alarm"
-                app:layout_constraintTop_toTopOf="@id/iv_cycle_three_alarm" />
-
-            <TextView
-                android:id="@+id/tv_cycle_three_alarm_time"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                app:layout_constraintBottom_toBottomOf="@id/iv_cycle_three_alarm"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/iv_cycle_three_alarm" />
-
-            <ImageView
-                android:id="@+id/iv_cycle_three_alarm_2"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/baseline_access_time_24dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@id/iv_cycle_three_alarm"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_cycle_three_alarm_2"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="알림 추가하기"
-                app:layout_constraintBottom_toBottomOf="@id/iv_cycle_three_alarm_2"
-                app:layout_constraintStart_toEndOf="@id/iv_cycle_three_alarm_2"
-                app:layout_constraintTop_toTopOf="@id/iv_cycle_three_alarm_2" />
-
-            <TextView
-                android:id="@+id/tv_cycle_three_alarm_time_2"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                app:layout_constraintBottom_toBottomOf="@id/iv_cycle_three_alarm_2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/iv_cycle_three_alarm_2" />
-            <ImageView
-                android:id="@+id/iv_cycle_three_alarm_3"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/baseline_access_time_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_cycle_three_alarm_2" />
-
-            <TextView
-                android:id="@+id/tv_cycle_three_alarm_3"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="알림 추가하기"
-                app:layout_constraintBottom_toBottomOf="@id/iv_cycle_three_alarm_3"
-                app:layout_constraintStart_toEndOf="@id/iv_cycle_three_alarm_3"
-                app:layout_constraintTop_toTopOf="@id/iv_cycle_three_alarm_3" />
-
-            <TextView
-                android:id="@+id/tv_cycle_three_alarm_time_3"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                app:layout_constraintBottom_toBottomOf="@id/iv_cycle_three_alarm_3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/iv_cycle_three_alarm_3" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_cycle_day"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/user_cl_bg_white_gradient_gray"
-            android:padding="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_cycle_three_alarm">
-
-            <ImageView
-                android:id="@+id/iv_cycle_day"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/baseline_today_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_cycle_day"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginBottom="12dp"
-                android:text="특정 요일마다"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_cycle_day"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/iv_arrow_4"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/baseline_arrow_circle_down_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/cl_cycle_alarm_add"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.core.widget.NestedScrollView>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_next"
