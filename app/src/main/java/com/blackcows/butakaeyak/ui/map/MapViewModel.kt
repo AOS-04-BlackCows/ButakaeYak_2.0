@@ -7,13 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blackcows.butakaeyak.data.models.KakaoPlace
 import com.blackcows.butakaeyak.domain.repo.KakaoMapRepository
-import com.blackcows.butakaeyak.domain.repo.PharmacyInfoRepository
-import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
-import com.blackcows.butakaeyak.data.retrofit.PharmacyInfoApiService
-import com.blackcows.butakaeyak.data.retrofit.RetrofitClientXml
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 private const val TAG = "k3f_MapViewModel"
@@ -22,44 +17,9 @@ private const val TAG = "k3f_MapViewModel"
 class MapViewModel @Inject constructor(
     private val kakaoRepository: KakaoMapRepository
 ) : ViewModel() {
-    private var pharmacyInfoRepository: PharmacyInfoRepository? = null
-
     private val _items = MutableLiveData<List<KakaoPlace>>()
     val items: LiveData<List<KakaoPlace>>
         get() = _items
-
-//    fun apiPharmacyInfoList() = runBlocking {
-//        val result = suspendCoroutine { continuation ->
-//            pharmacyInfoRepository?.searchPharmacyInfo("성남시 분당구") { drugs ->
-//                // callback 내용 작성
-//                continuation.resume(drugs)
-//            }
-//        }
-//
-//        assertNotNull(result)
-//        assertTrue(result.isNotEmpty())
-//
-//        result.forEachIndexed { i, it ->
-//            Log.d(TAG,"$i: ${it.dutyName}")
-//        }
-//    }
-
-    fun apiPharmacyInfoList() = runBlocking {
-        val instance = RetrofitClientXml.getInstance(ApiBaseUrl.PharmacyListInfoUrl)
-        val retrofit = instance.create(PharmacyInfoApiService::class.java)
-        Log.d(TAG, "retrofit")
-        val result = retrofit.getPharmacyInfo("경기도 성남시", null, null, null, null)
-
-        Log.d(TAG, "result")
-        result.body.items?.forEachIndexed { i, it ->
-            Log.d(TAG, "$i: ${it.dutyName}, ${it}")
-        }
-
-        Log.d(
-            TAG,
-            "resultCode: ${result.header.resultCode}, item: ${result.body.items?.get(0)?.dutyAddr}"
-        )
-    }
 
     fun communicateNetWork(x: Double, y: Double) {
         viewModelScope.launch {
