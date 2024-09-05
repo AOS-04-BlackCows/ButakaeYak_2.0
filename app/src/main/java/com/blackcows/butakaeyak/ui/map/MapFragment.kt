@@ -142,7 +142,7 @@ class MapFragment : Fragment() {
                 kakaoMap.labelManager!!.getLodLayer()
                 for (item in items) {
                     val styles = kakaoMap.labelManager!!.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.marker_pill)))
-                    val options = LabelOptions.from(LatLng.from(item.y.toDouble(), item.x.toDouble())).setStyles(styles).setClickable(true)
+                    val options = LabelOptions.from(LatLng.from(item.y.toDouble(), item.x.toDouble())).setStyles(styles).setTag(item).setClickable(true)
                     val layer = kakaoMap.labelManager!!.layer
                     layer?.addLabel(options)
                 }
