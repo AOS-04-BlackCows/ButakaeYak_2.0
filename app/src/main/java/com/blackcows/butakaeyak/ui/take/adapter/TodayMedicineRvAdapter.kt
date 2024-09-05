@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.take.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,11 +35,7 @@ class TodayMedicineRvAdapter:
 //                .load(item.imageUrl)
 //                .into(binding.image)
             with(binding) {
-                val visibleItems = mutableListOf<Medicine>()
                 alarmTimeTv.text = item.time
-
-                visibleItems.clear()
-                visibleItems.addAll(item.list.take(2))
 
                 val adapter = SimpleMedicineRvAdapter()
                 medicineRv.run {
@@ -47,16 +44,15 @@ class TodayMedicineRvAdapter:
                     addItemDecoration(TakeRvDecorator.getLinearDeco())
                 }
 
-                adapter.submitList(visibleItems)
+                adapter.submitList(item.list.take(2))
                 expandButton.visibility = if (item.list.size > 2) View.VISIBLE else View.GONE
 
                 //TODO: 접기 버튼도 넣기
                 expandButton.setOnClickListener {
-                    visibleItems.clear()
-                    visibleItems.addAll(item.list)
-
                     expandButton.visibility = View.GONE
-                    adapter.submitList(visibleItems)
+                    adapter.submitList(item.list.toMutableList())
+
+                    Log.d("TodayMedicineRvAdapter", "list size: ${adapter.currentList.size}")
                 }
             }
         }

@@ -31,7 +31,7 @@ class MyTakeViewModel @Inject constructor(
 //        }
         _uiState.value = TakeUiState.GetTodayMedicinesSuccess(
             listOf(
-                MedicineAtTime(dayWeekDay, "8:00", listOf(Medicine(id = "1", name = "기본약"), Medicine(id = "2",name = "비타민"), Medicine(id = "3",name = "영양제"))),
+                MedicineAtTime(dayWeekDay, "8:00", listOf(Medicine(id = "1", name = "기본약"), Medicine(id = "2",name = "비타민"), Medicine(id = "3",name = "영양제"), Medicine(id = "4", name = "4약"), Medicine(id = "5", name = "5약"))),
                 MedicineAtTime(dayWeekDay, "12:00", listOf(Medicine(id = "1",name = "기본약"))),
                 MedicineAtTime(dayWeekDay, "18:00", listOf(Medicine(id = "1",name = "기본약")))
             )

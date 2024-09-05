@@ -12,7 +12,7 @@ import com.blackcows.butakaeyak.R
 object TakeRvDecorator {
     fun getLinearDeco() = object : ItemDecoration() {
         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-            outRect.set(0,5,0,5)
+            outRect.set(0,3,0,3)
         }
     }
 

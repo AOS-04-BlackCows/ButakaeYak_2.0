@@ -18,6 +18,34 @@ object MainNavigation {
     private val fragmentStack = HashMap<TabTag, Stack<FragmentTag>>()
 
 
+    fun addFragment(fragment: Fragment, tag: FragmentTag) {
+        fragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_view, fragment, tag.name).commit()
+
+        Log.d("Navigation", "Push Fragment: ${tag.name} to Stack: ${currentTab.name}")
+        fragmentStack[currentTab]!!.push(tag)
+    }
+
+    fun popCurrentFragment() {
+        val curStack = fragmentStack[currentTab]!!
+        if(curStack.size == 0) return
+
+        curStack.pop()
+
+        val curFragment = fragmentManager.findFragmentByTag(
+            curStack.last().name
+        )!!
+
+        fragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_view, curFragment)
+            .commit()
+
+        Log.d("Navigation", "size: ${curStack.size}")
+    }
+
+    //-------------------------------------------------------------------------------------------------------------
+
+
     fun initialize(activity: MainActivity, binding: ActivityMainBinding) {
         fragmentManager = activity.supportFragmentManager
 
@@ -29,30 +57,6 @@ object MainNavigation {
         initViewPager(activity, binding)
         initNavigation(binding)
         addBackPressedCallback(activity, binding)
-    }
-
-    fun addFragment(fragment: Fragment, tag: FragmentTag) {
-        fragmentManager.beginTransaction()
-            .add(R.id.fragment_container_view, fragment, tag.name).commit()
-
-        Log.d("Navigation", "Push Fragment: ${tag.name} to Stack: ${currentTab.name}")
-        fragmentStack[currentTab]!!.push(tag)
-    }
-
-    fun popCurrentFragment() {
-        val curStack = fragmentStack[currentTab]!!
-        if(curStack.size == 0) return
-
-        val curFragment = fragmentManager.findFragmentByTag(
-            curStack.lastElement().name
-        )!!
-
-        fragmentManager.beginTransaction()
-            .remove(curFragment)
-            .commit()
-
-        Log.d("Navigation", "size: ${curStack.size}")
-        fragmentStack[currentTab]!!.pop()
     }
 
 
@@ -69,7 +73,10 @@ object MainNavigation {
         })
     }
     private fun initNavigation(binding: ActivityMainBinding) {
+        binding.viewPager.isUserInputEnabled = false
+
         binding.bottomMenuBar.setOnItemSelectedListener { item ->
+
             currentTab = when(item.itemId) {
                 R.id.navigation_take -> {
                     binding.viewPager.currentItem = 0
@@ -81,6 +88,7 @@ object MainNavigation {
                 }
                 R.id.navigation_map -> {
                     binding.viewPager.currentItem = 2
+
                     TabTag.Map
                 }
                 R.id.navigation_user -> {
