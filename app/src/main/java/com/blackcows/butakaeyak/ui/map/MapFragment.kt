@@ -16,26 +16,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.R
-import com.blackcows.butakaeyak.data.models.KakaoPlace
 import com.blackcows.butakaeyak.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.api.AnnotationsProto.http
 import com.kakao.sdk.common.KakaoSdk
-import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraAnimation
+import com.kakao.vectormap.camera.CameraPosition
 import com.kakao.vectormap.camera.CameraUpdateFactory
-import com.kakao.vectormap.label.Label
-import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
-import kotlinx.coroutines.delay
+import com.kakao.vectormap.label.TrackingManager
+
 
 private const val TAG = "k3f_MapFragment"
 class MapFragment : Fragment() {
@@ -49,6 +46,9 @@ class MapFragment : Fragment() {
     private val REQUEST_PERMISSION_LOCATION = 10
     lateinit var mLastLocation: Location // 위치 값을 가지고 있는 객체
     private lateinit var mLocationRequest: LocationRequest // 위치 정보
+
+    private lateinit var kakaoMapCall: KakaoMap
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -68,8 +68,11 @@ class MapFragment : Fragment() {
         // val keyHash = Utility.getKeyHash(requireContext())
         // Log.d(TAG, keyHash)
 
+        kakaoMapInit()
+
         // 위치를 찍는다.
         locationInit()
+
 
         mapViewModel.apiPharmacyInfoList()
     }
@@ -123,13 +126,23 @@ class MapFragment : Fragment() {
         myPlaceX = mLastLocation.longitude // 갱신 된 경도 127.11547410533494
         myPlaceY = mLastLocation.latitude // 갱신 된 위도 37.40754692649233
         Log.d(TAG, "위도 myPlaceX : $myPlaceX |&| 경도 myPlaceY : $myPlaceY")
-        kakaoMapInit()
+
+
+        kakaoMapCall.moveCamera(
+            CameraUpdateFactory.newCenterPosition(
+                LatLng.from(
+                    37.402005,
+                    127.108621
+                )
+            )
+        )
     }
 
     // 카카오맵
     private fun kakaoMapInit() {
         // 카카오맵 실행
         KakaoMapUtil(requireContext()).kakaoMapInit(binding.mapView, myPlaceX, myPlaceY, mapViewModel) { kakaoMap ->
+            kakaoMapCall = kakaoMap
             // 버튼 이벤트 설정
             binding.btnLocation.setOnClickListener {
                 if (checkPermissionForLocation(this)) {
