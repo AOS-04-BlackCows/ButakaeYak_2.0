@@ -6,10 +6,7 @@
 
 
     <!-- SignIn -->
-    <string name="tv_id">아이디</string>
-    <string name="tv_pw">비밀전호</string>
-
-    <string name="input_phone_number">전화번호를 입력해 주세요</string>
+    <string name="input_id">아이디를 입력해 주세요</string>
     <string name="input_pw">비밀번호를 입력해 주세요</string>
     <string name="input_name">이름을 입력해 주세요</string>
     <string name="input_age">나이를 입력해 주세요</string>

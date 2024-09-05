@@ -65,10 +65,10 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
         }
         binding.ivKakao.setOnClickListener(this)
 
-        val inPutPhoneNumber = intent.getStringExtra("phoneNumber")
+        val inPutId = intent.getStringExtra("id")
         val inPutPw = intent.getStringExtra("pw")
 
-        binding.inputPhoneNumber.setText(inPutPhoneNumber)
+        binding.inputId.setText(inPutId)
         binding.inputPw.setText(inPutPw)
 
 
@@ -102,7 +102,18 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
                             Log.e(TAG, "로그인 성공${token.accessToken}")
                             Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
                             nextUserFragment()
+
+                            firestoreManager.saveKakaoUser(object : FirestoreManager.ResultListener<Boolean>{
+                                override fun onSuccess(result: Boolean) {
+                                    Log.d(TAG, "Firebase 저장 성공")
+                                }
+
+                                override fun onFailure(e: Exception) {
+                                    Log.e(TAG, "Firebase저장 실패",e)
+                                }
+                            })
                         }
+
                     }
                 } else {
                     // 카카오 이메일 로그인
@@ -115,12 +126,12 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
     private fun initView() {
         with(binding) {
             btnLogin.setOnClickListener {
-                val userPhoneNumber = inputPhoneNumber.text.toString()
-                val phoneNumber = inputPhoneNumber.text.toString()
+                val userId = inputId.text.toString()
+                val phoneNumber = inputId.text.toString()
 
                 val pw = inputPw.text.toString()
                 if (validateInputs(phoneNumber, pw)) {
-                    firestoreManager.trySignIn(userPhoneNumber,
+                    firestoreManager.trySignIn(userId,
                         object : FirestoreManager.ResultListener<UserData> {
                             override fun onSuccess(result: UserData) {
                                 // 회원가입 성공 이벤트
@@ -145,12 +156,11 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
                 } else {
                     Toast.makeText(
                         this@SignInActivity,
-                        "전화번호와 비밀번호를 입력해주세요.",
+                        "아이디와 비밀번호를 입력해주세요.",
                         Toast.LENGTH_LONG
-                    )
-                        .show()
+                    ).show()
                 }
-                Log.d(TAG, "전화번호와 비밀번호 입력해주세요. ")
+                Log.d(TAG, "아이디와 비밀번호 입력해주세요. ")
             }
         }
     }

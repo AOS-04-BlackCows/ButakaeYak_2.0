@@ -2,9 +2,9 @@ package com.blackcows.butakaeyak.ui.SignIn
 
 object SignUpValidation {
     // 010-xxxx-xxxx
-    fun isValidPhoneNumber(phoneNumber: String): Boolean {
-        val phoneNumberPattern = "^(010\\d{4}\\d{4}\$)".toRegex()
-        return phoneNumberPattern.matches(phoneNumber)
+    fun isValidId(id: String): Boolean {
+        val idPattern = "^([a-zA-Z0-9]+$)".toRegex()
+        return idPattern.matches(id)
     }
 
     // 한국어만 가능
