@@ -17,8 +17,7 @@ class KakaoMapRepositoryImpl @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ): KakaoMapRepository {
     override suspend fun searchCategory(x: String, y: String): List<KakaoPlace> {
-
-        return kotlin.runCatching {
+        return runCatching {
             kakaoMapSource.searchCategoryPlace(x, y)
         }.getOrElse{
             Log.d(TAG, "onFailure")
