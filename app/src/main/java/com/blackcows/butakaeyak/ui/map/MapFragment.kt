@@ -16,18 +16,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.KakaoPlace
 import com.blackcows.butakaeyak.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.api.AnnotationsProto.http
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.Label
+import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
@@ -141,10 +145,33 @@ class MapFragment : Fragment() {
                 kakaoMap.labelManager!!.getLayer()
                 kakaoMap.labelManager!!.getLodLayer()
                 for (item in items) {
-                    val styles = kakaoMap.labelManager!!.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.marker_pill)))
-                    val options = LabelOptions.from(LatLng.from(item.y.toDouble(), item.x.toDouble())).setStyles(styles).setTag(item).setClickable(true)
-                    val layer = kakaoMap.labelManager!!.layer
+                    // 스타일 지정. LabelStyle.from()안에 원하는 이미지 넣기
+                    val style = kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.marker_pill)))
+                    // 라벨 옵션 지정. 위경도와 스타일 넣기
+                    val options = LabelOptions.from(LatLng.from(item.y.toDouble(), item.x.toDouble())).setStyles(style).setTag(item).setClickable(true)
+                    // 레이어 가져오기
+                    val layer = kakaoMap.labelManager?.layer
+                    // 레이어에 라벨 추가
                     layer?.addLabel(options)
+                    kakaoMap.setOnLabelClickListener { kakaoMap, labelLayer, label ->
+                        Log.d(TAG, label?.tag.toString())
+                        true
+                    }
+//                    KakaoPlace(
+//                    placeName=한우리약국,
+//                    distance=291,
+//                    placeUrl="http://place.map.kakao.com/9578427",
+//                    categoryName="의료,건강 > 약국",
+//                    addressName="경기 성남시 분당구 야탑동 215",
+//                    roadAddressName="경기 성남시 분당구 장미로 139",
+//                    id=9578427,
+//                    phone="031-708-3399",
+//                    categoryGroupCode="PM9",
+//                    categoryGroupName="약국",
+//                    x=127.13616482305073,
+//                    y=37.413583634331886
+//                    )
+
                 }
             }
             // 현재 위치를 중심으로한 약국 좌표를 저장한다.
