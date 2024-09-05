@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/round_rect_500"
-    android:padding="5dp">
+    android:padding="5dp"
+    >
 
     <TextView
         android:id="@+id/alarm_time_tv"
@@ -13,7 +14,7 @@
         android:layout_height="wrap_content"
 
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/medicine_rv"
         app:layout_constraintStart_toStartOf="parent"
 
         android:layout_marginStart="20dp"
@@ -29,12 +30,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        app:layout_constraintStart_toEndOf="@id/alarm_time_tv"
         app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintStart_toEndOf="@id/alarm_time_tv"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
 
         android:layout_marginHorizontal="20dp"
+
+        tools:listitem="@layout/medicine_simple_item"
          />
 
     <TextView
@@ -46,11 +49,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
 
         android:text="더보기"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:visibility="gone"
          />
 
