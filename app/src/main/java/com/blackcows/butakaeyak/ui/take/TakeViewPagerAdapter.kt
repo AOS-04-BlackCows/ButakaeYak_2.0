@@ -5,12 +5,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.blackcows.butakaeyak.ui.take.fragment.CycleFragment
 import com.blackcows.butakaeyak.ui.take.fragment.FormFragment
 import com.blackcows.butakaeyak.ui.take.fragment.NameFragment
-import com.blackcows.butakaeyak.ui.take.fragment.TimeFragment
 
 class TakeViewPagerAdapter(fragment: Fragment) :
     FragmentStateAdapter(fragment){
     private lateinit var takeViewPagerAdapter: TakeViewPagerAdapter
-    val fragments = listOf<Fragment>(NameFragment(), FormFragment(), CycleFragment(), TimeFragment())
+    val fragments = listOf<Fragment>(NameFragment(), FormFragment(), CycleFragment())
 
     override fun getItemCount(): Int {
         return fragments.size

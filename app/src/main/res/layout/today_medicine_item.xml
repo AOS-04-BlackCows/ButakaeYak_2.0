@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/round_rect_500"
+    android:padding="5dp"
+    >
+
+    <TextView
+        android:id="@+id/alarm_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/medicine_rv"
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:layout_marginStart="20dp"
+
+        android:text="18:50"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="18sp" 
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/medicine_rv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintStart_toEndOf="@id/alarm_time_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_marginHorizontal="20dp"
+
+        tools:listitem="@layout/medicine_simple_item"
+         />
+
+    <TextView
+        android:id="@+id/expandButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/medicine_rv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_marginTop="5dp"
+
+        android:text="더보기"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:visibility="gone"
+         />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

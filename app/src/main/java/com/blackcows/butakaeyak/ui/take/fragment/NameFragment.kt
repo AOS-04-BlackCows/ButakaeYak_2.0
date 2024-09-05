@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -53,10 +54,12 @@ class NameFragment : Fragment() {
                 binding.apply{
                     if(etMedicineName.length() > 0){
                         btnNext.apply{
+
                             isEnabled = true
                             setBackgroundResource(R.color.green)
                             setTextColor(Color.WHITE)
                             setOnClickListener {
+                                Log.d("버튼","버튼 눌림")
                                 viewModel.moveToNextPage()
                                 viewModel.updateItem(etMedicineName.text.toString())
                             }
