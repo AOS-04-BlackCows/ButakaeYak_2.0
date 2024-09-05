@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blackcows.butakaeyak.data.models.KakaoPlace
-import com.blackcows.butakaeyak.data.repository.KakaoMapRepository
-import com.blackcows.butakaeyak.data.repository.PharmacyInfoRepository
+import com.blackcows.butakaeyak.domain.repo.KakaoMapRepository
+import com.blackcows.butakaeyak.domain.repo.PharmacyInfoRepository
 import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
 import com.blackcows.butakaeyak.data.retrofit.PharmacyInfoApiService
 import com.blackcows.butakaeyak.data.retrofit.RetrofitClientXml

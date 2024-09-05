@@ -2,12 +2,10 @@ package com.blackcows.butakaeyak.data.repository.impl
 
 import android.util.Log
 import com.blackcows.butakaeyak.data.models.KakaoPlace
-import com.blackcows.butakaeyak.data.repository.KakaoMapRepository
+import com.blackcows.butakaeyak.domain.repo.KakaoMapRepository
 import com.blackcows.butakaeyak.data.source.api.KakaoMapSource
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "KakaoMapRepositoryImpl"
