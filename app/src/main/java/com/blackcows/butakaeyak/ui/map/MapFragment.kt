@@ -2,12 +2,15 @@ package com.blackcows.butakaeyak.ui.map
 
 import android.Manifest
 import android.content.Context.LOCATION_SERVICE
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,10 +22,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
+import com.blackcows.butakaeyak.data.source.LocalDataSource
 import com.blackcows.butakaeyak.databinding.BottomsheetMapDetailBinding
 import com.blackcows.butakaeyak.databinding.FragmentMapBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kakao.sdk.common.KakaoSdk
+import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraAnimation
@@ -30,6 +36,7 @@ import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
+import java.security.MessageDigest
 
 private const val TAG = "k3f_MapFragment"
 class MapFragment : Fragment() {
@@ -37,8 +44,8 @@ class MapFragment : Fragment() {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
     private val mapViewModel: MapViewModel by activityViewModels()
-    private var myPlaceLongtudeX: Double = 0.0 // 127.11547410533494
-    private var myPlaceLatitudeY: Double = 0.0 // 37.40754692649233
+    private var myPlaceLongtudeX: Double = 127.11547410533494 // 임시 127.11547410533494
+    private var myPlaceLatitudeY: Double = 37.40754692649233 // 임시 37.40754692649233
     private lateinit var locationManager: LocationManager
     private lateinit var locationListener: LocationListener
 //    private var mFusedLocationProviderClient: FusedLocationProviderClient? = null // 현재 위치를 가져오기 위한 변수
@@ -61,17 +68,20 @@ class MapFragment : Fragment() {
         checkPermissionForLocation(this)
         return root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         KakaoSdk.init(requireContext(), BuildConfig.NATIVE_APP_KEY)
         // 키해쉬 발급 ( 디버그 )
-        // val keyHash = Utility.getKeyHash(requireContext())
-        // Log.d(TAG, keyHash)
+         val keyHash = Utility.getKeyHash(requireContext())
+         Log.d(TAG, "keyHash : $keyHash")
 
         bottomSheetView = BottomsheetMapDetailBinding.inflate(layoutInflater)
         bottomSheetDialog = BottomSheetDialog(requireContext())
         bottomSheetDialog.setContentView(bottomSheetView.root)
+
+        kakaoMapInit(myPlaceLongtudeX, myPlaceLatitudeY)
+        mapViewModel.findPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
+        mapViewModel.moreFindPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
     }
 
     // 내 위치로 이동
@@ -134,26 +144,26 @@ class MapFragment : Fragment() {
         locationListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 // 위치 정보가 변경될 때 호출되는 콜백
-                val latitude = location.latitude
-                val longitude = location.longitude
+                myPlaceLongtudeX = location.longitude
+                myPlaceLatitudeY = location.latitude
                 // 위치 정보를 사용하여 원하는 작업 수행
-                Log.e("*****", "onLocationChanged")
-                Log.e("*****", "${location.latitude} ${location.latitude}")
+                Log.e(TAG, "onLocationChanged")
+                Log.e(TAG, "${location.latitude} ${location.longitude}")
             }
 
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
                 // 위치 제공자 상태 변경 시 호출되는 콜백
-                Log.e("*****", "onStatusChanged")
+                Log.e(TAG, "onStatusChanged")
             }
 
             override fun onProviderEnabled(provider: String) {
                 // 위치 제공자가 사용 가능할 때 호출되는 콜백
-                Log.e("*****", "onProviderEnabled")
+                Log.e(TAG, "onProviderEnabled")
             }
 
             override fun onProviderDisabled(provider: String) {
                 // 위치 제공자가 사용 불가능할 때 호출되는 콜백
-                Log.e("*****", "onProviderDisabled")
+                Log.e(TAG, "onProviderDisabled")
             }
         }
         // 위치 업데이트 요청
@@ -167,21 +177,18 @@ class MapFragment : Fragment() {
             val location: Location? = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             Log.d(TAG, LocationManager.GPS_PROVIDER)
             location?.let{
-                myPlaceLongtudeX = location.longitude // 갱신 된 경도 127.11547410533494
-                myPlaceLatitudeY = location.latitude // 갱신 된 위도 37.40754692649233
+//                myPlaceLongtudeX = location.longitude // 갱신 된 경도 127.11547410533494
+//                myPlaceLatitudeY = location.latitude // 갱신 된 위도 37.40754692649233
                 val accuracy = location.accuracy
                 val time = location.time
                 Log.d(TAG, "$myPlaceLongtudeX, $myPlaceLatitudeY, $location, $accuracy, $time")
 
                 // 위치 정보가 유효한 경우에만 카카오맵 초기화
-                if (myPlaceLongtudeX != 0.0 && myPlaceLatitudeY != 0.0) {
-                    kakaoMapInit(myPlaceLongtudeX, myPlaceLatitudeY)
-                    mapViewModel.findPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
-                    mapViewModel.moreFindPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
-                } else {
-                    Log.d(TAG, "유효하지 않은 위치 정보입니다.")
-                    Toast.makeText(requireContext(), "유효하지 않은 위치 정보입니다.", Toast.LENGTH_SHORT).show()
-                }
+//                if (myPlaceLongtudeX != 0.0 && myPlaceLatitudeY != 0.0) {
+//                } else {
+//                    Log.d(TAG, "유효하지 않은 위치 정보입니다.")
+//                    Toast.makeText(requireContext(), "유효하지 않은 위치 정보입니다.", Toast.LENGTH_SHORT).show()
+//                }
             } ?: run {
                 // 위치 정보가 없을 경우 처리
                 Log.d(TAG, "위치 정보를 가져올 수 없습니다.")
@@ -192,18 +199,18 @@ class MapFragment : Fragment() {
             Toast.makeText(requireContext(), "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
 
-        binding.testBtn1.setOnClickListener {
+        binding.mapResearch.setOnClickListener {
+            val camera = kakaoMapCall.getCameraPosition()
+            myPlaceLatitudeY = camera?.position?.latitude?: 0.0
+            myPlaceLongtudeX = camera?.position?.longitude?: 0.0
+            mapViewModel.findPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
+        }
+        binding.mapViewMore.setOnClickListener {
             if (mapViewModel.pharmacyPager <= 5) {
                 mapViewModel.moreFindPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
             } else {
                 Toast.makeText(requireContext(), "표시된 약국이 많아 더 이상 검색할 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
-        }
-        binding.testBtn2.setOnClickListener {
-            val camera = kakaoMapCall.getCameraPosition()
-            myPlaceLatitudeY = camera?.position?.latitude?: 0.0
-            myPlaceLongtudeX = camera?.position?.longitude?: 0.0
-            mapViewModel.findPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
         }
     }
 
@@ -241,18 +248,66 @@ class MapFragment : Fragment() {
                     layer?.addLabel(options)
                     kakaoMap.setOnLabelClickListener { kakaoMap, labelLayer, label ->
                         Log.d(TAG, label?.tag.toString())
-                        val selectTagArr = label?.tag.toString().split("||")
-                        bottomSheetView.distance.text = "${selectTagArr[1]}m"
-                        bottomSheetView.placeName.text = selectTagArr[0]
-                        bottomSheetView.phone.text = selectTagArr[7]
-                        bottomSheetView.placeUrl.text = selectTagArr[2]
-                        bottomSheetView.addressName.text = selectTagArr[4]
-                        bottomSheetView.roadAddressName.text = selectTagArr[5]
+                        val tag = label?.tag.toString().split("||")
+                        val pharmacyData = KakaoPlacePharmacy(tag[0],tag[1],tag[2],tag[3],tag[4],tag[5],tag[6],tag[7],tag[8],tag[9],tag[10],tag[11])
+                        bottomSheetView.distance.text = "${pharmacyData.distance}m"
+                        bottomSheetView.placeName.text = pharmacyData.placeName
+                        bottomSheetView.phone.text = pharmacyData.phone
+                        bottomSheetView.placeUrl.text = pharmacyData.placeUrl
+                        bottomSheetView.addressName.text = pharmacyData.addressName
+                        bottomSheetView.roadAddressName.text = pharmacyData.roadAddressName
+
+                        fun pharmacyChecked(): Boolean = LocalDataSource(requireContext()).isPharmacyChecked(pharmacyData.id)
+                        Log.d(TAG, "pharmacyChecked() = ${pharmacyChecked()}")
+                        fun activeIcon() {
+                            bottomSheetView.btnFavorite.setImageResource(R.drawable.icon_favorite_active)
+                            Log.d(TAG, "activeIcon() Run")
+                        }
+                        fun passiveIcon() {
+                            bottomSheetView.btnFavorite.setImageResource(R.drawable.icon_favorite)
+                            Log.d(TAG, "passiveIcon() Run")
+                        }
+                        // init icon option
+                        if (pharmacyChecked()) {
+                            activeIcon()
+                        } else {
+                            passiveIcon()
+                        }
+                        bottomSheetView.btnFavorite.setOnClickListener {
+                            if (pharmacyChecked()) {
+                                passiveIcon()
+                                LocalDataSource(requireContext()).removeMyPharmacy(pharmacyData.id)
+                            } else {
+                                activeIcon()
+                                LocalDataSource(requireContext()).addMyPharmacy(pharmacyData)
+                            }
+                        }
+                        bottomSheetView.btnCall.setOnClickListener {
+                            val phone = pharmacyData.phone
+                            if (phone.isNotEmpty()) {
+                                val intent = Intent(Intent.ACTION_DIAL)
+                                intent.data = Uri.parse("tel:$phone")
+                                startActivity(intent)
+                            } else {
+                                Toast.makeText(context, "유효한 전화번호가 아닙니다.", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        bottomSheetView.placeUrl.setOnClickListener {
+                            val url = pharmacyData.placeUrl
+                            if (url.isNotEmpty()) {
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                intent.data = Uri.parse(url)
+                                startActivity(intent)
+                            } else {
+                                Toast.makeText(context, "유효한 URL이 아닙니다.", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                         bottomSheetDialog.show()
                         true
                     }
-                    /*  selectTagArr Data
-                        [0] placeName = 예시 : 한우리약국,
+                    /*
+                        selectTagArr Data
+                           [0] placeName = 예시 : 한우리약국,
                         || [1] distance = 예시 : 291,
                         || [2] placeUrl = 예시 : "http://place.map.kakao.com/9578427",
                         || [3] categoryName = 예시 : "의료,건강 > 약국",
