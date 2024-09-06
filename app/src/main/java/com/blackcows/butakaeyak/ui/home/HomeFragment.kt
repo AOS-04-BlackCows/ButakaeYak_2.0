@@ -81,6 +81,18 @@ class HomeFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        Log.d("HomeFragment", "onPause")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("HomeFragment", "onResume")
+        homeViewModel.searchMedicinesWithName(binding.searchEtSearchtext.text.toString())
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

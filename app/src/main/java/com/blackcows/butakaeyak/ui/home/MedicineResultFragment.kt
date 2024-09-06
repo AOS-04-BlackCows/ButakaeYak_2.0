@@ -20,6 +20,7 @@ import com.blackcows.butakaeyak.ui.home.data.DataSource
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
+import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 
 private const val TAG = "약 결과"
 class MedicineResultFragment : Fragment() {
@@ -83,10 +84,14 @@ class MedicineResultFragment : Fragment() {
                 }
                 override fun setMedicineChecked(item: Medicine, isChecked: Boolean) {
                     Log.d(TAG,item.id.toString() + ": "+isChecked)
-                    if(isChecked) {
+                    if(!isChecked) {
                         homeViewModel.cancelMyMedicine(item.id!!)
                     } else {
                         homeViewModel.saveMyMedicine(MyMedicine(item, mapOf()))
+
+                        MainNavigation.addFragment(
+                            TakeAddFragment.newInstance(item), FragmentTag.TakeAddFragment
+                        )
                     }
                     homeViewModel.saveMyMedicine(MyMedicine(item, mapOf()))
                 }
@@ -104,18 +109,6 @@ class MedicineResultFragment : Fragment() {
                 viewModel.updateItem(medicineText)
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        if(homeViewModel.medicineResult.value!!.isNotEmpty()) {
-            val lists = homeViewModel.getMyMedicines().map {
-                it.medicine
-            }
-            medicineAdapter.submitList(lists)
-        }
-
     }
 
     companion object {
