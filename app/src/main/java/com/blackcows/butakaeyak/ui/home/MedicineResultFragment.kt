@@ -81,8 +81,6 @@ class MedicineResultFragment : Fragment() {
                     Log.d(TAG,"${item.id}: $result")
                     return result
                 }
-                //TODO: Set을 여기서 하지말고 homeViewModel.isMyMedicine을 이용하여 가져오자!
-                //  즉, homeResult에선 save하지 않고 결과를 계속 리로드 하는 식으로 작동하는게 좋을듯!
                 override fun setMedicineChecked(item: Medicine, isChecked: Boolean) {
                     Log.d(TAG,item.id.toString() + ": "+isChecked)
                     if(isChecked) {
@@ -111,10 +109,13 @@ class MedicineResultFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        val lists = homeViewModel.getMyMedicines().map {
-            it.medicine
+        if(homeViewModel.medicineResult.value!!.isNotEmpty()) {
+            val lists = homeViewModel.getMyMedicines().map {
+                it.medicine
+            }
+            medicineAdapter.submitList(lists)
         }
-        medicineAdapter.submitList(lists)
+
     }
 
     companion object {
