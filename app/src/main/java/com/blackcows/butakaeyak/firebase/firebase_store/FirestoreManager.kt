@@ -74,6 +74,7 @@ class FirestoreManager {
             }
     }
 
+    // TODO : 봐줘!!
     fun saveKakaoUser(resultListener: ResultListener<Boolean>){
         UserApiClient.instance.me{user, error ->
             if (error!= null) {

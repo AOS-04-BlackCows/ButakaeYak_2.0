@@ -9,13 +9,15 @@ import kotlinx.parcelize.Parcelize
 data class UserData(
     val name : String = "",
     val id : String = "",
-    val thumbnail : String = ""
+    val thumbnail : String = "",
+    val pwd : String = ""
 ) : Parcelable {
     fun toMap() : HashMap<String, String>{
         return hashMapOf(
             "name" to name,
             "id" to id,
-            "thumbnail" to thumbnail
+            "thumbnail" to thumbnail,
+            "pwd" to pwd
             )
     }
 }

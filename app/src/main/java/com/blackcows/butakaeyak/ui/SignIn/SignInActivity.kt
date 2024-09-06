@@ -115,6 +115,7 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
                             Log.e(TAG, "로그인 성공${token.accessToken}")
                             Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
 
+                            //TODO : 봐줘!
 //                            firestoreManager.saveKakaoUser(object : FirestoreManager.ResultListener<Boolean>{
 //                                override fun onSuccess(result: Boolean) {
 //                                    Log.d(TAG, "Firebase 저장 성공")
