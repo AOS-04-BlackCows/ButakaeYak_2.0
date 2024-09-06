@@ -21,6 +21,14 @@ object MainNavigation {
 
     private lateinit var binding: ActivityMainBinding
 
+    //navigation bar 안 보이게 할 때 쓰는 메소드
+    fun hideBottomNavigation(state: Boolean) {
+        binding.bottomMenuBar.visibility = if (state) View.GONE
+                                            else  View.VISIBLE
+
+        Log.d(TAG, "Hide Bottom Bar: $state")
+    }
+
 
     fun addFragment(fragment: Fragment, tag: FragmentTag) {
         fragmentManager.beginTransaction()
@@ -72,11 +80,7 @@ object MainNavigation {
         addBackPressedCallback(activity, binding)
     }
 
-    //navigation bar 안 보이게 할 때 쓰는 메소드
-    fun hideBottomNavigation(state: Boolean) {
-        if (state) binding.bottomMenuBar.visibility = View.GONE else binding.bottomMenuBar.visibility =
-            View.VISIBLE
-    }
+
 
 
     private fun initViewPager(activity: MainActivity, b: ActivityMainBinding) {
