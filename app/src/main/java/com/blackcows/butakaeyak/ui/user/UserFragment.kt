@@ -5,12 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentUserBinding
+import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.blackcows.butakaeyak.ui.SignIn.SignInActivity
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
@@ -28,6 +32,8 @@ class UserFragment : Fragment() {
 
     private val MIN_SCALE = 0.85f // 뷰가 몇퍼센트로 줄어들 것인지
     private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
+
+    private val userViewModel by activityViewModels<UserViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,23 +55,41 @@ class UserFragment : Fragment() {
 
         //ViewPager 화면 확인용 임시 더미데이터
         val dataList = mutableListOf<test>()
-        dataList.add(test(R.drawable.choco,"항히스타민제","피부 질환 완화제"))
-        dataList.add(test(R.drawable.choco,"항히스타민제","피부 질환 완화제"))
+        dataList.add(test(R.drawable.choco, "항히스타민제", "피부 질환 완화제"))
+        dataList.add(test(R.drawable.choco, "항히스타민제", "피부 질환 완화제"))
         userFavoriteViewPagerAdapter = UserFavoriteViewPagerAdapter(dataList)
 
         binding.apply {
-            vp2Favorite.apply{
-            adapter = userFavoriteViewPagerAdapter
-            setPageTransformer(ZoomOutPageTransformer())
+            vp2Favorite.apply {
+                adapter = userFavoriteViewPagerAdapter
+                setPageTransformer(ZoomOutPageTransformer())
+            }
+
+            clMyMedicine.setOnClickListener {
+                findNavController().navigate(R.id.action_navigation_user_to_navigation_take)
+            }
+//            ivArrow1.setOnClickListener{
+//                val intent = Intent(requireContext(),TakeActivity::class.java)
+//                startActivity(intent)
+//                requireActivity().overridePendingTransition(R.anim.alpha,R.anim.none)
+//            }
+
+            // 데이터 받기
+            val signInResultCallback = registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult()
+            ) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    val userData = result.data?.getParcelableExtra<UserData>("userData") ?: return@registerForActivityResult
+                    userViewModel.setCurrentUser(userData)
+                }
             }
 
             clMyLogin.setOnClickListener {
-                val intent = Intent(requireActivity(),SignInActivity::class.java)
-                startActivity(intent)
+                val intent = Intent(requireActivity(), SignInActivity::class.java)
+                signInResultCallback.launch(intent)
             }
         }
     }
-
             //TODO Toggle 클릭 시 NameFragment로 이동하게 하기 위함
             fun bind(item: MyMedicine) {
                 MainNavigation.addFragment(
@@ -89,6 +113,7 @@ class UserFragment : Fragment() {
                         // This page is way off-screen to the left.
                         alpha = 0f
                     }
+
                     position <= 1 -> { // [-1,1]
                         // Modify the default slide transition to shrink the page as well
                         val scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position))
@@ -108,6 +133,7 @@ class UserFragment : Fragment() {
                         alpha = (MIN_ALPHA +
                                 (((scaleFactor - MIN_SCALE) / (1 - MIN_SCALE)) * (1 - MIN_ALPHA)))
                     }
+
                     else -> { // (1,+Infinity]
                         // This page is way off-screen to the right.
                         alpha = 0f

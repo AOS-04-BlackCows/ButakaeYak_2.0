@@ -36,25 +36,10 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var button: Button
     private var imageUri: Uri? = null
 
-    private val userPhoneNumber by lazy { binding.inputPhoneNumber }
+    private val userId by lazy { binding.inputId }
     private val userName by lazy { binding.inputName }
-    private val userAge by lazy { binding.inputAge }
     private val userPw by lazy { binding.inputPw }
-
-    // 데이터 전달
-    private val resultLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val data: Intent? = result.data
-            val phoneNumber = result.data?.getStringExtra("phoneNumber") ?: "none"
-            val pw = result.data?.getStringExtra("pw") ?: "none"
-
-            userPhoneNumber.setText(phoneNumber)
-            userPw.setText(pw)
-        }
-    }
-
+    private val userThumbnail by lazy { binding.ivProfile }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,9 +57,9 @@ class SignUpActivity : AppCompatActivity() {
             btnSignup.setOnClickListener {
                 if (validateAllFields()) {
                     var userData = UserData(
-                        userPhoneNumber.text.toString(),
-                        userAge.text.toString(),
-                        userName.text.toString()
+                        userName.text.toString(),
+                        userId.text.toString(),
+
                     )
                     firestoreManager.trySignUp(userData,
                         object : FirestoreManager.ResultListener<Boolean> {
@@ -86,18 +71,22 @@ class SignUpActivity : AppCompatActivity() {
                                     Toast.LENGTH_LONG
                                 ).show()
 
-                                // 로그인에 전화번호 & 비밀번호 전달
-                                val intent = Intent(this@SignUpActivity, SignInActivity::class.java)
-                                intent.putExtra("phoneNumber", userPhoneNumber.text.toString())
-                                intent.putExtra("pw", userPw.text.toString())
-                                resultLauncher.launch(intent)
+                                // 로그인에 아이디 & 비밀번호 전달
+                                val intent = Intent().apply {
+                                    putExtra("id", userId.text.toString())
+                                    putExtra("pw", userPw.text.toString())
+                                    imageUri?.let { uri ->
+                                        putExtra("thumbnail",uri.toString())
+                                    }
+                                }
+                                setResult(RESULT_OK, intent)
                                 finish()
                             }
 
                             override fun onFailure(e: Exception) {
                                 //실패 시 처리
                                 if (e.message == "이미 가입된 번호입니다") {
-                                    binding.tiPhoneNumber.error = e.message
+                                    binding.tiId.error = e.message
                                 } else {
                                     Toast.makeText(
                                         this@SignUpActivity,
@@ -108,12 +97,6 @@ class SignUpActivity : AppCompatActivity() {
                             }
 
                         })
-                } else {
-                    Toast.makeText(
-                        this@SignUpActivity,
-                        "모든 필드를 올바르게 입력해주세요.",
-                        Toast.LENGTH_LONG
-                    ).show()
                 }
             }
         }
@@ -121,21 +104,15 @@ class SignUpActivity : AppCompatActivity() {
 
     // focus 검사
     private fun setupFocusChangeListeners() {
-        userPhoneNumber.setOnFocusChangeListener { _, hasFocus ->
+        userId.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                validatePhoneNumber()
+                validateId()
             }
         }
 
         userName.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 validateName()
-            }
-        }
-
-        userAge.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) {
-                validateAge()
             }
         }
 
@@ -149,22 +126,21 @@ class SignUpActivity : AppCompatActivity() {
     // 모든 입력 값을 한 번에 검사!
     private fun validateAllFields(): Boolean {
         var isValid = true
-        isValid = validatePhoneNumber() && isValid
+        isValid = validateId() && isValid
         isValid = validateName() && isValid
-        isValid = validateAge() && isValid
         isValid = validatePw() && isValid
 
         return isValid
     }
 
     // 핸드폰 번호에 대한 유효성 검사
-    private fun validatePhoneNumber(): Boolean {
-        val phoneNumber = userPhoneNumber.text.toString()
-        return if (phoneNumber.isEmpty() || !SignUpValidation.isValidPhoneNumber(phoneNumber)) {
-            binding.tiPhoneNumber.error = "유효한 전화번호를 입력해주세요. (예: 010-1234-5678)"
+    private fun validateId(): Boolean {
+        val id = userId.text.toString()
+        return if (id.isEmpty() || !SignUpValidation.isValidId(id)) {
+            binding.tiId.error = "Id는 영어 숫자만 가능합니다."
             false
         } else {
-            binding.tiPhoneNumber.error = null
+            binding.tiId.error = null
             true
         }
     }
@@ -177,18 +153,6 @@ class SignUpActivity : AppCompatActivity() {
             false
         } else {
             binding.tiName.error = null
-            true
-        }
-    }
-
-    // 나이에 대한 유효성 검사
-    private fun validateAge(): Boolean {
-        val age = userAge.text.toString().toInt()
-        return if (age == null || !SignUpValidation.isValidAge(age)) {
-            binding.tiAge.error = "유효한 나이를 입력해주세요."
-            false
-        } else {
-            binding.tiAge.error = null
             true
         }
     }
@@ -234,8 +198,11 @@ class SignUpActivity : AppCompatActivity() {
         imageView.clipToOutline = true
         button = binding.btnProfile
         button.setOnClickListener {
-            Log.d(TAG, "버튼 클릭 이벤트 발생!!")
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) // 에러 왜 뜨는지..
+            Log.d(TAG, "이미지 버튼 클릭 이벤트 발생!!")
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
                 == PackageManager.PERMISSION_GRANTED
             ) {
                 Log.d(TAG, "이미지 권한이 승인됨")

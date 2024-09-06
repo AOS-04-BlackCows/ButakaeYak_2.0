@@ -12,6 +12,7 @@ import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import java.util.Stack
 
 object MainNavigation {
+    private val TAG = "MainNavigation"
     private lateinit var fragmentManager: FragmentManager
 
     private var currentTab = TabTag.Take
@@ -31,6 +32,8 @@ object MainNavigation {
     fun popCurrentFragment() {
         val curStack = fragmentStack[currentTab]!!
         if(curStack.size == 0) return
+
+        Log.d(TAG, "CurTab: ${currentTab.name}")
 
         val secondFromLastFragmentTag = curStack[curStack.lastIndex - 1]
 

@@ -40,9 +40,24 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
     // 이메일 로그인 콜백
     private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
-            Log.e(TAG, "로그인 실패${error}")
+            Log.e(TAG, "카카오계정으로 로그인 실패${error}")
         } else if (token != null) {
-            Log.e(TAG, "로그인 성공${token.accessToken}")
+            Log.e(TAG, "카카오계정으로 로그인 성공${token.accessToken}")
+            kakaoLogin()
+        }
+    }
+
+    // 데이터 전달
+    private val resultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val data: Intent? = result.data
+            val id = result.data?.getStringExtra("id") ?: "none"
+            val pw = result.data?.getStringExtra("pw") ?: "none"
+
+            binding.inputId.setText(id)
+            binding.inputPw.setText(pw)
         }
     }
 
@@ -57,18 +72,17 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
 
         KakaoSdk.init(this, "d4ce3a86b1d0a8895e9eccdf9fb16fc4")
         if (AuthApiClient.instance.hasToken()) {
-            UserApiClient.instance.accessTokenInfo { _, error ->
-                if (error == null) {
-                    nextUserFragment()
-                }
+            UserApiClient.instance.accessTokenInfo{_, error ->
+                if (error== null)
+                    kakaoLogin()
             }
         }
-        binding.ivKakao.setOnClickListener(this)
+            binding.ivKakao.setOnClickListener(this)
 
-        val inPutPhoneNumber = intent.getStringExtra("phoneNumber")
+        val inPutId = intent.getStringExtra("id")
         val inPutPw = intent.getStringExtra("pw")
 
-        binding.inputPhoneNumber.setText(inPutPhoneNumber)
+        binding.inputId.setText(inPutId)
         binding.inputPw.setText(inPutPw)
 
 
@@ -92,7 +106,7 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
                             if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
                                 return@loginWithKakaoTalk
                             } else {
-                                // 카카오 이메일 로그인
+                                // 카카오계정 로그인
                                 UserApiClient.instance.loginWithKakaoAccount(
                                     this,
                                     callback = mCallback
@@ -101,8 +115,22 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
                         } else if (token != null) {
                             Log.e(TAG, "로그인 성공${token.accessToken}")
                             Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
-                            nextUserFragment()
+                            kakaoLogin()
+
+                            //TODO : 봐줘!
+                            firestoreManager.saveKakaoUser(object :
+                                FirestoreManager.ResultListener<Boolean> {
+                                override fun onSuccess(result: Boolean) {
+                                    Log.d(TAG, "Firebase 저장 성공")
+                                }
+
+                                override fun onFailure(e: Exception) {
+                                    Log.e(TAG, "Firebase저장 실패", e)
+                                }
+                            })
+
                         }
+
                     }
                 } else {
                     // 카카오 이메일 로그인
@@ -115,12 +143,12 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
     private fun initView() {
         with(binding) {
             btnLogin.setOnClickListener {
-                val userPhoneNumber = inputPhoneNumber.text.toString()
-                val phoneNumber = inputPhoneNumber.text.toString()
+                val userId = inputId.text.toString()
+                val name = inputId.text.toString()
 
                 val pw = inputPw.text.toString()
-                if (validateInputs(phoneNumber, pw)) {
-                    firestoreManager.trySignIn(userPhoneNumber,
+                if (validateInputs(name, pw)) {
+                    firestoreManager.trySignIn(userId,
                         object : FirestoreManager.ResultListener<UserData> {
                             override fun onSuccess(result: UserData) {
                                 // 회원가입 성공 이벤트
@@ -129,9 +157,15 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
                                     "로그인 성공",
                                     Toast.LENGTH_LONG
                                 ).show()
-
-                                nextUserFragment()
                                 Log.d(TAG, "로그인 페이지로 이동")
+
+                                // 로그인에 아이디 & 비밀번호 전달
+                                val intent = Intent().apply {
+                                    putExtra("userData", result)
+                                }
+                                setResult(RESULT_OK, intent)
+                                finish()
+
                             }
 
                             override fun onFailure(e: Exception) {
@@ -145,18 +179,17 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
                 } else {
                     Toast.makeText(
                         this@SignInActivity,
-                        "전화번호와 비밀번호를 입력해주세요.",
+                        "아이디와 비밀번호를 입력해주세요.",
                         Toast.LENGTH_LONG
-                    )
-                        .show()
+                    ).show()
                 }
-                Log.d(TAG, "전화번호와 비밀번호 입력해주세요. ")
+                Log.d(TAG, "아이디와 비밀번호 입력해주세요. ")
             }
         }
     }
 
-    private fun validateInputs(phoneNumber: String, password: String): Boolean {
-        return phoneNumber.isNotEmpty() && password.isNotEmpty()
+    private fun validateInputs(id: String, password: String): Boolean {
+        return id.isNotEmpty() && password.isNotEmpty()
     }
 
     private fun setSignUpTextView() {
@@ -178,7 +211,7 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
             override fun onClick(widget: View) {
                 Log.d(TAG, "회원가입 텍스트 클릭됨")
                 val intent = Intent(this@SignInActivity, SignUpActivity::class.java)
-                startActivity(intent)
+                resultLauncher.launch(intent)
             }
         }
         // Span에 적용
@@ -205,10 +238,22 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
         textSignUp.text = spannableString
     }
 
-    // MainActivity로 이동하고 UserFragment를 표시
-    private fun nextUserFragment() {
-        val intent = Intent(this@SignInActivity, MainActivity::class.java)
-        intent.putExtra("navigateTo", "user")
-        finish()
+    private fun kakaoLogin() {
+        UserApiClient.instance.me { user, meError ->
+            if (meError != null) {
+                Log.e(TAG, "사용자 정보 요청 실패 : $meError")
+            } else if (user != null) {
+                Log.d(TAG, "사용자 정보 요청 성공 : $user")
+                val intent = Intent().apply {
+                    putExtra(
+                        "name",
+                        user.kakaoAccount?.profile?.nickname
+                    )
+                    putExtra("thumbnail", user.kakaoAccount?.profile?.thumbnailImageUrl)
+                }
+                setResult(RESULT_OK, intent)
+                finish()
+            }
+        }
     }
 }
