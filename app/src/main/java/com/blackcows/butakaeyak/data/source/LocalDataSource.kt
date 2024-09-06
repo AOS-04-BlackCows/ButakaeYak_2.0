@@ -13,6 +13,8 @@ class LocalDataSource @Inject constructor(
     @ApplicationContext context: Context
 ) {
     companion object {
+        private const val TAG = "LocalDataSource"
+
         private const val APP_SHARED_PREFS = "BUAKAEYAK"
         const val MY_MEDICINES = "MEDICINES_IN_CONSUMING"
         const val FAVORITE_MEDICINES = "MEDICINES_IN_INTEREST"
@@ -39,4 +41,24 @@ class LocalDataSource @Inject constructor(
             listOf(myMedicine) + getMyMedicines()
         )
     }
+
+    fun isItemChecked(id: String) : Boolean {
+        return getMyMedicines().any {
+            it.medicine.id == id
+        }
+    }
+
+
+
+
+    //TODO: ????
+//    fun loadAllData(context: android.content.Context, fileName: String) : Medicine {
+//        val pref = context.getSharedPreferences(fileName, MODE_PRIVATE).all.toString()
+//        Log.d(TAG,context.getSharedPreferences(fileName, MODE_PRIVATE).all.toString())
+//        return parseJson(pref)
+//    }
+//    fun parseJson(jsonString: String): Medicine {
+//        val gson = Gson()
+//        return gson.fromJson(jsonString, Medicine::class.java)
+//    }
 }
