@@ -83,8 +83,8 @@ class FirestoreManager {
                 Log.i(TAG, "사용자 정보 요청 성고 ${user.kakaoAccount?.email}")
 
                 val userData = UserData(
-                    id = user.id.toString(),
-                    name = user.kakaoAccount?.profile?.nickname ?:""
+                    name = user.kakaoAccount?.profile?.nickname !!,
+                    thumbnail = user.kakaoAccount?.profile?.thumbnailImageUrl ?:""
                 )
 
                 trySignUp(userData,object : ResultListener<Boolean> {

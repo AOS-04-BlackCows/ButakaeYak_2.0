@@ -46,6 +46,20 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    // 데이터 전달
+    private val resultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val data: Intent? = result.data
+            val id = result.data?.getStringExtra("id") ?: "none"
+            val pw = result.data?.getStringExtra("pw") ?: "none"
+
+            binding.inputId.setText(id)
+            binding.inputPw.setText(pw)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -59,7 +73,6 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
         if (AuthApiClient.instance.hasToken()) {
             UserApiClient.instance.accessTokenInfo { _, error ->
                 if (error == null) {
-                    nextUserFragment()
                 }
             }
         }
@@ -101,17 +114,17 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
                         } else if (token != null) {
                             Log.e(TAG, "로그인 성공${token.accessToken}")
                             Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
-                            nextUserFragment()
 
-                            firestoreManager.saveKakaoUser(object : FirestoreManager.ResultListener<Boolean>{
-                                override fun onSuccess(result: Boolean) {
-                                    Log.d(TAG, "Firebase 저장 성공")
-                                }
+//                            firestoreManager.saveKakaoUser(object : FirestoreManager.ResultListener<Boolean>{
+//                                override fun onSuccess(result: Boolean) {
+//                                    Log.d(TAG, "Firebase 저장 성공")
+//                                }
+//
+//                                override fun onFailure(e: Exception) {
+//                                    Log.e(TAG, "Firebase저장 실패",e)
+//                                }
+//                            })
 
-                                override fun onFailure(e: Exception) {
-                                    Log.e(TAG, "Firebase저장 실패",e)
-                                }
-                            })
                         }
 
                     }
@@ -127,10 +140,10 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
         with(binding) {
             btnLogin.setOnClickListener {
                 val userId = inputId.text.toString()
-                val phoneNumber = inputId.text.toString()
+                val name = inputId.text.toString()
 
                 val pw = inputPw.text.toString()
-                if (validateInputs(phoneNumber, pw)) {
+                if (validateInputs(name, pw)) {
                     firestoreManager.trySignIn(userId,
                         object : FirestoreManager.ResultListener<UserData> {
                             override fun onSuccess(result: UserData) {
@@ -140,9 +153,15 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
                                     "로그인 성공",
                                     Toast.LENGTH_LONG
                                 ).show()
-
-                                nextUserFragment()
                                 Log.d(TAG, "로그인 페이지로 이동")
+
+                                // 로그인에 아이디 & 비밀번호 전달
+                                val intent = Intent().apply {
+                                    putExtra("userData", result)
+                                }
+                                setResult(RESULT_OK, intent)
+                                finish()
+
                             }
 
                             override fun onFailure(e: Exception) {
@@ -188,7 +207,7 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
             override fun onClick(widget: View) {
                 Log.d(TAG, "회원가입 텍스트 클릭됨")
                 val intent = Intent(this@SignInActivity, SignUpActivity::class.java)
-                startActivity(intent)
+                resultLauncher.launch(intent)
             }
         }
         // Span에 적용
@@ -213,12 +232,5 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
         // TextView에 적용
         textSignUp.movementMethod = LinkMovementMethod.getInstance() // 클릭 가능하게 설정
         textSignUp.text = spannableString
-    }
-
-    // MainActivity로 이동하고 UserFragment를 표시
-    private fun nextUserFragment() {
-        val intent = Intent(this@SignInActivity, MainActivity::class.java)
-        intent.putExtra("navigateTo", "user")
-        finish()
     }
 }

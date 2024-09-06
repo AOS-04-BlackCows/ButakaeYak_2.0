@@ -40,21 +40,6 @@ class SignUpActivity : AppCompatActivity() {
     private val userName by lazy { binding.inputName }
     private val userPw by lazy { binding.inputPw }
 
-    // 데이터 전달
-    private val resultLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val data: Intent? = result.data
-            val id = result.data?.getStringExtra("id") ?: "none"
-            val pw = result.data?.getStringExtra("pw") ?: "none"
-
-            userId.setText(id)
-            userPw.setText(pw)
-        }
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -84,11 +69,12 @@ class SignUpActivity : AppCompatActivity() {
                                     Toast.LENGTH_LONG
                                 ).show()
 
-                                // 로그인에 전화번호 & 비밀번호 전달
-                                val intent = Intent(this@SignUpActivity, SignInActivity::class.java)
-                                intent.putExtra("id", userId.text.toString())
-                                intent.putExtra("pw", userPw.text.toString())
-                                resultLauncher.launch(intent)
+                                // 로그인에 아이디 & 비밀번호 전달
+                                val intent = Intent().apply {
+                                    putExtra("id", userId.text.toString())
+                                    putExtra("pw", userPw.text.toString())
+                                }
+                                setResult(RESULT_OK, intent)
                                 finish()
                             }
 
@@ -211,7 +197,7 @@ class SignUpActivity : AppCompatActivity() {
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.READ_EXTERNAL_STORAGE
-                ) // 에러 왜 뜨는지..
+                )
                 == PackageManager.PERMISSION_GRANTED
             ) {
                 Log.d(TAG, "이미지 권한이 승인됨")
