@@ -16,12 +16,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.databinding.BottomsheetMapDetailBinding
 import com.blackcows.butakaeyak.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
@@ -31,8 +33,6 @@ import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
-import com.kakao.vectormap.label.TrackingManager
-
 
 private const val TAG = "k3f_MapFragment"
 class MapFragment : Fragment() {
@@ -46,9 +46,9 @@ class MapFragment : Fragment() {
     private val REQUEST_PERMISSION_LOCATION = 10
     lateinit var mLastLocation: Location // 위치 값을 가지고 있는 객체
     private lateinit var mLocationRequest: LocationRequest // 위치 정보
-
+    private lateinit var bottomSheetView: BottomsheetMapDetailBinding
+    private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var kakaoMapCall: KakaoMap
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,32 +63,21 @@ class MapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         KakaoSdk.init(requireContext(), BuildConfig.NATIVE_APP_KEY)
-
         // 키해쉬 발급 ( 디버그 )
         // val keyHash = Utility.getKeyHash(requireContext())
         // Log.d(TAG, keyHash)
-
-        kakaoMapInit()
-
+        bottomSheetView = BottomsheetMapDetailBinding.inflate(layoutInflater)
+        bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(bottomSheetView.root)
+        binding.testBtn1.setOnClickListener {
+            bottomSheetDialog.show()
+        }
         // 위치를 찍는다.
         locationInit()
-
-
-        mapViewModel.apiPharmacyInfoList()
     }
     private fun locationInit() {
         mLocationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-
-
-        // 버튼 이벤트를 통해 현재 위치 찾기
-        binding.testBtn1.setOnClickListener {
-            Log.d(TAG, "test_btn_1_clicked")
-        }
-        binding.testBtn2.setOnClickListener {
-            Log.d(TAG, "test_btn_2_clicked")
-
         }
         // 최초 X, Y 경도 위도 구현
         if (checkPermissionForLocation(this)) {
@@ -127,24 +116,23 @@ class MapFragment : Fragment() {
         myPlaceY = mLastLocation.latitude // 갱신 된 위도 37.40754692649233
         Log.d(TAG, "위도 myPlaceX : $myPlaceX |&| 경도 myPlaceY : $myPlaceY")
 
-
-        kakaoMapCall.moveCamera(
-            CameraUpdateFactory.newCenterPosition(
-                LatLng.from(
-                    37.402005,
-                    127.108621
-                )
-            )
-        )
+      // 현재 위치를 중심으로한 약국 좌표를 저장한다.
+        mapViewModel.communicateNetWork(myPlaceX, myPlaceY)
+        kakaoMapInit()
     }
 
+    // 내 위치로 이동
+    private fun kakaoMapMoveCamera(kakaoMap: KakaoMap) {
+        var cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(myPlaceY, myPlaceX))
+        kakaoMap.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
+    }
     // 카카오맵
     private fun kakaoMapInit() {
         // 카카오맵 실행
         KakaoMapUtil(requireContext()).kakaoMapInit(binding.mapView, myPlaceX, myPlaceY, mapViewModel) { kakaoMap ->
             kakaoMapCall = kakaoMap
             // 버튼 이벤트 설정
-            binding.btnLocation.setOnClickListener {
+                binding.btnLocation.setOnClickListener {
                 if (checkPermissionForLocation(this)) {
                     // 버튼 이벤트를 통해 현재 위치 찾기
                     startLocationUpdates()
@@ -158,38 +146,48 @@ class MapFragment : Fragment() {
                 kakaoMap.labelManager!!.getLayer()
                 kakaoMap.labelManager!!.getLodLayer()
                 for (item in items) {
-                    // 스타일 지정. LabelStyle.from()안에 원하는 이미지 넣기
+                    val itemResult = with(item){
+                        "$placeName||$distance||$placeUrl||$categoryName||$addressName||$roadAddressName||$id||$phone||$categoryGroupCode||$categoryGroupName||$x||$y"
+                    }
                     val style = kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.marker_pill)))
                     // 라벨 옵션 지정. 위경도와 스타일 넣기
-                    val options = LabelOptions.from(LatLng.from(item.y.toDouble(), item.x.toDouble())).setStyles(style).setTag(item).setClickable(true)
+                    val options = LabelOptions.from(LatLng.from(item.y.toDouble(), item.x.toDouble())).setStyles(style).setTag(itemResult).setClickable(true)
                     // 레이어 가져오기
                     val layer = kakaoMap.labelManager?.layer
                     // 레이어에 라벨 추가
                     layer?.addLabel(options)
                     kakaoMap.setOnLabelClickListener { kakaoMap, labelLayer, label ->
                         Log.d(TAG, label?.tag.toString())
+                        val selectTagArr = label?.tag.toString().split("||")
+                        bottomSheetView.distance.text = "${selectTagArr[1]}m"
+                        bottomSheetView.placeName.text = selectTagArr[0]
+                        bottomSheetView.phone.text = selectTagArr[7]
+                        bottomSheetView.placeUrl.text = selectTagArr[2]
+                        bottomSheetView.addressName.text = selectTagArr[4]
+                        bottomSheetView.roadAddressName.text = selectTagArr[5]
+                        bottomSheetDialog.show()
                         true
                     }
-//                    KakaoPlace(
-//                    placeName=한우리약국,
-//                    distance=291,
-//                    placeUrl="http://place.map.kakao.com/9578427",
-//                    categoryName="의료,건강 > 약국",
-//                    addressName="경기 성남시 분당구 야탑동 215",
-//                    roadAddressName="경기 성남시 분당구 장미로 139",
-//                    id=9578427,
-//                    phone="031-708-3399",
-//                    categoryGroupCode="PM9",
-//                    categoryGroupName="약국",
-//                    x=127.13616482305073,
-//                    y=37.413583634331886
-//                    )
+                    "KakaoPlace(placeName=한우리약국, distance=290, placeUrl=http://place.map.kakao.com/9578427, categoryName=의료,건강 > 약국, addressName=경기 성남시 분당구 야탑동 215, roadAddressName=경기 성남시 분당구 장미로 139, id=9578427, phone=031-708-3399, categoryGroupCode=PM9, categoryGroupName=약국, x=127.13616482305073, y=37.413583634331886)"
+                    "한우리약국" +
+                            "290" +
+                            "http://place.map.kakao.com/9578427"
+//                    selectTagArr =
+//                    [0] placeName = 예시 : 한우리약국,
+//                    [1] distance = 예시 : 291,
+//                    [2] placeUrl = 예시 : "http://place.map.kakao.com/9578427",
+//                    [3] categoryName = 예시 : "의료,건강 > 약국",
+//                    [4] addressName = 예시 : "경기 성남시 분당구 야탑동 215",
+//                    [5] roadAddressName = 예시 : "경기 성남시 분당구 장미로 139",
+//                    [6] id = 예시 : 9578427,
+//                    [7] phone = 예시 : "031-708-3399",
+//                    [8] categoryGroupCode = 예시 : "PM9",
+//                    [9] categoryGroupName = 예시 : "약국",
+//                    [10] x = 예시 : 127.13616482305073,
+//                    [11] y = 예시 : 37.413583634331886
 
                 }
             }
-            // 현재 위치를 중심으로한 약국 좌표를 저장한다.
-            mapViewModel.communicateNetWork(myPlaceX, myPlaceY)
-//            kakaoMap.setOnLabelClickListener()
         }
     }
 

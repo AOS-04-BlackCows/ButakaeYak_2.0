@@ -1,7 +1,5 @@
 package com.blackcows.butakaeyak.data.source.api
 
-import android.util.Log
-import com.blackcows.butakaeyak.data.models.Drug
 import com.blackcows.butakaeyak.data.models.KakaoPlace
 import com.blackcows.butakaeyak.data.retrofit.KakaoApiService
 import javax.inject.Inject
