@@ -5,32 +5,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blackcows.butakaeyak.data.models.KakaoPlace
-import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
-import com.blackcows.butakaeyak.data.retrofit.KakaoApiService
-import com.blackcows.butakaeyak.data.retrofit.KakaoInterceptor
-import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
+import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
+import com.blackcows.butakaeyak.domain.repo.KakaoMapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.create
 import javax.inject.Inject
 
-@HiltViewModel
-class MapViewModel @Inject constructor() : ViewModel() {
+private const val TAG = "k3f_MapViewModel"
 
-    private val _items = MutableLiveData<List<KakaoPlace>>()
-    val items: LiveData<List<KakaoPlace>>
+@HiltViewModel
+class MapViewModel @Inject constructor(
+    private val kakaoRepository: KakaoMapRepository
+) : ViewModel() {
+    private val _items = MutableLiveData<List<KakaoPlacePharmacy>>()
+    val items: LiveData<List<KakaoPlacePharmacy>>
         get() = _items
 
-    fun communicateNetWork(param: String) {
+    fun communicateNetWork(x: Double, y: Double) {
         viewModelScope.launch {
-            val instance = RetrofitClient.getInstance(ApiBaseUrl.KakaoPlaceSearchUrl)
-            val retrofit = instance.create(KakaoApiService::class.java)
-            val result = retrofit.getCategoryInfo("126.9795003", "37.5668114")
-            result.documents.forEachIndexed {i, it ->
-                Log.d("제발나와주세요 카카오맵정보님","$i: ${it}")
-            }
+            _items.value = kakaoRepository.searchCategory(x.toString(), y.toString())
+            Log.d(TAG, "${_items.value}")
         }
     }
 }

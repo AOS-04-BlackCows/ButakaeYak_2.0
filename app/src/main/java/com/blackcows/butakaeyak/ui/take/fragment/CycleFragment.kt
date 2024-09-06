@@ -1,25 +1,33 @@
 package com.blackcows.butakaeyak.ui.take.fragment
 
-import android.app.AlertDialog
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
 import android.widget.TextView
-import android.widget.TimePicker
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
+import com.blackcows.butakaeyak.ui.home.HomeFragment
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.take.AlarmReceiver
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
-import java.util.Calendar
+import com.blackcows.butakaeyak.ui.take.TimePickerDialog
+import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
+import com.blackcows.butakaeyak.ui.take.data.AlarmItem
 
 class CycleFragment : Fragment() {
 
@@ -27,232 +35,148 @@ class CycleFragment : Fragment() {
     private var _binding: FragmentCycleBinding? = null
     private val binding get() = _binding!!
 
+    //adapter 설정
+    private lateinit var adapter : CycleAdapter
+
+    //data class
+    private val alarmList = mutableListOf<AlarmItem>()
+
     //viewModel 설정
     private val viewModel: TakeViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    //bundle에서 medicine 가져오기
+    private val medicine: Medicine by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(MEDICINE_DATA, Medicine::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            arguments?.getParcelable(MEDICINE_DATA)!!
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val callback = object : OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val current = viewModel.currentPage.value ?: 0
-                if (current > 0) {
-                    viewModel.moveToPreviousPage()
-                } else {
-                    // NavController를 통해 뒤로 가기
-                    findNavController().popBackStack()
-                }
+                MainNavigation.popCurrentFragment()
             }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        })
+
         _binding = FragmentCycleBinding.inflate(inflater, container, false)
+
         val root: View = binding.root
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d("CycleFragment", "${medicine.name}, ${medicine.id}")
+
         binding.apply {
             ivBack.setOnClickListener {
-                viewModel.moveToPreviousPage()
+                MainNavigation.popCurrentFragment()
             }
-
-            clCycleOne.setOnClickListener {
-                if(clCycleOneAlarm.visibility == View.GONE){
-                    ivArrow1.setImageResource(R.drawable.baseline_arrow_circle_up_24dp)
-                    clCycleOneAlarm.visibility = View.VISIBLE
-                    binding.tvCycleOneAlarm.setOnClickListener {
-                        showTimePickerDialog(tvCycleOneAlarmTime)
-                    }
-
-                    ivArrow2.setImageResource(R.drawable.baseline_arrow_circle_down_24dp)
-                    clCycleTwoAlarm.visibility = View.GONE
-                    tvCycleTwoAlarmTime.text = ""
-                    tvCycleTwoAlarmTime2.text = ""
-
-                    ivArrow3.setImageResource(R.drawable.baseline_arrow_circle_down_24dp)
-                    clCycleThreeAlarm.visibility = View.GONE
-                    tvCycleThreeAlarmTime.text = ""
-                    tvCycleThreeAlarmTime2.text = ""
-                    tvCycleThreeAlarmTime3.text = ""
-                }
-                else{
-                    ivArrow1.setImageResource(R.drawable.baseline_arrow_circle_down_24dp)
-                    clCycleOneAlarm.visibility = View.GONE
-                    tvCycleOneAlarmTime.text = ""
-                }
+            adapter = CycleAdapter(requireContext(),alarmList){ itemCount ->
+                btnNextUpdate(itemCount)
             }
-
-            clCycleTwo.setOnClickListener {
-                if(clCycleTwoAlarm.visibility == View.GONE){
-                    ivArrow2.setImageResource(R.drawable.baseline_arrow_circle_up_24dp)
-                    clCycleTwoAlarm.visibility = View.VISIBLE
-                    binding.tvCycleTwoAlarm.setOnClickListener {
-                        showTimePickerDialog(tvCycleTwoAlarmTime)
-                    }
-                    binding.tvCycleTwoAlarm2.setOnClickListener {
-                        showTimePickerDialog(tvCycleTwoAlarmTime2)
-                    }
-
-                    ivArrow1.setImageResource(R.drawable.baseline_arrow_circle_down_24dp)
-                    clCycleOneAlarm.visibility = View.GONE
-                    tvCycleOneAlarmTime.text = ""
-
-                    ivArrow3.setImageResource(R.drawable.baseline_arrow_circle_down_24dp)
-                    clCycleThreeAlarm.visibility = View.GONE
-                    tvCycleThreeAlarmTime.text = ""
-                    tvCycleThreeAlarmTime2.text = ""
-                    tvCycleThreeAlarmTime3.text = ""
-                }
-                else{
-                    ivArrow2.setImageResource(R.drawable.baseline_arrow_circle_down_24dp)
-                    clCycleTwoAlarm.visibility = View.GONE
-                    tvCycleTwoAlarmTime.text = ""
-                    tvCycleTwoAlarmTime2.text = ""
-                }
-            }
-
-            clCycleThree.setOnClickListener {
-                if(clCycleThreeAlarm.visibility == View.GONE){
-                    ivArrow3.setImageResource(R.drawable.baseline_arrow_circle_up_24dp)
-                    clCycleThreeAlarm.visibility = View.VISIBLE
-                    tvCycleThreeAlarm.setOnClickListener {
-                        showTimePickerDialog(tvCycleThreeAlarmTime)
-                    }
-                    tvCycleThreeAlarm2.setOnClickListener {
-                        showTimePickerDialog(tvCycleThreeAlarmTime2)
-                    }
-                    tvCycleThreeAlarm3.setOnClickListener {
-                        showTimePickerDialog(tvCycleThreeAlarmTime3)
-                    }
-
-                    ivArrow2.setImageResource(R.drawable.baseline_arrow_circle_down_24dp)
-                    clCycleTwoAlarm.visibility = View.GONE
-                    tvCycleTwoAlarmTime.text = ""
-                    tvCycleTwoAlarmTime2.text = ""
-
-                    ivArrow1.setImageResource(R.drawable.baseline_arrow_circle_down_24dp)
-                    clCycleOneAlarm.visibility = View.GONE
-                    tvCycleOneAlarmTime.text = ""
-                }
-                else{
-                    ivArrow3.setImageResource(R.drawable.baseline_arrow_circle_down_24dp)
-                    clCycleThreeAlarm.visibility = View.GONE
-                    tvCycleThreeAlarmTime.text = ""
-                    tvCycleThreeAlarmTime2.text = ""
-                    tvCycleThreeAlarmTime3.text = ""
-                }
-            }
-
-            btnNext.setOnClickListener {
-                if (tvCycleOneAlarmTime.text != "") {
-                    btnNext.isEnabled = true
-                    saveSelectedTimes()
-                }
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            clCycleAlarmAdd.setOnClickListener {
+                showCustomTimePickerDialog()
             }
 
             viewModel.getData().observe(viewLifecycleOwner, Observer {
                 tvCycleName.text = "약 이름 : ${it}"
             })
-
             viewModel.getTextData().observe(viewLifecycleOwner, Observer{
                 tvCycleForm.text = "약 모형 : " + it
             })
+            viewModel.getImageData().observe(viewLifecycleOwner, Observer{
+                ivCycleForm.setImageResource(it)
+            })
+
+        }
+        btnNextUpdate(adapter.itemCount)
+    }
+
+    private fun showCustomTimePickerDialog() {
+        // text 임시 설정
+        val tempTextView = TextView(requireContext())
+
+        // 커스텀 TimePickerDialog 생성 및 보여주기
+        val timePickerDialog = TimePickerDialog(requireContext(), tempTextView)
+        timePickerDialog.setOnDismissListener {
+            val selectedTime = tempTextView.text.toString()
+            if (selectedTime.isNotEmpty()) {
+                addAlarmItem(selectedTime)
+                btnNextUpdate(adapter.itemCount)
+            }
+        }
+        timePickerDialog.show()
+    }
+
+    private fun addAlarmItem(timeText: String) {
+        val timeParts = timeText.split(":")
+        val hour = timeParts[0].toInt()
+        val minute = timeParts[1].toInt()
+        val alarmItem = AlarmItem(
+            timeText = timeText,
+            timeInMillis = adapter.getTimeInMillis(hour, minute)
+        )
+        adapter.addItem(alarmItem)
+    }
+
+    private fun btnNextUpdate(itemCount: Int) {
+        binding.btnNext.isEnabled = itemCount > 0
+        if (itemCount > 0) {
+            binding.btnNext.setBackgroundResource(R.color.green)
+            binding.btnNext.setTextColor(Color.WHITE)
+            binding.btnNext.setOnClickListener {
+                MainNavigation.popCurrentFragment()
+                setAlarmForAllItems()
+            }
+        } else {
+            binding.btnNext.setBackgroundResource(R.color.gray)
+            binding.btnNext.setTextColor(Color.DKGRAY)
+            binding.btnNext.setOnClickListener {
+                Toast.makeText(context, "시간 설정이 완료되지 않았습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun showTimePickerDialog(textView: TextView) {
-        val calendar = Calendar.getInstance()
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
+    private fun setAlarmForAllItems() {
+        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+        val alarmList = adapter.getAlarmList()
 
-        val timePickerView = layoutInflater.inflate(R.layout.dialog_timepicker, null)
-        val timePicker = timePickerView.findViewById<TimePicker>(R.id.customTimePicker)
-        val save = timePickerView.findViewById<Button>(R.id.btn_save)
-        val cancle = timePickerView.findViewById<Button>(R.id.btn_cancle)
+        for (alarm in alarmList) {
+            val intent = Intent(context, AlarmReceiver::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(
+                context, alarm.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
 
-        // 시간 초기화
-        timePicker.hour = hour
-        timePicker.minute = minute
-
-        //다이얼로그 생성
-        val dialog = AlertDialog.Builder(requireContext())
-            .setView(timePickerView)
-            .create()
-
-        cancle.setOnClickListener {
-            dialog.cancel()
+            alarmManager?.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
         }
 
-        save.setOnClickListener {
-            // 사용자가 선택한 시간 가져오기
-            val selectedHour = timePicker.hour
-            val selectedMinute = timePicker.minute
-            textView.text = String.format("%02d:%02d", selectedHour, selectedMinute)
-            dialog.dismiss()
-        }
-
-        // 타이틀 제거
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.setCancelable(false)
-
-        // 시간 변경 리스너 설정
-        timePicker.setOnTimeChangedListener { _, hourOfDay, minute ->
-            // 타이틀 업데이트
-            dialog.setTitle(String.format("%02d:%02d", hourOfDay, minute))
-        }
-
-        dialog.show()
-    }
-
-
-
-    private fun saveSelectedTimes() {
-        // TextView에 입력된 시간 중 유효한 값만 ViewModel에 저장
-        if (binding.tvCycleOneAlarmTime.text != "") {
-            val timeParts = binding.tvCycleOneAlarmTime.text.split(":")
-            val hour = timeParts[0].toInt()
-            val minute = timeParts[1].toInt()
-            viewModel.addTime(hour, minute)
-        }
-
-        if (binding.tvCycleTwoAlarmTime.text != "" && binding.tvCycleTwoAlarmTime2.text != "") {
-            val timeParts = binding.tvCycleTwoAlarmTime.text.split(":")
-            val hour = timeParts[0].toInt()
-            val minute = timeParts[1].toInt()
-            val timeParts2 = binding.tvCycleTwoAlarmTime2.text.split(":")
-            val hour2 = timeParts2[0].toInt()
-            val minute2 = timeParts2[1].toInt()
-            viewModel.addTime(hour, minute)
-            viewModel.addTime(hour2, minute2)
-        }
-
-        if (binding.tvCycleThreeAlarmTime.text != "" && binding.tvCycleThreeAlarmTime2.text != "" &&
-            binding.tvCycleThreeAlarmTime3.text != "") {
-            val timeParts = binding.tvCycleThreeAlarmTime.text.split(":")
-            val hour = timeParts[0].toInt()
-            val minute = timeParts[1].toInt()
-            val timeParts2 = binding.tvCycleThreeAlarmTime2.text.split(":")
-            val hour2 = timeParts2[0].toInt()
-            val minute2 = timeParts2[1].toInt()
-            val timeParts3 = binding.tvCycleThreeAlarmTime3.text.split(":")
-            val hour3 = timeParts3[0].toInt()
-            val minute3 = timeParts3[1].toInt()
-            viewModel.addTime(hour, minute)
-            viewModel.addTime(hour2, minute2)
-            viewModel.addTime(hour3, minute3)
-        }
+        Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val MEDICINE_DATA = "medicine_data"
+
+        @JvmStatic
+        fun newInstance(medicine: Medicine) =
+            CycleFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(MEDICINE_DATA, medicine)
+                }
+            }
     }
 }

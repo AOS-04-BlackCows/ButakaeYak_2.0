@@ -1,17 +1,16 @@
 package com.blackcows.butakaeyak
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.util.Log
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
-import dagger.hilt.android.AndroidEntryPoint
 import com.blackcows.butakaeyak.databinding.ActivityMainBinding
-import com.google.firebase.FirebaseApp
-import com.kakao.sdk.user.UserApiClient
-import com.blackcows.butakaeyak.firebase.auth.FirebaseAuthManager
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -26,16 +25,38 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         navView.setupWithNavController(navController)
 
+
+        MainNavigation.initialize(this, binding)
+
+        //TODO 알림 설정
+        createNotificationChannel()
+
     }
 
     //navigation bar 안 보이게 할 때 쓰는 메소드
     fun hideBottomNavigation(state: Boolean) {
-        if (state) binding.navView.visibility = View.GONE else binding.navView.visibility =
+        if (state) binding.bottomMenuBar.visibility = View.GONE else binding.bottomMenuBar.visibility =
             View.VISIBLE
+    }
+
+    //TODO 알림 설정
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Alarm Channel"
+            val descriptionText = "Channel for Alarm Manager"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel("alarm_channel", name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }

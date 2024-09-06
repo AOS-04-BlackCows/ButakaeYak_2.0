@@ -46,7 +46,6 @@ android {
             "REST_API_KEY",
             properties.getProperty("rest_api_key")
         )
-
         buildConfigField("String",
             "ALGORIA_APP_ID",
             properties.getProperty("algoria_app_id")
@@ -55,9 +54,24 @@ android {
             "ALGORIA_SEARCH_KEY",
             properties.getProperty("algoria_search_key")
         )
+
         defaultConfig {
             manifestPlaceholders["kakao_native_app_key"] = properties.getProperty("kakao_native_app_key")
         }
+
+        buildConfigField("String",
+            "NAVER_CLIENT_ID",
+            properties.getProperty("naver_client_id")
+        )
+        buildConfigField("String",
+            "NAVER_CLIENT_SECRET",
+            properties.getProperty("naver_client_secret")
+        )
+        buildConfigField("String",
+            "PHARMACY_LIST_INFO_KEY",
+            properties.getProperty("pharmacy_list_info_key")
+        )
+
     }
 
     buildTypes {
@@ -151,4 +165,9 @@ dependencies {
     implementation ("com.algolia:algoliasearch-android:3.27.0")
     implementation ("com.algolia:algoliasearch-client-kotlin:2.1.9")
 
+    // Tikxml
+    implementation ("com.tickaroo.tikxml:annotation:0.8.13")
+    implementation ("com.tickaroo.tikxml:core:0.8.13")
+    implementation ("com.tickaroo.tikxml:retrofit-converter:0.8.13")
+    kapt ("com.tickaroo.tikxml:processor:0.8.13")
 }

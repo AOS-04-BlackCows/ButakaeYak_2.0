@@ -10,12 +10,16 @@ import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentUserBinding
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.blackcows.butakaeyak.ui.SignIn.SignInActivity
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.take.data.MyMedicine
+import com.blackcows.butakaeyak.ui.take.fragment.NameFragment
 
 class UserFragment : Fragment() {
 
@@ -38,6 +42,9 @@ class UserFragment : Fragment() {
     ): View {
         val userViewModel =
             ViewModelProvider(this).get(UserViewModel::class.java)
+
+        val mainActivity = (activity as MainActivity)
+        mainActivity.hideBottomNavigation(false)
         _binding = FragmentUserBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
@@ -45,6 +52,7 @@ class UserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         //ViewPager 화면 확인용 임시 더미데이터
         val dataList = mutableListOf<test>()
         dataList.add(test(R.drawable.choco, "항히스타민제", "피부 질환 완화제"))
@@ -82,6 +90,12 @@ class UserFragment : Fragment() {
             }
         }
     }
+            //TODO Toggle 클릭 시 NameFragment로 이동하게 하기 위함
+            fun bind(item: MyMedicine) {
+                MainNavigation.addFragment(
+                    NameFragment.newInstance(item.medicine), FragmentTag.NameFragment
+                )
+            }
 
     override fun onDestroyView() {
         super.onDestroyView()

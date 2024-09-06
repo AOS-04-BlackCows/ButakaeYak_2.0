@@ -3,32 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_take">
 
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.blackcows.butakaeyak.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_search" >
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_map"
         android:name="com.blackcows.butakaeyak.ui.map.MapFragment"
         android:label="@string/title_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_user"
         android:name="com.blackcows.butakaeyak.ui.user.UserFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user" >
-        <action
-            android:id="@+id/action_navigation_user_to_navigation_take"
-            app:destination="@id/navigation_take"
-            app:enterAnim="@anim/alpha"
-            app:exitAnim="@anim/none"
-            app:popEnterAnim="@anim/move_end"
-            app:popExitAnim="@anim/none"/>
     </fragment>
 
     <fragment
@@ -36,30 +31,5 @@
         android:name="com.blackcows.butakaeyak.ui.take.fragment.TakeFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_take" >
-        <action
-            android:id="@+id/action_navigation_take_to_navigation_take_add"
-            app:destination="@id/navigation_take_add"
-            app:enterAnim="@anim/alpha"
-            app:exitAnim="@anim/none"
-            app:popEnterAnim="@anim/move_end"
-            app:popExitAnim="@anim/none"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_take_add"
-        android:name="com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment"
-        android:label="@string/title_user"
-        tools:layout="@layout/fragment_take_add" >
-        <action
-            android:id="@+id/action_navigation_take_add_to_navigation_name"
-            app:destination="@+id/navigation_name"
-            app:popUpTo="@+id/navigation_take"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_name"
-        android:name="com.blackcows.butakaeyak.ui.take.fragment.NameFragment"
-        android:label="name"
-        tools:layout="@layout/fragment_name">
     </fragment>
 </navigation>

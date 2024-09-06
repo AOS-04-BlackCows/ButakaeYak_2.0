@@ -4,8 +4,6 @@
     android:layout_height="100dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    android:background="@drawable/take_tv_stroke_gray_12dp"-->
-
     <ImageView
         android:id="@+id/iv_medicine_form"
         android:layout_width="60dp"
