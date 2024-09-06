@@ -17,7 +17,6 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentFeedListBinding
 import com.blackcows.butakaeyak.databinding.ItemResultsBinding
-import com.blackcows.butakaeyak.ui.home.data.DataSource
 import com.blackcows.butakaeyak.ui.home.data.ListItem
 import com.bumptech.glide.Glide
 import kotlin.coroutines.coroutineContext
@@ -89,7 +88,9 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
         private val loMedicineInfo: ConstraintLayout = medicineView.loMedicineInfo
 
         fun bind(medicineItem: Medicine) {
-            btnMyMedicine.isChecked = clickListener.isMedicineChecked(medicineItem)
+            val isSaved = clickListener.isMedicineChecked(medicineItem)
+            Log.d("HomeRecyclerView", "Name: ${medicineItem.name}, $isSaved")
+            btnMyMedicine.isChecked = isSaved
             with(medicineItem) {
                 Glide.with(itemView).load(imageUrl?:R.drawable.medicine).into(ivMedicine)
                 tvMedicineName.text = name

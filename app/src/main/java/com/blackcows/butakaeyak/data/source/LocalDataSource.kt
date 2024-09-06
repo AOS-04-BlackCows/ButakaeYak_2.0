@@ -3,6 +3,7 @@ package com.blackcows.butakaeyak.data.source
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -23,13 +24,17 @@ class LocalDataSource @Inject constructor(
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(APP_SHARED_PREFS, Activity.MODE_PRIVATE)
     private val editor = sharedPreferences.edit()
 
-    fun getMyMedicines(): List<MyMedicine>
-        = sharedPreferences.getString(MY_MEDICINES, null)?.let {
+    fun getMyMedicines(): List<MyMedicine> {
+        val list = sharedPreferences.getString(MY_MEDICINES, null)?.let {
             val gson = Gson()
-            val type = object : TypeToken<Array<MyMedicine>>() {}.type
-            return gson.fromJson(it, type)
-        } ?: listOf()
+            val type = object : TypeToken<List<MyMedicine>>() {}.type
+            gson.fromJson(it, type)
+        } ?: listOf<MyMedicine>()
 
+        Log.d(TAG, "list Size: ${list.size}")
+
+        return list
+    }
     fun saveMyMedicines(myMedicines: List<MyMedicine>) {
         val gson = Gson()
         val json = gson.toJson(myMedicines)
