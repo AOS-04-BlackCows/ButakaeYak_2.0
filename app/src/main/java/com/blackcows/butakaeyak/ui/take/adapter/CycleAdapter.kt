@@ -9,6 +9,7 @@ import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
 import java.util.Calendar
 
+
 class CycleAdapter(private val context: Context, private val alarmList: MutableList<AlarmItem>,private val onItemCountChangeListener: (Int) -> Unit) : RecyclerView.Adapter<CycleAdapter.CycleViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CycleViewHolder {
