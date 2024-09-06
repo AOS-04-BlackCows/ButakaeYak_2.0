@@ -9,11 +9,16 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.data.models.Medicine
+import com.blackcows.butakaeyak.databinding.DialogSearchDetailBinding
 import com.blackcows.butakaeyak.databinding.FragmentMedicineResultBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
 import com.blackcows.butakaeyak.ui.home.data.DataSource
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+
 private const val TAG = "약 결과"
 class MedicineResultFragment : Fragment() {
     //binding 설정
@@ -61,7 +66,9 @@ class MedicineResultFragment : Fragment() {
         binding.apply {
             medicineAdapter = HomeRecyclerAdapter(object : HomeRecyclerAdapter.ClickListener{
                 override fun onItemClick(item: Medicine) {
-                    //("디테일 화면 띄움")
+                    MainNavigation.addFragment(SearchDetailFragment.newInstance(item),
+                        FragmentTag.SearchDetailFragmentInSearch
+                    )
                     Log.d(TAG,"${item.id}, ${item.name} ")
                 }
                 override fun isMedicineChecked(item: Medicine) : Boolean{
