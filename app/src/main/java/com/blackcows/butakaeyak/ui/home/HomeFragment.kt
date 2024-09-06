@@ -26,8 +26,6 @@ import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment() {
-
-
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
@@ -35,6 +33,7 @@ class HomeFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by activityViewModels()
 
+    private var imm : InputMethodManager? =null
     private object homeData{
         var userEffectList = mutableListOf<Pair<String,String>>()
     }
@@ -47,7 +46,7 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
+        imm =  requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         val viewpager = binding.searchVp
         homeViewModel.text.observe(viewLifecycleOwner) {
             viewpager.currentItem
@@ -70,10 +69,10 @@ class HomeFragment : Fragment() {
         binding.searchBtnSearch.setOnClickListener {
             val query = binding.searchEtSearchtext.text.toString()
             binding.searchLoProgressContainer.visibility = View.VISIBLE
+            imm!!.hideSoftInputFromWindow(binding.searchBtnSearch.windowToken, 0)
             homeViewModel.searchMedicinesWithName(query)
             /*todo : 검색 완료시 프로그래스바 사라지게
-               검색 클릭시 에니메이션
-               검색 클릭시 키보드 내려가게
+               검색 클릭시 에니메이션- 굳이?
                검색전 횡한화면 채우기*/
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.searchLoProgressContainer.visibility = View.GONE

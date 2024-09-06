@@ -47,6 +47,7 @@
                 android:hint="검색어를 적어 주세요."
                 android:maxLines="1"
                 android:singleLine="true"
+                android:inputType="text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/search_btn_search"
                 app:layout_constraintHorizontal_bias="0.0"
