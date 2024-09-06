@@ -19,6 +19,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
+import com.blackcows.butakaeyak.data.source.LocalDataSource
 import com.blackcows.butakaeyak.databinding.BottomsheetMapDetailBinding
 import com.blackcows.butakaeyak.databinding.FragmentMapBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -37,8 +39,8 @@ class MapFragment : Fragment() {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
     private val mapViewModel: MapViewModel by activityViewModels()
-    private var myPlaceLongtudeX: Double = 0.0 // 127.11547410533494
-    private var myPlaceLatitudeY: Double = 0.0 // 37.40754692649233
+    private var myPlaceLongtudeX: Double = 0.0 // 임시 127.11547410533494
+    private var myPlaceLatitudeY: Double = 0.0 // 임시 37.40754692649233
     private lateinit var locationManager: LocationManager
     private lateinit var locationListener: LocationListener
 //    private var mFusedLocationProviderClient: FusedLocationProviderClient? = null // 현재 위치를 가져오기 위한 변수
@@ -192,18 +194,18 @@ class MapFragment : Fragment() {
             Toast.makeText(requireContext(), "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
 
-        binding.testBtn1.setOnClickListener {
+        binding.mapResearch.setOnClickListener {
+            val camera = kakaoMapCall.getCameraPosition()
+            myPlaceLatitudeY = camera?.position?.latitude?: 0.0
+            myPlaceLongtudeX = camera?.position?.longitude?: 0.0
+            mapViewModel.findPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
+        }
+        binding.mapViewMore.setOnClickListener {
             if (mapViewModel.pharmacyPager <= 5) {
                 mapViewModel.moreFindPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
             } else {
                 Toast.makeText(requireContext(), "표시된 약국이 많아 더 이상 검색할 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
-        }
-        binding.testBtn2.setOnClickListener {
-            val camera = kakaoMapCall.getCameraPosition()
-            myPlaceLatitudeY = camera?.position?.latitude?: 0.0
-            myPlaceLongtudeX = camera?.position?.longitude?: 0.0
-            mapViewModel.findPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
         }
     }
 
@@ -241,18 +243,28 @@ class MapFragment : Fragment() {
                     layer?.addLabel(options)
                     kakaoMap.setOnLabelClickListener { kakaoMap, labelLayer, label ->
                         Log.d(TAG, label?.tag.toString())
-                        val selectTagArr = label?.tag.toString().split("||")
-                        bottomSheetView.distance.text = "${selectTagArr[1]}m"
-                        bottomSheetView.placeName.text = selectTagArr[0]
-                        bottomSheetView.phone.text = selectTagArr[7]
-                        bottomSheetView.placeUrl.text = selectTagArr[2]
-                        bottomSheetView.addressName.text = selectTagArr[4]
-                        bottomSheetView.roadAddressName.text = selectTagArr[5]
+                        val tag = label?.tag.toString().split("||")
+                        val pharmacyData = KakaoPlacePharmacy(tag[0],tag[1],tag[2],tag[3],tag[4],tag[5],tag[6],tag[7],tag[8],tag[9],tag[10],tag[11])
+                        bottomSheetView.distance.text = "${pharmacyData.distance}m"
+                        bottomSheetView.placeName.text = pharmacyData.placeName
+                        bottomSheetView.phone.text = pharmacyData.phone
+                        bottomSheetView.placeUrl.text = pharmacyData.placeUrl
+                        bottomSheetView.addressName.text = pharmacyData.addressName
+                        bottomSheetView.roadAddressName.text = pharmacyData.roadAddressName
+                        bottomSheetView.btnFavorite.setOnClickListener {
+                            LocalDataSource(requireContext()).addMyPharmacy(pharmacyData)
+                        }
+                        bottomSheetView.btnCall.setOnClickListener {
+
+                        }
+                        bottomSheetView.placeUrl.setOnClickListener {
+
+                        }
                         bottomSheetDialog.show()
                         true
                     }
                     /*  selectTagArr Data
-                        [0] placeName = 예시 : 한우리약국,
+                           [0] placeName = 예시 : 한우리약국,
                         || [1] distance = 예시 : 291,
                         || [2] placeUrl = 예시 : "http://place.map.kakao.com/9578427",
                         || [3] categoryName = 예시 : "의료,건강 > 약국",
