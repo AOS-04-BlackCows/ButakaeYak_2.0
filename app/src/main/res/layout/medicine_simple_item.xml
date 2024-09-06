@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="5dp">
+    android:padding="2dp">
 
     <ImageView
         android:id="@+id/medicine_iv"
@@ -29,7 +29,10 @@
         android:layout_marginStart="10dp"
 
         android:text="타이레놀"
-        style="@style/body_b"
+        style="@style/body"
+
+        android:maxLines="1"
+        android:ellipsize="end"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

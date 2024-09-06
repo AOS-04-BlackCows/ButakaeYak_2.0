@@ -20,6 +20,8 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentTakeBinding
 import com.blackcows.butakaeyak.domain.take.GetTodayMedicineUseCase
 import com.blackcows.butakaeyak.ui.example.UserUiState
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.navigation.TabTag
 import com.blackcows.butakaeyak.ui.take.MyTakeViewModel
 import com.blackcows.butakaeyak.ui.take.TakeUiState
 import com.blackcows.butakaeyak.ui.take.adapter.MyMedicinesRvAdapter
@@ -46,7 +48,7 @@ class TakeFragment : Fragment() {
 
     private val TAG = "TakeFragment"
 
-    private val todayDate = Calendar.getInstance().time
+    private val todayDate = Calendar.getInstance()
     private val todayWeekDay by lazy {
         val calendar = Calendar.getInstance().apply {
             setTime(Date())
@@ -82,27 +84,8 @@ class TakeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initView()
         initUiState()
-
-        with(binding) {
-            todayDateTv.text = "${todayDate.toKorean()} ${todayWeekDay.toKorean()}"
-
-            todayMedicineRv.run {
-                layoutManager = LinearLayoutManager(requireContext())
-                adapter = todayMedicinesAdapter
-                addItemDecoration(TakeRvDecorator.getLinearDeco())
-            }
-            myMedicineRv.run {
-                layoutManager = LinearLayoutManager(requireContext())
-                adapter = myMedicinesAdapter
-                addItemDecoration(
-                    DividerItemDecoration(
-                        requireContext(),
-                        LinearLayoutManager.VERTICAL
-                    )
-                )
-            }
-        }
     }
 
     override fun onResume() {
@@ -120,11 +103,22 @@ class TakeFragment : Fragment() {
         myTakeViewModel.uiState.collectLatest {
             when (it) {
                 is TakeUiState.GetTodayMedicinesSuccess -> {
-                    todayMedicinesAdapter.submitList(it.medicineAtTimes)
+                    if(it.medicineAtTimes.isEmpty()) {
+                        binding.noTodayGuideBox.visibility = View.VISIBLE
+                    } else {
+                        binding.noTodayGuideBox.visibility = View.GONE
+                        todayMedicinesAdapter.submitList(it.medicineAtTimes)
+                    }
                 }
 
                 is TakeUiState.GetMyMedicinesSuccess -> {
-                    myMedicinesAdapter.submitList(it.medicines)
+                    Log.d(TAG, "isMyMedicineEmpty: ${it.medicines.isEmpty()}")
+                    if(it.medicines.isEmpty()) {
+                        binding.noMyMedicineTv.visibility = View.VISIBLE
+                    } else {
+                        binding.noMyMedicineTv.visibility = View.GONE
+                        myMedicinesAdapter.submitList(it.medicines)
+                    }
                 }
 
                 is TakeUiState.Failure -> {
@@ -133,6 +127,35 @@ class TakeFragment : Fragment() {
 
                 else -> null
             }
+        }
+    }
+
+    private fun initView() = with(binding) {
+        todayDateTv.text = "${todayDate.get(Calendar.YEAR)}년 ${todayDate.time.toKorean()}"
+
+
+        noTodayGuideGoBtn.setOnClickListener {
+            //TODO: 어디로 가요?
+            //  1. 우선 검색화면으로?
+            //      추가1) 튜토리얼
+            //      추가2)
+            MainNavigation.toOtherTab(TabTag.Search)
+        }
+
+        todayMedicineRv.run {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = todayMedicinesAdapter
+            addItemDecoration(TakeRvDecorator.getLinearDeco())
+        }
+        myMedicineRv.run {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = myMedicinesAdapter
+            addItemDecoration(
+                DividerItemDecoration(
+                    requireContext(),
+                    LinearLayoutManager.VERTICAL
+                )
+            )
         }
     }
 }

@@ -41,18 +41,24 @@ class TodayMedicineRvAdapter:
                 medicineRv.run {
                     layoutManager = LinearLayoutManager(binding.root.context)
                     this.adapter = adapter
-                    addItemDecoration(TakeRvDecorator.getLinearDeco())
+                    addItemDecoration(TakeRvDecorator.getLinearDecoSimpleItem())
                 }
 
                 adapter.submitList(item.list.take(2))
                 expandButton.visibility = if (item.list.size > 2) View.VISIBLE else View.GONE
 
-                //TODO: 접기 버튼도 넣기
                 expandButton.setOnClickListener {
+                    foldButton.visibility = View.VISIBLE
                     expandButton.visibility = View.GONE
                     adapter.submitList(item.list.toMutableList())
 
                     Log.d("TodayMedicineRvAdapter", "list size: ${adapter.currentList.size}")
+                }
+                foldButton.setOnClickListener {
+                    foldButton.visibility = View.GONE
+                    expandButton.visibility = View.VISIBLE
+
+                    adapter.submitList(item.list.take(2))
                 }
             }
         }

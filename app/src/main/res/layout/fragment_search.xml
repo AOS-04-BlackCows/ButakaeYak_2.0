@@ -23,7 +23,7 @@
             android:layout_height="64dp"
 
             android:scaleType="fitCenter"
-            android:src="@drawable/choco"
+            android:src="@drawable/logo_final"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
