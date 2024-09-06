@@ -25,19 +25,18 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        val navView: BottomNavigationView = binding.navView
+
+        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        navView.setupWithNavController(navController)
+
+
         MainNavigation.initialize(this, binding)
-
-        // 인텐트에서 navigateTo 값을 가져옴
-        val navigateTo = intent.getStringExtra("navigateTo")
-        Log.d(TAG, "navigateTo: $navigateTo")
-
-        if (navigateTo == "user") {
-            Log.d(TAG, "Navigating to UserFragment")
-            //navController.navigate(R.id.navigation_user)
-        }
 
         //TODO 알림 설정
         createNotificationChannel()
+
     }
 
     //navigation bar 안 보이게 할 때 쓰는 메소드

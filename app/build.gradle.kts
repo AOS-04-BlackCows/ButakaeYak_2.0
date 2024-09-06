@@ -54,6 +54,11 @@ android {
             "ALGORIA_SEARCH_KEY",
             properties.getProperty("algoria_search_key")
         )
+
+        defaultConfig {
+            manifestPlaceholders["kakao_native_app_key"] = properties.getProperty("kakao_native_app_key")
+        }
+
         buildConfigField("String",
             "NAVER_CLIENT_ID",
             properties.getProperty("naver_client_id")
@@ -66,6 +71,7 @@ android {
             "PHARMACY_LIST_INFO_KEY",
             properties.getProperty("pharmacy_list_info_key")
         )
+
     }
 
     buildTypes {
