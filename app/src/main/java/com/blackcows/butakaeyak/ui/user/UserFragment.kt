@@ -65,7 +65,6 @@ class UserFragment : Fragment() {
             }
         }
     }
-
             //TODO Toggle 클릭 시 NameFragment로 이동하게 하기 위함
             fun bind(item: MyMedicine) {
                 MainNavigation.addFragment(
