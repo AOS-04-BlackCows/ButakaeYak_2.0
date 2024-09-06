@@ -53,12 +53,14 @@
         app:layout_constraintTop_toBottomOf="@id/cl_my_info">
 
         <ImageView
+            android:id="@+id/iv_my_profile"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/sparta" />
     </androidx.cardview.widget.CardView>
 
     <TextView
+        android:id="@+id/tv_my_name"
         style="@style/subtitle_b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,61 +79,15 @@
         app:layout_constraintTop_toBottomOf="@id/cv_my_profile">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_my_medicine"
+            android:id="@+id/cl_my_terms"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/user_cl_bg_white_gradient_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/iv_my_medicine"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="10dp"
-                android:src="@drawable/medicine"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_my_medicine"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="10dp"
-                android:text="복용중인 약 관리"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_my_medicine"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/iv_arrow_1"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="10dp"
-                android:src="@drawable/baseline_arrow_circle_right_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_my_notification"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/user_cl_bg_white_gradient_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_my_medicine">
+            app:layout_constraintTop_toBottomOf="@id/cl_my_login">
 
             <ImageView
                 android:id="@+id/iv_my_notification"
@@ -151,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="10dp"
-                android:text="알림 설정"
+                android:text="서비스 이용 약관"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/iv_my_notification"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -173,11 +129,11 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/user_cl_bg_white_gradient_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_my_notification">
+            app:layout_constraintTop_toBottomOf="@id/cl_my_favorite">
 
             <ImageView
                 android:id="@+id/iv_my_login"
@@ -219,11 +175,11 @@
             android:layout_width="match_parent"
             android:layout_height="270dp"
             android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/user_cl_bg_white_gradient_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_my_login">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/iv_favorite"
