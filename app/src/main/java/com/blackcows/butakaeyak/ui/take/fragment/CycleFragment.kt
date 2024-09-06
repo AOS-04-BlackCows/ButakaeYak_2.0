@@ -66,8 +66,6 @@ class CycleFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        MainNavigation.hideBottomNavigation(true)
-
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 onBackPressed()
@@ -145,10 +143,13 @@ class CycleFragment : Fragment() {
             binding.btnNext.setBackgroundResource(R.color.green)
             binding.btnNext.setTextColor(Color.WHITE)
             binding.btnNext.setOnClickListener {
-                requireActivity().supportFragmentManager.beginTransaction()
+                parentFragmentManager.beginTransaction()
                     .remove(this@CycleFragment)
                     .commit()
+
                 setAlarmForAllItems()
+
+                MainNavigation.popCurrentFragment()
             }
         } else {
             binding.btnNext.setBackgroundResource(R.color.gray)

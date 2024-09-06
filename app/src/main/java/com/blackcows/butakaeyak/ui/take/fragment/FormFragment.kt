@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.adapter.FormAdapter
 import com.blackcows.butakaeyak.ui.take.data.FormItem
+import com.blackcows.butakaeyak.ui.take.fragment.NameFragment.Companion
 
 class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
 
@@ -37,12 +39,21 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
         ).commitNow()
     }
 
+    //TODO: 여기!
+    //bundle에서 medicine 가져오기
+    private val medicine: Medicine by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(MEDICINE_DATA, Medicine::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            arguments?.getParcelable(MEDICINE_DATA)!!
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        MainNavigation.hideBottomNavigation(true)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -76,8 +87,9 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
 
         binding.apply {
             ivBack.setOnClickListener{
-            onBackPressed()
-        }
+                onBackPressed()
+            }
+
             adapter = FormAdapter(dataForm, requireContext(), this@FormFragment)
             recyclerviewForm.adapter = adapter
             recyclerviewForm.layoutManager = LinearLayoutManager(requireContext())
@@ -91,10 +103,6 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
         }
 
     override fun onItemChecked(position: Int, isChecked: Boolean) {
-
-        //companion object
-        val medicine: Medicine? = arguments?.getParcelable(FormFragment.MEDICINE_DATA)
-
         binding.apply {
             if (isChecked) {
                 btnNext.apply {
@@ -104,11 +112,12 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
                     setBackgroundResource(R.color.green)
                     setTextColor(Color.WHITE)
                     setOnClickListener {
-                        medicine?.let { it1 -> CycleFragment.newInstance(it1) }?.let { it2 ->
-                            MainNavigation.addFragment(
-                                it2, FragmentTag.FormFragment
-                            )
-                        }
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container,
+                                    CycleFragment.newInstance(medicine)
+                            ).commitNow()
+
+
                         viewModel.updateFormItem(selectName)
                         viewModel.updateFormImageItem(selectImage)
                     }
