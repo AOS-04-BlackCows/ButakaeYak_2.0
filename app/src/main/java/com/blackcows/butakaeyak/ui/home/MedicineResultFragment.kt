@@ -13,7 +13,8 @@ import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentMedicineResultBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
-import com.blackcows.butakaeyak.ui.home.data.DataSource
+import com.blackcows.butakaeyak.ui.take.data.MyMedicine
+
 private const val TAG = "약 결과"
 class MedicineResultFragment : Fragment() {
     //binding 설정
@@ -64,39 +65,40 @@ class MedicineResultFragment : Fragment() {
                     //("디테일 화면 띄움")
                     Log.d(TAG,"${item.id}, ${item.name} ")
                 }
-                override fun isMedicineChecked(item: Medicine) : Boolean{
-                    Log.d(TAG,item.id.toString() + ": "+DataSource.isItemChecked(requireContext(),"MyPillData",item.id.toString()))
-                    return DataSource.isItemChecked(requireContext(),"MyPillData",item.id.toString())
+                override fun isMedicineChecked(item: Medicine) : Boolean {
+                    val result = homeViewModel.isMyMedicine(item.id!!)
+                    Log.d(TAG,"${item.id}: $result")
+                    return result
                 }
+                //TODO: Set을 여기서 하지말고 homeViewModel.isMyMedicine을 이용하여 가져오자!
+                //  즉, homeResult에선 save하지 않고 결과를 계속 리로드 하는 식으로 작동하는게 좋을듯!
                 override fun setMedicineChecked(item: Medicine, isChecked: Boolean) {
                     Log.d(TAG,item.id.toString() + ": "+isChecked)
-                    DataSource.satItemChecked(requireContext(),"MyPillData",item.id.toString(),isChecked)
+                    if(isChecked) {
+                        homeViewModel.cancelMyMedicine(item.id!!)
+                    } else {
+                        homeViewModel.saveMyMedicine(MyMedicine(item, mapOf()))
+                    }
+                    homeViewModel.saveMyMedicine(MyMedicine(item, mapOf()))
                 }
-//                override fun onMyPillClick(item: Medicine, needAdd: Boolean) {
-//                    //("복용중인 약 추가/삭제")
-//                    val json = "{\"id:\":\""+item.id.toString()+"\","+
-//                                "\"name:\":\""+item.name.toString()+"\","+
-//                                "\"enterprise:\":\""+item.enterprise.toString()+"\","+
-//                                "\"effect:\":\""+item.effect.toString()+"\","+
-//                                "\"instructions:\":\""+item.instructions.toString()+"\","+
-//                                "\"warning:\":\""+item.warning.toString()+"\","+
-//                                "\"caution:\":\""+item.caution.toString()+"\","+
-//                                "\"interaction:\":\""+item.interaction.toString()+"\","+
-//                                "\"sideEffect:\":\""+item.sideEffect.toString()+"\","+
-//                                "\"storingMethod:\":\""+item.storingMethod.toString()+"\","+
-//                                "\"imageUrl:\":\""+item.imageUrl.toString()+"\","+
-//                                "\"needAdd:\":\""+needAdd+"\"}"
-//                    Log.d("아이템 복용약 누름","${item.id}, ${item.name}, ${needAdd}")
-//                    DataSource.saveData(requireContext(),"MyPillData",item.id.toString(),json)
-//                }
             })
             resultlist.adapter = medicineAdapter
             resultlist.itemAnimator = null
             homeViewModel.medicineResult.observe(viewLifecycleOwner){
-                medicineAdapter.submitList(it.toList())
+                if(it.isNotEmpty()) Log.d(TAG, "Class: ${it[0]::class.simpleName}")
+                medicineAdapter.submitList(it)
             }
 //            pillAdapter.submitList(dataSource)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val lists = homeViewModel.getMyMedicines().map {
+            it.medicine
+        }
+        medicineAdapter.submitList(lists)
     }
 
     companion object {

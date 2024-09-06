@@ -6,4 +6,7 @@ interface LocalRepository {
     fun getMyMedicines(): List<MyMedicine>
     fun saveMyMedicines(list: List<MyMedicine>)
     fun addToMyMedicine(myMedicine: MyMedicine)
+
+    fun isMyMedicine(id: String): Boolean
+    fun cancelMyMedicine(id: String)
 }
