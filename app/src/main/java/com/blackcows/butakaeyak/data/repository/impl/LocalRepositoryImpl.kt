@@ -19,4 +19,8 @@ class LocalRepositoryImpl @Inject constructor(
     override fun addToMyMedicine(myMedicine: MyMedicine) {
         localDataSource.addMyMedicines(myMedicine)
     }
+
+    override fun isMyItem(id: String): Boolean {
+        return localDataSource.isItemChecked(id)
+    }
 }
