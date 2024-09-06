@@ -69,6 +69,7 @@ class HomeFragment : Fragment() {
         binding.searchBtnSearch.setOnClickListener {
             val query = binding.searchEtSearchtext.text.toString()
             binding.searchLoProgressContainer.visibility = View.VISIBLE
+            binding.searchLoImageblock.visibility = View.GONE
             imm!!.hideSoftInputFromWindow(binding.searchBtnSearch.windowToken, 0)
             homeViewModel.searchMedicinesWithName(query)
             /*todo : 검색 완료시 프로그래스바 사라지게
