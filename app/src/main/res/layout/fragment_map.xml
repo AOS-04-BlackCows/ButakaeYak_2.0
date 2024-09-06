@@ -6,6 +6,49 @@
     android:layout_height="match_parent"
     tools:context=".ui.map.MapFragment">
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_location"
+        style="@style/body"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="64dp"
+        android:background="@drawable/btn_my_gps"
+        android:elevation="4dp"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/test_btn1"
+        style="@style/body"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginBottom="64dp"
+        android:background="@drawable/round_long_rect_500"
+        android:paddingHorizontal="16dp"
+        android:text="현 위치에서 재검색"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/test_btn2"
+        style="@style/body"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/round_long_rect_500"
+        android:elevation="4dp"
+        android:paddingHorizontal="16dp"
+        android:text="목록 더보기"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.kakao.vectormap.MapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
@@ -14,45 +57,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_location"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="현 위치로"
-        style="@style/body"
-        android:textColor="@color/white"
-        android:background="@color/green"
-        android:paddingHorizontal="16dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="64dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/test_btn1"
-        style="@style/body"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginBottom="64dp"
-        android:layout_marginEnd="12dp"
-        android:background="@color/green"
-        android:paddingHorizontal="16dp"
-        android:text="테스트 버튼 1"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_location" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/test_btn2"
-        style="@style/body"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginBottom="64dp"
-        android:layout_marginEnd="12dp"
-        android:background="@color/green"
-        android:paddingHorizontal="16dp"
-        android:text="테스트 버튼 2"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/test_btn1" />
 </androidx.constraintlayout.widget.ConstraintLayout>
