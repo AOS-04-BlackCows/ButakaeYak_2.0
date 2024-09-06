@@ -94,7 +94,9 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
         private val loMedicineInfo: ConstraintLayout = medicineView.loMedicineInfo
 
         fun bind(medicineItem: Medicine) {
-            btnMyMedicine.isChecked = clickListener.isMedicineChecked(medicineItem)
+            val isSaved = clickListener.isMedicineChecked(medicineItem)
+            Log.d("HomeRecyclerView", "Name: ${medicineItem.name}, $isSaved")
+            btnMyMedicine.isChecked = isSaved
             with(medicineItem) {
                 Glide.with(itemView).load(imageUrl?:R.drawable.medicine).into(ivMedicine)
                 tvMedicineName.text = name
