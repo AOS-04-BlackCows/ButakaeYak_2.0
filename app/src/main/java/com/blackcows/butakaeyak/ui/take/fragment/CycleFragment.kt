@@ -44,6 +44,13 @@ class CycleFragment : Fragment() {
     //viewModel 설정
     private val viewModel: TakeViewModel by activityViewModels()
 
+    //뒤로가기 설정
+    private val onBackPressed = {
+        parentFragmentManager.beginTransaction().remove(
+            this
+        ).commitNow()
+    }
+
     //bundle에서 medicine 가져오기
     private val medicine: Medicine by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -58,9 +65,12 @@ class CycleFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        MainNavigation.hideBottomNavigation(true)
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                MainNavigation.popCurrentFragment()
+                onBackPressed()
             }
         })
 
@@ -77,7 +87,7 @@ class CycleFragment : Fragment() {
 
         binding.apply {
             ivBack.setOnClickListener {
-                MainNavigation.popCurrentFragment()
+                onBackPressed()
             }
             adapter = CycleAdapter(requireContext(),alarmList){ itemCount ->
                 btnNextUpdate(itemCount)
@@ -135,7 +145,9 @@ class CycleFragment : Fragment() {
             binding.btnNext.setBackgroundResource(R.color.green)
             binding.btnNext.setTextColor(Color.WHITE)
             binding.btnNext.setOnClickListener {
-                MainNavigation.popCurrentFragment()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .remove(this@CycleFragment)
+                    .commit()
                 setAlarmForAllItems()
             }
         } else {

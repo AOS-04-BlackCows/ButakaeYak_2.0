@@ -43,8 +43,6 @@ class UserFragment : Fragment() {
         val userViewModel =
             ViewModelProvider(this).get(UserViewModel::class.java)
 
-        val mainActivity = (activity as MainActivity)
-        mainActivity.hideBottomNavigation(false)
         _binding = FragmentUserBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
@@ -66,7 +64,7 @@ class UserFragment : Fragment() {
             }
 
             clMyMedicine.setOnClickListener {
-                findNavController().navigate(R.id.action_navigation_user_to_navigation_take)
+//                findNavController().navigate(R.id.action_navigation_user_to_navigation_take)
             }
 //            ivArrow1.setOnClickListener{
 //                val intent = Intent(requireContext(),TakeActivity::class.java)

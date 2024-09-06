@@ -26,23 +26,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        val navView: BottomNavigationView = binding.navView
-
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        navView.setupWithNavController(navController)
-
+//        val navView: BottomNavigationView = binding.navView
+//
+//        val navController = findNavController(R.id.nav)_host_fragment_activity_main)
+//        navView.setupWithNavController(navController
 
         MainNavigation.initialize(this, binding)
 
         //TODO 알림 설정
         createNotificationChannel()
 
-    }
-
-    //navigation bar 안 보이게 할 때 쓰는 메소드
-    fun hideBottomNavigation(state: Boolean) {
-        if (state) binding.bottomMenuBar.visibility = View.GONE else binding.bottomMenuBar.visibility =
-            View.VISIBLE
     }
 
     //TODO 알림 설정
