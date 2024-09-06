@@ -1,14 +1,16 @@
 package com.blackcows.butakaeyak.ui.home.data
 
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.blackcows.butakaeyak.data.models.Medicine
-import org.junit.runner.manipulation.Ordering.Context
+import com.google.gson.Gson
 
+private const val TAG = "약 데이터"
 class DataSource {
-    companion object{
-        private var INSTANCE : DataSource? = null
+    companion object {
+        private var INSTANCE: DataSource? = null
 
-        fun getDataSoures() : DataSource{
+        fun getDataSoures(): DataSource {
             // DatoSource::class 객체에 lock을 걸어 한번에 한 스레드에서만 실행 되도록 함
             return synchronized(DataSource::class) {
                 // 싱글톤 객체를 한번 호출하고 없으면 DataSource반환, 있으면 생성된 인스턴스 반환
@@ -19,22 +21,39 @@ class DataSource {
         }
 
         //SharedPreferences
-        fun saveData(context: android.content.Context, key:String, data: Set<String>,needAdd :Boolean) {
-            context.getSharedPreferences(key, MODE_PRIVATE).edit().putStringSet(data.first(),data).apply() // 저장완료
-            context.getSharedPreferences(key, MODE_PRIVATE).edit().putBoolean(data.first(),needAdd).apply() // 저장완료
+        fun saveData(context: android.content.Context,fileName: String,key: String,data: String) {
+            context.getSharedPreferences(fileName, MODE_PRIVATE)
+                .edit()
+                .putString(key, data)
+                .apply() // 저장완료
+        }
+        fun satItemChecked(context: android.content.Context,fileName: String,key: String,isChecked: Boolean) {
+            context.getSharedPreferences(fileName, MODE_PRIVATE).edit().putBoolean(key, isChecked).apply() // 저장완료
+            Log.d(TAG, key +" str "+ context.getSharedPreferences(fileName, MODE_PRIVATE).getBoolean(key,false).toString())
         }
 
-        fun loadData(context: android.content.Context,key:String) {
-            val pref = context.getSharedPreferences(key, MODE_PRIVATE)
+        fun isItemChecked(context: android.content.Context, fileName: String,key: String) : Boolean {
+            Log.d(TAG, key +" - "+ context.getSharedPreferences(fileName, MODE_PRIVATE).getBoolean(key,false))
+            return context.getSharedPreferences(fileName, MODE_PRIVATE).getBoolean(key,false)
+        }
+        fun loadAllData(context: android.content.Context, fileName: String) : Medicine {
+            val pref = context.getSharedPreferences(fileName, MODE_PRIVATE).all.toString()
+            Log.d(TAG,context.getSharedPreferences(fileName, MODE_PRIVATE).all.toString())
+            return parseJson(pref)
+        }
+        fun parseJson(jsonString: String): Medicine {
+            val gson = Gson()
+            return gson.fromJson(jsonString, Medicine::class.java)
         }
     }
 
     // MVVM패턴에서 Model에 해당한다고 볼 수 있음
-    fun getPillList() : List<Medicine>{
+    fun getMedicineList(): List<Medicine> {
         // 만들어놓은 데이터클래스 리턴
-        return CardDataList()
+        return MedicineDataList()
     }
-    fun CardDataList() : ArrayList<Medicine>{
+
+    fun MedicineDataList(): ArrayList<Medicine> {
         return arrayListOf(
             Medicine(
                 "000001",
