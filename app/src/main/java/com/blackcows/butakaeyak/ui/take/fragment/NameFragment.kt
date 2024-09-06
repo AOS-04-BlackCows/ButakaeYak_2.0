@@ -44,6 +44,7 @@ class NameFragment : Fragment() {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                MainNavigation.popCurrentFragment()
             }
         })
         return root
@@ -66,6 +67,7 @@ class NameFragment : Fragment() {
         }
 
         binding.ivBack.setOnClickListener {
+            MainNavigation.popCurrentFragment()
         }
 
         binding.etMedicineName.addTextChangedListener(object : TextWatcher {

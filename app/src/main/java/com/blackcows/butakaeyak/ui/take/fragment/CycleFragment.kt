@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -23,6 +22,7 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
 import com.blackcows.butakaeyak.ui.home.HomeFragment
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.AlarmReceiver
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.TimePickerDialog
@@ -60,7 +60,7 @@ class CycleFragment : Fragment() {
     ): View {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-
+                MainNavigation.popCurrentFragment()
             }
         })
 
@@ -77,7 +77,7 @@ class CycleFragment : Fragment() {
 
         binding.apply {
             ivBack.setOnClickListener {
-//                MainNavigation.popCurrentFragments()
+                MainNavigation.popCurrentFragment()
             }
             adapter = CycleAdapter(requireContext(),alarmList){ itemCount ->
                 btnNextUpdate(itemCount)
@@ -135,10 +135,7 @@ class CycleFragment : Fragment() {
             binding.btnNext.setBackgroundResource(R.color.green)
             binding.btnNext.setTextColor(Color.WHITE)
             binding.btnNext.setOnClickListener {
-                requireActivity().supportFragmentManager.popBackStack()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container_view, HomeFragment())
-                    .commit()
+                MainNavigation.popCurrentFragment()
                 setAlarmForAllItems()
             }
         } else {

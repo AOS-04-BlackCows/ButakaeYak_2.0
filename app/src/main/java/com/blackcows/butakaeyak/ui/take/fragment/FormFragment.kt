@@ -37,6 +37,7 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                MainNavigation.popCurrentFragment()
             }
         })
         _binding = FragmentFormBinding.inflate(inflater, container, false)
@@ -66,6 +67,7 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
 
         binding.apply {
             ivBack.setOnClickListener {
+                MainNavigation.popCurrentFragment()
             }
             adapter = FormAdapter(dataForm, requireContext(), this@FormFragment)
             recyclerviewForm.adapter = adapter

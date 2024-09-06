@@ -10,8 +10,6 @@
         android:name="com.blackcows.butakaeyak.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_search" >
-
-
     </fragment>
 
     <fragment
@@ -19,8 +17,6 @@
         android:name="com.blackcows.butakaeyak.ui.map.MapFragment"
         android:label="@string/title_map"
         tools:layout="@layout/fragment_map" >
-
-
     </fragment>
 
     <fragment

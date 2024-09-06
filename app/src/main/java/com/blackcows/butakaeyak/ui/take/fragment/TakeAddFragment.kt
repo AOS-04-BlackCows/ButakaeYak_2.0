@@ -39,6 +39,7 @@ class TakeAddFragment : Fragment() {
         mainActivity.hideBottomNavigation(false)
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                MainNavigation.popCurrentFragment()
             }
         })
 
