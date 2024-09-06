@@ -2,6 +2,7 @@ package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,6 +22,7 @@ import com.blackcows.butakaeyak.databinding.FragmentNameBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
+import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment.Companion
 
 class NameFragment : Fragment() {
 
@@ -30,6 +32,24 @@ class NameFragment : Fragment() {
 
     //viewModel 설정
     private val viewModel: TakeViewModel by activityViewModels()
+
+    //TODO: 여기!
+    private val onBackPressed = {
+        parentFragmentManager.beginTransaction().remove(
+            this
+        ).commitNow()
+    }
+
+    //TODO: 여기!
+    //bundle에서 medicine 가져오기
+    private val medicine: Medicine by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(MEDICINE_DATA, Medicine::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            arguments?.getParcelable(MEDICINE_DATA)!!
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +64,7 @@ class NameFragment : Fragment() {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                MainNavigation.popCurrentFragment()
+                onBackPressed()
             }
         })
         return root
@@ -66,8 +86,9 @@ class NameFragment : Fragment() {
             binding.etMedicineName.text = null
         }
 
+        //TODO: 여기!
         binding.ivBack.setOnClickListener {
-            MainNavigation.popCurrentFragment()
+            onBackPressed()
         }
 
         binding.etMedicineName.addTextChangedListener(object : TextWatcher {
