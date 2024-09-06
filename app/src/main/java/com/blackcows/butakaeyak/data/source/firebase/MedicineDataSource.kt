@@ -31,6 +31,7 @@ class MedicineDataSource @Inject constructor(
         val query = Query(name).apply {
             advancedSyntax = true
             setRestrictSearchableAttributes(facet)
+            hitsPerPage = 10
         }
 
         val jsonArray = medicineIndex.searchSync(query)
