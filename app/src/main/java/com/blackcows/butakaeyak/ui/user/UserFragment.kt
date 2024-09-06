@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
@@ -16,10 +18,13 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentUserBinding
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.blackcows.butakaeyak.ui.SignIn.SignInActivity
+import com.blackcows.butakaeyak.ui.home.data.DataSource.Companion.saveData
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.blackcows.butakaeyak.ui.take.fragment.NameFragment
+import com.blackcows.butakaeyak.ui.take.fragment.TermsFragment
+import com.bumptech.glide.Glide
 
 class UserFragment : Fragment() {
 
@@ -32,6 +37,8 @@ class UserFragment : Fragment() {
 
     private val MIN_SCALE = 0.85f // 뷰가 몇퍼센트로 줄어들 것인지
     private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
+
+    private var userData: UserData? = null
 
     private val userViewModel by activityViewModels<UserViewModel>()
 
@@ -63,37 +70,56 @@ class UserFragment : Fragment() {
                 setPageTransformer(ZoomOutPageTransformer())
             }
 
-            clMyMedicine.setOnClickListener {
-//                findNavController().navigate(R.id.action_navigation_user_to_navigation_take)
+            clMyTerms.setOnClickListener {
+                parentFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.alpha,R.anim.none)
+                    .replace(R.id.fragment_container_view,TermsFragment())
+                    .addToBackStack(null)
+                    .commit()
             }
-//            ivArrow1.setOnClickListener{
-//                val intent = Intent(requireContext(),TakeActivity::class.java)
-//                startActivity(intent)
-//                requireActivity().overridePendingTransition(R.anim.alpha,R.anim.none)
-//            }
 
             // 데이터 받기
+            //TODO 회원가입 데이터 받기 (이름, 프로필), 프로필 없을 때 기본 사진 설정
             val signInResultCallback = registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
             ) { result ->
                 if (result.resultCode == RESULT_OK) {
-                    val userData = result.data?.getParcelableExtra<UserData>("userData") ?: return@registerForActivityResult
-                    userViewModel.setCurrentUser(userData)
+                    userData = result.data?.getParcelableExtra<UserData>("userData") ?: return@registerForActivityResult
+                    userViewModel.setCurrentUser(userData!!)
+
+                    if(userData?.thumbnail.isNullOrBlank()){
+                        Glide.with(ivMyProfile).load(R.drawable.sparta).into(ivMyProfile)
+                    }else{
+                        Glide.with(ivMyProfile).load(userData?.thumbnail).into(ivMyProfile)
+                    }
+                    tvMyName.text = "환영합니다. ${userData?.name}님"
+                    saveData()
                 }
             }
 
+            loadData()
+
             clMyLogin.setOnClickListener {
-                val intent = Intent(requireActivity(), SignInActivity::class.java)
-                signInResultCallback.launch(intent)
+                    val intent = Intent(requireActivity(), SignInActivity::class.java)
+                    signInResultCallback.launch(intent)
             }
         }
     }
-            //TODO Toggle 클릭 시 NameFragment로 이동하게 하기 위함
-            fun bind(item: MyMedicine) {
-                MainNavigation.addFragment(
-                    NameFragment.newInstance(item.medicine), FragmentTag.NameFragment
-                )
-            }
+
+    //TODO SharedPreferences 저장, 받기
+    private fun saveData() {
+        val pref = activity?.getSharedPreferences("pref",0)
+        val edit = pref?.edit() // 수정 모드
+        // 1번째 인자는 키, 2번째 인자는 실제 담아둘 값
+        edit?.putString("userData", binding.tvMyName.text.toString())
+        edit?.apply() // 저장완료
+    }
+
+    private fun loadData() {
+        val pref = activity?.getSharedPreferences("pref",0)
+        // 1번째 인자는 키, 2번째 인자는 데이터가 존재하지 않을경우의 값
+        binding.tvMyName.setText(pref?.getString("userData",""))
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
