@@ -1,35 +1,33 @@
 package com.blackcows.butakaeyak.ui.take.fragment
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
-import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.home.HomeFragment
+import com.blackcows.butakaeyak.ui.take.AlarmReceiver
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
-import com.blackcows.butakaeyak.ui.take.data.CycleItem
-
 
 class CycleFragment : Fragment() {
 
@@ -56,24 +54,18 @@ class CycleFragment : Fragment() {
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val callback = object : OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val current = viewModel.currentPage.value ?: 0
-                if (current > 0) {
-                    viewModel.moveToPreviousPage()
-                } else {
-                    // NavController를 통해 뒤로 가기
-                    findNavController().popBackStack()
-                }
+
             }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        })
+
         _binding = FragmentCycleBinding.inflate(inflater, container, false)
+
         val root: View = binding.root
         return root
     }
@@ -85,19 +77,16 @@ class CycleFragment : Fragment() {
 
         binding.apply {
             ivBack.setOnClickListener {
-                viewModel.moveToPreviousPage()
+//                MainNavigation.popCurrentFragments()
             }
-            adapter = CycleAdapter(alarmList)
+            adapter = CycleAdapter(requireContext(),alarmList){ itemCount ->
+                btnNextUpdate(itemCount)
+            }
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            adapter.notifyDataSetChanged()
-
             clCycleAlarmAdd.setOnClickListener {
                 showCustomTimePickerDialog()
             }
-
-            // 초기 상태를 업데이트
-            updateButton()
 
             viewModel.getData().observe(viewLifecycleOwner, Observer {
                 tvCycleName.text = "약 이름 : ${it}"
@@ -108,72 +97,9 @@ class CycleFragment : Fragment() {
             viewModel.getImageData().observe(viewLifecycleOwner, Observer{
                 ivCycleForm.setImageResource(it)
             })
+
         }
-    }
-
-    private fun updateButton() {
-        when {
-//            binding.tvCycleOneAlarmTime.text.isNotEmpty() -> enableButton()
-            else -> disableButton()
-        }
-    }
-
-    private fun enableButton() {
-        binding.apply {
-            btnNext.isEnabled = true
-            btnNext.setBackgroundResource(R.color.green)
-            btnNext.setTextColor(Color.WHITE)
-            btnNext.setOnClickListener {
-                val selectedTimes = mutableListOf<Pair<Int, Int>>()
-
-                // ViewModel에 시간 추가
-                selectedTimes.forEach { time ->
-                    viewModel.addTime(time.first, time.second)
-                }
-
-                val drawable = ivCycleForm.drawable
-                val bitmap = drawable.let { drawableToBitmap(it) }
-                var name = tvCycleName.text.toString()
-                val cycleItem = CycleItem(bitmap,name)
-                viewModel.updateCycleData(cycleItem)
-                (requireParentFragment() as TakeAddFragment).navigateToTakeFragment()
-                viewModel.resetPage()
-//                saveSelectedTimes()
-            }
-        }
-    }
-
-    fun drawableToBitmap(drawable: Drawable): Bitmap {
-        if (drawable is BitmapDrawable) {
-            return drawable.bitmap
-        }
-        val bitmap = Bitmap.createBitmap(
-            drawable.intrinsicWidth,
-            drawable.intrinsicHeight,
-            Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, canvas.width, canvas.height)
-        drawable.draw(canvas)
-        return bitmap
-    }
-
-    private fun disableButton() {
-        binding.apply {
-            btnNext.isEnabled = false
-            btnNext.setBackgroundResource(R.color.gray)
-            btnNext.setTextColor(Color.DKGRAY)
-        }
-    }
-
-    private fun saveSelectedTimes() {
-        // TextView에 입력된 시간 중 유효한 값만 ViewModel에 저장
-//        if (binding.tvCycleOneAlarmTime.text.isNotBlank()) {
-//            val timeParts = binding.tvCycleOneAlarmTime.text.split(":")
-//            val hour = timeParts[0].toInt()
-//            val minute = timeParts[1].toInt()
-//            viewModel.addTime(hour, minute)
-//        }
+        btnNextUpdate(adapter.itemCount)
     }
 
     private fun showCustomTimePickerDialog() {
@@ -186,21 +112,58 @@ class CycleFragment : Fragment() {
             val selectedTime = tempTextView.text.toString()
             if (selectedTime.isNotEmpty()) {
                 addAlarmItem(selectedTime)
+                btnNextUpdate(adapter.itemCount)
             }
         }
         timePickerDialog.show()
     }
 
     private fun addAlarmItem(timeText: String) {
-        val newAlarm = AlarmItem(
-            timeText,
-            false, false, false, false,
-            false, false, false,
-            ContextCompat.getColor(requireContext(), R.color.green),
-            ContextCompat.getColor(requireContext(), R.color.dark_gray)
+        val timeParts = timeText.split(":")
+        val hour = timeParts[0].toInt()
+        val minute = timeParts[1].toInt()
+        val alarmItem = AlarmItem(
+            timeText = timeText,
+            timeInMillis = adapter.getTimeInMillis(hour, minute)
         )
-        alarmList.add(newAlarm)
-        adapter.notifyItemInserted(alarmList.size - 1)
+        adapter.addItem(alarmItem)
+    }
+
+    private fun btnNextUpdate(itemCount: Int) {
+        binding.btnNext.isEnabled = itemCount > 0
+        if (itemCount > 0) {
+            binding.btnNext.setBackgroundResource(R.color.green)
+            binding.btnNext.setTextColor(Color.WHITE)
+            binding.btnNext.setOnClickListener {
+                requireActivity().supportFragmentManager.popBackStack()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container_view, HomeFragment())
+                    .commit()
+                setAlarmForAllItems()
+            }
+        } else {
+            binding.btnNext.setBackgroundResource(R.color.gray)
+            binding.btnNext.setTextColor(Color.DKGRAY)
+            binding.btnNext.setOnClickListener {
+                Toast.makeText(context, "시간 설정이 완료되지 않았습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setAlarmForAllItems() {
+        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+        val alarmList = adapter.getAlarmList()
+
+        for (alarm in alarmList) {
+            val intent = Intent(context, AlarmReceiver::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(
+                context, alarm.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+
+            alarmManager?.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+        }
+
+        Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
