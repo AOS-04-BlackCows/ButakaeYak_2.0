@@ -30,14 +30,23 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
     //viewModel 설정
     private val viewModel: TakeViewModel by activityViewModels()
 
+    //뒤로가기 설정
+    private val onBackPressed = {
+        parentFragmentManager.beginTransaction().remove(
+            this
+        ).commitNow()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
+        MainNavigation.hideBottomNavigation(true)
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                MainNavigation.popCurrentFragment()
+                onBackPressed()
             }
         })
         _binding = FragmentFormBinding.inflate(inflater, container, false)
@@ -66,9 +75,9 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
         dataForm.add(FormItem(R.drawable.medicine_type_14,"기타"))
 
         binding.apply {
-            ivBack.setOnClickListener {
-                MainNavigation.popCurrentFragment()
-            }
+            ivBack.setOnClickListener{
+            onBackPressed()
+        }
             adapter = FormAdapter(dataForm, requireContext(), this@FormFragment)
             recyclerviewForm.adapter = adapter
             recyclerviewForm.layoutManager = LinearLayoutManager(requireContext())

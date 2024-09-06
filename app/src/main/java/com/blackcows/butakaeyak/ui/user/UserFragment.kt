@@ -43,8 +43,6 @@ class UserFragment : Fragment() {
         val userViewModel =
             ViewModelProvider(this).get(UserViewModel::class.java)
 
-        val mainActivity = (activity as MainActivity)
-        mainActivity.hideBottomNavigation(false)
         _binding = FragmentUserBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
