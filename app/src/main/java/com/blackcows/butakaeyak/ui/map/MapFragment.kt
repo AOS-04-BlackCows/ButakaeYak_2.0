@@ -28,6 +28,7 @@ import com.kakao.sdk.common.KakaoSdk
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraAnimation
+import com.kakao.vectormap.camera.CameraPosition
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
@@ -114,7 +115,8 @@ class MapFragment : Fragment() {
         myPlaceX = mLastLocation.longitude // 갱신 된 경도 127.11547410533494
         myPlaceY = mLastLocation.latitude // 갱신 된 위도 37.40754692649233
         Log.d(TAG, "위도 myPlaceX : $myPlaceX |&| 경도 myPlaceY : $myPlaceY")
-        // 현재 위치를 중심으로한 약국 좌표를 저장한다.
+
+      // 현재 위치를 중심으로한 약국 좌표를 저장한다.
         mapViewModel.communicateNetWork(myPlaceX, myPlaceY)
         kakaoMapInit()
     }
