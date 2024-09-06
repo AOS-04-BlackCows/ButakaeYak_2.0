@@ -18,6 +18,6 @@ data class UserData(
             "id" to id,
             "thumbnail" to thumbnail,
             "pwd" to pwd
-            )
+        )
     }
 }

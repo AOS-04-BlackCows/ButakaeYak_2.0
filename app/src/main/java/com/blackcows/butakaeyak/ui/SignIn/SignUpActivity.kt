@@ -60,7 +60,7 @@ class SignUpActivity : AppCompatActivity() {
                         userName.text.toString(),
                         userId.text.toString(),
 
-                    )
+                        )
                     firestoreManager.trySignUp(userData,
                         object : FirestoreManager.ResultListener<Boolean> {
                             override fun onSuccess(result: Boolean) {

@@ -85,7 +85,7 @@ class FirestoreManager {
 
                 val userData = UserData(
                     name = user.kakaoAccount?.profile?.nickname !!,
-                    thumbnail = user.kakaoAccount?.profile?.thumbnailImageUrl ?:""
+                    thumbnail = user.kakaoAccount?.profile?.thumbnailImageUrl ?: ""
                 )
 
                 trySignUp(userData,object : ResultListener<Boolean> {
@@ -98,7 +98,6 @@ class FirestoreManager {
                         Log.e(TAG, "Firebase 저장 실패", e)
                         resultListener.onFailure(e)
                     }
-
                 })
             }
         }

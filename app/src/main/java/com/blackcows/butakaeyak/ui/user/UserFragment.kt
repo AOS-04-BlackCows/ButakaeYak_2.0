@@ -66,7 +66,7 @@ class UserFragment : Fragment() {
             }
 
             clMyMedicine.setOnClickListener {
-                findNavController().navigate(R.id.action_navigation_user_to_navigation_take)
+//                findNavController().navigate(R.id.action_navigation_user_to_navigation_take)
             }
 //            ivArrow1.setOnClickListener{
 //                val intent = Intent(requireContext(),TakeActivity::class.java)
