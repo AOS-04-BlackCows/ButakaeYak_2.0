@@ -47,8 +47,7 @@ class TakeAddFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val mainActivity = activity as MainActivity
-        mainActivity.hideBottomNavigation(false)
+        MainNavigation.hideBottomNavigation(true)
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 MainNavigation.popCurrentFragment()
@@ -83,6 +82,7 @@ class TakeAddFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        MainNavigation.hideBottomNavigation(false)
         _binding = null
     }
 

@@ -73,8 +73,6 @@ class TakeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val mainActivity = activity as MainActivity
-        mainActivity.hideBottomNavigation(false)
 
         _binding = FragmentTakeBinding.inflate(inflater, container, false)
         val root: View = binding.root

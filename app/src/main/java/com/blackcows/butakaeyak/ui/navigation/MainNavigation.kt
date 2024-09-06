@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak.ui.navigation
 
 import android.util.Log
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.fragment.app.Fragment
@@ -69,6 +70,12 @@ object MainNavigation {
         initViewPager(activity, binding)
         initNavigation(binding)
         addBackPressedCallback(activity, binding)
+    }
+
+    //navigation bar 안 보이게 할 때 쓰는 메소드
+    fun hideBottomNavigation(state: Boolean) {
+        if (state) binding.bottomMenuBar.visibility = View.GONE else binding.bottomMenuBar.visibility =
+            View.VISIBLE
     }
 
 

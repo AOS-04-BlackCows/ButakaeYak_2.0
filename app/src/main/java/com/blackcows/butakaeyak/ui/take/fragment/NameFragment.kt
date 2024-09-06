@@ -56,8 +56,7 @@ class NameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        val mainActivity = activity as MainActivity
-        mainActivity.hideBottomNavigation(true)
+        MainNavigation.hideBottomNavigation(true)
 
         _binding = FragmentNameBinding.inflate(inflater, container, false)
         val root: View = binding.root
