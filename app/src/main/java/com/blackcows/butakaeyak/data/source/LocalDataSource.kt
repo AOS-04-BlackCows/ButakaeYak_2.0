@@ -17,6 +17,7 @@ class LocalDataSource @Inject constructor(
 ) {
     companion object {
         private const val TAG = "LocalDataSource"
+        private const val TAG_PHARMACY = "k3f_MapFragment_LocalDataSource"
 
         private const val APP_SHARED_PREFS = "BUAKAEYAK"
         private const val PHARMACY_SHARED_PREFS = "PHARMACYS"
@@ -86,8 +87,7 @@ class LocalDataSource @Inject constructor(
             val type = object : TypeToken<List<KakaoPlacePharmacy>>() {}.type
             gson.fromJson(it, type)
         } ?: listOf<KakaoPlacePharmacy>()
-
-        Log.d(TAG, "list Size: ${list.size}")
+        Log.d(TAG_PHARMACY, "list Size: ${list.size}")
 
         return list
     }
@@ -95,18 +95,21 @@ class LocalDataSource @Inject constructor(
         val gson = Gson()
         val json = gson.toJson(myPharmacy)
         editorPharmacy.putString(PHARMACY_SHARED_PREFS, json).apply()
+        Log.d(TAG_PHARMACY, "saveMyPharmacy() Run. myPharmacy.size: ${myPharmacy.size}")
     }
 
     fun addMyPharmacy(pharmacy: KakaoPlacePharmacy) {
         saveMyPharmacy(
             listOf(pharmacy) + getMyPharmacy()
         )
+        Log.d(TAG_PHARMACY, "addMyPharmacy() Run. id: ${pharmacy.id}")
     }
 
     fun isPharmacyChecked(id: String) : Boolean {
         return getMyPharmacy().any {
             it.id == id
         }
+        Log.d(TAG_PHARMACY, "isPharmacyChecked() Run. id: ${id}")
     }
 
     fun removeMyPharmacy(id: String) {
@@ -114,6 +117,7 @@ class LocalDataSource @Inject constructor(
             it.id == id
         }
         saveMyPharmacy(lists)
+        Log.d(TAG_PHARMACY, "removeMyPharmacy() Run. id: ${id}")
     }
 
 
