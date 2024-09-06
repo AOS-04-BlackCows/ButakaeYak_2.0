@@ -118,7 +118,9 @@ dependencies {
     testImplementation(libs.androidx.runtime.android)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+
     implementation(libs.glide)
+    annotationProcessor("com.github.bumptech.glide:compiler:4.7.1")
 
     implementation(libs.androidx.lifecycle.livedata.ktx)
 

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentFeedListBinding
 import com.blackcows.butakaeyak.databinding.ItemResultsBinding
+import com.blackcows.butakaeyak.ui.GlideApp
 import com.blackcows.butakaeyak.ui.home.data.ListItem
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
@@ -98,7 +99,13 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
             Log.d("HomeRecyclerView", "Name: ${medicineItem.name}, $isSaved")
             btnMyMedicine.isChecked = isSaved
             with(medicineItem) {
-                Glide.with(itemView).load(imageUrl?:R.drawable.medicine).into(ivMedicine)
+
+                if(imageUrl?.isNotEmpty() == true) {
+                    Glide.with(itemView).load(imageUrl).into(ivMedicine)
+                }
+
+
+
                 tvMedicineName.text = name
                 tvMedicineType.text = effect
                 loMedicineInfo.setOnClickListener {
