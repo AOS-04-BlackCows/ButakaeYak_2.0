@@ -39,6 +39,7 @@ class SignUpActivity : AppCompatActivity() {
     private val userId by lazy { binding.inputId }
     private val userName by lazy { binding.inputName }
     private val userPw by lazy { binding.inputPw }
+    private val userThumbnail by lazy { binding.ivProfile }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +59,7 @@ class SignUpActivity : AppCompatActivity() {
                     var userData = UserData(
                         userName.text.toString(),
                         userId.text.toString(),
+
                     )
                     firestoreManager.trySignUp(userData,
                         object : FirestoreManager.ResultListener<Boolean> {
@@ -73,6 +75,9 @@ class SignUpActivity : AppCompatActivity() {
                                 val intent = Intent().apply {
                                     putExtra("id", userId.text.toString())
                                     putExtra("pw", userPw.text.toString())
+                                    imageUri?.let { uri ->
+                                        putExtra("thumbnail",uri.toString())
+                                    }
                                 }
                                 setResult(RESULT_OK, intent)
                                 finish()
@@ -193,7 +198,7 @@ class SignUpActivity : AppCompatActivity() {
         imageView.clipToOutline = true
         button = binding.btnProfile
         button.setOnClickListener {
-            Log.d(TAG, "버튼 클릭 이벤트 발생!!")
+            Log.d(TAG, "이미지 버튼 클릭 이벤트 발생!!")
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.READ_EXTERNAL_STORAGE

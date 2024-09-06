@@ -55,6 +55,9 @@ android {
             "ALGORIA_SEARCH_KEY",
             properties.getProperty("algoria_search_key")
         )
+        defaultConfig {
+            manifestPlaceholders["kakao_native_app_key"] = properties.getProperty("kakao_native_app_key")
+        }
     }
 
     buildTypes {

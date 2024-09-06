@@ -66,7 +66,7 @@ class UserFragment : Fragment() {
 //                requireActivity().overridePendingTransition(R.anim.alpha,R.anim.none)
 //            }
 
-            // 데이터 전달
+            // 데이터 받기
             val signInResultCallback = registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
             ) { result ->

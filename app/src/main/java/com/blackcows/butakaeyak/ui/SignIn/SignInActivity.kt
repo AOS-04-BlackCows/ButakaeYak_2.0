@@ -43,7 +43,7 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
             Log.e(TAG, "카카오계정으로 로그인 실패${error}")
         } else if (token != null) {
             Log.e(TAG, "카카오계정으로 로그인 성공${token.accessToken}")
-
+            kakaoLogin()
         }
     }
 
@@ -106,7 +106,7 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
                             if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
                                 return@loginWithKakaoTalk
                             } else {
-                                // 카카오 이메일 로그인
+                                // 카카오계정 로그인
                                 UserApiClient.instance.loginWithKakaoAccount(
                                     this,
                                     callback = mCallback
@@ -243,12 +243,13 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
             if (meError != null) {
                 Log.e(TAG, "사용자 정보 요청 실패 : $meError")
             } else if (user != null) {
+                Log.d(TAG, "사용자 정보 요청 성공 : $user")
                 val intent = Intent().apply {
                     putExtra(
-                        "userData",
+                        "name",
                         user.kakaoAccount?.profile?.nickname
                     )
-                    putExtra("userData", user.kakaoAccount?.profile?.thumbnailImageUrl)
+                    putExtra("thumbnail", user.kakaoAccount?.profile?.thumbnailImageUrl)
                 }
                 setResult(RESULT_OK, intent)
                 finish()

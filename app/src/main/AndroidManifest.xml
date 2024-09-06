@@ -43,13 +43,8 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-
-                <data android:host="oauth"
-                    android:scheme="d4ce3a86b1d0a8895e9eccdf9fb16fc4" />
             </intent-filter>
         </activity>
 
@@ -62,7 +57,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:host="oauth"
-                    android:scheme="d4ce3a86b1d0a8895e9eccdf9fb16fc4" />
+                    android:scheme="${kakao_native_app_key}" />
             </intent-filter>
         </activity>
 
