@@ -40,9 +40,9 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
     // 이메일 로그인 콜백
     private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
-            Log.e(TAG, "로그인 실패${error}")
+            Log.e(TAG, "카카오계정으로 로그인 실패${error}")
         } else if (token != null) {
-            Log.e(TAG, "로그인 성공${token.accessToken}")
+            Log.e(TAG, "카카오계정으로 로그인 성공${token.accessToken}")
 
         }
     }
