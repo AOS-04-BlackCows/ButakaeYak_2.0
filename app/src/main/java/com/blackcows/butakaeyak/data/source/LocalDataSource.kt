@@ -53,7 +53,12 @@ class LocalDataSource @Inject constructor(
         }
     }
 
-
+    fun removeMyMedicine(id: String) {
+        val lists = getMyMedicines().toMutableList().filterNot {
+            it.medicine.id == id
+        }
+        saveMyMedicines(lists)
+    }
 
 
     //TODO: ????

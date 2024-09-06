@@ -62,5 +62,8 @@ class HomeViewModel @Inject constructor(
             it.medicine.id == id
         }
     }
+    fun cancelMyMedicine(id: String) {
+        localRepository.cancelMyMedicine(id)
+    }
 
 }

@@ -8,4 +8,5 @@ interface LocalRepository {
     fun addToMyMedicine(myMedicine: MyMedicine)
 
     fun isMyMedicine(id: String): Boolean
+    fun cancelMyMedicine(id: String)
 }

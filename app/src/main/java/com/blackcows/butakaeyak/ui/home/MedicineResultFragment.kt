@@ -74,25 +74,13 @@ class MedicineResultFragment : Fragment() {
                 //  즉, homeResult에선 save하지 않고 결과를 계속 리로드 하는 식으로 작동하는게 좋을듯!
                 override fun setMedicineChecked(item: Medicine, isChecked: Boolean) {
                     Log.d(TAG,item.id.toString() + ": "+isChecked)
+                    if(isChecked) {
+                        homeViewModel.cancelMyMedicine(item.id!!)
+                    } else {
+                        homeViewModel.saveMyMedicine(MyMedicine(item, mapOf()))
+                    }
                     homeViewModel.saveMyMedicine(MyMedicine(item, mapOf()))
                 }
-//                override fun onMyPillClick(item: Medicine, needAdd: Boolean) {
-//                    //("복용중인 약 추가/삭제")
-//                    val json = "{\"id:\":\""+item.id.toString()+"\","+
-//                                "\"name:\":\""+item.name.toString()+"\","+
-//                                "\"enterprise:\":\""+item.enterprise.toString()+"\","+
-//                                "\"effect:\":\""+item.effect.toString()+"\","+
-//                                "\"instructions:\":\""+item.instructions.toString()+"\","+
-//                                "\"warning:\":\""+item.warning.toString()+"\","+
-//                                "\"caution:\":\""+item.caution.toString()+"\","+
-//                                "\"interaction:\":\""+item.interaction.toString()+"\","+
-//                                "\"sideEffect:\":\""+item.sideEffect.toString()+"\","+
-//                                "\"storingMethod:\":\""+item.storingMethod.toString()+"\","+
-//                                "\"imageUrl:\":\""+item.imageUrl.toString()+"\","+
-//                                "\"needAdd:\":\""+needAdd+"\"}"
-//                    Log.d("아이템 복용약 누름","${item.id}, ${item.name}, ${needAdd}")
-//                    DataSource.saveData(requireContext(),"MyPillData",item.id.toString(),json)
-//                }
             })
             resultlist.adapter = medicineAdapter
             resultlist.itemAnimator = null
@@ -102,6 +90,15 @@ class MedicineResultFragment : Fragment() {
             }
 //            pillAdapter.submitList(dataSource)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val lists = homeViewModel.getMyMedicines().map {
+            it.medicine
+        }
+        medicineAdapter.submitList(lists)
     }
 
     companion object {
