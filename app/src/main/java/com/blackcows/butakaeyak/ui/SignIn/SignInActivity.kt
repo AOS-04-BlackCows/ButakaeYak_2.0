@@ -43,6 +43,7 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
             Log.e(TAG, "로그인 실패${error}")
         } else if (token != null) {
             Log.e(TAG, "로그인 성공${token.accessToken}")
+
         }
     }
 
@@ -71,12 +72,12 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
 
         KakaoSdk.init(this, "d4ce3a86b1d0a8895e9eccdf9fb16fc4")
         if (AuthApiClient.instance.hasToken()) {
-            UserApiClient.instance.accessTokenInfo { _, error ->
-                if (error == null) {
-                }
+            UserApiClient.instance.accessTokenInfo{_, error ->
+                if (error== null)
+                    kakaoLogin()
             }
         }
-        binding.ivKakao.setOnClickListener(this)
+            binding.ivKakao.setOnClickListener(this)
 
         val inPutId = intent.getStringExtra("id")
         val inPutPw = intent.getStringExtra("pw")
@@ -114,17 +115,19 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
                         } else if (token != null) {
                             Log.e(TAG, "로그인 성공${token.accessToken}")
                             Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
+                            kakaoLogin()
 
                             //TODO : 봐줘!
-//                            firestoreManager.saveKakaoUser(object : FirestoreManager.ResultListener<Boolean>{
-//                                override fun onSuccess(result: Boolean) {
-//                                    Log.d(TAG, "Firebase 저장 성공")
-//                                }
-//
-//                                override fun onFailure(e: Exception) {
-//                                    Log.e(TAG, "Firebase저장 실패",e)
-//                                }
-//                            })
+                            firestoreManager.saveKakaoUser(object :
+                                FirestoreManager.ResultListener<Boolean> {
+                                override fun onSuccess(result: Boolean) {
+                                    Log.d(TAG, "Firebase 저장 성공")
+                                }
+
+                                override fun onFailure(e: Exception) {
+                                    Log.e(TAG, "Firebase저장 실패", e)
+                                }
+                            })
 
                         }
 
@@ -185,8 +188,8 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun validateInputs(phoneNumber: String, password: String): Boolean {
-        return phoneNumber.isNotEmpty() && password.isNotEmpty()
+    private fun validateInputs(id: String, password: String): Boolean {
+        return id.isNotEmpty() && password.isNotEmpty()
     }
 
     private fun setSignUpTextView() {
@@ -233,5 +236,23 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
         // TextView에 적용
         textSignUp.movementMethod = LinkMovementMethod.getInstance() // 클릭 가능하게 설정
         textSignUp.text = spannableString
+    }
+
+    private fun kakaoLogin() {
+        UserApiClient.instance.me { user, meError ->
+            if (meError != null) {
+                Log.e(TAG, "사용자 정보 요청 실패 : $meError")
+            } else if (user != null) {
+                val intent = Intent().apply {
+                    putExtra(
+                        "userData",
+                        user.kakaoAccount?.profile?.nickname
+                    )
+                    putExtra("userData", user.kakaoAccount?.profile?.thumbnailImageUrl)
+                }
+                setResult(RESULT_OK, intent)
+                finish()
+            }
+        }
     }
 }
