@@ -101,6 +101,11 @@ class MedicineResultFragment : Fragment() {
                 medicineAdapter.submitList(it.toList())
             }
 //            pillAdapter.submitList(dataSource)
+
+            //TODO viewModel로 name을 넘김
+            medicineAdapter.setItemClickListener { medicineText->
+                viewModel.updateItem(medicineText)
+            }
         }
     }
 
