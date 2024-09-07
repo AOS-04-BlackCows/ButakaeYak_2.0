@@ -19,6 +19,7 @@ object MainNavigation {
 
     private var currentTab = TabTag.Take
     private val fragmentStack = HashMap<TabTag, Stack<FragmentTag>>()
+    private val tagToFragment = mutableMapOf<FragmentTag, Fragment?>()
 
     private lateinit var binding: ActivityMainBinding
 
@@ -38,9 +39,11 @@ object MainNavigation {
             transaction.setCustomAnimations(R.anim.alpha,R.anim.none)
         }
 
-        transaction.replace(R.id.fragment_container_view, fragment, tag.name).commit()
+        transaction.replace(R.id.fragment_container_view, fragment).commit()
+
 
         Log.d("Navigation", "Push Fragment: ${tag.name} to Stack: ${currentTab.name}")
+        tagToFragment[tag] = fragment
         fragmentStack[currentTab]!!.push(tag)
     }
 
@@ -50,23 +53,22 @@ object MainNavigation {
 
         if(curStack.size == 0) return
 
-        val curFragment = if(curStack.size == 1) {
-             fragmentManager.findFragmentByTag(curStack[0].name)!!
-        } else {
-            val secondFromLastFragmentTag = curStack[curStack.lastIndex - 1]
-            fragmentManager.findFragmentByTag(secondFromLastFragmentTag.name)!!
-        }
-
         if(enterAni != null && exitAni != null) {
             transaction.setCustomAnimations(enterAni, exitAni)
         }
 
-        transaction
-            .remove(curFragment)
-            .commitNow()
+        if(curStack.size == 1) {
+            val tag = curStack[0]!!
+            transaction.remove(tagToFragment[tag]!!).commit()
+            tagToFragment[tag] = null
+        } else {
+            val exTag = curStack.lastElement()!!
+            val tag = curStack[curStack.lastIndex - 1]
+            transaction.replace(R.id.fragment_container_view, tagToFragment[tag]!!).commit()
+            tagToFragment[exTag] = null
+        }
 
         Log.d("Navigation", "size: ${curStack.size}")
-
         curStack.pop()
     }
 
@@ -118,11 +120,10 @@ object MainNavigation {
 
             val transaction = fragmentManager.beginTransaction()
             if(fragmentStack[currentTab]!!.size != 0) {
-                val exFragment = fragmentManager.findFragmentByTag(
-                    fragmentStack[currentTab]!!.lastElement().name
-                )!!
 
-                transaction.hide(exFragment)
+                val exFragment = tagToFragment[fragmentStack[currentTab]!!.lastElement()]!!
+
+                transaction.remove(exFragment)
             }
 
             currentTab = when(item.itemId) {
@@ -152,11 +153,10 @@ object MainNavigation {
             Log.d(TAG, "cur Tab(${currentTab.name}): ${curListName.joinToString()}")
 
             if(fragmentStack[currentTab]!!.size != 0) {
-                val curFragment = fragmentManager.findFragmentByTag(
-                    fragmentStack[currentTab]!!.lastElement().name
-                )!!
+                Log.d(TAG, "last Tag: ${fragmentStack[currentTab]!!.lastElement().name}")
+                val curFragment = tagToFragment[fragmentStack[currentTab]!!.lastElement()]!!
 
-                transaction.show(curFragment)
+                transaction.replace(R.id.fragment_container_view, curFragment)
             }
 
             transaction.commit()
