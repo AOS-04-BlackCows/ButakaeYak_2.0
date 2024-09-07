@@ -174,6 +174,13 @@ class CycleFragment : Fragment() {
             )
 
             alarmManager?.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+
+            alarmManager?.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                alarm.timeInMillis,
+                AlarmManager.INTERVAL_DAY,
+                pendingIntent
+            )
         }
 
         Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
