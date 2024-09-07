@@ -2,10 +2,12 @@ package com.blackcows.butakaeyak.ui.home
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
@@ -47,20 +49,30 @@ class SearchDetailFragment () : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Glide.with(binding.root).load(medicine.imageUrl?: R.drawable.medicine).into(binding.detailIvMedicine)
 
-        binding.detailTvName.text = medicine.name
-        binding.detailTvEnterprise.text = medicine.enterprise
-        binding.detailTvEffect.text = medicine.effect
-        binding.detailTvInstructions.text = medicine.instructions
-        binding.detailTvWarning.text = medicine.warning
-        binding.detailTvCaution.text = medicine.caution
-        binding.detailTvInteraction.text = medicine.interaction
-        binding.detailTvSideEffect.text = medicine.sideEffect
-        binding.detailTvStoringMethod.text = medicine.storingMethod
 
-        binding.detailBtnBack.setOnClickListener {
-            MainNavigation.popCurrentFragment()
+
+        with(binding) {
+            Glide.with(root).load(medicine.imageUrl?: R.drawable.medicine).into(binding.detailIvMedicine)
+
+            detailTvName.text = medicine.name
+            detailTvEnterprise.text = medicine.enterprise
+            detailTvEffect.text = medicine.effect
+            detailTvInstructions.text = medicine.instructions
+            detailTvWarning.text = medicine.warning
+            detailTvCaution.text = medicine.caution
+            detailTvInteraction.text = medicine.interaction
+            detailTvSideEffect.text = medicine.sideEffect
+            detailTvStoringMethod.text = medicine.storingMethod
+
+            detailBtnBack.setOnClickListener {
+                MainNavigation.popCurrentFragment()
+            }
+
+            root.setOnClickListener {
+                Log.d("SearchDetail", "Tab!!")
+                MainNavigation.popCurrentFragment()
+            }
         }
 
 

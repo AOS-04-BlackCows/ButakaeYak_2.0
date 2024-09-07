@@ -6,6 +6,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.replace
 import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.R
@@ -110,6 +111,19 @@ object MainNavigation {
         binding.viewPager.isUserInputEnabled = false
 
         binding.bottomMenuBar.setOnItemSelectedListener { item ->
+            val listName = fragmentStack[currentTab]!!.map {
+                it.name
+            }
+            Log.d(TAG, "ex Tab(${currentTab.name}): ${listName.joinToString()}")
+
+            val transaction = fragmentManager.beginTransaction()
+            if(fragmentStack[currentTab]!!.size != 0) {
+                val exFragment = fragmentManager.findFragmentByTag(
+                    fragmentStack[currentTab]!!.lastElement().name
+                )!!
+
+                transaction.hide(exFragment)
+            }
 
             currentTab = when(item.itemId) {
                 R.id.navigation_take -> {
@@ -132,6 +146,20 @@ object MainNavigation {
                 else -> return@setOnItemSelectedListener false
             }
 
+            val curListName = fragmentStack[currentTab]!!.map {
+                it.name
+            }
+            Log.d(TAG, "cur Tab(${currentTab.name}): ${curListName.joinToString()}")
+
+            if(fragmentStack[currentTab]!!.size != 0) {
+                val curFragment = fragmentManager.findFragmentByTag(
+                    fragmentStack[currentTab]!!.lastElement().name
+                )!!
+
+                transaction.show(curFragment)
+            }
+
+            transaction.commit()
             true
         }
     }
