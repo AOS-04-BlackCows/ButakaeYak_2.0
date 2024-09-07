@@ -24,6 +24,9 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class SignInActivity : AppCompatActivity(), View.OnClickListener {
@@ -56,7 +59,9 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
             }
             Toast.makeText(this, "알 수 없는 이유로 로그인 실패하셨습니다. 다시 시도해주세요.", Toast.LENGTH_LONG).show()
         }
-        kakaoLogin()
+
+        //TODO: 왜 넣은건가요??
+        //kakaoLogin()
     }
 
 
@@ -220,15 +225,20 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
                 Log.e(TAG, "사용자 정보 요청 실패 : $meError")
             } else if (user != null) {
                 Log.d(TAG, "사용자 정보 요청 성공 : $user")
-                val intent = Intent().apply {
-                    putExtra(
-                        "name",
-                        user.kakaoAccount?.profile?.nickname
-                    )
-                    putExtra("thumbnail", user.kakaoAccount?.profile?.thumbnailImageUrl)
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    val result = firestoreManager.saveKakaoUser()
+
+                    if(result == null) {
+                        Toast.makeText(this@SignInActivity, "카카오 로그인에 실패하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        val intent = Intent().apply {
+                            putExtra("userData", result)
+                        }
+                        setResult(RESULT_OK, intent)
+                        finish()
+                    }
                 }
-                setResult(RESULT_OK, intent)
-                finish()
             }
         }
     }

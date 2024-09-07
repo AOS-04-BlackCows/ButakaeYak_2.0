@@ -10,14 +10,16 @@ data class UserData(
     val name : String = "",
     val id : String = "",
     val thumbnail : String = "",
-    val pwd : String = ""
+    val pwd : String = "",
+    val kakaoId: Long = 0L
 ) : Parcelable {
-    fun toMap() : HashMap<String, String>{
-        return hashMapOf(
-            "name" to name,
-            "id" to id,
-            "thumbnail" to thumbnail,
-            "pwd" to pwd
-        )
-    }
+    // 이미 확장함수로 정의해놨음. -> data/mapper.kt
+//    fun toMap() : HashMap<String, String>{
+//        return hashMapOf(
+//            "name" to name,
+//            "id" to id,
+//            "thumbnail" to thumbnail,
+//            "pwd" to pwd
+//        )
+//    }
 }
