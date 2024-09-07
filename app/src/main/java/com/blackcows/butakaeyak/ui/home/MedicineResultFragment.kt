@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.DialogSearchDetailBinding
 import com.blackcows.butakaeyak.databinding.FragmentMedicineResultBinding
@@ -21,6 +22,8 @@ import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 private const val TAG = "약 결과"
 class MedicineResultFragment : Fragment() {
@@ -69,6 +72,7 @@ class MedicineResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //더미 데이터
 //        val dataSource = DataSource.getDataSoures().getMedicineList()
+
         binding.apply {
             medicineAdapter = HomeRecyclerAdapter(object : HomeRecyclerAdapter.ClickListener{
                 override fun onItemClick(item: Medicine) {
@@ -110,6 +114,8 @@ class MedicineResultFragment : Fragment() {
             }
         }
     }
+
+
 
     companion object {
         const val ARG_COLUMN_COUNT = "column-count"
