@@ -32,7 +32,9 @@ object MainNavigation {
 
     fun addFragment(fragment: Fragment, tag: FragmentTag) {
         fragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_view, fragment, tag.name).commit()
+            .setCustomAnimations(R.anim.alpha,R.anim.none)
+            .replace(R.id.fragment_container_view, fragment, tag.name)
+            .commit()
 
         Log.d("Navigation", "Push Fragment: ${tag.name} to Stack: ${currentTab.name}")
         fragmentStack[currentTab]!!.push(tag)
@@ -42,7 +44,21 @@ object MainNavigation {
         val curStack = fragmentStack[currentTab]!!
         if(curStack.size == 0) return
 
+        else if(curStack.size == 1){
+            val curFragment = fragmentManager.findFragmentByTag(
+                curStack[0].name
+            )!!
+            fragmentManager.beginTransaction()
+                .remove(curFragment)
+                .commit()
+            curStack.pop()
+            return
+        }
+
         Log.d(TAG, "CurTab: ${currentTab.name}")
+        curStack.forEach {
+            Log.d(TAG,it.name)
+        }
 
         val secondFromLastFragmentTag = curStack[curStack.lastIndex - 1]
 
