@@ -61,11 +61,4 @@ class UserDataSource @Inject constructor(
             Result.success(userData)
         } else Result.failure(DUPLICATED_EXCEPTION)
     }
-
-    //TODO: 유저 탈퇴 기능 추가 후 구현
-//    suspend fun deleteUser(userData: UserData): Result<Boolean> = kotlin.runCatching {
-//        db.collection()
-//    }.onFailure {
-//        Result.failure(USER_NOT_FOUND_EXCEPTION)
-//    }
 }
