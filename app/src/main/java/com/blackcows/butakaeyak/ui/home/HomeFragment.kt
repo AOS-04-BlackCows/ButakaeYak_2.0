@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.SearchCategory
@@ -24,6 +25,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
@@ -58,6 +61,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        initUiState()
 
         viewPager = binding.searchVp
         binding.searchVp.adapter = HomeViewPager(this@HomeFragment)
@@ -68,17 +72,29 @@ class HomeFragment : Fragment() {
 
         binding.searchBtnSearch.setOnClickListener {
             val query = binding.searchEtSearchtext.text.toString()
-            binding.searchLoProgressContainer.visibility = View.VISIBLE
             binding.searchLoImageblock.visibility = View.GONE
             imm!!.hideSoftInputFromWindow(binding.searchBtnSearch.windowToken, 0)
             homeViewModel.searchMedicinesWithName(query)
-            /*todo : 검색 완료시 프로그래스바 사라지게
-               검색 클릭시 에니메이션- 굳이?
-               검색전 횡한화면 채우기*/
-            Handler(Looper.getMainLooper()).postDelayed({
-                binding.searchLoProgressContainer.visibility = View.GONE
-            },5000)
         }
+    }
+
+    private fun initUiState() {
+        lifecycleScope.launch {
+            homeViewModel.uiState.collectLatest {
+                when(it) {
+                    is SearchUiState.SearchMedicinesSuccess -> {
+                        binding.searchLoProgressContainer.visibility = View.GONE
+                    }
+
+                    is SearchUiState.Loading -> {
+                        binding.searchLoProgressContainer.visibility = View.VISIBLE
+                    }
+
+                    else -> null
+                }
+            }
+        }
+
     }
 
     override fun onPause() {

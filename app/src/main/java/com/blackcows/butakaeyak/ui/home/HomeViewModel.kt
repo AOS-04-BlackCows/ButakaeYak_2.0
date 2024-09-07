@@ -9,9 +9,12 @@ import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.domain.GetMedicinesNameUseCase
 import com.blackcows.butakaeyak.domain.home.GetPillUseCase
 import com.blackcows.butakaeyak.domain.repo.LocalRepository
+import com.blackcows.butakaeyak.ui.example.UserUiState
 import com.blackcows.butakaeyak.ui.home.data.DataSource
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,12 +36,16 @@ class HomeViewModel @Inject constructor(
     private val _medicineResult = MutableLiveData(listOf<Medicine>())
     val medicineResult get() = _medicineResult
 
+    private val _uiState = MutableStateFlow<SearchUiState>(SearchUiState.Init)
+    val uiState = _uiState.asStateFlow()
+
     init {
         getMyMedicines()
     }
 
     fun searchMedicinesWithName(name: String) {
         viewModelScope.launch {
+            _uiState.value = SearchUiState.Loading
             _medicineResult.value = getMedicinesNameUseCase.invoke(name)
         }
     }
