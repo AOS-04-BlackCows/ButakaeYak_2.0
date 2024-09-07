@@ -50,7 +50,8 @@ class TakeFragment : Fragment() {
 
     private val todayDate = Calendar.getInstance()
     private val todayWeekDay by lazy {
-        val calendar = Calendar.getInstance().apply {
+        val calendar = Calendar.getInstance()
+            .apply {
             setTime(Date())
         }
         WeekDay.from((calendar.get(Calendar.DAY_OF_WEEK)+5)%7)
@@ -73,8 +74,6 @@ class TakeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val mainActivity = activity as MainActivity
-        mainActivity.hideBottomNavigation(false)
 
         _binding = FragmentTakeBinding.inflate(inflater, container, false)
         val root: View = binding.root

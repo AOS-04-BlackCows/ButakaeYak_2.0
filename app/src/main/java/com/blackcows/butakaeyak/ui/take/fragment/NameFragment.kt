@@ -35,9 +35,9 @@ class NameFragment : Fragment() {
 
     //TODO: 여기!
     private val onBackPressed = {
-        parentFragmentManager.beginTransaction().remove(
-            this
-        ).commitNow()
+        parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.move_enter,R.anim.move_exit)
+            .remove(this).commitNow()
     }
 
     //TODO: 여기!
@@ -56,9 +56,6 @@ class NameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        val mainActivity = activity as MainActivity
-        mainActivity.hideBottomNavigation(true)
-
         _binding = FragmentNameBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -67,6 +64,7 @@ class NameFragment : Fragment() {
                 onBackPressed()
             }
         })
+
         return root
     }
 
@@ -78,10 +76,6 @@ class NameFragment : Fragment() {
                 etMedicineName.setText(it)
             })
         }
-
-        //companion object
-        val medicine: Medicine? = arguments?.getParcelable(MEDICINE_DATA)
-
         binding.ivDelete.setOnClickListener {
             binding.etMedicineName.text = null
         }
@@ -103,11 +97,15 @@ class NameFragment : Fragment() {
                             setTextColor(Color.WHITE)
                             setOnClickListener {
                                 Log.d("버튼","버튼 눌림")
-                                medicine?.let { it1 -> FormFragment.newInstance(it1) }?.let { it2 ->
-                                    MainNavigation.addFragment(
-                                        it2, FragmentTag.NameFragment
-                                    )
-                                }
+                                val newMedicine = medicine.copy(
+                                    name = binding.etMedicineName.text.toString()
+                                )
+                                parentFragmentManager.beginTransaction()
+                                    .replace(
+                                        R.id.fragment_container,
+                                        FormFragment.newInstance(newMedicine)
+                                    ).commitNow()
+
                                 viewModel.updateItem(etMedicineName.text.toString())
                             }
                         }

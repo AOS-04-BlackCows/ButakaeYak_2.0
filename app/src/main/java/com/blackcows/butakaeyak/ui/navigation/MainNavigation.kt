@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak.ui.navigation
 
 import android.util.Log
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.fragment.app.Fragment
@@ -20,10 +21,20 @@ object MainNavigation {
 
     private lateinit var binding: ActivityMainBinding
 
+    //navigation bar 안 보이게 할 때 쓰는 메소드
+    fun hideBottomNavigation(state: Boolean) {
+        binding.bottomMenuBar.visibility = if (state) View.GONE
+                                            else  View.VISIBLE
+
+        Log.d(TAG, "Hide Bottom Bar: $state")
+    }
+
 
     fun addFragment(fragment: Fragment, tag: FragmentTag) {
         fragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_view, fragment, tag.name).commit()
+            .setCustomAnimations(R.anim.alpha,R.anim.none)
+            .replace(R.id.fragment_container_view, fragment, tag.name)
+            .commit()
 
         Log.d("Navigation", "Push Fragment: ${tag.name} to Stack: ${currentTab.name}")
         fragmentStack[currentTab]!!.push(tag)
@@ -33,7 +44,21 @@ object MainNavigation {
         val curStack = fragmentStack[currentTab]!!
         if(curStack.size == 0) return
 
+        else if(curStack.size == 1){
+            val curFragment = fragmentManager.findFragmentByTag(
+                curStack[0].name
+            )!!
+            fragmentManager.beginTransaction()
+                .remove(curFragment)
+                .commit()
+            curStack.pop()
+            return
+        }
+
         Log.d(TAG, "CurTab: ${currentTab.name}")
+        curStack.forEach {
+            Log.d(TAG,it.name)
+        }
 
         val secondFromLastFragmentTag = curStack[curStack.lastIndex - 1]
 

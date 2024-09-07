@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.home
 
+import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.os.Handler
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.SearchCategory
 import com.blackcows.butakaeyak.data.models.SearchCategoryDataSource
@@ -75,6 +77,10 @@ class HomeFragment : Fragment() {
             binding.searchLoImageblock.visibility = View.GONE
             imm!!.hideSoftInputFromWindow(binding.searchBtnSearch.windowToken, 0)
             homeViewModel.searchMedicinesWithName(query)
+
+            //TODO 키보드 내리기
+            val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 

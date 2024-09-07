@@ -44,6 +44,13 @@ class CycleFragment : Fragment() {
     //viewModel 설정
     private val viewModel: TakeViewModel by activityViewModels()
 
+    //뒤로가기 설정
+    private val onBackPressed = {
+        parentFragmentManager.beginTransaction().setCustomAnimations(R.anim.move_enter,R.anim.move_exit).remove(
+            this
+        ).commitNow()
+    }
+
     //bundle에서 medicine 가져오기
     private val medicine: Medicine by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -58,9 +65,10 @@ class CycleFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                MainNavigation.popCurrentFragment()
+                onBackPressed()
             }
         })
 
@@ -77,7 +85,7 @@ class CycleFragment : Fragment() {
 
         binding.apply {
             ivBack.setOnClickListener {
-                MainNavigation.popCurrentFragment()
+                onBackPressed()
             }
             adapter = CycleAdapter(requireContext(),alarmList){ itemCount ->
                 btnNextUpdate(itemCount)
@@ -135,8 +143,13 @@ class CycleFragment : Fragment() {
             binding.btnNext.setBackgroundResource(R.color.green)
             binding.btnNext.setTextColor(Color.WHITE)
             binding.btnNext.setOnClickListener {
-                MainNavigation.popCurrentFragment()
+                parentFragmentManager.beginTransaction()
+                    .remove(this@CycleFragment)
+                    .commit()
+
                 setAlarmForAllItems()
+
+                MainNavigation.popCurrentFragment()
             }
         } else {
             binding.btnNext.setBackgroundResource(R.color.gray)
@@ -152,12 +165,22 @@ class CycleFragment : Fragment() {
         val alarmList = adapter.getAlarmList()
 
         for (alarm in alarmList) {
-            val intent = Intent(context, AlarmReceiver::class.java)
+            val intent = Intent(requireContext(), AlarmReceiver::class.java)
+
+            intent.putExtra("NOTIFICATION_TITLE",viewModel.getTextData().observe(viewLifecycleOwner, Observer{it}).toString())
+            intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
             val pendingIntent = PendingIntent.getBroadcast(
                 context, alarm.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT
             )
 
             alarmManager?.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+
+            alarmManager?.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                alarm.timeInMillis,
+                AlarmManager.INTERVAL_DAY,
+                pendingIntent
+            )
         }
 
         Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
