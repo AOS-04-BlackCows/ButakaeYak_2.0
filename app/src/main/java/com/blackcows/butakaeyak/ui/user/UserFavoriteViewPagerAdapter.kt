@@ -1,5 +1,7 @@
 package com.blackcows.butakaeyak.ui.user
 
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +12,6 @@ import com.blackcows.butakaeyak.data.source.firebase.UserDataSource
 import com.blackcows.butakaeyak.databinding.MypageItemFavoriteBinding
 
 class UserFavoriteViewPagerAdapter(val items : MutableList<KakaoPlacePharmacy>, val localDataSource : LocalDataSource) : RecyclerView.Adapter<UserFavoriteViewPagerAdapter.ViewPagerHolder>(){
-
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -29,8 +30,11 @@ class UserFavoriteViewPagerAdapter(val items : MutableList<KakaoPlacePharmacy>, 
         holder.aName.text = pharmacy.placeName
         holder.aGroup.text = pharmacy.phone
 
+        //TODO BindViewHolder 과부화 에러 수정
         holder.button.setOnClickListener {
-            removeItem(pharmacy.id, position)
+            Handler(Looper.getMainLooper()).post {
+                removeItem(pharmacy.id, position)
+            }
         }
     }
 
