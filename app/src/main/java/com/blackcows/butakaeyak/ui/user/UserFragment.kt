@@ -15,6 +15,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
+import com.blackcows.butakaeyak.data.source.LocalDataSource
 import com.blackcows.butakaeyak.databinding.FragmentUserBinding
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.blackcows.butakaeyak.ui.SignIn.SignInActivity
@@ -25,6 +27,7 @@ import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.blackcows.butakaeyak.ui.take.fragment.NameFragment
 import com.blackcows.butakaeyak.ui.take.fragment.TermsFragment
 import com.bumptech.glide.Glide
+import okhttp3.internal.notify
 
 class UserFragment : Fragment() {
 
@@ -58,11 +61,11 @@ class UserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //ViewPager 화면 확인용 임시 더미데이터
-        val dataList = mutableListOf<test>()
-        dataList.add(test(R.drawable.choco, "항히스타민제", "피부 질환 완화제"))
-        dataList.add(test(R.drawable.choco, "항히스타민제", "피부 질환 완화제"))
-        userFavoriteViewPagerAdapter = UserFavoriteViewPagerAdapter(dataList)
+        //TODO 즐겨찾기한 약국 데이터 받기
+        val localDataSource = LocalDataSource(requireContext())
+        val getLocalDataSource = LocalDataSource(requireContext()).getMyPharmacy().toMutableList()
+
+        userFavoriteViewPagerAdapter = UserFavoriteViewPagerAdapter(getLocalDataSource,localDataSource)
 
         binding.apply {
             vp2Favorite.apply {
