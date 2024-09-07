@@ -170,7 +170,7 @@ class CycleFragment : Fragment() {
             intent.putExtra("NOTIFICATION_TITLE",viewModel.getTextData().observe(viewLifecycleOwner, Observer{it}).toString())
             intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
             val pendingIntent = PendingIntent.getBroadcast(
-                context, alarm.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT
+                context, alarm.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
             alarmManager?.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
