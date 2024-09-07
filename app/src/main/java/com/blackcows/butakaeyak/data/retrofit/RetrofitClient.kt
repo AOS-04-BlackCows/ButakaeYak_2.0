@@ -44,9 +44,7 @@ object RetrofitClient {
             }
             ApiBaseUrl.KakaoPlaceSearchUrl -> {
                 OkHttpClient().newBuilder().addInterceptor(KakaoInterceptor.getInterceptor()).build()
-                OkHttpClient().newBuilder().addInterceptor(HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                }).addInterceptor(KakaoInterceptor.getInterceptor()).build()
+                OkHttpClient().newBuilder().addInterceptor(KakaoInterceptor.getInterceptor()).build()
             }
             ApiBaseUrl.MedicineUrl -> {
                 OkHttpClient().newBuilder().addInterceptor(MedicineInterceptor.get()).build()

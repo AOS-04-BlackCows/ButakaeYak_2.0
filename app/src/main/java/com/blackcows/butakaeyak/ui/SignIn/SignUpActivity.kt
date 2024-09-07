@@ -20,17 +20,26 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.blackcows.butakaeyak.databinding.ActivitySignUpBinding
+import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.firebase.firebase_store.FirestoreManager
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.google.firebase.firestore.auth.User
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SignUpActivity : AppCompatActivity() {
 
     private val TAG = "SignUpActivity"
 
     private lateinit var binding: ActivitySignUpBinding
 
-    private val firestoreManager = FirestoreManager()
+    @Inject
+    lateinit var userRepository: UserRepository
 
     private lateinit var imageView: ImageView
     private lateinit var button: Button
@@ -61,15 +70,13 @@ class SignUpActivity : AppCompatActivity() {
                         userId.text.toString(),
 
                         )
-                    firestoreManager.trySignUp(userData,
-                        object : FirestoreManager.ResultListener<Boolean> {
-                            override fun onSuccess(result: Boolean) {
-                                // 회원가입 성공 이벤트
-                                Toast.makeText(
-                                    this@SignUpActivity,
-                                    "회원가입 성공",
-                                    Toast.LENGTH_LONG
-                                ).show()
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        userRepository.signUpUserData(userData)
+                            .onSuccess {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(this@SignUpActivity, "회원가입 성공", Toast.LENGTH_LONG).show()
+                                }
 
                                 // 로그인에 아이디 & 비밀번호 전달
                                 val intent = Intent().apply {
@@ -81,22 +88,12 @@ class SignUpActivity : AppCompatActivity() {
                                 }
                                 setResult(RESULT_OK, intent)
                                 finish()
-                            }
-
-                            override fun onFailure(e: Exception) {
-                                //실패 시 처리
-                                if (e.message == "이미 가입된 번호입니다") {
-                                    binding.tiId.error = e.message
-                                } else {
-                                    Toast.makeText(
-                                        this@SignUpActivity,
-                                        "회원가입 실패: ${e.message}",
-                                        Toast.LENGTH_LONG
-                                    ).show()
+                            }.onFailure {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(this@SignUpActivity, "회원가입 실패: ${it.message}", Toast.LENGTH_LONG).show()
                                 }
                             }
-
-                        })
+                    }
                 }
             }
         }

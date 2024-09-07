@@ -1,11 +1,14 @@
 package com.blackcows.butakaeyak.firebase.firebase_store
 
 import android.util.Log
+import com.blackcows.butakaeyak.data.toMap
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.auth.User
 import com.google.firebase.firestore.firestore
 import com.kakao.sdk.user.UserApiClient
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 // db. 넣기
 class FirestoreManager {
@@ -58,10 +61,10 @@ class FirestoreManager {
                     resultListener.onFailure(java.lang.Exception("사용자 정보를 찾을 수 없습니다!")) //실패 콜백 함수를 불러 찾을 수 없다고 알림
                 } else {
                     // documents 안에서 사용자 찾기 구문
-                    for (documents in documents) {
+                    for (document in documents) {
                         // toObject : Firestore 문서의 데이터를 지정된 클래스 타입의 객체로 전화해줌
                         val userData =
-                            documents.toObject(UserData::class.java) // 변환하고자 하는 클래스 타입을 UserData로 지정
+                            document.toObject(UserData::class.java) // 변환하고자 하는 클래스 타입을 UserData로 지정
                         Log.d(TAG, "로그인 성공!! 사용자 이름 : ${userData.name}")
                         resultListener.onSuccess(userData) // 있으면 성공~
                         break
@@ -74,7 +77,22 @@ class FirestoreManager {
             }
     }
 
-    // TODO : 봐줘!!
+    suspend fun saveKakaoUser(): UserData? {
+        return suspendCoroutine<UserData?> { coroutine ->
+            saveKakaoUser(object: ResultListener<UserData?> {
+                override fun onSuccess(result: UserData?) {
+                    coroutine.resume(result!!)
+                }
+
+                override fun onFailure(e: Exception) {
+                    coroutine.resume(null)
+                }
+
+            })
+        }
+    }
+
+
     fun saveKakaoUser(resultListener: ResultListener<Boolean>){
         UserApiClient.instance.me{user, error ->
             if (error!= null) {
@@ -85,6 +103,7 @@ class FirestoreManager {
 
                 val userData = UserData(
                     name = user.kakaoAccount?.profile?.nickname !!,
+                    kakaoId = user.id!!,
                     thumbnail = user.kakaoAccount?.profile?.thumbnailImageUrl ?: ""
                 )
 
@@ -92,6 +111,36 @@ class FirestoreManager {
                     override fun onSuccess(result: Boolean) {
                         Log.d(TAG, "Firebase 저장 성공")
                         resultListener.onSuccess(true)
+                    }
+
+                    override fun onFailure(e: Exception) {
+                        Log.e(TAG, "Firebase 저장 실패", e)
+                        resultListener.onFailure(e)
+                    }
+                })
+            }
+        }
+    }
+
+    @JvmName("UserDataResultListener")
+    fun saveKakaoUser(resultListener: ResultListener<UserData?>){
+        UserApiClient.instance.me{user, error ->
+            if (error!= null) {
+                Log.e(TAG, "사용자 정보 요청 실패 : ${error}")
+                resultListener.onFailure(Exception("카카오 사용자 정보 요청 실패"))
+            } else if (user != null) {
+                Log.i(TAG, "사용자 정보 요청 성고 ${user.kakaoAccount?.email}")
+
+                val userData = UserData(
+                    name = user.kakaoAccount?.profile?.nickname !!,
+                    kakaoId = user.id!!,
+                    thumbnail = user.kakaoAccount?.profile?.thumbnailImageUrl ?: ""
+                )
+
+                trySignUp(userData,object : ResultListener<Boolean> {
+                    override fun onSuccess(result: Boolean) {
+                        Log.d(TAG, "Firebase 저장 성공")
+                        resultListener.onSuccess(userData)
                     }
 
                     override fun onFailure(e: Exception) {
