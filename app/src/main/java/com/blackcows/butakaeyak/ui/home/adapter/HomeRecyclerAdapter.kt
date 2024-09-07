@@ -116,6 +116,8 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
                     //clickListener.onMyMedicineClick(medicineItem,isChecked)
                     clickListener.setMedicineChecked(medicineItem, btnMyMedicine.isChecked)
                     Log.d(TAG,"${name}")
+                    //TODO NameFragment로 약 이름 넘기기
+                    itemClickListener?.invoke(tvMedicineName.text.toString())
                 }
             }
         }
