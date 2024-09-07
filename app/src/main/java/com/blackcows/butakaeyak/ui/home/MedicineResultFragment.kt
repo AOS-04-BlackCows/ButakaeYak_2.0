@@ -76,7 +76,8 @@ class MedicineResultFragment : Fragment() {
         binding.apply {
             medicineAdapter = HomeRecyclerAdapter(object : HomeRecyclerAdapter.ClickListener{
                 override fun onItemClick(item: Medicine) {
-                    MainNavigation.addFragment(SearchDetailFragment.newInstance(item),
+                    MainNavigation.addFragment(
+                        SearchDetailFragment.newInstance(item),
                         FragmentTag.SearchDetailFragmentInSearch
                     )
                     Log.d(TAG,"${item.id}, ${item.name} ")
