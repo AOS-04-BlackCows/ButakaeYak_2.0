@@ -10,7 +10,6 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -36,7 +35,6 @@ import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
-import java.security.MessageDigest
 
 private const val TAG = "k3f_MapFragment"
 class MapFragment : Fragment() {
@@ -60,12 +58,13 @@ class MapFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-//        val mapViewModel = ViewModelProvider(this).get(MapViewModel::class.java)
-
         _binding = FragmentMapBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        checkPermissionForLocation(this)
+        if (checkPermissionForLocation()) {
+            // 권한이 있을 때만 GPS 초기화
+            gpsInit()
+        }
         return root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,10 +77,27 @@ class MapFragment : Fragment() {
         bottomSheetView = BottomsheetMapDetailBinding.inflate(layoutInflater)
         bottomSheetDialog = BottomSheetDialog(requireContext())
         bottomSheetDialog.setContentView(bottomSheetView.root)
-
         kakaoMapInit(myPlaceLongtudeX, myPlaceLatitudeY)
         mapViewModel.findPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
         mapViewModel.moreFindPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
+        /*
+        해시키 발급하는 키
+        try {
+            val keystore = KeyStore.getInstance("PKCS12")
+            val keystoreFile = FileInputStream("alias 경로")
+            val password = "비밀번호".toCharArray()
+
+            keystore.load(keystoreFile, password)
+            val cert: Certificate = keystore.getCertificate("alias 파일명")
+            val md: MessageDigest = MessageDigest.getInstance("SHA-1")
+            val publicKey = md.digest(cert.encoded)
+            val base64 = Base64.getEncoder().encodeToString(publicKey)
+
+            println("Key Hash: $publicKey")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        */
     }
 
     // 내 위치로 이동
@@ -91,11 +107,10 @@ class MapFragment : Fragment() {
     }
 
     // 위치 권한이 있는지 확인하는 메서드
-    private fun checkPermissionForLocation(fragment: Fragment): Boolean {
+    private fun checkPermissionForLocation(): Boolean {
         // Android 6.0 Marshmallow 이상에서는 위치 권한에 추가 런타임 권한이 필요
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (fragment.context?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                gpsInit()
+            if (requireContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 true
             } else {
                 // 권한이 없으므로 권한 요청 알림 보내기
@@ -109,10 +124,22 @@ class MapFragment : Fragment() {
     }
 
     // 사용자에게 권한 요청 후 결과에 대한 처리 로직
+//    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        if (requestCode == REQUEST_PERMISSION_LOCATION) {
+//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                gpsInit()
+//            } else {
+//                Log.d(TAG, "onRequestPermissionsResult() _ 권한 허용 거부")
+//                Toast.makeText(requireContext(), "권한이 없어 해당 기능을 실행할 수 없습니다.", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_PERMISSION_LOCATION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 권한이 승인되면 GPS 초기화
                 gpsInit()
             } else {
                 Log.d(TAG, "onRequestPermissionsResult() _ 권한 허용 거부")
@@ -120,6 +147,7 @@ class MapFragment : Fragment() {
             }
         }
     }
+
     // NEW GPS CODE
     fun gpsInit() {
         // 사용자의 위치를 얻을 때는 LocationManager라는 시스템 서비스를 이용
@@ -139,16 +167,14 @@ class MapFragment : Fragment() {
         }
         Log.d(TAG, result)  // Enabled Providers : passive, gps, network..
 
-
-
         locationListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 // 위치 정보가 변경될 때 호출되는 콜백
                 myPlaceLongtudeX = location.longitude
                 myPlaceLatitudeY = location.latitude
                 // 위치 정보를 사용하여 원하는 작업 수행
-                Log.e(TAG, "onLocationChanged")
-                Log.e(TAG, "${location.latitude} ${location.longitude}")
+                Log.e(TAG, "onLocationChanged ( myPlaceLongtudeX = ${location.latitude}, myPlaceLatitudeY = ${location.longitude} )")
+                Log.e(TAG, "")
             }
 
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
@@ -173,31 +199,26 @@ class MapFragment : Fragment() {
 
         // 위치정보얻기
         // getAccuracy(): 정확도 || getLatitude(): 위도 || getLongitude(): 경도 || getTime(): 획득 시간
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            val location: Location? = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            Log.d(TAG, LocationManager.GPS_PROVIDER)
-            location?.let{
-//                myPlaceLongtudeX = location.longitude // 갱신 된 경도 127.11547410533494
-//                myPlaceLatitudeY = location.latitude // 갱신 된 위도 37.40754692649233
-                val accuracy = location.accuracy
-                val time = location.time
-                Log.d(TAG, "$myPlaceLongtudeX, $myPlaceLatitudeY, $location, $accuracy, $time")
+       val location: Location? = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+       Log.d(TAG, LocationManager.GPS_PROVIDER)
+       location?.let{
+           myPlaceLongtudeX = location.longitude // 갱신 된 경도 127.11547410533494
+           myPlaceLatitudeY = location.latitude // 갱신 된 위도 37.40754692649233
+           val accuracy = location.accuracy
+           val time = location.time
+           Log.d(TAG, "$myPlaceLongtudeX, $myPlaceLatitudeY, $location, $accuracy, $time")
 
-                // 위치 정보가 유효한 경우에만 카카오맵 초기화
-//                if (myPlaceLongtudeX != 0.0 && myPlaceLatitudeY != 0.0) {
-//                } else {
-//                    Log.d(TAG, "유효하지 않은 위치 정보입니다.")
-//                    Toast.makeText(requireContext(), "유효하지 않은 위치 정보입니다.", Toast.LENGTH_SHORT).show()
-//                }
-            } ?: run {
-                // 위치 정보가 없을 경우 처리
-                Log.d(TAG, "위치 정보를 가져올 수 없습니다.")
-                Toast.makeText(requireContext(), "위치 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            Log.d(TAG, "위치 권한이 없습니다.")
-            Toast.makeText(requireContext(), "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
-        }
+           // 위치 정보가 유효한 경우에만 카카오맵 초기화
+//           if (myPlaceLongtudeX != 0.0 && myPlaceLatitudeY != 0.0) {
+//           } else {
+//               Log.d(TAG, "유효하지 않은 위치 정보입니다.")
+//               Toast.makeText(requireContext(), "유효하지 않은 위치 정보입니다.", Toast.LENGTH_SHORT).show()
+//           }
+       } ?: run {
+           // 위치 정보가 없을 경우 처리
+           Log.d(TAG, "위치 정보를 가져올 수 없습니다.")
+           Toast.makeText(requireContext(), "위치 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show()
+       }
 
         binding.mapResearch.setOnClickListener {
             val camera = kakaoMapCall.getCameraPosition()
@@ -239,7 +260,19 @@ class MapFragment : Fragment() {
                     val itemResult = with(item){
                         "$placeName||$distance||$placeUrl||$categoryName||$addressName||$roadAddressName||$id||$phone||$categoryGroupCode||$categoryGroupName||$x||$y"
                     }
-                    val style = kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon_pharmacy_label)))
+                    var style: LabelStyles?
+                    // id가 이미 pharmacy에 있을 때
+                    val styleFavorite = kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon_pharmacy_label_favorite)))
+                    val styleDefault = kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon_pharmacy_label)))
+                    val styleClicked = kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon_pharmacy_label_clicked)))
+                    fun styleCheck (id: String): LabelStyles? {
+                        return if (LocalDataSource(requireContext()).isPharmacyChecked(id)) {
+                            styleFavorite
+                        } else {
+                            styleDefault
+                        }
+                    }
+                    style = styleCheck(item.id)
                     // 라벨 옵션 지정. 위경도와 스타일 넣기
                     val options = LabelOptions.from(LatLng.from(item.y.toDouble(), item.x.toDouble())).setStyles(style).setTag(itemResult).setClickable(true)
                     // 레이어 가져오기
@@ -247,6 +280,7 @@ class MapFragment : Fragment() {
                     // 레이어에 라벨 추가
                     layer?.addLabel(options)
                     kakaoMap.setOnLabelClickListener { kakaoMap, labelLayer, label ->
+                        Log.d(TAG, "Clicked Label id : $id")
                         Log.d(TAG, label?.tag.toString())
                         val tag = label?.tag.toString().split("||")
                         val pharmacyData = KakaoPlacePharmacy(tag[0],tag[1],tag[2],tag[3],tag[4],tag[5],tag[6],tag[7],tag[8],tag[9],tag[10],tag[11])
@@ -256,7 +290,11 @@ class MapFragment : Fragment() {
                         bottomSheetView.placeUrl.text = pharmacyData.placeUrl
                         bottomSheetView.addressName.text = pharmacyData.addressName
                         bottomSheetView.roadAddressName.text = pharmacyData.roadAddressName
-
+                        label.changeStyles(styleClicked)
+                        bottomSheetDialog.setOnCancelListener {
+                            style = styleCheck(pharmacyData.id)
+                            label.changeStyles(style)
+                        }
                         fun pharmacyChecked(): Boolean = LocalDataSource(requireContext()).isPharmacyChecked(pharmacyData.id)
                         Log.d(TAG, "pharmacyChecked() = ${pharmacyChecked()}")
                         fun activeIcon() {
@@ -324,6 +362,7 @@ class MapFragment : Fragment() {
             }
         }
     }
+
 
     override fun onResume() {
         super.onResume()

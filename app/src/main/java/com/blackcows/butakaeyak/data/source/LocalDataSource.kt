@@ -106,10 +106,10 @@ class LocalDataSource @Inject constructor(
     }
 
     fun isPharmacyChecked(id: String) : Boolean {
+        Log.d(TAG_PHARMACY, "isPharmacyChecked() Run. id: ${id}")
         return getMyPharmacy().any {
             it.id == id
         }
-        Log.d(TAG_PHARMACY, "isPharmacyChecked() Run. id: ${id}")
     }
 
     fun removeMyPharmacy(id: String) {
