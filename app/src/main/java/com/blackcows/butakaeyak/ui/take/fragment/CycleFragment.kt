@@ -2,11 +2,13 @@ package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -167,20 +169,75 @@ class CycleFragment : Fragment() {
         for (alarm in alarmList) {
             val intent = Intent(requireContext(), AlarmReceiver::class.java)
 
-            intent.putExtra("NOTIFICATION_TITLE",viewModel.getTextData().observe(viewLifecycleOwner, Observer{it}).toString())
+            intent.putExtra("NOTIFICATION_TITLE","${binding.tvCycleName.text}")
             intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
             val pendingIntent = PendingIntent.getBroadcast(
-                context, alarm.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                context, alarm.requestCode, intent, PendingIntent.FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
             )
 
-            alarmManager?.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                // Android 12 이상에서 정확한 알람 설정
+                try {
+                    if (alarmManager?.canScheduleExactAlarms() == true) {
+                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+                        alarmManager.setRepeating(
+                            AlarmManager.RTC_WAKEUP,
+                            alarm.timeInMillis,
+                            AlarmManager.INTERVAL_DAY,
+                            pendingIntent
+                        )
+                    } else {
+                        val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                        startActivity(intent)
+                    }
+                } catch (e: SecurityException) {
+                    Toast.makeText(context, "알림 설정에 실패했습니다. 권한을 확인해주세요.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                // Android 12 이하에서 정확한 알람 설정
+                alarmManager?.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+                alarmManager?.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    alarm.timeInMillis,
+                    AlarmManager.INTERVAL_DAY,
+                    pendingIntent
+                )
+            }
 
-            alarmManager?.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                alarm.timeInMillis,
-                AlarmManager.INTERVAL_DAY,
-                pendingIntent
-            )
+//            try {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // Android 12 이상
+//                    if (alarmManager?.canScheduleExactAlarms() == true) {
+//                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+//                        alarmManager.setRepeating(
+//                            AlarmManager.RTC_WAKEUP,
+//                            alarm.timeInMillis,
+//                            AlarmManager.INTERVAL_DAY,
+//                            pendingIntent
+//                        )
+//                    } else {
+//                        // 권한 요청 화면으로 이동
+//                        val requestIntent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+//                        startActivity(requestIntent)
+//                    }
+//                } else { // Android 12 이하
+//                    alarmManager?.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+//                    alarmManager?.setRepeating(
+//                        AlarmManager.RTC_WAKEUP,
+//                        alarm.timeInMillis,
+//                        AlarmManager.INTERVAL_DAY,
+//                        pendingIntent
+//                    )
+//                }
+//            } catch (e: SecurityException) {
+//                // 예외 처리: Android 12 이하에서의 에러를 처리
+//                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+//                    // Android 12 이하에서 권한 문제 발생 시 처리
+//                    Toast.makeText(context, "알림 설정에 실패했습니다.", Toast.LENGTH_SHORT).show()
+//                } else {
+//                    // Android 12 이상에서 예외 발생 시 처리
+//                    Toast.makeText(context, "알림 권한을 확인해 주세요.", Toast.LENGTH_SHORT).show()
+//                }
+//            }
         }
 
         Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
