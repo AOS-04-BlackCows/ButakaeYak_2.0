@@ -53,7 +53,7 @@ class TakeFragment : Fragment() {
         val calendar = Calendar.getInstance().apply {
             setTime(Date())
         }
-        WeekDay.from(calendar.get(Calendar.DAY_OF_WEEK)-1)
+        WeekDay.from((calendar.get(Calendar.DAY_OF_WEEK)+5)%7)
     }
 
     private val myTakeViewModel: MyTakeViewModel by activityViewModels()
