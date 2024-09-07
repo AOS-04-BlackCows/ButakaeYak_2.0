@@ -165,7 +165,7 @@ class CycleFragment : Fragment() {
         val alarmList = adapter.getAlarmList()
 
         for (alarm in alarmList) {
-            val intent = Intent(context, AlarmReceiver::class.java)
+            val intent = Intent(requireContext(), AlarmReceiver::class.java)
                 intent.putExtra("NOTIFICATION_TITLE",viewModel.getTextData().observe(viewLifecycleOwner, Observer{it}).toString())
                 intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
             val pendingIntent = PendingIntent.getBroadcast(
