@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.ActivitySignInBinding
+import com.blackcows.butakaeyak.domain.repo.LocalRepository
 import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.firebase.firebase_store.FirestoreManager
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
@@ -43,6 +44,8 @@ class SignInActivity : AppCompatActivity() {
 
     @Inject
     lateinit var userRepository: UserRepository
+    @Inject
+    lateinit var localRepository: LocalRepository
 
 
     // 데이터 전달
@@ -89,17 +92,11 @@ class SignInActivity : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     userRepository.loginWithId(userId, pw)
                         .onSuccess {
-                            Toast.makeText(this@SignInActivity, "로그인 성공", Toast.LENGTH_SHORT).show()
-                            Log.d(TAG, "로그인 페이지로 이동")
-
-                            // 로그인에 아이디 & 비밀번호 전달
-                            val intent = Intent().apply {
-                                putExtra("userData", it)
-                            }
-                            setResult(RESULT_OK, intent)
-                            finish()
+                            onSuccessLogin(it)
                         }.onFailure {
-                            Toast.makeText(this@SignInActivity, "로그인 실패: ${it.message}", Toast.LENGTH_SHORT).show()
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(this@SignInActivity, "로그인 실패: ${it.message}", Toast.LENGTH_SHORT).show()
+                            }
                         }
                 }
             } else {
@@ -142,24 +139,30 @@ class SignInActivity : AppCompatActivity() {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@SignInActivity, it.message, Toast.LENGTH_SHORT).show()
                         }
-                        //
                     }.onSuccess {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(this@SignInActivity, "로그인 성공", Toast.LENGTH_SHORT).show()
-                        }
-
-                        Log.d(TAG, "로그인 페이지로 이동")
-
-                        // 로그인에 아이디 & 비밀번호 전달
-                        val intent = Intent().apply {
-                            putExtra("userData", it)
-                        }
-                        setResult(RESULT_OK, intent)
-                        finish()
+                        onSuccessLogin(it)
                     }
             }
-
         }
+    }
+
+    private suspend fun onSuccessLogin(userData: UserData) {
+        withContext(Dispatchers.Main) {
+            Toast.makeText(this@SignInActivity, "로그인 성공", Toast.LENGTH_SHORT).show()
+        }
+
+        if(binding.checkBox.isChecked) {
+            localRepository.saveUserData(userData)
+        }
+
+        Log.d(TAG, "로그인 페이지로 이동")
+
+        // 로그인에 아이디 & 비밀번호 전달
+        val intent = Intent().apply {
+            putExtra("userData", userData)
+        }
+        setResult(RESULT_OK, intent)
+        finish()
     }
 
     private fun validateInputs(id: String, password: String): Boolean {

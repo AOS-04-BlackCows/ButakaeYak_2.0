@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
+import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.google.api.AnnotationsProto.http
 import com.google.gson.Gson
@@ -21,9 +22,12 @@ class LocalDataSource @Inject constructor(
 
         private const val APP_SHARED_PREFS = "BUAKAEYAK"
         private const val PHARMACY_SHARED_PREFS = "PHARMACYS"
+
         const val MY_MEDICINES = "MEDICINES_IN_CONSUMING"
         const val FAVORITE_MEDICINES = "MEDICINES_IN_INTEREST"
         const val FAVORITE_PHARMACY = "PHARMACY_IN_INTEREST"
+
+        const val USER_DATA = "USER_DATA"
     }
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(APP_SHARED_PREFS, Activity.MODE_PRIVATE)
@@ -120,6 +124,18 @@ class LocalDataSource @Inject constructor(
         Log.d(TAG_PHARMACY, "removeMyPharmacy() Run. id: ${id}")
     }
 
+    fun saveAutoLoginData(userData: UserData) {
+        val gson = Gson()
+        val json = gson.toJson(userData)
+        editor.putString(USER_DATA, json).apply()
+    }
+
+    fun getSavedUserData(): UserData? {
+        return sharedPreferences.getString(USER_DATA, null)?.let {
+            val gson = Gson()
+            gson.fromJson(it, UserData::class.java)
+        }
+    }
 
 
 }
