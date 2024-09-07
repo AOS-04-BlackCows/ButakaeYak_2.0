@@ -8,5 +8,6 @@ enum class FragmentTag {
     CycleFragment,
     SearchDetailFragmentInSearch,
     NameFragment,
-    FormFragment
+    FormFragment,
+    SearchDetailFragmentInTake
 }

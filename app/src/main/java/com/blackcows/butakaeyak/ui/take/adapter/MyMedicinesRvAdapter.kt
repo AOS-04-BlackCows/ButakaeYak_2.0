@@ -11,6 +11,9 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.MyMedicineItemBinding
 import com.blackcows.butakaeyak.databinding.TodayMedicineItemBinding
+import com.blackcows.butakaeyak.ui.GlideApp
+import com.blackcows.butakaeyak.ui.home.MedicineResultFragment
+import com.blackcows.butakaeyak.ui.home.SearchDetailFragment
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.data.MedicineAtTime
@@ -41,6 +44,11 @@ class MyMedicinesRvAdapter:
                     medicineNameTv.text = item.medicine.name
                     medicineEffectTv.text = item.medicine.effect
 
+                    root.setOnClickListener {
+                        MainNavigation.addFragment(
+                            SearchDetailFragment.newInstance(item.medicine), FragmentTag.SearchDetailFragmentInTake
+                        )
+                    }
                     tvMedicineAlarmIv.setOnClickListener {
                         //TODO: navigate to MyMedicineDetailPage.
                         MainNavigation.addFragment(
