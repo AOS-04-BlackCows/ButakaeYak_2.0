@@ -47,6 +47,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = SearchUiState.Loading
             _medicineResult.value = getMedicinesNameUseCase.invoke(name)
+            _uiState.value = SearchUiState.SearchMedicinesSuccess(_medicineResult.value!!)
         }
     }
 
