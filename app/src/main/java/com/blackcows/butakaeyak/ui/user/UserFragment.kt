@@ -31,6 +31,7 @@ import okhttp3.internal.notify
 
 class UserFragment : Fragment() {
 
+
     //binding 설정
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
