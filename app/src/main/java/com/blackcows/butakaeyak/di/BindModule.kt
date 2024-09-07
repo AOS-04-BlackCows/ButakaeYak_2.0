@@ -8,6 +8,8 @@ import com.blackcows.butakaeyak.data.repository.impl.DrugRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.LocalRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.KakaoMapRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.MedicineRepositoryImpl
+import com.blackcows.butakaeyak.data.repository.impl.UserRepositoryImpl
+import com.blackcows.butakaeyak.domain.repo.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -31,4 +33,8 @@ abstract class BindModule {
     @Binds
     //@ViewModelScoped
     abstract fun provideKakaoRepository(impl: KakaoMapRepositoryImpl): KakaoMapRepository
+
+    @Binds
+    //@ViewModelScoped
+    abstract fun provideUserRepository(impl: UserRepositoryImpl): UserRepository
 }

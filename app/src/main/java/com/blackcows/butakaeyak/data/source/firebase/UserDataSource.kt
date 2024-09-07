@@ -20,6 +20,7 @@ class UserDataSource @Inject constructor(
         private const val USER_COLLECTION = "users"
 
         private const val ID = "id"
+        private const val PASSWORD = "pwd"
         private const val KAKAO_ID = "kakaoId"
 
         val USER_NOT_FOUND_EXCEPTION = object : Exception() {
@@ -32,29 +33,40 @@ class UserDataSource @Inject constructor(
         }
     }
 
-    suspend fun getUserWithLoginId(id: String): Result<UserData> {
+    suspend fun getUserWithLoginId(id: String, pwd: String): Result<UserData> {
         val result = db.collection(USER_COLLECTION)
             .whereEqualTo(ID, id)
-            .get().await()?.toObjects(UserData::class.java)?.get(0)
+            .whereEqualTo(PASSWORD, pwd)
+            .get().await()?.toObjects(UserData::class.java)?.getOrNull(0)
 
         return if(result == null) Result.failure(USER_NOT_FOUND_EXCEPTION)
                 else Result.success(result)
     }
 
+    private suspend fun isDuplicatedId(id: String): Boolean {
+        val result = db.collection(USER_COLLECTION)
+            .whereEqualTo(ID, id)
+            .get().await()?.toObjects(UserData::class.java)?.getOrNull(0)
+
+        return (result != null)
+    }
+
     suspend fun getUserWithKakaoId(id: Long): Result<UserData> {
         val result = db.collection(USER_COLLECTION)
             .whereEqualTo(KAKAO_ID, id)
-            .get().await()?.toObjects(UserData::class.java)?.get(0)
+            .get().await()?.toObjects(UserData::class.java)?.getOrNull(0)
 
         return if(result == null) Result.failure(USER_NOT_FOUND_EXCEPTION)
         else Result.success(result)
     }
 
     suspend fun saveUserData(userData: UserData): Result<UserData> = coroutineScope {
-        val loginIdResult = async { getUserWithLoginId(userData.id) }
-        val kakaoIdResult = async { getUserWithKakaoId(userData.kakaoId) }
+        val hasAccount = async { userData.id?.let { isDuplicatedId(userData.id) } ?: false }
+        val hasKakaoAccount = async {
+            (userData.kakaoId != null && getUserWithKakaoId(userData.kakaoId).isSuccess)
+        }
 
-        if (loginIdResult.await().isFailure && kakaoIdResult.await().isFailure) {
+        if (!hasAccount.await() && !hasKakaoAccount.await()) {
             db.collection("users")
                 .add(userData.toMap()).await()
 
