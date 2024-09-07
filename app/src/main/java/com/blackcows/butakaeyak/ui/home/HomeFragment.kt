@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.home
 
+import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.os.Handler
@@ -79,6 +80,10 @@ class HomeFragment : Fragment() {
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.searchLoProgressContainer.visibility = View.GONE
             },5000)
+
+            //TODO 키보드 내리기
+            val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 
