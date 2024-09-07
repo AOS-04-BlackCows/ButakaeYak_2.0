@@ -30,50 +30,46 @@ object MainNavigation {
     }
 
 
-    fun addFragment(fragment: Fragment, tag: FragmentTag) {
-        fragmentManager.beginTransaction()
-            .setCustomAnimations(R.anim.alpha,R.anim.none)
-            .replace(R.id.fragment_container_view, fragment, tag.name)
-            .commit()
+    fun addFragment(fragment: Fragment, tag: FragmentTag, enterAni: Int? = null, exitAni: Int? = null) {
+        val transaction = fragmentManager.beginTransaction()
+
+        if (enterAni != null && exitAni != null) {
+            transaction.setCustomAnimations(R.anim.alpha,R.anim.none)
+        }
+
+        transaction.replace(R.id.fragment_container_view, fragment, tag.name).commit()
 
         Log.d("Navigation", "Push Fragment: ${tag.name} to Stack: ${currentTab.name}")
         fragmentStack[currentTab]!!.push(tag)
     }
 
-    fun popCurrentFragment() {
+    fun popCurrentFragment(enterAni: Int? = null, exitAni: Int? = null) {
         val curStack = fragmentStack[currentTab]!!
+        val transaction = fragmentManager.beginTransaction()
+
         if(curStack.size == 0) return
 
-        else if(curStack.size == 1){
-            val curFragment = fragmentManager.findFragmentByTag(
-                curStack[0].name
-            )!!
-            fragmentManager.beginTransaction()
-                .remove(curFragment)
-                .commit()
-            curStack.pop()
-            return
+        val curFragment = if(curStack.size == 1) {
+             fragmentManager.findFragmentByTag(curStack[0].name)!!
+        } else {
+            val secondFromLastFragmentTag = curStack[curStack.lastIndex - 1]
+            fragmentManager.findFragmentByTag(secondFromLastFragmentTag.name)!!
         }
 
-        Log.d(TAG, "CurTab: ${currentTab.name}")
-        curStack.forEach {
-            Log.d(TAG,it.name)
+        if(enterAni != null && exitAni != null) {
+            transaction.setCustomAnimations(enterAni, exitAni)
         }
 
-        val secondFromLastFragmentTag = curStack[curStack.lastIndex - 1]
-
-        val curFragment = fragmentManager.findFragmentByTag(
-            secondFromLastFragmentTag.name
-        )!!
-
-        fragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_view, curFragment)
-            .commit()
+        transaction
+            .remove(curFragment)
+            .commitNow()
 
         Log.d("Navigation", "size: ${curStack.size}")
 
         curStack.pop()
     }
+
+
 
     fun toOtherTab(tabTag: TabTag) {
         currentTab = tabTag

@@ -36,8 +36,11 @@ class NameFragment : Fragment() {
     //TODO: 여기!
     private val onBackPressed = {
         parentFragmentManager.beginTransaction()
-            .setCustomAnimations(R.anim.move_enter,R.anim.move_exit)
-            .remove(this).commitNow()
+            .setCustomAnimations(R.anim.move_enter, R.anim.move_exit)
+            .remove(this)
+            .commitNow()
+
+        MainNavigation.popCurrentFragment()
     }
 
     //TODO: 여기!
@@ -61,6 +64,7 @@ class NameFragment : Fragment() {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                Log.d("NameFragment", "Back Pressed!")
                 onBackPressed()
             }
         })
@@ -82,6 +86,7 @@ class NameFragment : Fragment() {
 
         //TODO: 여기!
         binding.ivBack.setOnClickListener {
+            Log.d("NameFragment", "Back Pressed2")
             onBackPressed()
         }
 

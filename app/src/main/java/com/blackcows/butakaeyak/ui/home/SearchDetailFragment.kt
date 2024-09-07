@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
@@ -17,6 +18,11 @@ class SearchDetailFragment () : Fragment(){
     private var _binding: DialogSearchDetailBinding? = null
     private val binding get() = _binding!!
 
+    private val onBackPressedCallback = object: OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+
+        }
+    }
 
     //bundle에서 medicine 가져오기
     private val medicine: Medicine by lazy {
@@ -56,6 +62,8 @@ class SearchDetailFragment () : Fragment(){
         binding.detailBtnBack.setOnClickListener {
             MainNavigation.popCurrentFragment()
         }
+
+
     }
 
     override fun onDestroyView() {
