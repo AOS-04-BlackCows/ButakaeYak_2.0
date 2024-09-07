@@ -46,7 +46,7 @@ class CycleFragment : Fragment() {
 
     //뒤로가기 설정
     private val onBackPressed = {
-        parentFragmentManager.beginTransaction().remove(
+        parentFragmentManager.beginTransaction().setCustomAnimations(R.anim.move_enter,R.anim.move_exit).remove(
             this
         ).commitNow()
     }
@@ -166,6 +166,8 @@ class CycleFragment : Fragment() {
 
         for (alarm in alarmList) {
             val intent = Intent(context, AlarmReceiver::class.java)
+                intent.putExtra("NOTIFICATION_TITLE",viewModel.getTextData().observe(viewLifecycleOwner, Observer{it}).toString())
+                intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
             val pendingIntent = PendingIntent.getBroadcast(
                 context, alarm.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT
             )

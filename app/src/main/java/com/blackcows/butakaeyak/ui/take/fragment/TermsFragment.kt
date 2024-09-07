@@ -19,9 +19,9 @@ class TermsFragment : Fragment() {
 
     //뒤로가기 설정
     private val onBackPressed = {
-        parentFragmentManager.beginTransaction().setCustomAnimations(R.anim.move_end,R.anim.none).remove(
+            parentFragmentManager.beginTransaction().setCustomAnimations(R.anim.move_enter,R.anim.move_exit).remove(
             this
-        ).commitNow()
+        ).commit()
     }
 
     override fun onCreateView(
@@ -36,6 +36,12 @@ class TermsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackPressed()
+            }
+        })
 
         binding.ivBack.setOnClickListener {
             onBackPressed()
@@ -140,7 +146,7 @@ class TermsFragment : Fragment() {
         binding.clTerms7.setOnClickListener {
             if (binding.tvTerms7.visibility == View.GONE) {
                 binding.tvTerms7.visibility = View.VISIBLE
-                binding.ivTerms2.animate().apply {
+                binding.ivTerms7.animate().apply {
                     duration = 300
                     rotation(180f)
                 }

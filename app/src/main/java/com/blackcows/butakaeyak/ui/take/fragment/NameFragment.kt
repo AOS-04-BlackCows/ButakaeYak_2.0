@@ -35,9 +35,9 @@ class NameFragment : Fragment() {
 
     //TODO: 여기!
     private val onBackPressed = {
-        parentFragmentManager.beginTransaction().remove(
-            this
-        ).commitNow()
+        parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.move_enter,R.anim.move_exit)
+            .remove(this).commitNow()
     }
 
     //TODO: 여기!
@@ -64,6 +64,7 @@ class NameFragment : Fragment() {
                 onBackPressed()
             }
         })
+
         return root
     }
 

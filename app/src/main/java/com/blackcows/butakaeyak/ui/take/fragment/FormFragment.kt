@@ -34,7 +34,7 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
 
     //뒤로가기 설정
     private val onBackPressed = {
-        parentFragmentManager.beginTransaction().remove(
+        parentFragmentManager.beginTransaction().setCustomAnimations(R.anim.move_enter,R.anim.move_exit).remove(
             this
         ).commitNow()
     }
