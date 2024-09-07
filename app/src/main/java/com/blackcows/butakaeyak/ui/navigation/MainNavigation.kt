@@ -97,10 +97,6 @@ object MainNavigation {
     }
 
 
-
-
-
-
     private fun initViewPager(activity: MainActivity, b: ActivityMainBinding) {
         binding = b
         val viewPager = binding.viewPager
