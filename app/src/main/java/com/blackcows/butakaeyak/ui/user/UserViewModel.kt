@@ -12,6 +12,7 @@ class UserViewModel : ViewModel() {
     private val _currentUser = MutableLiveData<UserData>()
     val currentUser : LiveData<UserData> = _currentUser
 
+
     fun setCurrentUser(userData : UserData) {
         _currentUser.value = userData
     }
