@@ -34,7 +34,6 @@ class UserFragment : Fragment() {
     //binding 설정
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
-
     //ViewPager 설정
     private lateinit var userFavoriteViewPagerAdapter: UserFavoriteViewPagerAdapter
 
