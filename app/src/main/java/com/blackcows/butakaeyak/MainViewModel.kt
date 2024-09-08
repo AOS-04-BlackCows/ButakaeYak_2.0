@@ -17,19 +17,19 @@ class MainViewModel @Inject constructor(
     private val localRepository: LocalRepository,
     private val pharmacyRepository: PharmacyRepository
 ): ViewModel() {
-    private val _pharmacies = MutableLiveData<List<KakaoPlacePharmacy>>()
-    val pharmacies : LiveData<List<KakaoPlacePharmacy>> get() = _pharmacies
+    private val _pharmacies = MutableLiveData<Set<KakaoPlacePharmacy>>()
+    val pharmacies get() = _pharmacies
 
-    private val _myMedicine = MutableLiveData<List<MyMedicine>>()
+    private val _myMedicine = MutableLiveData<Set<MyMedicine>>()
     val myMedicines get() = _myMedicine
 
     fun getPharmacyList(){
         val getPharmacy = pharmacyRepository.getMyPharmacy()
-        _pharmacies.value = getPharmacy
+        _pharmacies.value = getPharmacy.toSet()
     }
     fun savePharmacyList(pharmacyList: List<KakaoPlacePharmacy>){
         pharmacyRepository.saveMyPharmacy(pharmacyList)
-        _pharmacies.value = pharmacyList
+        _pharmacies.value = pharmacyList.toSet()
     }
     fun addToFavoritePharmacyList(pharmacy: KakaoPlacePharmacy){
         pharmacyRepository.addMyPharmacy(pharmacy)
@@ -51,11 +51,11 @@ class MainViewModel @Inject constructor(
 
 
     fun getMyMedicineList() {
-        _myMedicine.value = localRepository.getMyMedicines()
+        _myMedicine.value = localRepository.getMyMedicines().toSet()
     }
     fun saveMyMedicineList(myMedicines: List<MyMedicine>) {
         localRepository.saveMyMedicines(myMedicines)
-        _myMedicine.value = myMedicines
+        _myMedicine.value = myMedicines.toSet()
     }
     fun addToMyMedicineList(myMedicine: MyMedicine) {
         localRepository.addToMyMedicine(myMedicine)
