@@ -55,8 +55,8 @@
             app:layout_constraintStart_toEndOf="@+id/iv_medicine"
             app:layout_constraintTop_toBottomOf="@+id/tv_medicine_name" />
 
-        <ToggleButton
-            android:id="@+id/btn_my_medicine"
+        <ImageView
+            android:id="@+id/iv_my_medicine"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginTop="4dp"
@@ -65,8 +65,7 @@
             android:checked="false"
             android:textOn=""
             android:textOff=""
-            android:scaleType="fitCenter"
-            android:background="@drawable/selector_mymedicine"
+            android:src="@drawable/baseline_arrow_circle_right_24dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
