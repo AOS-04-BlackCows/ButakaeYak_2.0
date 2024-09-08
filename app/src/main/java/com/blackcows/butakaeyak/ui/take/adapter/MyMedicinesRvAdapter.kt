@@ -1,5 +1,8 @@
 package com.blackcows.butakaeyak.ui.take.adapter
 
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.DialogInterface
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +15,7 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.MyMedicineItemBinding
 import com.blackcows.butakaeyak.databinding.TodayMedicineItemBinding
+import com.blackcows.butakaeyak.domain.repo.LocalRepository
 import com.blackcows.butakaeyak.ui.GlideApp
 import com.blackcows.butakaeyak.ui.home.MedicineResultFragment
 import com.blackcows.butakaeyak.ui.home.SearchDetailFragment
@@ -21,9 +25,11 @@ import com.blackcows.butakaeyak.ui.take.data.MedicineAtTime
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.blackcows.butakaeyak.ui.take.fragment.CycleFragment
 import com.bumptech.glide.Glide
+import javax.inject.Inject
 
-class MyMedicinesRvAdapter:
-    ListAdapter<MyMedicine, MyMedicinesRvAdapter.MedicineViewHolder>(
+class MyMedicinesRvAdapter(
+    private val longClickCallback: (MyMedicine) -> Unit
+): ListAdapter<MyMedicine, MyMedicinesRvAdapter.MedicineViewHolder>(
         object: DiffUtil.ItemCallback<MyMedicine>() {
             override fun areItemsTheSame(oldItem: MyMedicine, newItem: MyMedicine): Boolean {
                 //Log.d("DiffUtil", "old: ${oldItem.imageUrl}, new: ${newItem.imageUrl}}")
@@ -35,7 +41,6 @@ class MyMedicinesRvAdapter:
             }
         }
     ) {
-
         inner class MedicineViewHolder(private val binding: MyMedicineItemBinding): RecyclerView.ViewHolder(binding.root) {
             fun bind(item: MyMedicine) {
                 with(binding) {
@@ -52,6 +57,10 @@ class MyMedicinesRvAdapter:
                         MainNavigation.addFragment(
                             SearchDetailFragment.newInstance(item.medicine), FragmentTag.SearchDetailFragmentInTake
                         )
+                    }
+                    root.setOnLongClickListener {
+                        longClickCallback(item)
+                        true
                     }
                     tvMedicineAlarmIv.setOnClickListener {
                         MainNavigation.addFragment(

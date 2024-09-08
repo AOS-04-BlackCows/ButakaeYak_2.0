@@ -24,13 +24,6 @@ private const val TAG = "홈 어뎁터"
 class HomeRecyclerAdapter(private val clickListener: ClickListener) :
     ListAdapter<Medicine, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
-        //TODO itemClick 처리 이벤트
-    private var itemClickListener: ((String) -> Unit)? = null
-
-    fun setItemClickListener(listener: (String) -> Unit) {
-        itemClickListener = listener
-    }
-
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Medicine>() {
             override fun areItemsTheSame(oldItem: Medicine, newItem: Medicine): Boolean {
@@ -97,14 +90,14 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
         fun bind(medicineItem: Medicine) {
             val isSaved = clickListener.isMedicineChecked(medicineItem)
             Log.d("HomeRecyclerView", "Name: ${medicineItem.name}, $isSaved")
-            ivMyMedicine.isEnabled = isSaved
+            
             with(medicineItem) {
 
                 if(imageUrl?.isNotEmpty() == true) {
                     Glide.with(itemView).load(imageUrl).into(ivMedicine)
                 }
 
-
+                Log.d(TAG, "ivMyMedicine.isEnabled: ${ivMyMedicine.isEnabled}")
 
                 tvMedicineName.text = name
                 tvMedicineType.text = effect
@@ -113,11 +106,11 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
                     Log.d(TAG, "${name}")
                 }
                 ivMyMedicine.setOnClickListener {
+                    Log.d(TAG, "click!")
                     //clickListener.onMyMedicineClick(medicineItem,isChecked)
-                    clickListener.setMedicineChecked(medicineItem, ivMyMedicine.isEnabled)
+                    clickListener.setMedicineChecked(medicineItem, true)
                     Log.d(TAG,"${name}")
                     //TODO NameFragment로 약 이름 넘기기
-                    itemClickListener?.invoke(tvMedicineName.text.toString())
                 }
             }
         }

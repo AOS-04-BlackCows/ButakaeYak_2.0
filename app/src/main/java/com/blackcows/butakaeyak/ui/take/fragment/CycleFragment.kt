@@ -20,6 +20,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
@@ -30,7 +31,11 @@ import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
+import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.bumptech.glide.Glide
+import io.ktor.util.date.WeekDay
+import java.util.Calendar
+import java.util.Date
 
 class CycleFragment : Fragment() {
 
@@ -46,6 +51,7 @@ class CycleFragment : Fragment() {
 
     //viewModel 설정
     private val viewModel: TakeViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     //뒤로가기 설정
     private val onBackPressed = {
@@ -55,13 +61,15 @@ class CycleFragment : Fragment() {
     }
 
     //bundle에서 medicine 가져오기
-    private val medicine: Medicine by lazy {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    private val myMedicine: MyMedicine by lazy {
+        val medicine = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getParcelable(MEDICINE_DATA, Medicine::class.java)!!
         } else {
             @Suppress("DEPRECATION")
             arguments?.getParcelable(MEDICINE_DATA)!!
         }
+
+        mainViewModel.getMyMedicineOnList(medicine.id!!) ?: MyMedicine(medicine, listOf())
     }
 
     override fun onCreateView(
@@ -84,7 +92,7 @@ class CycleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("CycleFragment", "${medicine.name}, ${medicine.id}")
+        Log.d("CycleFragment", "${myMedicine.medicine.name}, ${myMedicine.medicine.id}")
 
         binding.apply {
             ivBack.setOnClickListener {
@@ -99,11 +107,12 @@ class CycleFragment : Fragment() {
                 showCustomTimePickerDialog()
             }
 
-            tvCycleName.text = "약 이름 : ${medicine.name}"
+            tvCycleName.text = "약 이름 : ${myMedicine.medicine.name}"
             //tvCycleForm.text = "약 모형 : " + medicine.
-            if(medicine.imageUrl?.isNotEmpty() == true) {
-                Glide.with(root).load(medicine.imageUrl).into(ivCycleForm)
-            }
+//            val url = myMedicine.medicine.imageUrl
+//            if(url?.isNotEmpty() == true) {
+//                Glide.with(root).load(url).into(ivCycleForm)
+//            }
 
 
         }
@@ -149,6 +158,7 @@ class CycleFragment : Fragment() {
 
                 setAlarmForAllItems()
 
+                mainViewModel.addToMyMedicineList(myMedicine)
                 MainNavigation.popCurrentFragment()
             }
         } else {

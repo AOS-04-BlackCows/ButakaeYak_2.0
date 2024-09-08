@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -90,17 +91,15 @@ class MedicineResultFragment : Fragment() {
                     return result
                 }
                 override fun setMedicineChecked(item: Medicine, isChecked: Boolean) {
-                    Log.d(TAG,item.id.toString() + ": "+isChecked)
-                    if(!isChecked) {
-                        mainViewModel.cancelMyMedicine(item.id!!)
+                    val hasIt = mainViewModel.isMyMedicine(item.id!!)
+                    Log.d(TAG,"Do I have item:${item.id}? :$hasIt")
+                    if(hasIt) {
+                        Toast.makeText(requireContext(), "이미 복용 중인 약입니다.", Toast.LENGTH_SHORT).show()
                     } else {
-                        mainViewModel.addToMyMedicineList(MyMedicine(item, mapOf()))
-
                         MainNavigation.addFragment(
                             TakeAddFragment.newInstance(item), FragmentTag.TakeAddFragment
                         )
                     }
-                    mainViewModel.addToMyMedicineList(MyMedicine(item, mapOf()))
                 }
             })
             resultlist.adapter = medicineAdapter
@@ -108,12 +107,6 @@ class MedicineResultFragment : Fragment() {
             homeViewModel.medicineResult.observe(viewLifecycleOwner){
                 if(it.isNotEmpty()) Log.d(TAG, "Class: ${it[0]::class.simpleName}")
                 medicineAdapter.submitList(it)
-            }
-//            pillAdapter.submitList(dataSource)
-
-            //TODO viewModel로 name을 넘김
-            medicineAdapter.setItemClickListener { medicineText->
-                viewModel.updateItem(medicineText)
             }
         }
     }

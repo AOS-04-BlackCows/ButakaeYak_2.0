@@ -30,9 +30,6 @@ class NameFragment : Fragment() {
     private var _binding: FragmentNameBinding? = null
     private val binding get() = _binding!!
 
-    //viewModel 설정
-    private val viewModel: TakeViewModel by activityViewModels()
-
     //TODO: 여기!
     private val onBackPressed = {
         parentFragmentManager.beginTransaction()
@@ -76,9 +73,26 @@ class NameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            viewModel.getData().observe(viewLifecycleOwner, Observer {
-                etMedicineName.setText(it)
-            })
+            etMedicineName.setText(medicine.name!!)
+
+            if(etMedicineName.length() > 0){
+                btnNext.apply{
+                    isEnabled = true
+                    setBackgroundResource(R.color.green)
+                    setTextColor(Color.WHITE)
+                    setOnClickListener {
+                        Log.d("버튼","버튼 눌림")
+                        val newMedicine = medicine.copy(
+                            name = binding.etMedicineName.text.toString()
+                        )
+                        parentFragmentManager.beginTransaction()
+                            .replace(
+                                R.id.fragment_container,
+                                FormFragment.newInstance(newMedicine)
+                            ).commitNow()
+                    }
+                }
+            }
         }
         binding.ivDelete.setOnClickListener {
             binding.etMedicineName.text = null
@@ -91,7 +105,9 @@ class NameFragment : Fragment() {
         }
 
         binding.etMedicineName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.apply{
@@ -110,8 +126,6 @@ class NameFragment : Fragment() {
                                         R.id.fragment_container,
                                         FormFragment.newInstance(newMedicine)
                                     ).commitNow()
-
-                                viewModel.updateItem(etMedicineName.text.toString())
                             }
                         }
                     }
