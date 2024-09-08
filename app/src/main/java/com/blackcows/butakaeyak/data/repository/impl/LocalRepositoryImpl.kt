@@ -37,4 +37,8 @@ class LocalRepositoryImpl @Inject constructor(
     override fun hasSavedUserData(): UserData? {
         return localDataSource.getSavedUserData()
     }
+
+    override fun deleteUserData() {
+        localDataSource.deleteAutoLoginData()
+    }
 }

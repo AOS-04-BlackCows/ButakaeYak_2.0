@@ -7,4 +7,5 @@ interface UserRepository {
     suspend fun loginWithKakaoId(kakaoId: Long): Result<UserData>
     suspend fun signUpUserData(userData: UserData): Result<UserData>
     suspend fun trySignInWithKakao(): Result<UserData>
+    suspend fun logoutKakao(): Boolean
 }

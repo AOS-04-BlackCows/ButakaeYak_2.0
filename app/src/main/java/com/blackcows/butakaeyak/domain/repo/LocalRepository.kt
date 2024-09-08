@@ -14,4 +14,5 @@ interface LocalRepository {
 
     fun saveUserData(userData: UserData)
     fun hasSavedUserData(): UserData?
+    fun deleteUserData()
 }
