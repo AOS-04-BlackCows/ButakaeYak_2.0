@@ -91,13 +91,13 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
         private val ivMedicine: ImageView = medicineView.ivMedicine
         private val tvMedicineName: TextView = medicineView.tvMedicineName
         private val tvMedicineType: TextView = medicineView.tvMedicineType
-        private val btnMyMedicine: ToggleButton = medicineView.btnMyMedicine
+        private val ivMyMedicine: ImageView = medicineView.ivMyMedicine
         private val loMedicineInfo: ConstraintLayout = medicineView.loMedicineInfo
 
         fun bind(medicineItem: Medicine) {
             val isSaved = clickListener.isMedicineChecked(medicineItem)
             Log.d("HomeRecyclerView", "Name: ${medicineItem.name}, $isSaved")
-            btnMyMedicine.isChecked = isSaved
+            ivMyMedicine.isEnabled = isSaved
             with(medicineItem) {
 
                 if(imageUrl?.isNotEmpty() == true) {
@@ -112,9 +112,9 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
                     clickListener.onItemClick(medicineItem)
                     Log.d(TAG, "${name}")
                 }
-                btnMyMedicine.setOnClickListener {
+                ivMyMedicine.setOnClickListener {
                     //clickListener.onMyMedicineClick(medicineItem,isChecked)
-                    clickListener.setMedicineChecked(medicineItem, btnMyMedicine.isChecked)
+                    clickListener.setMedicineChecked(medicineItem, ivMyMedicine.isEnabled)
                     Log.d(TAG,"${name}")
                     //TODO NameFragment로 약 이름 넘기기
                     itemClickListener?.invoke(tvMedicineName.text.toString())
