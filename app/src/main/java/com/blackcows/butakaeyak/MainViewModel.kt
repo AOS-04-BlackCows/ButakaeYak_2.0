@@ -63,6 +63,8 @@ class MainViewModel @Inject constructor(
         _myMedicine.value = myMedicines.toSet()
     }
     fun addToMyMedicineList(myMedicine: MyMedicine) {
+        cancelMyMedicine(myMedicine.medicine.id!!)
+
         localRepository.addToMyMedicine(myMedicine)
         getMyMedicineList()
     }
