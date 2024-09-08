@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.blackcows.butakaeyak.data.source.LocalDataSource
-import com.blackcows.butakaeyak.data.source.firebase.UserDataSource
 import com.blackcows.butakaeyak.databinding.MypageItemFavoriteBinding
 
 class UserFavoriteViewPagerAdapter(val items : MutableList<KakaoPlacePharmacy>, val localDataSource : LocalDataSource) : RecyclerView.Adapter<UserFavoriteViewPagerAdapter.ViewPagerHolder>(){
@@ -26,7 +25,7 @@ class UserFavoriteViewPagerAdapter(val items : MutableList<KakaoPlacePharmacy>, 
         position: Int
     ) {
         val pharmacy = items[position]
-        holder.aImage.setImageResource(R.drawable.choco)
+        holder.aImage.setImageResource(R.drawable.pharmacy)
         holder.aName.text = pharmacy.placeName
         holder.aGroup.text = pharmacy.phone
 
