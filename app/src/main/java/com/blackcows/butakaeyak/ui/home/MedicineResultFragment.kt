@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.DialogSearchDetailBinding
 import com.blackcows.butakaeyak.databinding.FragmentMedicineResultBinding
@@ -35,6 +36,7 @@ class MedicineResultFragment : Fragment() {
 
     //viewModel 설정
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     //TODO NameFragment로 데이터 넘겨줄 viewModel
     private val viewModel: TakeViewModel by activityViewModels()
@@ -83,22 +85,22 @@ class MedicineResultFragment : Fragment() {
                     Log.d(TAG,"${item.id}, ${item.name} ")
                 }
                 override fun isMedicineChecked(item: Medicine) : Boolean {
-                    val result = homeViewModel.isMyMedicine(item.id!!)
+                    val result = mainViewModel.isMyMedicine(item.id!!)
                     Log.d(TAG,"${item.id}: $result")
                     return result
                 }
                 override fun setMedicineChecked(item: Medicine, isChecked: Boolean) {
                     Log.d(TAG,item.id.toString() + ": "+isChecked)
                     if(!isChecked) {
-                        homeViewModel.cancelMyMedicine(item.id!!)
+                        mainViewModel.cancelMyMedicine(item.id!!)
                     } else {
-                        homeViewModel.saveMyMedicine(MyMedicine(item, mapOf()))
+                        mainViewModel.addToMyMedicineList(MyMedicine(item, mapOf()))
 
                         MainNavigation.addFragment(
                             TakeAddFragment.newInstance(item), FragmentTag.TakeAddFragment
                         )
                     }
-                    homeViewModel.saveMyMedicine(MyMedicine(item, mapOf()))
+                    mainViewModel.addToMyMedicineList(MyMedicine(item, mapOf()))
                 }
             })
             resultlist.adapter = medicineAdapter

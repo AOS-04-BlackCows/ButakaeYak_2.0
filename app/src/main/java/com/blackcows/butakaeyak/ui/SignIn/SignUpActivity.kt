@@ -65,11 +65,11 @@ class SignUpActivity : AppCompatActivity() {
         with(binding) {
             btnSignup.setOnClickListener {
                 if (validateAllFields()) {
-                    var userData = UserData(
-                        userName.text.toString(),
-                        userId.text.toString(),
-
-                        )
+                    val userData = UserData(
+                            name = userName.text.toString(),
+                            id = userId.text.toString(),
+                            pwd = userPw.text.toString()
+                    )
 
                     CoroutineScope(Dispatchers.IO).launch {
                         userRepository.signUpUserData(userData)
