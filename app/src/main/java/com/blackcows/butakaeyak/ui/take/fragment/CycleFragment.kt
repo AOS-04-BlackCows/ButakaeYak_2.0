@@ -103,6 +103,54 @@ class CycleFragment : Fragment() {
             }
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+            if (myMedicine.alarms.isNotEmpty()) {
+                alarmList.clear() // 기존 알람 리스트 초기화
+                Log.d("CycleFragment", "Found alarms: ${myMedicine.alarms}")
+
+                for (alarmString in myMedicine.alarms) {
+                    Log.d("CycleFragment", "Processing alarm: $alarmString")
+
+                    // 시간 문자열 포맷이 맞는지 확인
+                    val timeParts = alarmString.split(":")
+                    if (timeParts.size == 2) {
+                        try {
+                            val hour = timeParts[0].toInt()
+                            val minute = timeParts[1].toInt()
+                            val alarmItem = AlarmItem(
+                                timeText = alarmString,
+                                timeInMillis = adapter.getTimeInMillis(hour, minute)
+                            )
+                            alarmList.add(alarmItem)
+                            Log.d("CycleFragment", "Added alarm item: $alarmItem")
+                        } catch (e: NumberFormatException) {
+                            Log.e("CycleFragment", "Error parsing time: $alarmString", e)
+                        }
+                    } else {
+                        Log.e("CycleFragment", "Invalid time format: $alarmString")
+                    }
+                }
+
+                adapter.notifyDataSetChanged() // 어댑터에 변경사항 알림
+            } else {
+                Log.e("CycleFragment", "No alarms found")
+            }
+
+//            if (myMedicine.alarms.isNotEmpty()) {
+//                alarmList.clear() // 기존 알람 리스트 초기화
+//                for (alarmString in myMedicine.alarms) {
+//                    val timeParts = alarmString.split(":")
+//                        val hour = timeParts[0].toInt()
+//                        val minute = timeParts[1].toInt()
+//                        val alarmItem = AlarmItem(
+//                            timeText = alarmString,
+//                            timeInMillis = adapter.getTimeInMillis(hour, minute)
+//                        )
+//                        alarmList.add(alarmItem)
+//                }
+//                adapter.notifyDataSetChanged()
+//            }
+
             clCycleAlarmAdd.setOnClickListener {
                 showCustomTimePickerDialog()
             }
@@ -157,8 +205,12 @@ class CycleFragment : Fragment() {
                     .commit()
 
                 setAlarmForAllItems()
-
-                mainViewModel.addToMyMedicineList(myMedicine)
+                val newMyMedicine = myMedicine.copy(
+                    alarms = alarmList.map {
+                        it.timeText!!
+                    }
+                )
+                mainViewModel.addToMyMedicineList(newMyMedicine)
                 MainNavigation.popCurrentFragment()
             }
         } else {
