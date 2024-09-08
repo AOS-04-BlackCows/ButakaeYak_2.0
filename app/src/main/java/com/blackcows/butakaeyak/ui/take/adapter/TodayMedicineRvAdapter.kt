@@ -13,6 +13,7 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.TodayMedicineItemBinding
 import com.blackcows.butakaeyak.ui.take.data.MedicineAtTime
+import com.bumptech.glide.Glide
 import okhttp3.internal.notify
 
 class TodayMedicineRvAdapter:
@@ -31,12 +32,8 @@ class TodayMedicineRvAdapter:
     ) {
     inner class MedicineAtTimeViewHolder(private val binding: TodayMedicineItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: MedicineAtTime) {
-//            GlideApp.with(binding.root)
-//                .load(item.imageUrl)
-//                .into(binding.image)
             with(binding) {
                 alarmTimeTv.text = item.time
-
                 val adapter = SimpleMedicineRvAdapter()
                 medicineRv.run {
                     layoutManager = LinearLayoutManager(binding.root.context)

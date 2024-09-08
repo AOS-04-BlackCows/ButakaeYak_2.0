@@ -14,6 +14,7 @@ import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.MedicineSimpleItemBinding
 import com.blackcows.butakaeyak.databinding.TodayMedicineItemBinding
 import com.blackcows.butakaeyak.ui.take.data.MedicineAtTime
+import com.bumptech.glide.Glide
 
 class SimpleMedicineRvAdapter: ListAdapter<Medicine, SimpleMedicineRvAdapter.SimpleMedicineViewHolder>(
         object: DiffUtil.ItemCallback<Medicine>() {
@@ -32,7 +33,10 @@ class SimpleMedicineRvAdapter: ListAdapter<Medicine, SimpleMedicineRvAdapter.Sim
     inner class SimpleMedicineViewHolder(private val binding: MedicineSimpleItemBinding): ViewHolder(binding.root) {
         fun bind(item: Medicine) {
             with(binding) {
-                //TODO: Image: 추가
+                val imageUrl = item.imageUrl
+                if(imageUrl?.isNotEmpty() == true) {
+                    Glide.with(itemView).load(imageUrl).into(medicineIv)
+                }
                 medicineNameTv.text = item.name
             }
         }

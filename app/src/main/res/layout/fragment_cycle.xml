@@ -33,15 +33,22 @@
         android:id="@+id/tv_cycle_name"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@+id/tv_cycle"
+        app:layout_constraintStart_toStartOf="@+id/iv_back"
+
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="16dp"
+
         android:text=""
         android:textColor="@color/dark_gray"
         style="@style/body_b"
-        android:inputType="text|textMultiLine"
+        android:maxLines="1"
+        android:ellipsize="end"
+
         android:scrollHorizontally="false"
-        android:layout_marginTop="32dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/tv_cycle"
-        app:layout_constraintStart_toStartOf="@+id/iv_back"/>
+
+        />
 
     <TextView
         android:id="@+id/tv_cycle_form"

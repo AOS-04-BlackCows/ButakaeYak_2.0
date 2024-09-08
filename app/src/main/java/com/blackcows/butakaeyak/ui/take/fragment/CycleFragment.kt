@@ -30,6 +30,7 @@ import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
+import com.bumptech.glide.Glide
 
 class CycleFragment : Fragment() {
 
@@ -98,15 +99,12 @@ class CycleFragment : Fragment() {
                 showCustomTimePickerDialog()
             }
 
-            viewModel.getData().observe(viewLifecycleOwner, Observer {
-                tvCycleName.text = "약 이름 : ${it}"
-            })
-            viewModel.getTextData().observe(viewLifecycleOwner, Observer{
-                tvCycleForm.text = "약 모형 : " + it
-            })
-            viewModel.getImageData().observe(viewLifecycleOwner, Observer{
-                ivCycleForm.setImageResource(it)
-            })
+            tvCycleName.text = "약 이름 : ${medicine.name}"
+            //tvCycleForm.text = "약 모형 : " + medicine.
+            if(medicine.imageUrl?.isNotEmpty() == true) {
+                Glide.with(root).load(medicine.imageUrl).into(ivCycleForm)
+            }
+
 
         }
         btnNextUpdate(adapter.itemCount)
