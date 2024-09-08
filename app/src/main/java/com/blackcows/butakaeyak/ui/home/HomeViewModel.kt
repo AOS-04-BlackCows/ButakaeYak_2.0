@@ -39,40 +39,12 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<SearchUiState>(SearchUiState.Init)
     val uiState = _uiState.asStateFlow()
 
-    init {
-        getMyMedicines()
-    }
-
     fun searchMedicinesWithName(name: String) {
         viewModelScope.launch {
             _uiState.value = SearchUiState.Loading
             _medicineResult.value = getMedicinesNameUseCase.invoke(name)
             _uiState.value = SearchUiState.SearchMedicinesSuccess(_medicineResult.value!!)
         }
-    }
-
-    fun getMyMedicines(): List<MyMedicine> {
-        val result= localRepository.getMyMedicines()
-
-        myMedicines.clear()
-        myMedicines.addAll(result)
-
-        Log.d("HomeViewModel", "MyMedicines size: ${result.size}")
-        return myMedicines
-    }
-    fun saveMyMedicine(myMedicine: MyMedicine) {
-        localRepository.addToMyMedicine(myMedicine)
-    }
-    fun saveAllMyMedicines(myMedicines: List<MyMedicine>) {
-        localRepository.saveMyMedicines(myMedicines)
-    }
-    fun isMyMedicine(id: String): Boolean {
-        return myMedicines.any {
-            it.medicine.id == id
-        }
-    }
-    fun cancelMyMedicine(id: String) {
-        localRepository.cancelMyMedicine(id)
     }
 
 }

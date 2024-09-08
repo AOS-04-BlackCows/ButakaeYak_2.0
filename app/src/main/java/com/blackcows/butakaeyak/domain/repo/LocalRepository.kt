@@ -9,6 +9,7 @@ interface LocalRepository {
     fun addToMyMedicine(myMedicine: MyMedicine) // MyMedicine 하나 추가하여 저장
 
     fun isMyMedicine(id: String): Boolean       // 내가 복용중인 약인지 아닌지
+    @Deprecated("이거 쓰지말고 LiveData에서 value 값 변경 후 save 호출하기")
     fun cancelMyMedicine(id: String)            // MyMedicine에서 삭제
 
     fun saveUserData(userData: UserData)
