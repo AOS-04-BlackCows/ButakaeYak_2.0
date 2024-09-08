@@ -27,6 +27,9 @@ import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.blackcows.butakaeyak.ui.take.fragment.NameFragment
 import com.blackcows.butakaeyak.ui.take.fragment.TermsFragment
 import com.bumptech.glide.Glide
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.internal.notify
 
 class UserFragment : Fragment() {
@@ -73,6 +76,18 @@ class UserFragment : Fragment() {
                 setPageTransformer(ZoomOutPageTransformer())
             }
 
+            userViewModel.currentUser.observe(viewLifecycleOwner) {
+                if(it != null) {
+                    //로그아웃 버튼
+                    clMyLogin.visibility = View.INVISIBLE
+                    clMyLogout.visibility = View.VISIBLE
+                } else {
+                    //로그인 버튼
+                    clMyLogout.visibility = View.INVISIBLE
+                    clMyLogin.visibility = View.VISIBLE
+                }
+            }
+
             clMyTerms.setOnClickListener {
                 parentFragmentManager.beginTransaction()
                     .setCustomAnimations(R.anim.alpha,R.anim.none)
@@ -88,7 +103,7 @@ class UserFragment : Fragment() {
             ) { result ->
                 if (result.resultCode == RESULT_OK) {
                     userData = result.data?.getParcelableExtra<UserData>("userData") ?: return@registerForActivityResult
-                    userViewModel.setCurrentUser(userData!!)
+                    userViewModel.setUser(userData!!)
 
                     if(userData?.thumbnail.isNullOrBlank()){
                         Glide.with(ivMyProfile).load(R.drawable.icon_user).into(ivMyProfile)
@@ -105,6 +120,11 @@ class UserFragment : Fragment() {
             clMyLogin.setOnClickListener {
                     val intent = Intent(requireActivity(), SignInActivity::class.java)
                     signInResultCallback.launch(intent)
+            }
+            clMyLogout.setOnClickListener {
+                CoroutineScope(Dispatchers.IO).launch {
+                    userViewModel.logout()
+                }
             }
         }
     }
@@ -127,6 +147,12 @@ class UserFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        userViewModel.loadUser()
     }
 
     //ViewPager 스와이프 시 화면 애니메이션

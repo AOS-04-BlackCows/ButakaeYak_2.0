@@ -137,5 +137,9 @@ class LocalDataSource @Inject constructor(
         }
     }
 
+    fun deleteAutoLoginData() {
+        editor.putString(USER_DATA, null).apply()
+    }
+
 
 }
