@@ -3,6 +3,7 @@ package com.blackcows.butakaeyak
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.blackcows.butakaeyak.domain.repo.LocalRepository
 import com.blackcows.butakaeyak.domain.repo.PharmacyRepository
@@ -15,7 +16,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val localRepository: LocalRepository,
     private val pharmacyRepository: PharmacyRepository
-) {
+): ViewModel() {
     private val _pharmacies = MutableLiveData<List<KakaoPlacePharmacy>>()
     val pharmacies : LiveData<List<KakaoPlacePharmacy>> get() = _pharmacies
 
@@ -71,13 +72,7 @@ class MainViewModel @Inject constructor(
         saveMyMedicineList(removedList)
     }
     fun isMyMedicine(id: String): Boolean {
-        if(myMedicines.value == null) {
-            throw Exception("Please call getMyMedicineList() to initialize LiveData.")
-        }
-
-        return myMedicines.value!!.any {
-            it.medicine.id == id
-        }
+        return localRepository.isMyMedicine(id)
     }
 
 }

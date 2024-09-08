@@ -25,6 +25,7 @@ class LocalRepositoryImpl @Inject constructor(
         return localDataSource.isItemChecked(id)
     }
 
+    @Deprecated("")
     override fun cancelMyMedicine(id: String) {
         localDataSource.removeMyMedicine(id)
     }

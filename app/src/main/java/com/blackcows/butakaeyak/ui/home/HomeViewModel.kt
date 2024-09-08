@@ -21,17 +21,13 @@ import javax.inject.Inject
 private const val TAG = "SearchResult"
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getPillUseCase: GetPillUseCase,
     private val getMedicinesNameUseCase: GetMedicinesNameUseCase,
-    private val localRepository: LocalRepository
 ) : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
     }
     val text: LiveData<String> = _text          //LiveData는 뭐 때문에 넣은거야??
-
-    private val myMedicines = mutableListOf<MyMedicine>()
 
     private val _medicineResult = MutableLiveData(listOf<Medicine>())
     val medicineResult get() = _medicineResult

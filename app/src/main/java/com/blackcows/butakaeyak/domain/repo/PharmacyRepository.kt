@@ -8,7 +8,4 @@ interface PharmacyRepository {
     fun saveMyPharmacy(myPharmacy: List<KakaoPlacePharmacy>)
     fun addMyPharmacy(pharmacy: KakaoPlacePharmacy)
     fun isPharmacyChecked(id: String) : Boolean
-    fun removeMyPharmacy(id: String)
-    fun saveAutoLoginData(userData: UserData)
-    fun getSavedUserData(): UserData?
 }
