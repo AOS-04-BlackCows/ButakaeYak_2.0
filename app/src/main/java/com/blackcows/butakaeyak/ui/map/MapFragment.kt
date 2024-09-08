@@ -312,11 +312,15 @@ class MapFragment : Fragment() {
                             passiveIcon()
                         }
                         bottomSheetView.btnFavorite.setOnClickListener {
+                            // TODO 메인 뷰모델에서 여기를 클릭했을때마다 getPharmacy 갱신
+                            // TODO pharmacyChecked() 도 메인 뷰모델에서 제작할것
                             if (pharmacyChecked()) {
                                 passiveIcon()
+                                // TODO 이놈들도 뷰모델로 옮길것
                                 LocalDataSource(requireContext()).removeMyPharmacy(pharmacyData.id)
                             } else {
                                 activeIcon()
+                                // TODO 이놈들도 뷰모델로 옮길것
                                 LocalDataSource(requireContext()).addMyPharmacy(pharmacyData)
                             }
                         }
