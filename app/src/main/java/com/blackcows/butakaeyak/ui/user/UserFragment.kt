@@ -2,6 +2,7 @@ package com.blackcows.butakaeyak.ui.user
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,11 +28,13 @@ import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.blackcows.butakaeyak.ui.take.fragment.NameFragment
 import com.blackcows.butakaeyak.ui.take.fragment.TermsFragment
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.internal.notify
 
+@AndroidEntryPoint
 class UserFragment : Fragment() {
 
 
@@ -44,9 +47,7 @@ class UserFragment : Fragment() {
     private val MIN_SCALE = 0.85f // 뷰가 몇퍼센트로 줄어들 것인지
     private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
 
-    private var userData: UserData? = null
-
-    private val userViewModel by activityViewModels<UserViewModel>()
+    private val userViewModel: UserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,11 +78,14 @@ class UserFragment : Fragment() {
             }
 
             userViewModel.currentUser.observe(viewLifecycleOwner) {
+                Log.d("UserFragment", "userName: ${it?.name ?: "없음"}")
                 if(it != null) {
+                    tvMyName.text = "환영합니다. ${it.name!!}님"
                     //로그아웃 버튼
                     clMyLogin.visibility = View.INVISIBLE
                     clMyLogout.visibility = View.VISIBLE
                 } else {
+                    tvMyName.text = "환영합니다!"
                     //로그인 버튼
                     clMyLogout.visibility = View.INVISIBLE
                     clMyLogin.visibility = View.VISIBLE
@@ -102,20 +106,17 @@ class UserFragment : Fragment() {
                 ActivityResultContracts.StartActivityForResult()
             ) { result ->
                 if (result.resultCode == RESULT_OK) {
-                    userData = result.data?.getParcelableExtra<UserData>("userData") ?: return@registerForActivityResult
-                    userViewModel.setUser(userData!!)
+                    val userData = result.data?.getParcelableExtra<UserData>("userData") ?: return@registerForActivityResult
+                    userViewModel.setUser(userData)
 
-                    if(userData?.thumbnail.isNullOrBlank()){
+                    if(userData.thumbnail.isNullOrBlank()){
                         Glide.with(ivMyProfile).load(R.drawable.icon_user).into(ivMyProfile)
                     }else{
-                        Glide.with(ivMyProfile).load(userData?.thumbnail).into(ivMyProfile)
+                        Glide.with(ivMyProfile).load(userData.thumbnail).into(ivMyProfile)
                     }
-                    tvMyName.text = "환영합니다. ${userData?.name}님"
-                    saveData()
+                    tvMyName.text = "환영합니다. ${userData.name}님"
                 }
             }
-
-            loadData()
 
             clMyLogin.setOnClickListener {
                     val intent = Intent(requireActivity(), SignInActivity::class.java)
@@ -127,21 +128,6 @@ class UserFragment : Fragment() {
                 }
             }
         }
-    }
-
-    //TODO SharedPreferences 저장, 받기
-    private fun saveData() {
-        val pref = activity?.getSharedPreferences("pref",0)
-        val edit = pref?.edit() // 수정 모드
-        // 1번째 인자는 키, 2번째 인자는 실제 담아둘 값
-        edit?.putString("userData", binding.tvMyName.text.toString())
-        edit?.apply() // 저장완료
-    }
-
-    private fun loadData() {
-        val pref = activity?.getSharedPreferences("pref",0)
-        // 1번째 인자는 키, 2번째 인자는 데이터가 존재하지 않을경우의 값
-        binding.tvMyName.setText(pref?.getString("userData",""))
     }
 
     override fun onDestroyView() {

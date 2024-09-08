@@ -8,6 +8,8 @@ import com.blackcows.butakaeyak.domain.repo.LocalRepository
 import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +19,7 @@ class UserViewModel @Inject constructor(
 ) : ViewModel() {
 
     // 현재 사용자 등록
-    private val _currentUser = MutableLiveData<UserData>()
+    private val _currentUser = MutableLiveData<UserData?>(null)
     val currentUser get() = _currentUser
 
 
@@ -31,7 +33,11 @@ class UserViewModel @Inject constructor(
     }
     suspend fun logout() {
         localRepository.deleteUserData()
-        userRepository.logoutKakao()
-        currentUser.value = null
+        if(currentUser.value!!.kakaoId != null) {
+            userRepository.logoutKakao()
+        }
+        withContext(Dispatchers.Main) {
+            currentUser.value = null
+        }
     }
 }
