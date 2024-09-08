@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.take.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,11 +21,9 @@ import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentTakeBinding
-import com.blackcows.butakaeyak.domain.take.GetTodayMedicineUseCase
 import com.blackcows.butakaeyak.ui.example.UserUiState
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.navigation.TabTag
-import com.blackcows.butakaeyak.ui.take.MyTakeViewModel
 import com.blackcows.butakaeyak.ui.take.TakeUiState
 import com.blackcows.butakaeyak.ui.take.adapter.MyMedicinesRvAdapter
 import com.blackcows.butakaeyak.ui.take.adapter.TakeRvDecorator
@@ -64,7 +63,16 @@ class TakeFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
 
     private val todayMedicinesAdapter = TodayMedicineRvAdapter()
-    private val myMedicinesAdapter = MyMedicinesRvAdapter()
+    private val myMedicinesAdapter = MyMedicinesRvAdapter() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("그만 복용하실건가요?")
+            .setPositiveButton("네") { d, which ->
+                mainViewModel.cancelMyMedicine(it.medicine.id!!)
+            }.setNegativeButton("아니요") { d, _ ->
+                d.dismiss()
+            }
+            .show()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,8 +139,8 @@ class TakeFragment : Fragment() {
         val timeToMedicines = mutableMapOf<String, MutableList<Medicine>>()
 
         mainViewModel.myMedicines.value!!.forEach {  myMedicine ->
-            val todayPlans = myMedicine.alarms[todayWeekDay]
-            todayPlans?.forEach { time ->
+            val todayPlans = myMedicine.alarms
+            todayPlans.forEach { time ->
                 timeToMedicines
                     .getOrPut(time) { mutableListOf() }
                     .add(myMedicine.medicine)

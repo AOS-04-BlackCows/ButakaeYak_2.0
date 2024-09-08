@@ -50,6 +50,11 @@ class MainViewModel @Inject constructor(
     }
 
 
+    fun getMyMedicineOnList(id: String): MyMedicine? {
+        return localRepository.getMyMedicines().toSet().find {
+            it.medicine.id == id
+        }
+    }
     fun getMyMedicineList() {
         _myMedicine.value = localRepository.getMyMedicines().toSet()
     }

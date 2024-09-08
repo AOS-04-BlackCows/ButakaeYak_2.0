@@ -9,5 +9,5 @@ import io.ktor.util.date.WeekDay
  */
 data class MyMedicine(
     val medicine: Medicine,
-    val alarms: Map<WeekDay, List<String>>
+    val alarms: List<String>
 )
