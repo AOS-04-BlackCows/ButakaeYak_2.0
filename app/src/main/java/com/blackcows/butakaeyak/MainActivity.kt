@@ -31,12 +31,6 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
     }
 
-    //navigation bar 안 보이게 할 때 쓰는 메소드
-    fun hideBottomNavigation(state: Boolean) {
-        if (state) binding.bottomMenuBar.visibility = View.GONE else binding.bottomMenuBar.visibility =
-            View.VISIBLE
-    }
-
     //TODO 알림 설정
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
