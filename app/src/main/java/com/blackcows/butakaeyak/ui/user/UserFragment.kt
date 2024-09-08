@@ -91,7 +91,7 @@ class UserFragment : Fragment() {
                     userViewModel.setCurrentUser(userData!!)
 
                     if(userData?.thumbnail.isNullOrBlank()){
-                        Glide.with(ivMyProfile).load(R.drawable.sparta).into(ivMyProfile)
+                        Glide.with(ivMyProfile).load(R.drawable.icon_user).into(ivMyProfile)
                     }else{
                         Glide.with(ivMyProfile).load(userData?.thumbnail).into(ivMyProfile)
                     }
