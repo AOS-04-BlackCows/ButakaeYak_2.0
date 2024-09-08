@@ -80,8 +80,6 @@ class SignInActivity : AppCompatActivity() {
 
         binding.inputId.setText(inPutId)
         binding.inputPw.setText(inPutPw)
-
-
     }
 
     private fun initView() = with(binding) {
@@ -95,7 +93,7 @@ class SignInActivity : AppCompatActivity() {
                             onSuccessLogin(it)
                         }.onFailure {
                             withContext(Dispatchers.Main) {
-                                Toast.makeText(this@SignInActivity, "로그인 실패: ${it.message}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@SignInActivity, "아이디와 비밀번호를 확인해주세요.", Toast.LENGTH_LONG).show()
                             }
                         }
                 }
