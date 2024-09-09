@@ -87,9 +87,23 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/input_pw"
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/btn_visibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:tag="0"
+        android:background="@android:color/transparent"
+        android:src="@drawable/baseline_visibility_off_24"
+        app:layout_constraintTop_toTopOf="@id/ti_pw"
+        app:layout_constraintBottom_toBottomOf="@id/ti_pw"
+        app:layout_constraintEnd_toEndOf="@id/ti_pw"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_signup"

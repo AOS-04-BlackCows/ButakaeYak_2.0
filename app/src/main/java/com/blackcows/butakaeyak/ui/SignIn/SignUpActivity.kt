@@ -9,6 +9,8 @@ import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -20,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.ActivitySignUpBinding
 import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.firebase.firebase_store.FirestoreManager
@@ -64,6 +67,21 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun initView() {
         with(binding) {
+            btnVisibility.setOnClickListener {
+                when(it.tag){
+                    "0" -> {
+                        btnVisibility.tag = "1"
+                        inputPw.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                        btnVisibility.setImageResource(R.drawable.baseline_visibility_24dp)
+                    }
+                    "1" -> {
+                        btnVisibility.tag = "0"
+                        inputPw.transformationMethod = PasswordTransformationMethod.getInstance()
+                        btnVisibility.setImageResource(R.drawable.baseline_visibility_off_24)
+                    }
+                }
+            }
+
             btnSignup.setOnClickListener {
                 if (validateAllFields()) {
                     val userData = UserData(
