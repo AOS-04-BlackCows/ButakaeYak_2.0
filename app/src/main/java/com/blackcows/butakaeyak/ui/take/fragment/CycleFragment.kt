@@ -322,7 +322,9 @@ class CycleFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        MainNavigation.hideBottomNavigation(false)
+        if(fragmentTag == FragmentTag.CycleFragmentInHome) {
+            MainNavigation.hideBottomNavigation(false)
+        }
         _binding = null
     }
 
