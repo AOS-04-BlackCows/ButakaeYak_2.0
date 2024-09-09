@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ButakaeYak</string>
+    <string name="app_name">부탁해약</string>
     <string name="title_home">Home</string>
     <string name="title_search">Search</string>
     <string name="title_map">map</string>
@@ -83,7 +83,7 @@
     <string name="hint_medicine_name">입력해주세요</string>
 
     <!-- Search -->
-    <string name="hint_search">검색어를 적어주세요.</string>
+    <string name="hint_search">검색어를 입력해 주세요.</string>
 
     <!-- Take -->
     <string name="today_date">2024년 9월 3일</string>
