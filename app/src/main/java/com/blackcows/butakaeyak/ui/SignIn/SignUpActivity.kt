@@ -9,7 +9,10 @@ import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
@@ -19,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.ActivitySignUpBinding
 import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.firebase.firebase_store.FirestoreManager
@@ -63,19 +67,47 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun initView() {
         with(binding) {
+            btnVisibility.setOnClickListener {
+                when(it.tag){
+                    "0" -> {
+                        btnVisibility.tag = "1"
+                        inputPw.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                        btnVisibility.setImageResource(R.drawable.baseline_visibility_24dp)
+                    }
+                    "1" -> {
+                        btnVisibility.tag = "0"
+                        inputPw.transformationMethod = PasswordTransformationMethod.getInstance()
+                        btnVisibility.setImageResource(R.drawable.baseline_visibility_off_24)
+                    }
+                }
+            }
+
             btnSignup.setOnClickListener {
                 if (validateAllFields()) {
                     val userData = UserData(
-                            name = userName.text.toString(),
-                            id = userId.text.toString(),
-                            pwd = userPw.text.toString()
+                        name = userName.text.toString(),
+                        id = userId.text.toString(),
+                        pwd = userPw.text.toString()
                     )
 
                     CoroutineScope(Dispatchers.IO).launch {
+
+                        withContext(Dispatchers.Main) {
+                            binding.progressContainer.visibility = View.VISIBLE
+                        }
+
                         userRepository.signUpUserData(userData)
                             .onSuccess {
                                 withContext(Dispatchers.Main) {
-                                    Toast.makeText(this@SignUpActivity, "회원가입 성공", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        this@SignUpActivity,
+                                        "회원가입 성공",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+
+                                withContext(Dispatchers.Main) {
+                                    binding.progressContainer.visibility = View.GONE
                                 }
 
                                 // 로그인에 아이디 & 비밀번호 전달
@@ -83,14 +115,18 @@ class SignUpActivity : AppCompatActivity() {
                                     putExtra("id", userId.text.toString())
                                     putExtra("pw", userPw.text.toString())
                                     imageUri?.let { uri ->
-                                        putExtra("thumbnail",uri.toString())
+                                        putExtra("thumbnail", uri.toString())
                                     }
                                 }
                                 setResult(RESULT_OK, intent)
                                 finish()
                             }.onFailure {
                                 withContext(Dispatchers.Main) {
-                                    Toast.makeText(this@SignUpActivity, "회원가입 실패: ${it.message}", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        this@SignUpActivity,
+                                        "회원가입 실패: ${it.message}",
+                                        Toast.LENGTH_LONG
+                                    ).show()
                                 }
                             }
                     }

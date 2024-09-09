@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.method.HideReturnsTransformationMethod
 import android.text.method.LinkMovementMethod
+import android.text.method.PasswordTransformationMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
@@ -24,6 +26,8 @@ import com.blackcows.butakaeyak.firebase.firebase_store.FirestoreManager
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.KakaoSdk
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,11 +87,28 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun initView() = with(binding) {
+        btnVisibility.setOnClickListener {
+            when(it.tag){
+                "0" -> {
+                    btnVisibility.tag = "1"
+                    inputPw.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                    btnVisibility.setImageResource(R.drawable.baseline_visibility_24dp)
+                }
+                "1" -> {
+                    btnVisibility.tag = "0"
+                    inputPw.transformationMethod = PasswordTransformationMethod.getInstance()
+                    btnVisibility.setImageResource(R.drawable.baseline_visibility_off_24)
+                }
+            }
+        }
         btnLogin.setOnClickListener {
             val userId = inputId.text.toString()
             val pw = inputPw.text.toString()
             if (validateInputs(userId, pw)) {
                 CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.Main) {
+                        binding.progressContainer.visibility = View.VISIBLE
+                    }
                     userRepository.loginWithId(userId, pw)
                         .onSuccess {
                             onSuccessLogin(it)
@@ -96,6 +117,10 @@ class SignInActivity : AppCompatActivity() {
                                 Toast.makeText(this@SignInActivity, "아이디와 비밀번호를 확인해주세요.", Toast.LENGTH_LONG).show()
                             }
                         }
+
+                    withContext(Dispatchers.Main) {
+                        binding.progressContainer.visibility = View.GONE
+                    }
                 }
             } else {
                 Toast.makeText(
@@ -109,16 +134,29 @@ class SignInActivity : AppCompatActivity() {
 
         ivKakao.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main) {
+                    binding.progressContainer.visibility = View.VISIBLE
+                }
                 // 카카오톡 설치 확인
                 // 설치 true -> 카카오톡 로그인
                 // 설치 false -> 카카오 이메일 로그인
                 // 로그인 실패하게 된다면 if문 타고 사용자가 취소했을 때는 그대로 return하여 login이 취소되고 -> 사용자가 취소한거 아니면 이메일 로그인
-
                 val result = suspendCoroutine<Pair<OAuthToken?, Throwable?>> {
                     if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@SignInActivity)) {
                         // 카카오톡 로그인
                         UserApiClient.instance.loginWithKakaoTalk(this@SignInActivity) { token, e ->
-                            it.resume(Pair(token, e))
+                            // 사용자 취소
+                            if (e != null) {
+                                if (e is ClientError && e.reason == ClientErrorCause.Cancelled) {
+                                    Log.d(TAG, "카카오 로그인 사용자 취소")
+                                    return@loginWithKakaoTalk
+                                }
+                                UserApiClient.instance.loginWithKakaoAccount(this@SignInActivity) { token, e ->
+                                    it.resume(Pair(token, e))
+                                }
+                            } else if (token != null) {
+                                Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
+                            }
                         }
                     } else {
                         // 카카오 이메일 로그인
@@ -136,9 +174,14 @@ class SignInActivity : AppCompatActivity() {
                         Log.d(TAG, it.message!!)
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@SignInActivity, it.message, Toast.LENGTH_SHORT).show()
+                            binding.progressContainer.visibility = View.GONE
                         }
+
                     }.onSuccess {
                         onSuccessLogin(it)
+                        withContext(Dispatchers.Main) {
+                            binding.progressContainer.visibility = View.GONE
+                        }
                     }
             }
         }
@@ -148,7 +191,6 @@ class SignInActivity : AppCompatActivity() {
         withContext(Dispatchers.Main) {
             Toast.makeText(this@SignInActivity, "로그인 성공", Toast.LENGTH_SHORT).show()
         }
-
         if(binding.checkBox.isChecked) {
             localRepository.saveUserData(userData)
         }
@@ -193,7 +235,8 @@ class SignInActivity : AppCompatActivity() {
         spannableString.setSpan(
             signUpClickableSpan,
             signUpStart,
-            signUpEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE
+            signUpEnd,
+            Spanned.SPAN_INCLUSIVE_INCLUSIVE
         )
 
         // 색상 설정
