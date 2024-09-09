@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.ListAdapter
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentFeedListBinding
 import com.blackcows.butakaeyak.databinding.ItemResultsBinding
-import com.blackcows.butakaeyak.ui.GlideApp
 import com.blackcows.butakaeyak.ui.home.data.ListItem
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
