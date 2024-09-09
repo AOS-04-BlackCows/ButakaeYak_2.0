@@ -156,9 +156,11 @@ class TakeFragment : Fragment() {
 
         if(result.size != 0) {
             binding.noTodayGuideBox.visibility = View.GONE
+            binding.noMyMedicineTv.visibility = View.GONE
             todayMedicinesAdapter.submitList(result)
         } else {
             binding.noTodayGuideBox.visibility = View.VISIBLE
+            binding.noMyMedicineTv.visibility = View.VISIBLE
         }
 
     }
