@@ -39,7 +39,7 @@
             style="@style/caption_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1200m"
+            android:text="@string/distance"
             android:textColor="@color/dark_gray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -52,7 +52,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingEnd="20dp"
-            android:text="비타민약국비타민약국비타민약국"
+            android:text="@string/place_name"
             app:layout_constraintStart_toStartOf="@+id/distance"
             app:layout_constraintTop_toBottomOf="@+id/distance" />
 
@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="전화번호"
+            android:text="@string/phone_number"
             app:layout_constraintStart_toStartOf="@+id/distance"
             app:layout_constraintTop_toBottomOf="@+id/place_name" />
 
@@ -71,7 +71,7 @@
             style="@style/body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="010-0000-0000"
+            android:text="@string/phone_number_text"
             app:layout_constraintStart_toStartOf="@+id/distance"
             app:layout_constraintTop_toBottomOf="@+id/phone_title" />
 
@@ -81,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="주소"
+            android:text="@string/address"
             app:layout_constraintStart_toStartOf="@+id/distance"
             app:layout_constraintTop_toBottomOf="@+id/phone" />
 
@@ -90,7 +90,7 @@
             style="@style/body"
             android:layout_width="47dp"
             android:layout_height="24dp"
-            android:text="지번 ) "
+            android:text="@string/address_name"
             android:textColor="@color/dark_gray"
             app:layout_constraintStart_toStartOf="@+id/distance"
             app:layout_constraintTop_toBottomOf="@+id/address_title" />
@@ -100,7 +100,7 @@
             style="@style/body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="도로명 ) "
+            android:text="@string/road_address_name"
             android:textColor="@color/dark_gray"
             app:layout_constraintStart_toStartOf="@+id/distance"
             app:layout_constraintTop_toBottomOf="@+id/address_name_title" />
@@ -111,7 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="링크"
+            android:text="@string/place_url_title"
             app:layout_constraintStart_toStartOf="@+id/distance"
             app:layout_constraintTop_toBottomOf="@+id/road_address_name_title" />
 
@@ -120,7 +120,7 @@
             style="@style/body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="https://www.naver.com"
+            android:text="@string/place_url"
             app:layout_constraintStart_toStartOf="@+id/distance"
             app:layout_constraintTop_toBottomOf="@+id/place_url_title" />
 
@@ -129,7 +129,7 @@
             style="@style/body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="@string/text"
             app:layout_constraintBottom_toBottomOf="@+id/address_name_title"
             app:layout_constraintStart_toEndOf="@+id/address_name_title"
             app:layout_constraintTop_toTopOf="@+id/address_name_title" />
@@ -139,7 +139,7 @@
             style="@style/body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="@string/text"
             app:layout_constraintBottom_toBottomOf="@+id/road_address_name_title"
             app:layout_constraintStart_toEndOf="@+id/road_address_name_title"
             app:layout_constraintTop_toTopOf="@+id/road_address_name_title" />
