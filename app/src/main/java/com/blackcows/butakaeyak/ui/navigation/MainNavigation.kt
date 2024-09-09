@@ -166,6 +166,7 @@ object MainNavigation {
     private fun addBackPressedCallback(activity: MainActivity, binding: ActivityMainBinding) {
         val callback = object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                Log.d(TAG, "Back Pressed!")
                 val curStack = fragmentStack[currentTab]!!
                 if(curStack.size == 0) {
                     if(currentTab == TabTag.Take) {

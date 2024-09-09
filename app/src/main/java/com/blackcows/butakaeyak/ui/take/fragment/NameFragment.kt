@@ -35,7 +35,7 @@ class NameFragment : Fragment() {
         parentFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.move_enter, R.anim.move_exit)
             .remove(this)
-            .commitNow()
+            .commit()
 
         MainNavigation.popCurrentFragment()
     }
@@ -86,12 +86,12 @@ class NameFragment : Fragment() {
                             name = binding.etMedicineName.text.toString()
                         )
                         parentFragmentManager.beginTransaction()
-                            .replace(
+                            .add(
                                 R.id.fragment_container,
                                 FormFragment.newInstance(newMedicine)
                             )
-                            .addToBackStack("NameFragment")
-                            .commitNow()
+                            .addToBackStack(null)
+                            .commit()
                     }
                 }
             }
@@ -118,19 +118,6 @@ class NameFragment : Fragment() {
                             isEnabled = true
                             setBackgroundResource(R.color.green)
                             setTextColor(Color.WHITE)
-                            setOnClickListener {
-                                Log.d("버튼","버튼 눌림")
-                                val newMedicine = medicine.copy(
-                                    name = binding.etMedicineName.text.toString()
-                                )
-                                parentFragmentManager.beginTransaction()
-                                    .replace(
-                                        R.id.fragment_container,
-                                        FormFragment.newInstance(newMedicine)
-                                    )
-                                    .addToBackStack("NameFragment")
-                                    .commitNow()
-                            }
                         }
                     }
                     else{

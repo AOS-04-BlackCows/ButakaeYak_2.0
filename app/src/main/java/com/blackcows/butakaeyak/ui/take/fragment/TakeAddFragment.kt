@@ -48,11 +48,6 @@ class TakeAddFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                MainNavigation.popCurrentFragment()
-            }
-        })
 
         _binding = FragmentTakeAddBinding.inflate(layoutInflater,container,false)
         val root: View = binding.root
