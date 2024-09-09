@@ -2,11 +2,13 @@ package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,6 +20,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blackcows.butakaeyak.MainActivity
+import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
@@ -28,6 +32,11 @@ import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
+import com.blackcows.butakaeyak.ui.take.data.MyMedicine
+import com.bumptech.glide.Glide
+import io.ktor.util.date.WeekDay
+import java.util.Calendar
+import java.util.Date
 
 class CycleFragment : Fragment() {
 
@@ -43,24 +52,39 @@ class CycleFragment : Fragment() {
 
     //viewModel 설정
     private val viewModel: TakeViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+
+    //뒤로가기 설정
+    private val onBackPressed = {
+        parentFragmentManager.beginTransaction().setCustomAnimations(R.anim.move_enter,R.anim.move_exit).remove(
+            this
+        ).commitNow()
+
+        MainNavigation.popCurrentFragment()
+    }
 
     //bundle에서 medicine 가져오기
-    private val medicine: Medicine by lazy {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    private val myMedicine: MyMedicine by lazy {
+        val medicine = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getParcelable(MEDICINE_DATA, Medicine::class.java)!!
         } else {
             @Suppress("DEPRECATION")
             arguments?.getParcelable(MEDICINE_DATA)!!
         }
+
+        mainViewModel.getMyMedicineOnList(medicine.id!!) ?: MyMedicine(medicine, listOf())
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        MainNavigation.hideBottomNavigation(true)
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                MainNavigation.popCurrentFragment()
+                onBackPressed()
             }
         })
 
@@ -73,30 +97,76 @@ class CycleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("CycleFragment", "${medicine.name}, ${medicine.id}")
+        Log.d("CycleFragment", "${myMedicine.medicine.name}, ${myMedicine.medicine.id}")
 
         binding.apply {
             ivBack.setOnClickListener {
-                MainNavigation.popCurrentFragment()
+                onBackPressed()
             }
             adapter = CycleAdapter(requireContext(),alarmList){ itemCount ->
                 btnNextUpdate(itemCount)
             }
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+            if (myMedicine.alarms.isNotEmpty()) {
+                alarmList.clear() // 기존 알람 리스트 초기화
+                Log.d("CycleFragment", "Found alarms: ${myMedicine.alarms}")
+
+                for (alarmString in myMedicine.alarms) {
+                    Log.d("CycleFragment", "Processing alarm: $alarmString")
+
+                    // 시간 문자열 포맷이 맞는지 확인
+                    val timeParts = alarmString.split(":")
+                    if (timeParts.size == 2) {
+                        try {
+                            val hour = timeParts[0].toInt()
+                            val minute = timeParts[1].toInt()
+                            val alarmItem = AlarmItem(
+                                timeText = alarmString,
+                                timeInMillis = adapter.getTimeInMillis(hour, minute)
+                            )
+                            alarmList.add(alarmItem)
+                            Log.d("CycleFragment", "Added alarm item: $alarmItem")
+                        } catch (e: NumberFormatException) {
+                            Log.e("CycleFragment", "Error parsing time: $alarmString", e)
+                        }
+                    } else {
+                        Log.e("CycleFragment", "Invalid time format: $alarmString")
+                    }
+                }
+
+                adapter.notifyDataSetChanged() // 어댑터에 변경사항 알림
+            } else {
+                Log.e("CycleFragment", "No alarms found")
+            }
+
+//            if (myMedicine.alarms.isNotEmpty()) {
+//                alarmList.clear() // 기존 알람 리스트 초기화
+//                for (alarmString in myMedicine.alarms) {
+//                    val timeParts = alarmString.split(":")
+//                        val hour = timeParts[0].toInt()
+//                        val minute = timeParts[1].toInt()
+//                        val alarmItem = AlarmItem(
+//                            timeText = alarmString,
+//                            timeInMillis = adapter.getTimeInMillis(hour, minute)
+//                        )
+//                        alarmList.add(alarmItem)
+//                }
+//                adapter.notifyDataSetChanged()
+//            }
+
             clCycleAlarmAdd.setOnClickListener {
                 showCustomTimePickerDialog()
             }
 
-            viewModel.getData().observe(viewLifecycleOwner, Observer {
-                tvCycleName.text = "약 이름 : ${it}"
-            })
-            viewModel.getTextData().observe(viewLifecycleOwner, Observer{
-                tvCycleForm.text = "약 모형 : " + it
-            })
-            viewModel.getImageData().observe(viewLifecycleOwner, Observer{
-                ivCycleForm.setImageResource(it)
-            })
+            tvCycleName.text = "약 이름 : ${myMedicine.medicine.name}"
+            //tvCycleForm.text = "약 모형 : " + medicine.
+//            val url = myMedicine.medicine.imageUrl
+//            if(url?.isNotEmpty() == true) {
+//                Glide.with(root).load(url).into(ivCycleForm)
+//            }
+
 
         }
         btnNextUpdate(adapter.itemCount)
@@ -135,8 +205,18 @@ class CycleFragment : Fragment() {
             binding.btnNext.setBackgroundResource(R.color.green)
             binding.btnNext.setTextColor(Color.WHITE)
             binding.btnNext.setOnClickListener {
-                MainNavigation.popCurrentFragment()
+                parentFragmentManager.beginTransaction()
+                    .remove(this@CycleFragment)
+                    .commit()
+
                 setAlarmForAllItems()
+                val newMyMedicine = myMedicine.copy(
+                    alarms = alarmList.map {
+                        it.timeText!!
+                    }
+                )
+                mainViewModel.addToMyMedicineList(newMyMedicine)
+                MainNavigation.popCurrentFragment()
             }
         } else {
             binding.btnNext.setBackgroundResource(R.color.gray)
@@ -152,12 +232,77 @@ class CycleFragment : Fragment() {
         val alarmList = adapter.getAlarmList()
 
         for (alarm in alarmList) {
-            val intent = Intent(context, AlarmReceiver::class.java)
+            val intent = Intent(requireContext(), AlarmReceiver::class.java)
+
+            intent.putExtra("NOTIFICATION_TITLE","${binding.tvCycleName.text}")
+            intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
             val pendingIntent = PendingIntent.getBroadcast(
-                context, alarm.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT
+                context, alarm.requestCode, intent, PendingIntent.FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
             )
 
-            alarmManager?.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                // Android 12 이상에서 정확한 알람 설정
+                try {
+                    if (alarmManager?.canScheduleExactAlarms() == true) {
+                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+                        alarmManager.setRepeating(
+                            AlarmManager.RTC_WAKEUP,
+                            alarm.timeInMillis,
+                            AlarmManager.INTERVAL_DAY,
+                            pendingIntent
+                        )
+                    } else {
+                        val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                        startActivity(intent)
+                    }
+                } catch (e: SecurityException) {
+                    Toast.makeText(context, "알림 설정에 실패했습니다. 권한을 확인해주세요.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                // Android 12 이하에서 정확한 알람 설정
+                alarmManager?.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+                alarmManager?.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    alarm.timeInMillis,
+                    AlarmManager.INTERVAL_DAY,
+                    pendingIntent
+                )
+            }
+
+//            try {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // Android 12 이상
+//                    if (alarmManager?.canScheduleExactAlarms() == true) {
+//                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+//                        alarmManager.setRepeating(
+//                            AlarmManager.RTC_WAKEUP,
+//                            alarm.timeInMillis,
+//                            AlarmManager.INTERVAL_DAY,
+//                            pendingIntent
+//                        )
+//                    } else {
+//                        // 권한 요청 화면으로 이동
+//                        val requestIntent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+//                        startActivity(requestIntent)
+//                    }
+//                } else { // Android 12 이하
+//                    alarmManager?.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+//                    alarmManager?.setRepeating(
+//                        AlarmManager.RTC_WAKEUP,
+//                        alarm.timeInMillis,
+//                        AlarmManager.INTERVAL_DAY,
+//                        pendingIntent
+//                    )
+//                }
+//            } catch (e: SecurityException) {
+//                // 예외 처리: Android 12 이하에서의 에러를 처리
+//                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+//                    // Android 12 이하에서 권한 문제 발생 시 처리
+//                    Toast.makeText(context, "알림 설정에 실패했습니다.", Toast.LENGTH_SHORT).show()
+//                } else {
+//                    // Android 12 이상에서 예외 발생 시 처리
+//                    Toast.makeText(context, "알림 권한을 확인해 주세요.", Toast.LENGTH_SHORT).show()
+//                }
+//            }
         }
 
         Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
@@ -165,6 +310,7 @@ class CycleFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        MainNavigation.hideBottomNavigation(false)
         _binding = null
     }
 

@@ -1,7 +1,7 @@
 package com.blackcows.butakaeyak.ui.SignIn
 
 object SignUpValidation {
-    // 010-xxxx-xxxx
+    // 영어 숫자만 가능
     fun isValidId(id: String): Boolean {
         val idPattern = "^([a-zA-Z0-9]+$)".toRegex()
         return idPattern.matches(id)

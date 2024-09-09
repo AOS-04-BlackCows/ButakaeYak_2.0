@@ -1,12 +1,44 @@
 package com.blackcows.butakaeyak.ui.user
 
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
+import com.blackcows.butakaeyak.data.source.LocalDataSource
 import com.blackcows.butakaeyak.databinding.MypageItemFavoriteBinding
+import com.bumptech.glide.Glide
 
-class UserFavoriteViewPagerAdapter(val items : MutableList<test>) : RecyclerView.Adapter<UserFavoriteViewPagerAdapter.ViewPagerHolder>(){
+class UserFavoriteViewPagerAdapter(
+    private val onClickRemove: (KakaoPlacePharmacy) -> Unit
+) : ListAdapter<KakaoPlacePharmacy, UserFavoriteViewPagerAdapter.ViewPagerHolder>(
+    object : DiffUtil.ItemCallback<KakaoPlacePharmacy>() {
+        override fun areItemsTheSame(oldItem: KakaoPlacePharmacy, newItem: KakaoPlacePharmacy): Boolean {
+            return oldItem.id == newItem.id
+        }
+        override fun areContentsTheSame(oldItem: KakaoPlacePharmacy, newItem: KakaoPlacePharmacy): Boolean {
+            return oldItem.id == newItem.id
+        }
+    }
+) {
+
+    inner class ViewPagerHolder(private val binding : MypageItemFavoriteBinding) : RecyclerView.ViewHolder(binding.root){
+        fun bind(item: KakaoPlacePharmacy) {
+            with(binding) {
+                ivMedicine.setImageResource(R.drawable.pharmacy)
+                tvMedicineNameInfo.text = item.placeName
+                tvMedicineGroupInfo.text = item.phone
+
+                ivDelete.setOnClickListener {
+                    onClickRemove(item)
+                }
+            }
+        }
+    }
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -19,20 +51,8 @@ class UserFavoriteViewPagerAdapter(val items : MutableList<test>) : RecyclerView
         holder: UserFavoriteViewPagerAdapter.ViewPagerHolder,
         position: Int
     ) {
-        holder.aImage.setImageResource(R.drawable.choco)
-        holder.aName.text = "항히스타민제"
-        holder.aGroup.text = "피부 질환 완화제"
-
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int {
-         return items.size
-    }
 
-    inner class ViewPagerHolder(private val binding : MypageItemFavoriteBinding) : RecyclerView.ViewHolder(binding.root){
-        val aImage = binding.ivMedicine
-        val aName = binding.tvMedicineNameInfo
-        val aGroup = binding.tvMedicineGroupInfo
-
-    }
 }

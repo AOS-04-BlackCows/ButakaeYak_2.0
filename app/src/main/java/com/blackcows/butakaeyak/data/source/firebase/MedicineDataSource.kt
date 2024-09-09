@@ -31,6 +31,7 @@ class MedicineDataSource @Inject constructor(
         val query = Query(name).apply {
             advancedSyntax = true
             setRestrictSearchableAttributes(facet)
+            hitsPerPage = 10
         }
 
         val jsonArray = medicineIndex.searchSync(query)
@@ -89,7 +90,7 @@ class MedicineDataSource @Inject constructor(
     }
 
     private suspend fun getImageUrl(medicine: Medicine): Medicine {
-        val item = retrofit.getDrugInfo("").body.items
+        val item = retrofit.getDrugInfo(medicine.name!!).body.items
 
         return if(item.isNotEmpty())  medicine.copy(
             imageUrl = item[0].itemImage

@@ -14,14 +14,4 @@ data class AlarmItem(
     var timeText: String? = null,
     var timeInMillis: Long = 0L,
     val requestCode: Int = (System.currentTimeMillis() % Integer.MAX_VALUE).toInt()
-//    val timeText: String,      // 시간 텍스트
-//    val isMonEnabled: Boolean, // 월요일 활성화 여부
-//    val isTueEnabled: Boolean, // 화요일 활성화 여부
-//    val isWedEnabled: Boolean, // 수요일 활성화 여부
-//    val isThuEnabled: Boolean, // 목요일 활성화 여부
-//    val isFriEnabled: Boolean, // 금요일 활성화 여부
-//    val isSatEnabled: Boolean, // 토요일 활성화 여부
-//    val isSunEnabled: Boolean, // 일요일 활성화 여부
-//    val trueColor: Int,      // 활성화 상태의 텍스트 색상
-//    val falseColor: Int     // 비활성화 상태의 텍스트 색상
 )

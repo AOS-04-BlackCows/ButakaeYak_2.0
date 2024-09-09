@@ -2,49 +2,64 @@ package com.blackcows.butakaeyak.ui.user
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.MainActivity
+import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
+import com.blackcows.butakaeyak.data.source.LocalDataSource
 import com.blackcows.butakaeyak.databinding.FragmentUserBinding
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.blackcows.butakaeyak.ui.SignIn.SignInActivity
+import com.blackcows.butakaeyak.ui.home.data.DataSource.Companion.saveData
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.blackcows.butakaeyak.ui.take.fragment.NameFragment
+import com.blackcows.butakaeyak.ui.take.fragment.TermsFragment
+import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.internal.notify
 
+@AndroidEntryPoint
 class UserFragment : Fragment() {
+
 
     //binding 설정
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
-
     //ViewPager 설정
-    private lateinit var userFavoriteViewPagerAdapter: UserFavoriteViewPagerAdapter
+    private val userFavoriteViewPagerAdapter by lazy {
+        UserFavoriteViewPagerAdapter { mainViewModel.cancelFavoritePharmacy(it.id) }
+    }
 
     private val MIN_SCALE = 0.85f // 뷰가 몇퍼센트로 줄어들 것인지
     private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
 
-    private val userViewModel by activityViewModels<UserViewModel>()
+    private val userViewModel: UserViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val userViewModel =
-            ViewModelProvider(this).get(UserViewModel::class.java)
-
-        val mainActivity = (activity as MainActivity)
-        mainActivity.hideBottomNavigation(false)
         _binding = FragmentUserBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
@@ -53,11 +68,11 @@ class UserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //ViewPager 화면 확인용 임시 더미데이터
-        val dataList = mutableListOf<test>()
-        dataList.add(test(R.drawable.choco, "항히스타민제", "피부 질환 완화제"))
-        dataList.add(test(R.drawable.choco, "항히스타민제", "피부 질환 완화제"))
-        userFavoriteViewPagerAdapter = UserFavoriteViewPagerAdapter(dataList)
+        mainViewModel.getPharmacyList()
+        mainViewModel.pharmacies.observe(viewLifecycleOwner) {
+            Log.d("UserFragment", "pharmacies size: ${it.size}")
+            userFavoriteViewPagerAdapter.submitList(it.toList())
+        }
 
         binding.apply {
             vp2Favorite.apply {
@@ -65,41 +80,68 @@ class UserFragment : Fragment() {
                 setPageTransformer(ZoomOutPageTransformer())
             }
 
-            clMyMedicine.setOnClickListener {
-                findNavController().navigate(R.id.action_navigation_user_to_navigation_take)
+            userViewModel.currentUser.observe(viewLifecycleOwner) {
+                Log.d("UserFragment", "userName: ${it?.name ?: "없음"}")
+                if(it != null) {
+                    tvMyName.text = "환영합니다. ${it.name!!}님"
+                    //로그아웃 버튼
+                    clMyLogin.visibility = View.INVISIBLE
+                    clMyLogout.visibility = View.VISIBLE
+                } else {
+                    tvMyName.text = "환영합니다!"
+                    //로그인 버튼
+                    clMyLogout.visibility = View.INVISIBLE
+                    clMyLogin.visibility = View.VISIBLE
+                }
             }
-//            ivArrow1.setOnClickListener{
-//                val intent = Intent(requireContext(),TakeActivity::class.java)
-//                startActivity(intent)
-//                requireActivity().overridePendingTransition(R.anim.alpha,R.anim.none)
-//            }
+
+            clMyTerms.setOnClickListener {
+                parentFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.alpha,R.anim.none)
+                    .replace(R.id.fragment_container_view,TermsFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
 
             // 데이터 받기
+            //TODO 회원가입 데이터 받기 (이름, 프로필), 프로필 없을 때 기본 사진 설정
             val signInResultCallback = registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
             ) { result ->
                 if (result.resultCode == RESULT_OK) {
                     val userData = result.data?.getParcelableExtra<UserData>("userData") ?: return@registerForActivityResult
-                    userViewModel.setCurrentUser(userData)
+                    userViewModel.setUser(userData)
+
+                    if(userData.thumbnail.isNullOrBlank()){
+                        Glide.with(ivMyProfile).load(R.drawable.icon_user).into(ivMyProfile)
+                    }else{
+                        Glide.with(ivMyProfile).load(userData.thumbnail).into(ivMyProfile)
+                    }
+                    tvMyName.text = "환영합니다. ${userData.name}님"
                 }
             }
 
             clMyLogin.setOnClickListener {
-                val intent = Intent(requireActivity(), SignInActivity::class.java)
-                signInResultCallback.launch(intent)
+                    val intent = Intent(requireActivity(), SignInActivity::class.java)
+                    signInResultCallback.launch(intent)
+            }
+            clMyLogout.setOnClickListener {
+                CoroutineScope(Dispatchers.IO).launch {
+                    userViewModel.logout()
+                }
             }
         }
     }
-            //TODO Toggle 클릭 시 NameFragment로 이동하게 하기 위함
-            fun bind(item: MyMedicine) {
-                MainNavigation.addFragment(
-                    NameFragment.newInstance(item.medicine), FragmentTag.NameFragment
-                )
-            }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        userViewModel.loadUser()
     }
 
     //ViewPager 스와이프 시 화면 애니메이션

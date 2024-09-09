@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.take.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,13 +17,13 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.MainActivity
+import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentTakeBinding
-import com.blackcows.butakaeyak.domain.take.GetTodayMedicineUseCase
 import com.blackcows.butakaeyak.ui.example.UserUiState
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.navigation.TabTag
-import com.blackcows.butakaeyak.ui.take.MyTakeViewModel
 import com.blackcows.butakaeyak.ui.take.TakeUiState
 import com.blackcows.butakaeyak.ui.take.adapter.MyMedicinesRvAdapter
 import com.blackcows.butakaeyak.ui.take.adapter.TakeRvDecorator
@@ -39,6 +40,7 @@ import java.util.Date
 import java.util.Locale
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.adapter.TakeAdapter
+import com.blackcows.butakaeyak.ui.take.data.MedicineAtTime
 
 class TakeFragment : Fragment() {
 
@@ -50,15 +52,27 @@ class TakeFragment : Fragment() {
 
     private val todayDate = Calendar.getInstance()
     private val todayWeekDay by lazy {
-        val calendar = Calendar.getInstance().apply {
+        val calendar = Calendar.getInstance()
+            .apply {
             setTime(Date())
         }
-        WeekDay.from(calendar.get(Calendar.DAY_OF_WEEK))
+        WeekDay.from((calendar.get(Calendar.DAY_OF_WEEK)+5)%7)
     }
 
-    private val myTakeViewModel: MyTakeViewModel by activityViewModels()
+    //private val myTakeViewModel: MyTakeViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+
     private val todayMedicinesAdapter = TodayMedicineRvAdapter()
-    private val myMedicinesAdapter = MyMedicinesRvAdapter()
+    private val myMedicinesAdapter = MyMedicinesRvAdapter() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("그만 복용하실건가요?")
+            .setPositiveButton("네") { d, which ->
+                mainViewModel.cancelMyMedicine(it.medicine.id!!)
+            }.setNegativeButton("아니요") { d, _ ->
+                d.dismiss()
+            }
+            .show()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,8 +87,6 @@ class TakeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val mainActivity = activity as MainActivity
-        mainActivity.hideBottomNavigation(false)
 
         _binding = FragmentTakeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -85,13 +97,6 @@ class TakeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initView()
-        initUiState()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        myTakeViewModel.loadTodayMedicines(todayWeekDay)
-        myTakeViewModel.loadMyMedicines()
     }
 
     override fun onDestroyView() {
@@ -99,46 +104,16 @@ class TakeFragment : Fragment() {
         _binding = null
     }
 
-    private fun initUiState() = lifecycleScope.launch {
-        myTakeViewModel.uiState.collectLatest {
-            when (it) {
-                is TakeUiState.GetTodayMedicinesSuccess -> {
-                    if(it.medicineAtTimes.isEmpty()) {
-                        binding.noTodayGuideBox.visibility = View.VISIBLE
-                    } else {
-                        binding.noTodayGuideBox.visibility = View.GONE
-                        todayMedicinesAdapter.submitList(it.medicineAtTimes)
-                    }
-                }
-
-                is TakeUiState.GetMyMedicinesSuccess -> {
-                    Log.d(TAG, "isMyMedicineEmpty: ${it.medicines.isEmpty()}")
-                    if(it.medicines.isEmpty()) {
-                        binding.noMyMedicineTv.visibility = View.VISIBLE
-                    } else {
-                        binding.noMyMedicineTv.visibility = View.GONE
-                        myMedicinesAdapter.submitList(it.medicines)
-                    }
-                }
-
-                is TakeUiState.Failure -> {
-                    Log.d(TAG, "In $TAG, UiState Failed...")
-                }
-
-                else -> null
-            }
-        }
-    }
-
     private fun initView() = with(binding) {
         todayDateTv.text = "${todayDate.get(Calendar.YEAR)}년 ${todayDate.time.toKorean()}"
 
+        mainViewModel.getMyMedicineList()
+        mainViewModel.myMedicines.observe(viewLifecycleOwner) {
+            myMedicinesAdapter.submitList(it.toList())
+            updateTodayMedicineList()
+        }
 
         noTodayGuideGoBtn.setOnClickListener {
-            //TODO: 어디로 가요?
-            //  1. 우선 검색화면으로?
-            //      추가1) 튜토리얼
-            //      추가2)
             MainNavigation.toOtherTab(TabTag.Search)
         }
 
@@ -157,5 +132,36 @@ class TakeFragment : Fragment() {
                 )
             )
         }
+    }
+
+    private fun updateTodayMedicineList() {
+        val result = mutableListOf<MedicineAtTime>()
+        val timeToMedicines = mutableMapOf<String, MutableList<Medicine>>()
+
+        mainViewModel.myMedicines.value!!.forEach {  myMedicine ->
+            val todayPlans = myMedicine.alarms
+            todayPlans.forEach { time ->
+                timeToMedicines
+                    .getOrPut(time) { mutableListOf() }
+                    .add(myMedicine.medicine)
+            }
+        }
+        timeToMedicines.forEach { (k, v) ->
+            if(k.isNotEmpty()) {
+                result.add(MedicineAtTime(todayWeekDay, k, v))
+            }
+        }
+
+        Log.d(TAG, "ToDayMedicine list size: ${result.size}")
+
+        if(result.size != 0) {
+            binding.noTodayGuideBox.visibility = View.GONE
+            binding.noMyMedicineTv.visibility = View.GONE
+            todayMedicinesAdapter.submitList(result)
+        } else {
+            binding.noTodayGuideBox.visibility = View.VISIBLE
+            binding.noMyMedicineTv.visibility = View.VISIBLE
+        }
+
     }
 }

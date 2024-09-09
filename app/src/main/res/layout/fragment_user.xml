@@ -11,8 +11,8 @@
         android:id="@+id/cl_my_info"
         android:layout_width="108dp"
         android:layout_height="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/user_cl_bg_green_radius"
         android:elevation="12dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,13 +35,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:text="내 정보"
+            android:text="@string/my_info"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_my_info"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_my_profile"
@@ -53,17 +55,19 @@
         app:layout_constraintTop_toBottomOf="@id/cl_my_info">
 
         <ImageView
+            android:id="@+id/iv_my_profile"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/sparta" />
+            android:src="@drawable/icon_user" />
     </androidx.cardview.widget.CardView>
 
     <TextView
+        android:id="@+id/tv_my_name"
         style="@style/subtitle_b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:text="환영합니다. 000님"
+        android:text="@string/my_name"
         app:layout_constraintBottom_toBottomOf="@id/cv_my_profile"
         app:layout_constraintStart_toEndOf="@id/cv_my_profile"
         app:layout_constraintTop_toTopOf="@id/cv_my_profile" />
@@ -77,83 +81,37 @@
         app:layout_constraintTop_toBottomOf="@id/cv_my_profile">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_my_medicine"
+            android:id="@+id/cl_my_terms"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/user_cl_bg_white_gradient_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/cl_my_login">
 
             <ImageView
-                android:id="@+id/iv_my_medicine"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="10dp"
-                android:src="@drawable/medicine"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_my_medicine"
-                style="@style/body_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="10dp"
-                android:text="복용중인 약 관리"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_my_medicine"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/iv_arrow_1"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="10dp"
-                android:src="@drawable/baseline_arrow_circle_right_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_my_notification"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/user_cl_bg_white_gradient_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_my_medicine">
-
-            <ImageView
-                android:id="@+id/iv_my_notification"
+                android:id="@+id/iv_my_terms"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="10dp"
-                android:src="@drawable/ic_notifications_black_24dp"
+                android:src="@drawable/baseline_list_alt_24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_my_notification"
+                android:id="@+id/tv_my_terms"
                 style="@style/body_b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="10dp"
-                android:text="알림 설정"
+                android:text="@string/terms_title"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_my_notification"
+                app:layout_constraintStart_toEndOf="@id/iv_my_terms"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -169,15 +127,58 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_my_logout"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+
+            android:visibility="invisible"
+
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="8dp"
+
+            android:background="@drawable/user_cl_bg_white_gradient_gray"            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_my_favorite">
+
+            <ImageView
+                android:id="@+id/iv_my_logout"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/baseline_logout_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_my_logout"
+                style="@style/body_b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/my_logout"
+                      
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_my_logout"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_my_login"
             android:layout_width="match_parent"
             android:layout_height="70dp"
+
+            android:visibility="visible"
+
             android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/user_cl_bg_white_gradient_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_my_notification">
+            app:layout_constraintTop_toBottomOf="@id/cl_my_favorite">
 
             <ImageView
                 android:id="@+id/iv_my_login"
@@ -197,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="10dp"
-                android:text="로그인 설정"
+                android:text="@string/my_login"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/iv_my_login"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -217,13 +218,13 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_my_favorite"
             android:layout_width="match_parent"
-            android:layout_height="270dp"
+            android:layout_height="280dp"
             android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="24dp"
             android:background="@drawable/user_cl_bg_white_gradient_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_my_login">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/iv_favorite"
@@ -241,7 +242,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="즐겨찾기한 약국"
+                android:text="@string/favorite_pharmacy"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_favorite"
                 app:layout_constraintStart_toEndOf="@id/iv_favorite" />
 

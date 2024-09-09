@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.home
 
+import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.os.Handler
@@ -12,7 +13,9 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.SearchCategory
 import com.blackcows.butakaeyak.data.models.SearchCategoryDataSource
@@ -24,10 +27,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
-
-
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
@@ -35,6 +38,7 @@ class HomeFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by activityViewModels()
 
+    private var imm : InputMethodManager? =null
     private object homeData{
         var userEffectList = mutableListOf<Pair<String,String>>()
     }
@@ -47,7 +51,7 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
+        imm =  requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         val viewpager = binding.searchVp
         homeViewModel.text.observe(viewLifecycleOwner) {
             viewpager.currentItem
@@ -59,6 +63,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        initUiState()
 
         viewPager = binding.searchVp
         binding.searchVp.adapter = HomeViewPager(this@HomeFragment)
@@ -69,16 +74,44 @@ class HomeFragment : Fragment() {
 
         binding.searchBtnSearch.setOnClickListener {
             val query = binding.searchEtSearchtext.text.toString()
-            binding.searchLoProgressContainer.visibility = View.VISIBLE
+            binding.searchLoImageblock.visibility = View.GONE
+            imm!!.hideSoftInputFromWindow(binding.searchBtnSearch.windowToken, 0)
             homeViewModel.searchMedicinesWithName(query)
-            /*todo : 검색 완료시 프로그래스바 사라지게
-               검색 클릭시 에니메이션
-               검색 클릭시 키보드 내려가게
-               검색전 횡한화면 채우기*/
-            Handler(Looper.getMainLooper()).postDelayed({
-                binding.searchLoProgressContainer.visibility = View.GONE
-            },5000)
+
+            //TODO 키보드 내리기
+            val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
+    }
+
+    private fun initUiState() {
+        lifecycleScope.launch {
+            homeViewModel.uiState.collectLatest {
+                when(it) {
+                    is SearchUiState.SearchMedicinesSuccess -> {
+                        binding.searchLoProgressContainer.visibility = View.GONE
+                    }
+
+                    is SearchUiState.Loading -> {
+                        binding.searchLoProgressContainer.visibility = View.VISIBLE
+                    }
+
+                    else -> null
+                }
+            }
+        }
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        Log.d("HomeFragment", "onPause")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("HomeFragment", "onResume")
     }
 
     override fun onDestroyView() {

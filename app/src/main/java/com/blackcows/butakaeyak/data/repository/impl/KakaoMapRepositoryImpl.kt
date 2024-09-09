@@ -14,9 +14,9 @@ class KakaoMapRepositoryImpl @Inject constructor(
     private val kakaoMapSource: KakaoMapSource,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ): KakaoMapRepository {
-    override suspend fun searchCategory(x: String, y: String): List<KakaoPlacePharmacy> {
+    override suspend fun searchCategory(x: String, y: String, date: Int): List<KakaoPlacePharmacy> {
         return runCatching {
-            kakaoMapSource.searchCategoryPlace(x, y)
+            kakaoMapSource.searchCategoryPlace(x, y, date)
         }.getOrElse{
             Log.d(TAG, "onFailure")
             emptyList()

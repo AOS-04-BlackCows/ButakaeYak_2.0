@@ -23,13 +23,6 @@ private const val TAG = "홈 어뎁터"
 class HomeRecyclerAdapter(private val clickListener: ClickListener) :
     ListAdapter<Medicine, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
-        //TODO itemClick 처리 이벤트
-    private var itemClickListener: ((String) -> Unit)? = null
-
-    fun setItemClickListener(listener: (String) -> Unit) {
-        itemClickListener = listener
-    }
-
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Medicine>() {
             override fun areItemsTheSame(oldItem: Medicine, newItem: Medicine): Boolean {
@@ -90,30 +83,33 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
         private val ivMedicine: ImageView = medicineView.ivMedicine
         private val tvMedicineName: TextView = medicineView.tvMedicineName
         private val tvMedicineType: TextView = medicineView.tvMedicineType
-        private val btnMyMedicine: ToggleButton = medicineView.btnMyMedicine
+        private val ivMyMedicine: ImageView = medicineView.ivMyMedicine
         private val loMedicineInfo: ConstraintLayout = medicineView.loMedicineInfo
 
         fun bind(medicineItem: Medicine) {
-            btnMyMedicine.isChecked = clickListener.isMedicineChecked(medicineItem)
+            val isSaved = clickListener.isMedicineChecked(medicineItem)
+            Log.d("HomeRecyclerView", "Name: ${medicineItem.name}, $isSaved")
+            
             with(medicineItem) {
-                Glide.with(itemView).load(imageUrl?:R.drawable.medicine).into(ivMedicine)
+
+                if(imageUrl?.isNotEmpty() == true) {
+                    Glide.with(itemView).load(imageUrl).into(ivMedicine)
+                }
+
+                Log.d(TAG, "ivMyMedicine.isEnabled: ${ivMyMedicine.isEnabled}")
+
                 tvMedicineName.text = name
                 tvMedicineType.text = effect
                 loMedicineInfo.setOnClickListener {
                     clickListener.onItemClick(medicineItem)
                     Log.d(TAG, "${name}")
                 }
-                btnMyMedicine.setOnClickListener {
+                ivMyMedicine.setOnClickListener {
+                    Log.d(TAG, "click!")
                     //clickListener.onMyMedicineClick(medicineItem,isChecked)
-                    clickListener.setMedicineChecked(medicineItem, btnMyMedicine.isChecked)
+                    clickListener.setMedicineChecked(medicineItem, true)
                     Log.d(TAG,"${name}")
-
-                    //TODO btnMyMedicine 클릭 시 약 이름과 TakeAdd로 화면 이동
-                    itemClickListener?.invoke(tvMedicineName.text.toString())
-
-                    MainNavigation.addFragment(
-                        TakeAddFragment.newInstance(medicineItem), FragmentTag.TakeAddFragment
-                    )
+                    //TODO NameFragment로 약 이름 넘기기
                 }
             }
         }

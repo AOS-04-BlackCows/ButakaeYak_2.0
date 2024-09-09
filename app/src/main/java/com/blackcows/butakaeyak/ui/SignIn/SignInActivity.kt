@@ -145,6 +145,7 @@ class SignInActivity : AppCompatActivity() {
                     } else {
                         // 카카오 이메일 로그인
                         UserApiClient.instance.loginWithKakaoAccount(this@SignInActivity) { token, e ->
+                            it.resume(Pair(token, e))
                         }
                     }
                 }
@@ -174,7 +175,6 @@ class SignInActivity : AppCompatActivity() {
         withContext(Dispatchers.Main) {
             Toast.makeText(this@SignInActivity, "로그인 성공", Toast.LENGTH_SHORT).show()
         }
-
         if(binding.checkBox.isChecked) {
             localRepository.saveUserData(userData)
         }

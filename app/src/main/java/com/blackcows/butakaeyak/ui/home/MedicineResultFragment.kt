@@ -9,12 +9,23 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.data.models.Medicine
+import com.blackcows.butakaeyak.databinding.DialogSearchDetailBinding
 import com.blackcows.butakaeyak.databinding.FragmentMedicineResultBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
+import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.blackcows.butakaeyak.ui.home.data.DataSource
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
+import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 private const val TAG = "약 결과"
 class MedicineResultFragment : Fragment() {
@@ -26,6 +37,7 @@ class MedicineResultFragment : Fragment() {
 
     //viewModel 설정
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     //TODO NameFragment로 데이터 넘겨줄 viewModel
     private val viewModel: TakeViewModel by activityViewModels()
@@ -63,51 +75,43 @@ class MedicineResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //더미 데이터
 //        val dataSource = DataSource.getDataSoures().getMedicineList()
+
         binding.apply {
             medicineAdapter = HomeRecyclerAdapter(object : HomeRecyclerAdapter.ClickListener{
                 override fun onItemClick(item: Medicine) {
-                    //("디테일 화면 띄움")
+                    MainNavigation.addFragment(
+                        SearchDetailFragment.newInstance(item),
+                        FragmentTag.SearchDetailFragmentInSearch
+                    )
                     Log.d(TAG,"${item.id}, ${item.name} ")
                 }
-                override fun isMedicineChecked(item: Medicine) : Boolean{
-                    Log.d(TAG,item.id.toString() + ": "+DataSource.isItemChecked(requireContext(),"MyPillData",item.id.toString()))
-                    return DataSource.isItemChecked(requireContext(),"MyPillData",item.id.toString())
+                override fun isMedicineChecked(item: Medicine) : Boolean {
+                    val result = mainViewModel.isMyMedicine(item.id!!)
+                    Log.d(TAG,"${item.id}: $result")
+                    return result
                 }
                 override fun setMedicineChecked(item: Medicine, isChecked: Boolean) {
-                    Log.d(TAG,item.id.toString() + ": "+isChecked)
-                    DataSource.satItemChecked(requireContext(),"MyPillData",item.id.toString(),isChecked)
+                    val hasIt = mainViewModel.isMyMedicine(item.id!!)
+                    Log.d(TAG,"Do I have item:${item.id}? :$hasIt")
+                    if(hasIt) {
+                        Toast.makeText(requireContext(), "이미 복용 중인 약입니다.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        MainNavigation.addFragment(
+                            TakeAddFragment.newInstance(item), FragmentTag.TakeAddFragment
+                        )
+                    }
                 }
-//                override fun onMyPillClick(item: Medicine, needAdd: Boolean) {
-//                    //("복용중인 약 추가/삭제")
-//                    val json = "{\"id:\":\""+item.id.toString()+"\","+
-//                                "\"name:\":\""+item.name.toString()+"\","+
-//                                "\"enterprise:\":\""+item.enterprise.toString()+"\","+
-//                                "\"effect:\":\""+item.effect.toString()+"\","+
-//                                "\"instructions:\":\""+item.instructions.toString()+"\","+
-//                                "\"warning:\":\""+item.warning.toString()+"\","+
-//                                "\"caution:\":\""+item.caution.toString()+"\","+
-//                                "\"interaction:\":\""+item.interaction.toString()+"\","+
-//                                "\"sideEffect:\":\""+item.sideEffect.toString()+"\","+
-//                                "\"storingMethod:\":\""+item.storingMethod.toString()+"\","+
-//                                "\"imageUrl:\":\""+item.imageUrl.toString()+"\","+
-//                                "\"needAdd:\":\""+needAdd+"\"}"
-//                    Log.d("아이템 복용약 누름","${item.id}, ${item.name}, ${needAdd}")
-//                    DataSource.saveData(requireContext(),"MyPillData",item.id.toString(),json)
-//                }
             })
             resultlist.adapter = medicineAdapter
             resultlist.itemAnimator = null
             homeViewModel.medicineResult.observe(viewLifecycleOwner){
-                medicineAdapter.submitList(it.toList())
-            }
-//            pillAdapter.submitList(dataSource)
-
-            //TODO viewModel로 name을 넘김
-            medicineAdapter.setItemClickListener { medicineText->
-                viewModel.updateItem(medicineText)
+                if(it.isNotEmpty()) Log.d(TAG, "Class: ${it[0]::class.simpleName}")
+                medicineAdapter.submitList(it)
             }
         }
     }
+
+
 
     companion object {
         const val ARG_COLUMN_COUNT = "column-count"

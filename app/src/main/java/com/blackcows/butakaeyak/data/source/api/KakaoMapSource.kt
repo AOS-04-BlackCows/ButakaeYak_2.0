@@ -9,9 +9,9 @@ class KakaoMapSource @Inject constructor(
 ) {
     private val tag = "DrugDataSource"
 
-    suspend fun searchCategoryPlace(x: String,y: String): List<KakaoPlacePharmacy> {
+    suspend fun searchCategoryPlace(x: String,y: String, date: Int): List<KakaoPlacePharmacy> {
         val list = mutableListOf<KakaoPlacePharmacy>()
-        val result = retrofit.getCategoryInfo(x, y)
+        val result = retrofit.getCategoryInfo(x, y, date)
         result.documents.forEach {
             list.add(it.toKakaoPlace())
         }

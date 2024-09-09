@@ -34,31 +34,31 @@ android {
 
         testInstrumentationRunner = "com.blackcows.butakaeyak.HiltTestRunner"
 
-        buildConfigField("String",
+        buildConfigField(
+            "String",
             "DRUG_INFO_KEY",
             properties.getProperty("drug_info_key")
         )
-        buildConfigField("String",
+        buildConfigField(
+            "String",
             "NATIVE_APP_KEY",
             properties.getProperty("native_app_key")
         )
-        buildConfigField("String",
+        buildConfigField(
+            "String",
             "REST_API_KEY",
             properties.getProperty("rest_api_key")
         )
-        buildConfigField("String",
+        buildConfigField(
+            "String",
             "ALGORIA_APP_ID",
             properties.getProperty("algoria_app_id")
         )
-        buildConfigField("String",
+        buildConfigField(
+            "String",
             "ALGORIA_SEARCH_KEY",
             properties.getProperty("algoria_search_key")
         )
-
-        defaultConfig {
-            manifestPlaceholders["kakao_native_app_key"] = properties.getProperty("kakao_native_app_key")
-        }
-
         buildConfigField("String",
             "NAVER_CLIENT_ID",
             properties.getProperty("naver_client_id")
@@ -72,6 +72,24 @@ android {
             properties.getProperty("pharmacy_list_info_key")
         )
 
+        manifestPlaceholders["kakao_native_app_key"] =
+            properties.getProperty("kakao_native_app_key")
+
+        buildConfigField(
+            "String",
+            "NAVER_CLIENT_ID",
+            properties.getProperty("naver_client_id")
+        )
+        buildConfigField(
+            "String",
+            "NAVER_CLIENT_SECRET",
+            properties.getProperty("naver_client_secret")
+        )
+        buildConfigField(
+            "String",
+            "PHARMACY_LIST_INFO_KEY",
+            properties.getProperty("pharmacy_list_info_key")
+        )
     }
 
     buildTypes {
@@ -106,17 +124,18 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    
+
     implementation(libs.androidx.activity)
     implementation(libs.firebase.firestore)
-    
+
     implementation(libs.androidx.runner)
-    
+
     implementation(libs.androidx.junit.ktx)
-    
+
     implementation(libs.androidx.activity)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.firebase.storage.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -124,7 +143,9 @@ dependencies {
     testImplementation(libs.androidx.runtime.android)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+
     implementation(libs.glide)
+    annotationProcessor("com.github.bumptech.glide:compiler:4.7.1")
 
     implementation(libs.androidx.lifecycle.livedata.ktx)
 
@@ -162,12 +183,12 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")     //인증
 
     //Algoria
-    implementation ("com.algolia:algoliasearch-android:3.27.0")
-    implementation ("com.algolia:algoliasearch-client-kotlin:2.1.9")
+    implementation("com.algolia:algoliasearch-android:3.27.0")
+    implementation("com.algolia:algoliasearch-client-kotlin:2.1.9")
 
     // Tikxml
-    implementation ("com.tickaroo.tikxml:annotation:0.8.13")
-    implementation ("com.tickaroo.tikxml:core:0.8.13")
-    implementation ("com.tickaroo.tikxml:retrofit-converter:0.8.13")
-    kapt ("com.tickaroo.tikxml:processor:0.8.13")
+    implementation("com.tickaroo.tikxml:annotation:0.8.13")
+    implementation("com.tickaroo.tikxml:core:0.8.13")
+    implementation("com.tickaroo.tikxml:retrofit-converter:0.8.13")
+    kapt("com.tickaroo.tikxml:processor:0.8.13")
 }

@@ -30,14 +30,14 @@ class NameFragment : Fragment() {
     private var _binding: FragmentNameBinding? = null
     private val binding get() = _binding!!
 
-    //viewModel 설정
-    private val viewModel: TakeViewModel by activityViewModels()
-
     //TODO: 여기!
     private val onBackPressed = {
-        parentFragmentManager.beginTransaction().remove(
-            this
-        ).commitNow()
+        parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.move_enter, R.anim.move_exit)
+            .remove(this)
+            .commitNow()
+
+        MainNavigation.popCurrentFragment()
     }
 
     //TODO: 여기!
@@ -56,17 +56,16 @@ class NameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        val mainActivity = activity as MainActivity
-        mainActivity.hideBottomNavigation(true)
-
         _binding = FragmentNameBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                Log.d("NameFragment", "Back Pressed!")
                 onBackPressed()
             }
         })
+
         return root
     }
 
@@ -74,25 +73,41 @@ class NameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            viewModel.getData().observe(viewLifecycleOwner, Observer {
-                etMedicineName.setText(it)
-            })
+            etMedicineName.setText(medicine.name!!)
+
+            if(etMedicineName.length() > 0){
+                btnNext.apply{
+                    isEnabled = true
+                    setBackgroundResource(R.color.green)
+                    setTextColor(Color.WHITE)
+                    setOnClickListener {
+                        Log.d("버튼","버튼 눌림")
+                        val newMedicine = medicine.copy(
+                            name = binding.etMedicineName.text.toString()
+                        )
+                        parentFragmentManager.beginTransaction()
+                            .replace(
+                                R.id.fragment_container,
+                                FormFragment.newInstance(newMedicine)
+                            ).commitNow()
+                    }
+                }
+            }
         }
-
-        //companion object
-        val medicine: Medicine? = arguments?.getParcelable(MEDICINE_DATA)
-
         binding.ivDelete.setOnClickListener {
             binding.etMedicineName.text = null
         }
 
         //TODO: 여기!
         binding.ivBack.setOnClickListener {
+            Log.d("NameFragment", "Back Pressed2")
             onBackPressed()
         }
 
         binding.etMedicineName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.apply{
@@ -103,12 +118,14 @@ class NameFragment : Fragment() {
                             setTextColor(Color.WHITE)
                             setOnClickListener {
                                 Log.d("버튼","버튼 눌림")
-                                medicine?.let { it1 -> FormFragment.newInstance(it1) }?.let { it2 ->
-                                    MainNavigation.addFragment(
-                                        it2, FragmentTag.NameFragment
-                                    )
-                                }
-                                viewModel.updateItem(etMedicineName.text.toString())
+                                val newMedicine = medicine.copy(
+                                    name = binding.etMedicineName.text.toString()
+                                )
+                                parentFragmentManager.beginTransaction()
+                                    .replace(
+                                        R.id.fragment_container,
+                                        FormFragment.newInstance(newMedicine)
+                                    ).commitNow()
                             }
                         }
                     }
