@@ -26,6 +26,7 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
 import com.blackcows.butakaeyak.ui.home.HomeFragment
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.AlarmReceiver
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
@@ -56,11 +57,14 @@ class CycleFragment : Fragment() {
 
     //뒤로가기 설정
     private val onBackPressed = {
-        parentFragmentManager.beginTransaction().setCustomAnimations(R.anim.move_enter,R.anim.move_exit).remove(
-            this
-        ).commitNow()
-
-        MainNavigation.popCurrentFragment()
+        if(fragmentTag == FragmentTag.CycleFragmentInHome) {
+            MainNavigation.popCurrentFragment()
+        } else {
+            parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.move_enter,R.anim.move_exit)
+                .remove(this)
+                .commitNow()
+        }
     }
 
     //bundle에서 medicine 가져오기
@@ -73,6 +77,14 @@ class CycleFragment : Fragment() {
         }
 
         mainViewModel.getMyMedicineOnList(medicine.id!!) ?: MyMedicine(medicine, listOf())
+    }
+    //bundle에서 medicine 가져오기
+    private val fragmentTag by lazy {
+        when(arguments?.getString(FRAGMENT_TAG)!!) {
+            FragmentTag.CycleFragmentInHome.name -> FragmentTag.CycleFragmentInHome
+            FragmentTag.CycleFragmentInTakeAdd.name -> FragmentTag.CycleFragmentInTakeAdd
+            else -> null
+        }!!
     }
 
     override fun onCreateView(
@@ -310,18 +322,22 @@ class CycleFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        MainNavigation.hideBottomNavigation(false)
+        if(fragmentTag == FragmentTag.CycleFragmentInHome) {
+            MainNavigation.hideBottomNavigation(false)
+        }
         _binding = null
     }
 
     companion object {
         private const val MEDICINE_DATA = "medicine_data"
+        private const val FRAGMENT_TAG = "FRAGMENT_TAG"
 
         @JvmStatic
-        fun newInstance(medicine: Medicine) =
+        fun newInstance(medicine: Medicine, fragmentTag: FragmentTag) =
             CycleFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(MEDICINE_DATA, medicine)
+                    putString(FRAGMENT_TAG, fragmentTag.name)
                 }
             }
     }

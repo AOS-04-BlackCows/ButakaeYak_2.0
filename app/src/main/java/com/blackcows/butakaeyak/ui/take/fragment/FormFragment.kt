@@ -37,7 +37,7 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
     private val onBackPressed = {
         parentFragmentManager.beginTransaction().setCustomAnimations(R.anim.move_enter,R.anim.move_exit).remove(
             this
-        ).commitNow()
+        ).commit()
     }
 
     //TODO: 여기!
@@ -114,9 +114,11 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
                     setTextColor(Color.WHITE)
                     setOnClickListener {
                         parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container,
-                                    CycleFragment.newInstance(medicine)
-                            ).commitNow()
+                            .add(R.id.fragment_container,
+                                    CycleFragment.newInstance(medicine, FragmentTag.CycleFragmentInTakeAdd)
+                            )
+                            .addToBackStack(null)
+                            .commit()
 
 
                         viewModel.updateFormItem(selectName)
