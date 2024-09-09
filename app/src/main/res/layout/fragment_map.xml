@@ -37,7 +37,7 @@
         android:layout_marginBottom="32dp"
         android:background="@drawable/round_long_rect_500"
         android:paddingHorizontal="16dp"
-        android:text="현 위치에서 재검색"
+        android:text="@string/map_research"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +53,7 @@
         android:background="@drawable/round_long_rect_500"
         android:elevation="4dp"
         android:paddingHorizontal="16dp"
-        android:text="목록 더보기"
+        android:text="@string/view_more"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
