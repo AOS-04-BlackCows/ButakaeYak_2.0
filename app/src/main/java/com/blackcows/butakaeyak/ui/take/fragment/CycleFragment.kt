@@ -20,6 +20,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
@@ -58,6 +59,8 @@ class CycleFragment : Fragment() {
         parentFragmentManager.beginTransaction().setCustomAnimations(R.anim.move_enter,R.anim.move_exit).remove(
             this
         ).commitNow()
+
+        MainNavigation.popCurrentFragment()
     }
 
     //bundle에서 medicine 가져오기
@@ -76,6 +79,8 @@ class CycleFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        MainNavigation.hideBottomNavigation(true)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -305,6 +310,7 @@ class CycleFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        MainNavigation.hideBottomNavigation(false)
         _binding = null
     }
 
