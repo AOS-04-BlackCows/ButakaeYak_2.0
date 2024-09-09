@@ -22,11 +22,13 @@ class MapViewModel @Inject constructor(
     private val _items = MutableLiveData<List<KakaoPlacePharmacy>>()
     val items: LiveData<List<KakaoPlacePharmacy>>
         get() = _items
+
     var pharmacyPager = 0
 
     fun findPharmacy(x: Double, y: Double) {
         pharmacyPager = 1
         viewModelScope.launch {
+            _items.value = listOf()
             _items.value = kakaoRepository.searchCategory(x.toString(), y.toString(), pharmacyPager)
             Log.d(TAG, "${_items.value}")
         }
