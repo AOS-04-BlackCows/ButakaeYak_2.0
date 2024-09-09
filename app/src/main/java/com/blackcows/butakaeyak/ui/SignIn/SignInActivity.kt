@@ -2,7 +2,6 @@ package com.blackcows.butakaeyak.ui.SignIn
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Nickname
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
@@ -16,36 +15,40 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.blackcows.butakaeyak.MainActivity
+import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.ActivitySignInBinding
+import com.blackcows.butakaeyak.domain.repo.LocalRepository
+import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.firebase.firebase_store.FirestoreManager
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
-import com.blackcows.butakaeyak.ui.user.UserFragment
-import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
-import com.kakao.sdk.user.UserApi
+import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
-class SignInActivity : AppCompatActivity(), View.OnClickListener {
+@AndroidEntryPoint
+class SignInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignInBinding
-    private val firestoreManager = FirestoreManager()
-    private val TAG = "SignIpActivity"
+    private val TAG = "SignInActivity"
 
-    // 이메일 로그인 콜백
-    private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-        if (error != null) {
-            Log.e(TAG, "카카오계정으로 로그인 실패${error}")
-        } else if (token != null) {
-            Log.e(TAG, "카카오계정으로 로그인 성공${token.accessToken}")
-            kakaoLogin()
-        }
-    }
+    @Inject
+    lateinit var userRepository: UserRepository
+    @Inject
+    lateinit var localRepository: LocalRepository
+
 
     // 데이터 전달
     private val resultLauncher = registerForActivityResult(
@@ -70,122 +73,120 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
         initView()
         setSignUpTextView()
 
-        KakaoSdk.init(this, "d4ce3a86b1d0a8895e9eccdf9fb16fc4")
-        if (AuthApiClient.instance.hasToken()) {
-            UserApiClient.instance.accessTokenInfo{_, error ->
-                if (error== null)
-                    kakaoLogin()
-            }
-        }
-            binding.ivKakao.setOnClickListener(this)
+        Log.d(TAG, Utility.getKeyHash(this))
+
+        KakaoSdk.init(this, BuildConfig.NATIVE_APP_KEY)
 
         val inPutId = intent.getStringExtra("id")
         val inPutPw = intent.getStringExtra("pw")
 
         binding.inputId.setText(inPutId)
         binding.inputPw.setText(inPutPw)
-
-
     }
 
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.ivKakao.id -> {
+    private fun initView() = with(binding) {
+        btnLogin.setOnClickListener {
+            val userId = inputId.text.toString()
+            val pw = inputPw.text.toString()
+            if (validateInputs(userId, pw)) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.Main) {
+                        binding.progressContainer.visibility = View.VISIBLE
+                    }
+                    userRepository.loginWithId(userId, pw)
+                        .onSuccess {
+                            onSuccessLogin(it)
+                        }.onFailure {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(this@SignInActivity, "아이디와 비밀번호를 확인해주세요.", Toast.LENGTH_LONG).show()
+                            }
+                        }
 
+                    withContext(Dispatchers.Main) {
+                        binding.progressContainer.visibility = View.GONE
+                    }
+                }
+            } else {
+                Toast.makeText(
+                    this@SignInActivity,
+                    "아이디와 비밀번호를 입력해주세요.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            Log.d(TAG, "아이디와 비밀번호 입력해주세요. ")
+        }
+
+        ivKakao.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main) {
+                    binding.progressContainer.visibility = View.VISIBLE
+                }
                 // 카카오톡 설치 확인
                 // 설치 true -> 카카오톡 로그인
                 // 설치 false -> 카카오 이메일 로그인
                 // 로그인 실패하게 된다면 if문 타고 사용자가 취소했을 때는 그대로 return하여 login이 취소되고 -> 사용자가 취소한거 아니면 이메일 로그인
-                if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
-                    // 카카오톡 로그인
-                    UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
-                        // 로그인 실패 부분
-                        if (error != null) {
-                            Log.e(TAG, "로그인 실패${error}")
-                            // 사용자 취소 부분
-                            if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
-                                return@loginWithKakaoTalk
-                            } else {
-                                // 카카오계정 로그인
-                                UserApiClient.instance.loginWithKakaoAccount(
-                                    this,
-                                    callback = mCallback
-                                )
+                val result = suspendCoroutine<Pair<OAuthToken?, Throwable?>> {
+                    if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@SignInActivity)) {
+                        // 카카오톡 로그인
+                        UserApiClient.instance.loginWithKakaoTalk(this@SignInActivity) { token, e ->
+                            // 사용자 취소
+                            if (e != null) {
+                                if (e is ClientError && e.reason == ClientErrorCause.Cancelled) {
+                                    Log.d(TAG, "카카오 로그인 사용자 취소")
+                                    return@loginWithKakaoTalk
+                                }
+                                UserApiClient.instance.loginWithKakaoAccount(this@SignInActivity) { token, e ->
+                                    it.resume(Pair(token, e))
+                                }
+                            } else if (token != null) {
+                                Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
                             }
-                        } else if (token != null) {
-                            Log.e(TAG, "로그인 성공${token.accessToken}")
-                            Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
-                            kakaoLogin()
+                        }
+                    } else {
+                        // 카카오 이메일 로그인
+                        UserApiClient.instance.loginWithKakaoAccount(this@SignInActivity) { token, e ->
+                        }
+                    }
+                }
 
-                            //TODO : 봐줘!
-                            firestoreManager.saveKakaoUser(object :
-                                FirestoreManager.ResultListener<Boolean> {
-                                override fun onSuccess(result: Boolean) {
-                                    Log.d(TAG, "Firebase 저장 성공")
-                                }
+                Log.d(TAG, "카카오 로그인: ${result.second?.message ?: "에러없음"}")
 
-                                override fun onFailure(e: Exception) {
-                                    Log.e(TAG, "Firebase저장 실패", e)
-                                }
-                            })
-
+                //TODO: 나중에 flow로 바꿔서 처리하기...
+                userRepository.trySignInWithKakao()
+                    .onFailure {
+                        Log.d(TAG, it.message!!)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@SignInActivity, it.message, Toast.LENGTH_SHORT).show()
+                            binding.progressContainer.visibility = View.GONE
                         }
 
+                    }.onSuccess {
+                        onSuccessLogin(it)
+                        withContext(Dispatchers.Main) {
+                            binding.progressContainer.visibility = View.GONE
+                        }
                     }
-                } else {
-                    // 카카오 이메일 로그인
-                    UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
-                }
             }
         }
     }
 
-    private fun initView() {
-        with(binding) {
-            btnLogin.setOnClickListener {
-                val userId = inputId.text.toString()
-                val name = inputId.text.toString()
-
-                val pw = inputPw.text.toString()
-                if (validateInputs(name, pw)) {
-                    firestoreManager.trySignIn(userId,
-                        object : FirestoreManager.ResultListener<UserData> {
-                            override fun onSuccess(result: UserData) {
-                                // 회원가입 성공 이벤트
-                                Toast.makeText(
-                                    this@SignInActivity,
-                                    "로그인 성공",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                                Log.d(TAG, "로그인 페이지로 이동")
-
-                                // 로그인에 아이디 & 비밀번호 전달
-                                val intent = Intent().apply {
-                                    putExtra("userData", result)
-                                }
-                                setResult(RESULT_OK, intent)
-                                finish()
-
-                            }
-
-                            override fun onFailure(e: Exception) {
-                                Toast.makeText(
-                                    this@SignInActivity,
-                                    "로그인 실패: ${e.message}",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        })
-                } else {
-                    Toast.makeText(
-                        this@SignInActivity,
-                        "아이디와 비밀번호를 입력해주세요.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                Log.d(TAG, "아이디와 비밀번호 입력해주세요. ")
-            }
+    private suspend fun onSuccessLogin(userData: UserData) {
+        withContext(Dispatchers.Main) {
+            Toast.makeText(this@SignInActivity, "로그인 성공", Toast.LENGTH_SHORT).show()
         }
+
+        if(binding.checkBox.isChecked) {
+            localRepository.saveUserData(userData)
+        }
+
+        Log.d(TAG, "로그인 페이지로 이동")
+
+        // 로그인에 아이디 & 비밀번호 전달
+        val intent = Intent().apply {
+            putExtra("userData", userData)
+        }
+        setResult(RESULT_OK, intent)
+        finish()
     }
 
     private fun validateInputs(id: String, password: String): Boolean {
@@ -218,7 +219,8 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
         spannableString.setSpan(
             signUpClickableSpan,
             signUpStart,
-            signUpEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE
+            signUpEnd,
+            Spanned.SPAN_INCLUSIVE_INCLUSIVE
         )
 
         // 색상 설정
@@ -236,24 +238,5 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
         // TextView에 적용
         textSignUp.movementMethod = LinkMovementMethod.getInstance() // 클릭 가능하게 설정
         textSignUp.text = spannableString
-    }
-
-    private fun kakaoLogin() {
-        UserApiClient.instance.me { user, meError ->
-            if (meError != null) {
-                Log.e(TAG, "사용자 정보 요청 실패 : $meError")
-            } else if (user != null) {
-                Log.d(TAG, "사용자 정보 요청 성공 : $user")
-                val intent = Intent().apply {
-                    putExtra(
-                        "name",
-                        user.kakaoAccount?.profile?.nickname
-                    )
-                    putExtra("thumbnail", user.kakaoAccount?.profile?.thumbnailImageUrl)
-                }
-                setResult(RESULT_OK, intent)
-                finish()
-            }
-        }
     }
 }

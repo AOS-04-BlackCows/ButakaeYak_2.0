@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
@@ -20,17 +21,26 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.blackcows.butakaeyak.databinding.ActivitySignUpBinding
+import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.firebase.firebase_store.FirestoreManager
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.google.firebase.firestore.auth.User
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SignUpActivity : AppCompatActivity() {
 
     private val TAG = "SignUpActivity"
 
     private lateinit var binding: ActivitySignUpBinding
 
-    private val firestoreManager = FirestoreManager()
+    @Inject
+    lateinit var userRepository: UserRepository
 
     private lateinit var imageView: ImageView
     private lateinit var button: Button
@@ -56,47 +66,52 @@ class SignUpActivity : AppCompatActivity() {
         with(binding) {
             btnSignup.setOnClickListener {
                 if (validateAllFields()) {
-                    var userData = UserData(
-                        userName.text.toString(),
-                        userId.text.toString(),
-
+                    val userData = UserData(
+                        name = userName.text.toString(),
+                        id = userId.text.toString(),
+                        pwd = userPw.text.toString()
                     )
-                    firestoreManager.trySignUp(userData,
-                        object : FirestoreManager.ResultListener<Boolean> {
-                            override fun onSuccess(result: Boolean) {
-                                // 회원가입 성공 이벤트
-                                Toast.makeText(
-                                    this@SignUpActivity,
-                                    "회원가입 성공",
-                                    Toast.LENGTH_LONG
-                                ).show()
+
+                    CoroutineScope(Dispatchers.IO).launch {
+
+                        withContext(Dispatchers.Main) {
+                            binding.progressContainer.visibility = View.VISIBLE
+                        }
+
+                        userRepository.signUpUserData(userData)
+                            .onSuccess {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        this@SignUpActivity,
+                                        "회원가입 성공",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+
+                                withContext(Dispatchers.Main) {
+                                    binding.progressContainer.visibility = View.GONE
+                                }
 
                                 // 로그인에 아이디 & 비밀번호 전달
                                 val intent = Intent().apply {
                                     putExtra("id", userId.text.toString())
                                     putExtra("pw", userPw.text.toString())
                                     imageUri?.let { uri ->
-                                        putExtra("thumbnail",uri.toString())
+                                        putExtra("thumbnail", uri.toString())
                                     }
                                 }
                                 setResult(RESULT_OK, intent)
                                 finish()
-                            }
-
-                            override fun onFailure(e: Exception) {
-                                //실패 시 처리
-                                if (e.message == "이미 가입된 번호입니다") {
-                                    binding.tiId.error = e.message
-                                } else {
+                            }.onFailure {
+                                withContext(Dispatchers.Main) {
                                     Toast.makeText(
                                         this@SignUpActivity,
-                                        "회원가입 실패: ${e.message}",
+                                        "회원가입 실패: ${it.message}",
                                         Toast.LENGTH_LONG
                                     ).show()
                                 }
                             }
-
-                        })
+                    }
                 }
             }
         }
