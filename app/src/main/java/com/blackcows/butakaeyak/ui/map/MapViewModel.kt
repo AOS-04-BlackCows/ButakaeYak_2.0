@@ -19,7 +19,7 @@ private const val TAG = "k3f_MapViewModel"
 class MapViewModel @Inject constructor(
     private val kakaoRepository: KakaoMapRepository
 ) : ViewModel() {
-    private val _items = MutableLiveData<List<KakaoPlacePharmacy>>()
+    private val _items = MutableLiveData<List<KakaoPlacePharmacy>>(listOf())
     val items: LiveData<List<KakaoPlacePharmacy>>
         get() = _items
 
