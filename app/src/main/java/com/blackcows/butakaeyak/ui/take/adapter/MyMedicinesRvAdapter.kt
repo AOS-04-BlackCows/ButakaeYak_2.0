@@ -64,7 +64,8 @@ class MyMedicinesRvAdapter(
                     }
                     tvMedicineAlarmIv.setOnClickListener {
                         MainNavigation.addFragment(
-                            CycleFragment.newInstance(item.medicine), FragmentTag.CycleFragment
+                            CycleFragment.newInstance(item.medicine, FragmentTag.CycleFragmentInHome),
+                            FragmentTag.CycleFragmentInHome
                         )
                     }
                 }

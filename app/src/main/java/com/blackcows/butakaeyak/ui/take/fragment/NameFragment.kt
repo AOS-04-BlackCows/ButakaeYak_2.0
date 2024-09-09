@@ -89,7 +89,9 @@ class NameFragment : Fragment() {
                             .replace(
                                 R.id.fragment_container,
                                 FormFragment.newInstance(newMedicine)
-                            ).commitNow()
+                            )
+                            .addToBackStack("NameFragment")
+                            .commitNow()
                     }
                 }
             }
@@ -125,7 +127,9 @@ class NameFragment : Fragment() {
                                     .replace(
                                         R.id.fragment_container,
                                         FormFragment.newInstance(newMedicine)
-                                    ).commitNow()
+                                    )
+                                    .addToBackStack("NameFragment")
+                                    .commitNow()
                             }
                         }
                     }

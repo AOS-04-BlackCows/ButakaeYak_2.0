@@ -5,7 +5,8 @@ enum class FragmentTag {
 
     TakeAddFragment,
     MedicineDetailFragment,
-    CycleFragment,
+    CycleFragmentInTakeAdd,
+    CycleFragmentInHome,
     SearchDetailFragmentInSearch,
     NameFragment,
     FormFragment,

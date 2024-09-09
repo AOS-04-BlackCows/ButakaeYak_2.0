@@ -115,8 +115,10 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
                     setOnClickListener {
                         parentFragmentManager.beginTransaction()
                             .replace(R.id.fragment_container,
-                                    CycleFragment.newInstance(medicine)
-                            ).commitNow()
+                                    CycleFragment.newInstance(medicine, FragmentTag.CycleFragmentInTakeAdd)
+                            )
+                            .addToBackStack("FormFragment")
+                            .commitNow()
 
 
                         viewModel.updateFormItem(selectName)
