@@ -27,7 +27,7 @@
         android:id="@+id/btn_profile"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:hint="사진 설정하세요"
+        android:hint="@string/input_photo"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/iv_profile"
         app:layout_constraintEnd_toEndOf="@+id/iv_profile"

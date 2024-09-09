@@ -75,7 +75,7 @@
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="업체명"
+                        android:text="@string/enterprise"
                         app:layout_constraintStart_toStartOf="@+id/detail_tv_name"
                         app:layout_constraintTop_toBottomOf="@+id/detail_tv_name" />
                     <TextView
@@ -84,7 +84,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:hint="내용없음"
+                        android:hint="@string/no_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/detail_tv_enterprise_title"
                         app:layout_constraintTop_toTopOf="@+id/detail_tv_enterprise_title" />
@@ -95,7 +95,7 @@
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="효능/효과"
+                        android:text="@string/effect"
                         app:layout_constraintStart_toStartOf="@+id/detail_tv_enterprise_title"
                         app:layout_constraintTop_toBottomOf="@+id/detail_tv_enterprise" />
                     <TextView
@@ -104,7 +104,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:hint="내용없음"
+                        android:hint="@string/no_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/detail_tv_effect_title"
                         app:layout_constraintTop_toTopOf="@+id/detail_tv_effect_title" />
@@ -115,7 +115,7 @@
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="복용법"
+                        android:text="@string/instructions"
                         app:layout_constraintStart_toStartOf="@+id/detail_tv_effect_title"
                         app:layout_constraintTop_toBottomOf="@+id/detail_tv_effect" />
                     <TextView
@@ -124,7 +124,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:hint="내용없음"
+                        android:hint="@string/no_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/detail_tv_instructions_title"
                         app:layout_constraintTop_toTopOf="@+id/detail_tv_instructions_title" />
@@ -135,7 +135,7 @@
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="주의사항"
+                        android:text="@string/warning"
                         app:layout_constraintStart_toStartOf="@+id/detail_tv_instructions_title"
                         app:layout_constraintTop_toBottomOf="@+id/detail_tv_instructions" />
                     <TextView
@@ -144,7 +144,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:hint="내용없음"
+                        android:hint="@string/no_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/detail_tv_warning_title"
                         app:layout_constraintTop_toTopOf="@+id/detail_tv_warning_title" />
@@ -155,7 +155,7 @@
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="경고 사항"
+                        android:text="@string/caution"
                         app:layout_constraintStart_toStartOf="@+id/detail_tv_warning_title"
                         app:layout_constraintTop_toBottomOf="@+id/detail_tv_warning" />
                     <TextView
@@ -164,7 +164,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:hint="내용없음"
+                        android:hint="@string/no_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/detail_tv_caution_title"
                         app:layout_constraintTop_toTopOf="@+id/detail_tv_caution_title" />
@@ -175,7 +175,7 @@
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="상호 작용"
+                        android:text="@string/interaction"
                         app:layout_constraintStart_toStartOf="@+id/detail_tv_caution_title"
                         app:layout_constraintTop_toBottomOf="@+id/detail_tv_caution" />
                     <TextView
@@ -184,7 +184,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:hint="내용없음"
+                        android:hint="@string/no_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/detail_tv_interaction_title"
                         app:layout_constraintTop_toTopOf="@+id/detail_tv_interaction_title" />
@@ -195,7 +195,7 @@
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="부작용"
+                        android:text="@string/sideEffect"
                         app:layout_constraintStart_toStartOf="@+id/detail_tv_interaction_title"
                         app:layout_constraintTop_toBottomOf="@+id/detail_tv_interaction" />
                     <TextView
@@ -204,7 +204,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:hint="내용없음"
+                        android:hint="@string/no_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/detail_tv_sideEffect_title"
                         app:layout_constraintTop_toTopOf="@+id/detail_tv_sideEffect_title" />
@@ -215,7 +215,7 @@
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="저장 방법"
+                        android:text="@string/storingMethod"
                         app:layout_constraintStart_toStartOf="@+id/detail_tv_sideEffect_title"
                         app:layout_constraintTop_toBottomOf="@+id/detail_tv_sideEffect" />
                     <TextView
@@ -224,7 +224,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:hint="내용없음"
+                        android:hint="@string/no_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/detail_tv_storingMethod_title"
                         app:layout_constraintTop_toTopOf="@+id/detail_tv_storingMethod_title" />
