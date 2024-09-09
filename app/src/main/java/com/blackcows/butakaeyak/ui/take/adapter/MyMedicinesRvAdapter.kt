@@ -16,7 +16,6 @@ import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.MyMedicineItemBinding
 import com.blackcows.butakaeyak.databinding.TodayMedicineItemBinding
 import com.blackcows.butakaeyak.domain.repo.LocalRepository
-import com.blackcows.butakaeyak.ui.GlideApp
 import com.blackcows.butakaeyak.ui.home.MedicineResultFragment
 import com.blackcows.butakaeyak.ui.home.SearchDetailFragment
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
