@@ -17,10 +17,10 @@ class MainViewModel @Inject constructor(
     private val localRepository: LocalRepository,
     private val pharmacyRepository: PharmacyRepository
 ): ViewModel() {
-    private val _pharmacies = MutableLiveData<Set<KakaoPlacePharmacy>>()
+    private val _pharmacies = MutableLiveData<Set<KakaoPlacePharmacy>>(setOf())
     val pharmacies get() = _pharmacies
 
-    private val _myMedicine = MutableLiveData<Set<MyMedicine>>()
+    private val _myMedicine = MutableLiveData<Set<MyMedicine>>(setOf())
     val myMedicines get() = _myMedicine
 
     fun getPharmacyList(){

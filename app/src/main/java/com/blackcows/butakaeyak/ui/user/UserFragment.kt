@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.MainActivity
+import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.blackcows.butakaeyak.data.source.LocalDataSource
@@ -42,21 +43,23 @@ class UserFragment : Fragment() {
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
     //ViewPager 설정
-    private lateinit var userFavoriteViewPagerAdapter: UserFavoriteViewPagerAdapter
+    private val userFavoriteViewPagerAdapter by lazy {
+        UserFavoriteViewPagerAdapter { mainViewModel.cancelFavoritePharmacy(it.id) }
+    }
 
     private val MIN_SCALE = 0.85f // 뷰가 몇퍼센트로 줄어들 것인지
     private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
 
     private val userViewModel: UserViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val userViewModel =
-            ViewModelProvider(this).get(UserViewModel::class.java)
-
         _binding = FragmentUserBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
@@ -65,11 +68,11 @@ class UserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //TODO 즐겨찾기한 약국 데이터 받기
-        val localDataSource = LocalDataSource(requireContext())
-        val getLocalDataSource = LocalDataSource(requireContext()).getMyPharmacy().toMutableList()
-
-        userFavoriteViewPagerAdapter = UserFavoriteViewPagerAdapter(getLocalDataSource,localDataSource)
+        mainViewModel.getPharmacyList()
+        mainViewModel.pharmacies.observe(viewLifecycleOwner) {
+            Log.d("UserFragment", "pharmacies size: ${it.size}")
+            userFavoriteViewPagerAdapter.submitList(it.toList())
+        }
 
         binding.apply {
             vp2Favorite.apply {

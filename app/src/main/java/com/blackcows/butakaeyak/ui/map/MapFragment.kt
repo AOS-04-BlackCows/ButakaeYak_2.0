@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.BuildConfig
+import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.blackcows.butakaeyak.data.source.LocalDataSource
@@ -53,6 +54,9 @@ class MapFragment : Fragment() {
     private lateinit var bottomSheetView: BottomsheetMapDetailBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var kakaoMapCall: KakaoMap
+
+    private val mainViewModel: MainViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -312,16 +316,12 @@ class MapFragment : Fragment() {
                             passiveIcon()
                         }
                         bottomSheetView.btnFavorite.setOnClickListener {
-                            // TODO 메인 뷰모델에서 여기를 클릭했을때마다 getPharmacy 갱신
-                            // TODO pharmacyChecked() 도 메인 뷰모델에서 제작할것
                             if (pharmacyChecked()) {
                                 passiveIcon()
-                                // TODO 이놈들도 뷰모델로 옮길것
-                                LocalDataSource(requireContext()).removeMyPharmacy(pharmacyData.id)
+                                mainViewModel.cancelFavoritePharmacy(pharmacyData.id)
                             } else {
                                 activeIcon()
-                                // TODO 이놈들도 뷰모델로 옮길것
-                                LocalDataSource(requireContext()).addMyPharmacy(pharmacyData)
+                                mainViewModel.addToFavoritePharmacyList(pharmacyData)
                             }
                         }
                         bottomSheetView.btnCall.setOnClickListener {
