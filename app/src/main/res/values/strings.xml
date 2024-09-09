@@ -90,7 +90,7 @@
 
     <!-- User -->
     <string name="my_info">내 정보</string>
-    <string name="my_name">환영합니다 000님</string>
+    <string name="my_name">로그인이 필요합니다</string>
     <string name="my_login">로그인 설정</string>
     <string name="my_logout">로그아웃</string>
     <string name="my_terms">서비스 이용 약관</string>

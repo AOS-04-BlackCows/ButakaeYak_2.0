@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.method.HideReturnsTransformationMethod
 import android.text.method.LinkMovementMethod
+import android.text.method.PasswordTransformationMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
@@ -85,6 +87,20 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun initView() = with(binding) {
+        btnVisibility.setOnClickListener {
+            when(it.tag){
+                "0" -> {
+                    btnVisibility.tag = "1"
+                    inputPw.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                    btnVisibility.setImageResource(R.drawable.baseline_visibility_24dp)
+                }
+                "1" -> {
+                    btnVisibility.tag = "0"
+                    inputPw.transformationMethod = PasswordTransformationMethod.getInstance()
+                    btnVisibility.setImageResource(R.drawable.baseline_visibility_off_24)
+                }
+            }
+        }
         btnLogin.setOnClickListener {
             val userId = inputId.text.toString()
             val pw = inputPw.text.toString()
