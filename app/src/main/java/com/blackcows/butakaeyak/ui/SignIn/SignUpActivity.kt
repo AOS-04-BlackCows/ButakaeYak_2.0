@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
@@ -66,16 +67,29 @@ class SignUpActivity : AppCompatActivity() {
             btnSignup.setOnClickListener {
                 if (validateAllFields()) {
                     val userData = UserData(
-                            name = userName.text.toString(),
-                            id = userId.text.toString(),
-                            pwd = userPw.text.toString()
+                        name = userName.text.toString(),
+                        id = userId.text.toString(),
+                        pwd = userPw.text.toString()
                     )
 
                     CoroutineScope(Dispatchers.IO).launch {
+
+                        withContext(Dispatchers.Main) {
+                            binding.progressContainer.visibility = View.VISIBLE
+                        }
+
                         userRepository.signUpUserData(userData)
                             .onSuccess {
                                 withContext(Dispatchers.Main) {
-                                    Toast.makeText(this@SignUpActivity, "회원가입 성공", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        this@SignUpActivity,
+                                        "회원가입 성공",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+
+                                withContext(Dispatchers.Main) {
+                                    binding.progressContainer.visibility = View.GONE
                                 }
 
                                 // 로그인에 아이디 & 비밀번호 전달
@@ -83,14 +97,18 @@ class SignUpActivity : AppCompatActivity() {
                                     putExtra("id", userId.text.toString())
                                     putExtra("pw", userPw.text.toString())
                                     imageUri?.let { uri ->
-                                        putExtra("thumbnail",uri.toString())
+                                        putExtra("thumbnail", uri.toString())
                                     }
                                 }
                                 setResult(RESULT_OK, intent)
                                 finish()
                             }.onFailure {
                                 withContext(Dispatchers.Main) {
-                                    Toast.makeText(this@SignUpActivity, "회원가입 실패: ${it.message}", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        this@SignUpActivity,
+                                        "회원가입 실패: ${it.message}",
+                                        Toast.LENGTH_LONG
+                                    ).show()
                                 }
                             }
                     }
