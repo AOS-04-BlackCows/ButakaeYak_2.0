@@ -6,10 +6,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.KeyEvent
+import android.view.KeyEvent.KEYCODE_ENTER
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -29,7 +33,9 @@ import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import okhttp3.internal.cache.DiskLruCache
 
+private const val TAG = "HomeFragment_Log"
 class HomeFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -73,14 +79,41 @@ class HomeFragment : Fragment() {
         }.attach()
 
         binding.searchBtnSearch.setOnClickListener {
-            val query = binding.searchEtSearchtext.text.toString()
+            searchQuery()
+//            val query = binding.searchEtSearchtext.text.toString()
+//            if(query.isEmpty()){
+//                Toast.makeText(requireContext(), "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show()
+//            }else{
+//                binding.searchLoImageblock.visibility = View.GONE
+//                imm!!.hideSoftInputFromWindow(binding.searchBtnSearch.windowToken, 0)
+//                homeViewModel.searchMedicinesWithName(query)
+//
+//                //TODO 키보드 내리기
+//                val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+//            }
+        }
+        binding.searchEtSearchtext.setOnEditorActionListener { v, actionId, event ->
+            Log.d(TAG, "keyCode: ${actionId} -- ${EditorInfo.IME_ACTION_DONE} ")
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                searchQuery()
+            }
+
+            true
+        }
+    }
+    private fun searchQuery(){
+        val query = binding.searchEtSearchtext.text.toString()
+        if(query.isEmpty()){
+            Toast.makeText(requireContext(), "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show()
+        }else{
             binding.searchLoImageblock.visibility = View.GONE
             imm!!.hideSoftInputFromWindow(binding.searchBtnSearch.windowToken, 0)
             homeViewModel.searchMedicinesWithName(query)
 
             //TODO 키보드 내리기
             val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+            inputMethodManager.hideSoftInputFromWindow(view?.windowToken ?: null, 0)
         }
     }
 
