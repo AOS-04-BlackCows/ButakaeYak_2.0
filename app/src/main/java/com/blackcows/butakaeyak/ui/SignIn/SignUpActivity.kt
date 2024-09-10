@@ -109,6 +109,7 @@ class SignUpActivity : AppCompatActivity() {
                                         "회원가입 실패: ${it.message}",
                                         Toast.LENGTH_LONG
                                     ).show()
+                                    binding.progressContainer.visibility = View.GONE
                                 }
                             }
                     }
