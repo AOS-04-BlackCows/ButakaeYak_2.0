@@ -84,12 +84,6 @@ class MapFragment : Fragment() {
         bottomSheetDialog.setContentView(bottomSheetView.root)
         kakaoMapInit()
 
-
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // 권한이 있을 때만 GPS 초기화
-            gpsInit()
-        }
-
         /*
         해시키 발급하는 키
         try {
@@ -214,6 +208,11 @@ class MapFragment : Fragment() {
         Log.d(TAG, "myPlaceX, myPlaceY = $myPlaceLongtudeX, $myPlaceLatitudeY")
         KakaoMapUtil(requireContext()).kakaoMapInit(binding.mapView, mapViewModel) { kakaoMap ->
             kakaoMapCall = kakaoMap
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                // 권한이 있을 때만 GPS 초기화
+                gpsInit()
+            }
+
             // 버튼 이벤트 설정
             // 버튼 이벤트를 통해 현재 위치 찾기
             binding.btnLocation.setOnClickListener {
