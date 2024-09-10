@@ -68,10 +68,6 @@ class MapFragment : Fragment() {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // 권한이 있을 때만 GPS 초기화
-            gpsInit()
-        }
         return root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -89,7 +85,10 @@ class MapFragment : Fragment() {
         kakaoMapInit()
 
 
-
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // 권한이 있을 때만 GPS 초기화
+            gpsInit()
+        }
 
         /*
         해시키 발급하는 키
