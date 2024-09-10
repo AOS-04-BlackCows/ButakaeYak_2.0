@@ -171,6 +171,7 @@ class MapFragment : Fragment() {
                         mapViewModel.moreFindPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
                     }
                 }
+
             }
 
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
@@ -190,12 +191,12 @@ class MapFragment : Fragment() {
         }
         // 위치 업데이트 요청
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1f, locationListener)
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 5f, locationListener)
         }
 
         // 위치정보얻기
-       val location: Location? = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-       Log.d(TAG, LocationManager.GPS_PROVIDER)
+       val location: Location? = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+       Log.d(TAG, LocationManager.NETWORK_PROVIDER)
        location?.let{
            myPlaceLongtudeX = location.longitude // 갱신 된 경도 127.11547410533494
            myPlaceLatitudeY = location.latitude // 갱신 된 위도 37.40754692649233
