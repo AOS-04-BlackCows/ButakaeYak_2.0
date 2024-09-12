@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/shape_result"
+
+    android:paddingVertical="8dp"
+    android:orientation="horizontal">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lo_medicine_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:layout_weight="10">
+
+        <ImageView
+            android:id="@+id/iv_medicine"
+            android:layout_width="110dp"
+            android:layout_height="76dp"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/medicine"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_medicine_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingEnd="24dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:hint="제품명"
+            style="@style/body"
+            android:maxLines="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/iv_medicine"
+            app:layout_constraintTop_toTopOf="@+id/iv_medicine" />
+
+        <TextView
+            android:id="@+id/tv_medicine_type"
+            style="@style/caption_gray"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:ellipsize="end"
+            android:layout_marginTop="8dp"
+            android:hint="제품타입"
+            android:paddingEnd="32dp"
+            android:singleLine="true"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/iv_medicine"
+            app:layout_constraintTop_toBottomOf="@+id/tv_medicine_name" />
+
+        <ImageView
+            android:id="@+id/iv_my_medicine"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="4dp"
+            android:layout_gravity="center_horizontal"
+            android:translationZ="1dp"
+
+            android:textOn=""
+            android:textOff=""
+            android:src="@drawable/baseline_arrow_circle_right_24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</LinearLayout>

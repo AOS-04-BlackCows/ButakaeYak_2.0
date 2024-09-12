@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/user_bg">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_medicine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            app:cardCornerRadius="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_medicine"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/choco" />
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="2dp"
+            android:layout_height="140dp"
+            android:layout_marginStart="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cv_medicine"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_medicine_name"
+            style="@style/body_b"
+            android:layout_width="70dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:background="@drawable/user_cl_bg_green_radius"
+            android:text="약 이름"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toEndOf="@id/divider"
+            app:layout_constraintTop_toTopOf="@id/divider" />
+
+        <TextView
+            android:id="@+id/tv_medicine_name_info"
+            style="@style/body_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:text="약 이름"
+            app:layout_constraintStart_toEndOf="@id/divider"
+            app:layout_constraintTop_toBottomOf="@+id/tv_medicine_name" />
+
+        <TextView
+            android:id="@+id/tv_medicine_group"
+            style="@style/body_b"
+            android:layout_width="70dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="32dp"
+            android:gravity="center"
+            android:background="@drawable/user_cl_bg_green_radius"
+            android:text="약 분류"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/divider"
+            app:layout_constraintStart_toEndOf="@id/divider" />
+
+        <TextView
+            android:id="@+id/tv_medicine_group_info"
+            style="@style/body_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="4dp"
+            android:text="약 분류"
+            app:layout_constraintStart_toEndOf="@id/divider"
+            app:layout_constraintTop_toBottomOf="@id/tv_medicine_group" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/bell"
+            app:layout_constraintBottom_toBottomOf="@id/tv_notification"
+            app:layout_constraintEnd_toStartOf="@+id/tv_notification"
+            app:layout_constraintTop_toTopOf="@id/tv_notification" />
+
+        <TextView
+            android:id="@+id/tv_notification"
+            style="@style/caption_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="알림 설정"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
