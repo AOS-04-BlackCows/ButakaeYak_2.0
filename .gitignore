@@ -9,6 +9,7 @@ output.json
 
 /local.properties
 /.idea/caches
+/.idea/appInsightsSettings.xml
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
