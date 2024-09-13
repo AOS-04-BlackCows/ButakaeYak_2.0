@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
+import com.blackcows.butakaeyak.data.models.MyPharmacy
+import com.blackcows.butakaeyak.data.source.link.MyPharmacyDataSource
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.google.gson.Gson
@@ -14,7 +16,7 @@ import javax.inject.Inject
 
 class LocalMyPharmacyDataSource @Inject constructor(
     @ApplicationContext context: Context
-) {
+): MyPharmacyDataSource {
     companion object {
         private const val TAG = "PHARMACY_DATASOURCE"
         private const val PHARMACY_SHARED_PREFS = "PHARMACYS"
@@ -25,44 +27,34 @@ class LocalMyPharmacyDataSource @Inject constructor(
         PHARMACY_SHARED_PREFS, Activity.MODE_PRIVATE)
     private val editorPharmacy = sharedPreferencesPharmacy.edit()
 
-
-    // Pharmacy
-    fun getMyPharmacy(): List<KakaoPlacePharmacy> {
+    override fun getMyPharmacies(userId: String): List<MyPharmacy> {
         val list = sharedPreferencesPharmacy.getString(FAVORITE_PHARMACY, null)?.let {
             val gson = Gson()
-            val type = object : TypeToken<List<KakaoPlacePharmacy>>() {}.type
+            val type = object : TypeToken<List<MyPharmacy>>() {}.type
             gson.fromJson(it, type)
-        } ?: listOf<KakaoPlacePharmacy>()
+        } ?: listOf<MyPharmacy>()
         Log.d(TAG, "list Size: ${list.size}")
 
         return list
     }
-    fun saveMyPharmacy(myPharmacy: List<KakaoPlacePharmacy>) {
+
+    override fun saveMyPharmacies(pharmacies: List<MyPharmacy>) {
         val gson = Gson()
-        val json = gson.toJson(myPharmacy)
+        val json = gson.toJson(pharmacies)
         editorPharmacy.putString(FAVORITE_PHARMACY, json).apply()
-        Log.d(TAG, "saveMyPharmacy() Run. myPharmacy.size: ${myPharmacy.size}")
+        Log.d(TAG, "saveMyPharmacy() Run. myPharmacy.size: ${pharmacies.size}")
     }
 
-    fun addMyPharmacy(pharmacy: KakaoPlacePharmacy) {
-        saveMyPharmacy(
-            listOf(pharmacy) + getMyPharmacy()
+    override fun addSinglePharmacy(pharmacy: MyPharmacy) {
+        saveMyPharmacies(
+            listOf(pharmacy) + getMyPharmacies("")
         )
-        Log.d(TAG, "addMyPharmacy() Run. id: ${pharmacy.id}")
     }
 
-    fun isPharmacyChecked(id: String) : Boolean {
-        Log.d(TAG, "isPharmacyChecked() Run. id: ${id}")
-        return getMyPharmacy().any {
-            it.id == id
+    override fun removePharmacy(pharmacy: MyPharmacy) {
+        val lists = getMyPharmacies("").toMutableList().filterNot {
+            it == pharmacy
         }
-    }
-
-    fun removeMyPharmacy(id: String) {
-        val lists = getMyPharmacy().toMutableList().filterNot {
-            it.id == id
-        }
-        saveMyPharmacy(lists)
-        Log.d(TAG, "removeMyPharmacy() Run. id: ${id}")
+        saveMyPharmacies(lists)
     }
 }
