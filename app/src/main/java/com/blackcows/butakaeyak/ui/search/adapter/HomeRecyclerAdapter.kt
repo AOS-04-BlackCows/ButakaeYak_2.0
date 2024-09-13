@@ -1,4 +1,4 @@
-package com.blackcows.butakaeyak.ui.home.adapter
+package com.blackcows.butakaeyak.ui.search.adapter
 
 import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
@@ -6,18 +6,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.ToggleButton
-import com.blackcows.butakaeyak.R
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentFeedListBinding
 import com.blackcows.butakaeyak.databinding.ItemResultsBinding
-import com.blackcows.butakaeyak.ui.home.data.ListItem
-import com.blackcows.butakaeyak.ui.navigation.FragmentTag
-import com.blackcows.butakaeyak.ui.navigation.MainNavigation
-import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
+import com.blackcows.butakaeyak.ui.search.data.ListItem
 import com.bumptech.glide.Glide
 private const val TAG = "홈 어뎁터"
 class HomeRecyclerAdapter(private val clickListener: ClickListener) :

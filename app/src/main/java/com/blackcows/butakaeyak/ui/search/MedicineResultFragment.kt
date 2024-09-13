@@ -1,4 +1,4 @@
-package com.blackcows.butakaeyak.ui.home
+package com.blackcows.butakaeyak.ui.search
 
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +14,7 @@ import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentMedicineResultBinding
-import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
+import com.blackcows.butakaeyak.ui.search.adapter.HomeRecyclerAdapter
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.TakeViewModel

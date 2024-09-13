@@ -1,8 +1,8 @@
-package com.blackcows.butakaeyak.ui.home.adapter
+package com.blackcows.butakaeyak.ui.search.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.blackcows.butakaeyak.ui.home.MedicineResultFragment
+import com.blackcows.butakaeyak.ui.search.MedicineResultFragment
 
 class HomeViewPager(fragment: Fragment): FragmentStateAdapter(fragment) {
     //TODO: update list.

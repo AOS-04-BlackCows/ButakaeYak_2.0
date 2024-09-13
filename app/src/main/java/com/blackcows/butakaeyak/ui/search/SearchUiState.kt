@@ -1,7 +1,6 @@
-package com.blackcows.butakaeyak.ui.home
+package com.blackcows.butakaeyak.ui.search
 
 import com.blackcows.butakaeyak.data.models.Medicine
-import com.blackcows.butakaeyak.ui.example.UserUiState
 
 sealed class SearchUiState {
     data class SearchMedicinesSuccess(val medicines: List<Medicine>): SearchUiState()

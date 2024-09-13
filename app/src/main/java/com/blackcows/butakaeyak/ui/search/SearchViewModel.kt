@@ -1,4 +1,4 @@
-package com.blackcows.butakaeyak.ui.home
+package com.blackcows.butakaeyak.ui.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
