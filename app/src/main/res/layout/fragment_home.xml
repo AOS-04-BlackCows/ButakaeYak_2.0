@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/home_cl_bg_connection"
         android:elevation="3dp"
@@ -85,8 +85,8 @@
         style="@style/body_b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
         android:paddingHorizontal="16dp"
-        android:paddingVertical="20dp"
         android:text="약 알림"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view2" />
@@ -99,7 +99,8 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/home_cl_bg_today_medicine"
-        android:paddingVertical="20dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2">
