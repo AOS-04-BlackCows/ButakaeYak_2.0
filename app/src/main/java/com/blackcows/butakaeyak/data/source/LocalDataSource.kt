@@ -123,23 +123,4 @@ class LocalDataSource @Inject constructor(
         saveMyPharmacy(lists)
         Log.d(TAG_PHARMACY, "removeMyPharmacy() Run. id: ${id}")
     }
-
-    fun saveAutoLoginData(userData: UserData) {
-        val gson = Gson()
-        val json = gson.toJson(userData)
-        editor.putString(USER_DATA, json).apply()
-    }
-
-    fun getSavedUserData(): UserData? {
-        return sharedPreferences.getString(USER_DATA, null)?.let {
-            val gson = Gson()
-            gson.fromJson(it, UserData::class.java)
-        }
-    }
-
-    fun deleteAutoLoginData() {
-        editor.remove(USER_DATA).apply()
-    }
-
-
 }
