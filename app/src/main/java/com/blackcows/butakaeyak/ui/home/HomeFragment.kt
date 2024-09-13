@@ -125,17 +125,14 @@ class HomeFragment : Fragment(), View.OnClickListener {
         // 나랑 가까운 약국
         binding.homeConnection1.setOnClickListener{
             Toast.makeText(context, "homeConnection1.onClicked", Toast.LENGTH_SHORT).show()
-            anim()
         }
         // 즐겨찾기한 약국
         binding.homeConnection2.setOnClickListener{
             Toast.makeText(context, "homeConnection2.onClicked", Toast.LENGTH_SHORT).show()
-            anim()
         }
         // 이게 무슨 약이지?
         binding.homeConnection3.setOnClickListener{
             Toast.makeText(context, "homeConnection3.onClicked", Toast.LENGTH_SHORT).show()
-            anim()
         }
         // 사진 등록
         binding.btnAddMedicine1.setOnClickListener{
