@@ -7,7 +7,6 @@ import android.util.Log
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
-import com.google.api.AnnotationsProto.http
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -31,7 +30,8 @@ class LocalDataSource @Inject constructor(
     }
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(APP_SHARED_PREFS, Activity.MODE_PRIVATE)
-    private val sharedPreferencesPharmacy: SharedPreferences = context.getSharedPreferences(PHARMACY_SHARED_PREFS, Activity.MODE_PRIVATE)
+    private val sharedPreferencesPharmacy: SharedPreferences = context.getSharedPreferences(
+        PHARMACY_SHARED_PREFS, Activity.MODE_PRIVATE)
     private val editor = sharedPreferences.edit()
     private val editorPharmacy = sharedPreferencesPharmacy.edit()
 
