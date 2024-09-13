@@ -146,31 +146,11 @@ class CycleFragment : Fragment() {
                 Log.e("CycleFragment", "No alarms found")
             }
 
-//            if (myMedicine.alarms.isNotEmpty()) {
-//                alarmList.clear() // 기존 알람 리스트 초기화
-//                for (alarmString in myMedicine.alarms) {
-//                    val timeParts = alarmString.split(":")
-//                        val hour = timeParts[0].toInt()
-//                        val minute = timeParts[1].toInt()
-//                        val alarmItem = AlarmItem(
-//                            timeText = alarmString,
-//                            timeInMillis = adapter.getTimeInMillis(hour, minute)
-//                        )
-//                        alarmList.add(alarmItem)
-//                }
-//                adapter.notifyDataSetChanged()
-//            }
-
             clCycleAlarmAdd.setOnClickListener {
                 showCustomTimePickerDialog()
             }
 
             tvCycleName.text = "약 이름 : ${myMedicine.medicine.name}"
-            //tvCycleForm.text = "약 모형 : " + medicine.
-//            val url = myMedicine.medicine.imageUrl
-//            if(url?.isNotEmpty() == true) {
-//                Glide.with(root).load(url).into(ivCycleForm)
-//            }
 
 
         }
@@ -237,6 +217,8 @@ class CycleFragment : Fragment() {
         val alarmList = adapter.getAlarmList()
 
         for (alarm in alarmList) {
+            Log.d("timeInMillis","${alarm.timeInMillis}")
+            Log.d("requestCode","${alarm.requestCode}")
             val intent = Intent(requireContext(), AlarmReceiver::class.java)
 
             intent.putExtra("NOTIFICATION_TITLE","${binding.tvCycleName.text}")
@@ -273,41 +255,6 @@ class CycleFragment : Fragment() {
                     pendingIntent
                 )
             }
-
-//            try {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // Android 12 이상
-//                    if (alarmManager?.canScheduleExactAlarms() == true) {
-//                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
-//                        alarmManager.setRepeating(
-//                            AlarmManager.RTC_WAKEUP,
-//                            alarm.timeInMillis,
-//                            AlarmManager.INTERVAL_DAY,
-//                            pendingIntent
-//                        )
-//                    } else {
-//                        // 권한 요청 화면으로 이동
-//                        val requestIntent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-//                        startActivity(requestIntent)
-//                    }
-//                } else { // Android 12 이하
-//                    alarmManager?.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
-//                    alarmManager?.setRepeating(
-//                        AlarmManager.RTC_WAKEUP,
-//                        alarm.timeInMillis,
-//                        AlarmManager.INTERVAL_DAY,
-//                        pendingIntent
-//                    )
-//                }
-//            } catch (e: SecurityException) {
-//                // 예외 처리: Android 12 이하에서의 에러를 처리
-//                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-//                    // Android 12 이하에서 권한 문제 발생 시 처리
-//                    Toast.makeText(context, "알림 설정에 실패했습니다.", Toast.LENGTH_SHORT).show()
-//                } else {
-//                    // Android 12 이상에서 예외 발생 시 처리
-//                    Toast.makeText(context, "알림 권한을 확인해 주세요.", Toast.LENGTH_SHORT).show()
-//                }
-//            }
         }
 
         Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
