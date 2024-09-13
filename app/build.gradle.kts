@@ -136,6 +136,7 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.lifecycle)
@@ -201,4 +202,7 @@ dependencies {
     //ML Kit
     // To recognize Korean script
     implementation ("com.google.mlkit:text-recognition-korean:16.0.1")
+
+    // viewPager2 Indicator
+    implementation("com.tbuonomo:dotsindicator:5.0")
 }
