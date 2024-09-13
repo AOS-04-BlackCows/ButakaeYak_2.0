@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -41,6 +42,7 @@ import java.util.Locale
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.adapter.TakeAdapter
 import com.blackcows.butakaeyak.ui.take.data.MedicineAtTime
+import com.blackcows.butakaeyak.ui.textrecognition.OCR_Activity
 
 class TakeFragment : Fragment() {
 
@@ -115,6 +117,10 @@ class TakeFragment : Fragment() {
 
         noTodayGuideGoBtn.setOnClickListener {
             MainNavigation.toOtherTab(TabTag.Search)
+        }
+
+        showCamera.setOnClickListener {
+            startActivity(Intent(requireActivity(), OCR_Activity::class.java))
         }
 
         todayMedicineRv.run {

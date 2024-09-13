@@ -136,6 +136,12 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.lifecycle)
+    val camerax_version = "1.5.0-alpha01"
+    implementation("androidx.camera:camera-core:${camerax_version}")
+    implementation("androidx.camera:camera-camera2:${camerax_version}")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -191,4 +197,8 @@ dependencies {
     implementation("com.tickaroo.tikxml:core:0.8.13")
     implementation("com.tickaroo.tikxml:retrofit-converter:0.8.13")
     kapt("com.tickaroo.tikxml:processor:0.8.13")
+
+    //ML Kit
+    // To recognize Korean script
+    implementation ("com.google.mlkit:text-recognition-korean:16.0.1")
 }
