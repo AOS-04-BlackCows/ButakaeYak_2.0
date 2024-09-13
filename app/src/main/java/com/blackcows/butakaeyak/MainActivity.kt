@@ -62,7 +62,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 // 권한이 없으므로 권한 요청 알림 보내기
                 requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_LOCATION)
-                Toast.makeText(this, "권한이 없어 해당 기능을 실행할 수 없습니다.", Toast.LENGTH_SHORT).show()
                 false
             }
         } else {

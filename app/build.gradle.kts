@@ -136,6 +136,7 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.androidx.legacy.support.v4)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -191,4 +192,7 @@ dependencies {
     implementation("com.tickaroo.tikxml:core:0.8.13")
     implementation("com.tickaroo.tikxml:retrofit-converter:0.8.13")
     kapt("com.tickaroo.tikxml:processor:0.8.13")
+
+    // viewPager2 Indicator
+    implementation("com.tbuonomo:dotsindicator:5.0")
 }
