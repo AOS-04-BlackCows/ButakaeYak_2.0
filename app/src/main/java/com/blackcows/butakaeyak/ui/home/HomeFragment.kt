@@ -11,14 +11,12 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.MedicineGroup
-import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.blackcows.butakaeyak.databinding.FragmentHomeBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeViewPagerAdapter
-import com.google.android.material.tabs.TabLayout
+
 private const val TAG = "HomeFragment"
 class HomeFragment : Fragment(), View.OnClickListener {
 
@@ -40,6 +38,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         HomeViewPagerAdapter {
             // mainViewModel.cancelFavoritePharmacy(it.name)
             // TODO mainViewModel에 약 예약으로 가기 추가하고 적용
+            // TODO onClickItem 옵션추가
         }
     }
 
@@ -81,7 +80,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         binding.btnAddMedicineContainer.setOnClickListener(this)
 
         binding.btnAddMedicineContainer.isClickable = false
-
+        fragmentInit()
         //
 //        fragList = arrayListOf(FragmentControl(), FragmentState(), FragmentPolicy())
 //
@@ -103,7 +102,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 //        transaction.commit()
     }
 
-    fun anim(){
+    fun anim () {
         if (openFlag){
             // Fab이 눌려있을때 닫는 애니메이션
             binding.btnAddMedicineContainer.startAnimation(fab_close)
@@ -121,6 +120,35 @@ class HomeFragment : Fragment(), View.OnClickListener {
         뷰모델 구성해보기
         책상정리하기
     */
+
+    private fun fragmentInit () {
+        // 나랑 가까운 약국
+        binding.homeConnection1.setOnClickListener{
+            Toast.makeText(context, "homeConnection1.onClicked", Toast.LENGTH_SHORT).show()
+            anim()
+        }
+        // 즐겨찾기한 약국
+        binding.homeConnection2.setOnClickListener{
+            Toast.makeText(context, "homeConnection2.onClicked", Toast.LENGTH_SHORT).show()
+            anim()
+        }
+        // 이게 무슨 약이지?
+        binding.homeConnection3.setOnClickListener{
+            Toast.makeText(context, "homeConnection3.onClicked", Toast.LENGTH_SHORT).show()
+            anim()
+        }
+        // 사진 등록
+        binding.btnAddMedicine1.setOnClickListener{
+            Toast.makeText(context, "btnAddMedicine1.onClicked", Toast.LENGTH_SHORT).show()
+            anim()
+        }
+        // 직접 등록
+        binding.btnAddMedicine2.setOnClickListener{
+            Toast.makeText(context, "btnAddMedicine2.onClicked.", Toast.LENGTH_SHORT).show()
+            anim()
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
