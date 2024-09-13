@@ -27,7 +27,7 @@ class LocalMyPharmacyDataSource @Inject constructor(
         PHARMACY_SHARED_PREFS, Activity.MODE_PRIVATE)
     private val editorPharmacy = sharedPreferencesPharmacy.edit()
 
-    override fun getMyPharmacies(userId: String): List<MyPharmacy> {
+    override suspend fun getMyPharmacies(userId: String): List<MyPharmacy> {
         val list = sharedPreferencesPharmacy.getString(FAVORITE_PHARMACY, null)?.let {
             val gson = Gson()
             val type = object : TypeToken<List<MyPharmacy>>() {}.type
@@ -38,20 +38,20 @@ class LocalMyPharmacyDataSource @Inject constructor(
         return list
     }
 
-    override fun saveMyPharmacies(pharmacies: List<MyPharmacy>) {
+    override suspend fun saveMyPharmacies(pharmacies: List<MyPharmacy>) {
         val gson = Gson()
         val json = gson.toJson(pharmacies)
         editorPharmacy.putString(FAVORITE_PHARMACY, json).apply()
         Log.d(TAG, "saveMyPharmacy() Run. myPharmacy.size: ${pharmacies.size}")
     }
 
-    override fun addSinglePharmacy(pharmacy: MyPharmacy) {
+    override suspend fun addSinglePharmacy(userId: String, pharmacy: MyPharmacy) {
         saveMyPharmacies(
             listOf(pharmacy) + getMyPharmacies("")
         )
     }
 
-    override fun removePharmacy(pharmacy: MyPharmacy) {
+    override suspend fun removePharmacy(pharmacy: MyPharmacy) {
         val lists = getMyPharmacies("").toMutableList().filterNot {
             it == pharmacy
         }

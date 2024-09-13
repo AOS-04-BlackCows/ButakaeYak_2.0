@@ -24,13 +24,12 @@ class FriendsDataSource @Inject constructor(
 
     private val db = Firebase.firestore
 
-    suspend fun getMyProposes(userId: String): List<Friend> {
-        val result = db.collection(FRIEND_COLLECTION)
-            .whereEqualTo(PROPOSER, userId)
-            .get().await().toObjects(Friend::class.java)
-
-        return result
-    }
+    suspend fun getMyProposes(userId: String): List<Friend>
+        = kotlin.runCatching {
+            db.collection(FRIEND_COLLECTION)
+                .whereEqualTo(PROPOSER, userId)
+                .get().await().toObjects(Friend::class.java)
+            }.getOrDefault(listOf())
 
     suspend fun getMyReceives(userId: String): List<Friend> {
         val result = db.collection(FRIEND_COLLECTION)
@@ -55,7 +54,7 @@ class FriendsDataSource @Inject constructor(
             .whereEqualTo(RECEIVER, opponentId)
             .get().await()
 
-        if(!proposer.isEmpty) {
+        if(proposer.documents.isNotEmpty()) {
             val id = proposer.documents[0].id
             db.collection(FRIEND_COLLECTION)
                 .document(id)
@@ -68,7 +67,7 @@ class FriendsDataSource @Inject constructor(
             .whereEqualTo(RECEIVER, userId)
             .get().await()
 
-        if(!receiver.isEmpty) {
+        if(receiver.documents.isNotEmpty()) {
             val id = receiver.documents[0].id
             db.collection(FRIEND_COLLECTION)
                 .document(id)

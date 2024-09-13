@@ -4,8 +4,8 @@ import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.data.models.MyPharmacy
 
 interface MyPharmacyDataSource {
-    fun getMyPharmacies(userId: String): List<MyPharmacy>
-    fun saveMyPharmacies(pharmacies: List<MyPharmacy>)
-    fun addSinglePharmacy(pharmacy: MyPharmacy)
-    fun removePharmacy(pharmacy: MyPharmacy)
+    suspend fun getMyPharmacies(userId: String): List<MyPharmacy>
+    suspend fun saveMyPharmacies(pharmacies: List<MyPharmacy>)
+    suspend fun addSinglePharmacy(userId: String, pharmacy: MyPharmacy)
+    suspend fun removePharmacy(pharmacy: MyPharmacy)
 }
