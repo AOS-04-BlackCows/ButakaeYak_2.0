@@ -1,4 +1,4 @@
-package com.blackcows.butakaeyak.ui.home
+package com.blackcows.butakaeyak.ui.search
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.blackcows.butakaeyak.R
-import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
 
 /**
  * A fragment representing a list of Items.

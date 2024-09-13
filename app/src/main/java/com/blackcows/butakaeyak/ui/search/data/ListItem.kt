@@ -1,4 +1,4 @@
-package com.blackcows.butakaeyak.ui.home.data
+package com.blackcows.butakaeyak.ui.search.data
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

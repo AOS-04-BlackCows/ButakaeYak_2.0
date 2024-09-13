@@ -1,4 +1,4 @@
-package com.blackcows.butakaeyak.ui.home
+package com.blackcows.butakaeyak.ui.search
 
 import android.content.Context
 import android.os.Bundle
@@ -19,7 +19,7 @@ import com.blackcows.butakaeyak.data.models.SearchCategoryDataSource
 import com.blackcows.butakaeyak.databinding.BottomsheetSearchfilterBinding
 import com.blackcows.butakaeyak.databinding.FragmentSearchBinding
 import com.blackcows.butakaeyak.databinding.ItemSearchfilterBinding
-import com.blackcows.butakaeyak.ui.home.adapter.HomeViewPager
+import com.blackcows.butakaeyak.ui.search.adapter.HomeViewPager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable

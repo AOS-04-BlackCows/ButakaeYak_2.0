@@ -3,7 +3,7 @@ package com.blackcows.butakaeyak.ui.navigation
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.blackcows.butakaeyak.ui.home.SearchFragment
+import com.blackcows.butakaeyak.ui.search.SearchFragment
 import com.blackcows.butakaeyak.ui.map.MapFragment
 import com.blackcows.butakaeyak.ui.take.fragment.TakeFragment
 import com.blackcows.butakaeyak.ui.user.UserFragment
