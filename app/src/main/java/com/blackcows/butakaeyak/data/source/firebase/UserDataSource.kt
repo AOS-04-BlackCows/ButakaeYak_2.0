@@ -68,10 +68,15 @@ class UserDataSource @Inject constructor(
         }
 
         if (!hasAccount.await() && !hasKakaoAccount.await()) {
-            db.collection("users")
+            db.collection(USER_COLLECTION)
                 .add(user.toMap()).await()
 
             Result.success(user)
         } else Result.failure(DUPLICATED_EXCEPTION)
+    }
+
+    //TODO: token 등록
+    suspend fun registerDeviceToken(token: String) {
+
     }
 }
