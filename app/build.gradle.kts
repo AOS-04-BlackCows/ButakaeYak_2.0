@@ -90,6 +90,11 @@ android {
             "PHARMACY_LIST_INFO_KEY",
             properties.getProperty("pharmacy_list_info_key")
         )
+        buildConfigField(
+            "String",
+            "MEDICINE_INFO_KEY",
+            properties.getProperty("medicine_info_key")
+        )
     }
 
     buildTypes {

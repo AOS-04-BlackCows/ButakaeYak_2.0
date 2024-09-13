@@ -3,15 +3,20 @@ package com.blackcows.butakaeyak.di
 import com.algolia.search.saas.Client
 import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
-import com.blackcows.butakaeyak.data.retrofit.DrugApiService
-import com.blackcows.butakaeyak.data.retrofit.KakaoApiService
+import com.blackcows.butakaeyak.data.retrofit.service.DrugApiService
+import com.blackcows.butakaeyak.data.retrofit.service.KakaoApiService
 import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
+import com.blackcows.butakaeyak.data.retrofit.service.MedicineInfoService
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import retrofit2.Converter
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -38,6 +43,12 @@ class ProvideModule {
     //@ViewModelScoped
     fun provideKakaoApiService() : KakaoApiService {
         return RetrofitClient.getInstance(ApiBaseUrl.KakaoPlaceSearchUrl).create(KakaoApiService::class.java)
+    }
+
+    @Provides
+    //@ViewModelScoped
+    fun provideMedicineInfoApiService() : MedicineInfoService {
+        return RetrofitClient.getInstance(ApiBaseUrl.MedicineInfoUrl).create(MedicineInfoService::class.java)
     }
     
 }

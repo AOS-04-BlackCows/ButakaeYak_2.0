@@ -1,10 +1,5 @@
 package com.blackcows.butakaeyak
 
-import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
-import com.blackcows.butakaeyak.data.retrofit.DrugApiService
-import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 import org.junit.Assert.*

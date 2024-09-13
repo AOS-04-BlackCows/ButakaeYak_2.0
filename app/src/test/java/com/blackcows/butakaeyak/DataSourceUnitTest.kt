@@ -1,15 +1,14 @@
 package com.blackcows.butakaeyak
 
 import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
-import com.blackcows.butakaeyak.data.retrofit.DrugApiService
+import com.blackcows.butakaeyak.data.retrofit.service.DrugApiService
 import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
+import com.blackcows.butakaeyak.data.source.api.MedicineInfoDataSource
 import com.blackcows.butakaeyak.data.source.firebase.MedicineDataSource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import junit.framework.TestCase.assertNotNull
-import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
@@ -19,8 +18,6 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 @HiltAndroidTest
 @RunWith(RobolectricTestRunner::class)
@@ -31,6 +28,8 @@ class DataSourceUnitTest {
     var hiltRule = HiltAndroidRule(this)
 
     @Inject lateinit var medicineDataSource: MedicineDataSource
+
+    @Inject lateinit var medicineInfoDataSource: MedicineInfoDataSource
 
     @Before
     fun setUp() {
@@ -76,6 +75,15 @@ class DataSourceUnitTest {
 
         result.forEachIndexed { i, it->
             println("$i) ${it.name}")
+        }
+    }
+
+    @Test
+    fun getMedicineDetail() = runBlocking {
+        val result = medicineInfoDataSource.searchMedicines("타이레놀")
+
+        result.forEachIndexed { i, it->
+            println("$i) ${it.name} \n effect: ${it.effect} \n cation: ${it.caution}")
         }
     }
 }
