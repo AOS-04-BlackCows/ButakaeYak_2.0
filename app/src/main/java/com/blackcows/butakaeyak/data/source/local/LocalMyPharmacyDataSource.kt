@@ -18,7 +18,7 @@ class LocalMyPharmacyDataSource @Inject constructor(
     companion object {
         private const val TAG = "PHARMACY_DATASOURCE"
         private const val PHARMACY_SHARED_PREFS = "PHARMACYS"
-        const val FAVORITE_PHARMACY = "PHARMACY_IN_INTEREST"
+        private const val FAVORITE_PHARMACY = "PHARMACY_IN_INTEREST"
     }
 
     private val sharedPreferencesPharmacy: SharedPreferences = context.getSharedPreferences(

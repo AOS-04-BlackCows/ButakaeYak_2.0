@@ -18,7 +18,7 @@ class LocalUtilsDataSource @Inject constructor(
         private const val TAG = "LocalUtilsDataSource"
 
         private const val APP_SHARED_PREFS = "BUAKAEYAK"
-        const val USER_DATA = "USER_DATA"
+        private const val USER_DATA = "USER_DATA"
     }
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(APP_SHARED_PREFS, Activity.MODE_PRIVATE)
