@@ -2,6 +2,8 @@ package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -15,13 +17,19 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentNameBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.take.FormSelectDialog
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
+import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
+import com.blackcows.butakaeyak.ui.take.adapter.NameAdapter
+import com.blackcows.butakaeyak.ui.take.data.AlarmItem
+import com.blackcows.butakaeyak.ui.take.data.NameItem
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment.Companion
 
 class NameFragment : Fragment() {
@@ -29,6 +37,11 @@ class NameFragment : Fragment() {
     //binding 설정
     private var _binding: FragmentNameBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var adapter : NameAdapter
+
+    //data class
+    private val mItems = mutableListOf<NameItem>()
 
     //TODO: 여기!
     private val onBackPressed = {
@@ -73,7 +86,32 @@ class NameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
+
+            btnMedicineForm.setOnClickListener {
+                val formDialog = FormSelectDialog(requireContext(),object :
+                    FormSelectDialog.OnFormSelectListener {
+                    override fun onFormSelected(image: Drawable) {
+                        btnMedicineForm.background = image
+                    }
+                }, btnMedicineForm.background)
+                formDialog.show()
+            }
+
             etMedicineName.setText(medicine.name!!)
+
+            adapter = NameAdapter(mItems, requireContext())
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+            btnPlusMinus.setOnClickListener {
+                val image = btnMedicineForm.background
+                val bitmap = (image as BitmapDrawable).bitmap
+                val text = etMedicineName.text.toString()
+                val nameItem = NameItem(bitmap, text)
+                adapter.addItem(nameItem)
+            }
+
+            tvSize.text = "총 ${adapter.itemCount}개의 약이 등록 예정"
 
             if(etMedicineName.length() > 0){
                 btnNext.apply{
@@ -95,9 +133,6 @@ class NameFragment : Fragment() {
                     }
                 }
             }
-        }
-        binding.ivDelete.setOnClickListener {
-            binding.etMedicineName.text = null
         }
 
         //TODO: 여기!
