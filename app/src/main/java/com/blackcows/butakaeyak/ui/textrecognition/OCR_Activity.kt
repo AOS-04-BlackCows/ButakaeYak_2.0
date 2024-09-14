@@ -1,17 +1,25 @@
 package com.blackcows.butakaeyak.ui.textrecognition
 
+import android.Manifest
+import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Insets.add
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.Recorder
 import androidx.camera.video.Recording
 import androidx.camera.video.VideoCapture
@@ -22,21 +30,11 @@ import com.google.android.gms.common.annotation.KeepName
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
 import com.kakao.sdk.template.model.Button
-import java.util.concurrent.ExecutorService
-import android.Manifest
-import android.content.ContentValues
-import android.provider.MediaStore
-import android.util.Log
-import android.widget.Toast
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
-import androidx.camera.lifecycle.ProcessCameraProvider
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
@@ -80,13 +78,14 @@ class OCR_Activity : AppCompatActivity()  {
             Log.d(TAG, "takePhoto")
         }
         binding.videoCaptureButton.setOnClickListener {
-            captureVideo()
             Log.d(TAG, "captureVideo")
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
     }
+
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>, grantResults:
@@ -137,8 +136,9 @@ class OCR_Activity : AppCompatActivity()  {
         val imageCapture = imageCapture ?: return
 
         // Create time stamped name and MediaStore entry.
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
+        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.KOREA)
             .format(System.currentTimeMillis())
+
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
@@ -163,18 +163,29 @@ class OCR_Activity : AppCompatActivity()  {
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                 }
-
-                override fun
-                        onImageSaved(output: ImageCapture.OutputFileResults){
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val msg = "Photo capture succeeded: ${output.savedUri}"
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d(TAG, msg)
+
+                    output.savedUri?.let { uri ->
+                        try {
+                            // 저장된 이미지의 URI로부터 InputImage 생성
+                            val image = InputImage.fromFilePath(this@OCR_Activity, uri)
+
+                            // 텍스트 인식 시작
+                            runTextRecognition(image)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            Toast.makeText(baseContext, "Failed to load image", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         )
-    }
 
-    private fun captureVideo() {}
+
+    }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
@@ -184,6 +195,40 @@ class OCR_Activity : AppCompatActivity()  {
         super.onDestroy()
         cameraExecutor.shutdown()
     }
+
+    private fun runTextRecognition(image: InputImage) {
+//        val image = InputImage.fromMediaImage(mSelectedImage, 0)
+
+        binding.videoCaptureButton.setEnabled(false)//임시로
+        recognizer.process(image)
+            .addOnSuccessListener { texts ->
+                binding.videoCaptureButton.setEnabled(true)//임시로
+                processTextRecognitionResult(texts)
+            }
+            .addOnFailureListener { e -> // Task failed with an exception
+                binding.videoCaptureButton.setEnabled(true)//임시로
+                e.printStackTrace()
+            }
+    }
+    private fun processTextRecognitionResult(texts: Text) {
+        val blocks: List<Text.TextBlock> = texts.textBlocks
+        if (blocks.isEmpty()) {
+            Toast.makeText(baseContext, "No text found", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // 인식된 텍스트를 한 줄씩 표시
+        val resultText = StringBuilder()
+        for (block in blocks) {
+            for (line in block.lines) {
+                resultText.append(line.text).append("\n")
+            }
+        }
+
+        // 결과를 TextView에 표시
+        binding.textViewOcrResult.text = resultText.toString()
+    }
+
 
     companion object {
         private const val TAG = "CameraXApp"
