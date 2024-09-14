@@ -81,6 +81,8 @@
     <!-- Name -->
     <string name="medicine_name_explanation">복용하는 약 종류\n및 이름을 작성하세요</string>
     <string name="hint_medicine_name">입력해주세요</string>
+    <string name="medicine_guide">약 등록 안내</string>
+    <string name="medicine_guide_particular">· 약 제형을 선택한 후, 약 이름을 입력해주세요\n· 같은 시간대에 복용하는 약은 ‘+’ 버튼으로 추가하세요.\n· ‘다음’ 버튼을 눌러 날짜와 시간을 설정하세요.</string>
 
     <!-- Search -->
     <string name="hint_search">검색어를 입력해 주세요.</string>
