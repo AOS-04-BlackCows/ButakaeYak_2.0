@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.blackcows.butakaeyak.data.models.MedicineGroup
+import com.blackcows.butakaeyak.data.models.MedicineGroupResponse
 import com.blackcows.butakaeyak.data.source.link.MedicineGroupDataSource
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -27,31 +28,31 @@ class LocalMedicineGroupDataSource @Inject constructor(
     private val editor = sharedPreferences.edit()
 
 
-    override suspend fun getMedicineGroups(userId: String): List<MedicineGroup> {
+    override suspend fun getMedicineGroups(userId: String): List<MedicineGroupResponse> {
         val list = sharedPreferences.getString(MEDICINE_DETAIL, null)?.let {
             val gson = Gson()
-            val type = object : TypeToken<List<MedicineGroup>>() {}.type
+            val type = object : TypeToken<List<MedicineGroupResponse>>() {}.type
             gson.fromJson(it, type)
-        } ?: listOf<MedicineGroup>()
+        } ?: listOf<MedicineGroupResponse>()
 
         return list
     }
 
-    override suspend fun saveMedicineGroup(groups: List<MedicineGroup>) {
+    private fun saveMedicineGroup(groups: List<MedicineGroupResponse>) {
         val gson = Gson()
         val json = gson.toJson(groups)
         editor.putString(MEDICINE_DETAIL, json).apply()
     }
 
     override suspend fun addSingleGroup(group: MedicineGroup) {
-        saveMedicineGroup(
-            listOf(group) + getMedicineGroups("0")
-        )
+        val list = getMedicineGroups("0").toMutableList()
+        list.add(group.toResponse())
+        saveMedicineGroup(list)
     }
 
     override suspend fun removeGroup(group: MedicineGroup) {
         val lists = getMedicineGroups("").toMutableList().filterNot {
-            it == group
+            it.id == group.id
         }
         saveMedicineGroup(lists)
     }

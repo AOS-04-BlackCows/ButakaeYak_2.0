@@ -3,6 +3,7 @@ package com.blackcows.butakaeyak.data.source.firebase
 import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.data.models.Memo
 import com.blackcows.butakaeyak.data.models.MemoRequest
+import com.blackcows.butakaeyak.data.models.MemoResponse
 import com.blackcows.butakaeyak.data.models.User
 import com.blackcows.butakaeyak.data.source.firebase.UserDataSource.Companion.DUPLICATED_EXCEPTION
 import com.blackcows.butakaeyak.data.toMap
@@ -48,10 +49,10 @@ class MemoDataSource @Inject constructor(
         }
     }
 
-    suspend fun getMemoById(id: String): Memo? =
+    suspend fun getMemoById(id: String): MemoResponse? =
         kotlin.runCatching {
             db.collection(MEMO_COLLECTION)
                 .document(id)
-                .get().await().toObjectWithId<Memo>()
+                .get().await().toObjectWithId<MemoResponse>()
         }.getOrNull()
 }

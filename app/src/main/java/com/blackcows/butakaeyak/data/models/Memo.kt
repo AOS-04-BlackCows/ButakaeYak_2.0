@@ -25,3 +25,11 @@ data class MemoRequest(
     val createdAt: String,
     val updatedAt: String
 )
+data class MemoResponse(
+    val id: String,
+    val userId: String,
+    val groupId: String,
+    val content: String,
+    val createdAt: String,
+    val updatedAt: String
+)
