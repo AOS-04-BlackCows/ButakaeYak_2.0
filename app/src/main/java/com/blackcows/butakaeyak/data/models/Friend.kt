@@ -9,3 +9,9 @@ data class Friend(
     val receiver: String,
     val isConnected: Boolean
 )
+
+data class FriendRequest(
+    val proposer: String,
+    val receiver: String,
+    val isConnected: Boolean
+)

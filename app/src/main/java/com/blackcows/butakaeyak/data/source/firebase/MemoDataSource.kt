@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.data.source.firebase
 
+import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.data.models.Memo
 import com.blackcows.butakaeyak.data.models.User
 import com.blackcows.butakaeyak.data.source.firebase.UserDataSource.Companion.DUPLICATED_EXCEPTION
@@ -32,7 +33,7 @@ class MemoDataSource @Inject constructor(
     suspend fun getMemoById(id: String): Memo? {
         val memo = db.collection(MEMO_COLLECTION)
                         .document(id)
-                        .get().await()?.toObject(Memo::class.java)
+                        .get().await()?
 
         return memo
     }

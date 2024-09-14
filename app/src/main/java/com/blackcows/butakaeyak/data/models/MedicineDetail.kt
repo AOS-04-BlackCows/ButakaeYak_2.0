@@ -14,3 +14,14 @@ data class MedicineDetail(
     val caution: String,
     val storing: String,
 )
+
+data class MedicineDetailOrigin(
+    val id: String,
+    val name: String,
+    val entpName: String,
+    val shape: String,
+    val effect: String,
+    val instruction: String,
+    val caution: String,
+    val storing: String,
+)

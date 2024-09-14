@@ -5,6 +5,8 @@ import com.blackcows.butakaeyak.data.retrofit.service.DrugApiService
 import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
 import com.blackcows.butakaeyak.data.source.api.MedicineInfoDataSource
 import com.blackcows.butakaeyak.data.source.firebase.MedicineDataSource
+import com.blackcows.butakaeyak.data.toMap
+import com.google.firebase.firestore.auth.User
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication

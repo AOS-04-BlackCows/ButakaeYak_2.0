@@ -2,6 +2,9 @@ package com.blackcows.butakaeyak.data.source.firebase
 
 import android.util.Log
 import com.blackcows.butakaeyak.data.models.Friend
+import com.blackcows.butakaeyak.data.models.FriendRequest
+import com.blackcows.butakaeyak.data.toMap
+import com.blackcows.butakaeyak.data.toObjectsWithId
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObjects
@@ -24,20 +27,33 @@ class FriendsDataSource @Inject constructor(
 
     private val db = Firebase.firestore
 
+    suspend fun propose(userId: String, opponentId: String) {
+        runCatching {
+            val obj = FriendRequest(
+                proposer = userId,
+                receiver = opponentId,
+                isConnected = false
+            )
+            db.collection(FRIEND_COLLECTION)
+                .add(obj)
+        }.onFailure {
+            Log.w(TAG, "propose failed) msg: ${it.message}")
+        }
+    }
+
     suspend fun getMyProposes(userId: String): List<Friend>
         = kotlin.runCatching {
             db.collection(FRIEND_COLLECTION)
                 .whereEqualTo(PROPOSER, userId)
-                .get().await().toObjects(Friend::class.java)
+                .get().await().toObjectsWithId<Friend>()
             }.getOrDefault(listOf())
 
-    suspend fun getMyReceives(userId: String): List<Friend> {
-        val result = db.collection(FRIEND_COLLECTION)
-            .whereEqualTo(RECEIVER, userId)
-            .get().await().toObjects(Friend::class.java)
-
-        return result
-    }
+    suspend fun getMyReceives(userId: String): List<Friend>
+        = kotlin.runCatching {
+            db.collection(FRIEND_COLLECTION)
+                .whereEqualTo(RECEIVER, userId)
+                .get().await().toObjectsWithId<Friend>()
+        }.getOrDefault(listOf())
 
     suspend fun getMyFriends(userId: String): List<Friend> = coroutineScope {
         val propose =  async { getMyProposes(userId) }
@@ -49,32 +65,21 @@ class FriendsDataSource @Inject constructor(
     }
 
     suspend fun cancelFriend(userId: String, opponentId: String) {
-        val proposer = db.collection(FRIEND_COLLECTION)
-            .whereEqualTo(PROPOSER, userId)
-            .whereEqualTo(RECEIVER, opponentId)
-            .get().await()
+        kotlin.runCatching {
+            val relationship = getMyFriends(userId).firstOrNull {
+                it.isConnected && (it.proposer == opponentId || it.receiver == opponentId)
+            }
 
-        if(proposer.documents.isNotEmpty()) {
-            val id = proposer.documents[0].id
-            db.collection(FRIEND_COLLECTION)
-                .document(id)
-                .delete().await()
-            return
+            if(relationship != null) {
+                db.collection(FRIEND_COLLECTION)
+                    .document(relationship.id)
+                    .delete()
+                    .await()
+            } else {
+                Log.w(TAG, "friends에 등록돼있지 않은데 삭제 시도함")
+            }
+        }.onFailure {
+            Log.w(TAG, "cancelFriend failed) msg: ${it.message}")
         }
-
-        val receiver = db.collection(FRIEND_COLLECTION)
-            .whereEqualTo(PROPOSER, opponentId)
-            .whereEqualTo(RECEIVER, userId)
-            .get().await()
-
-        if(receiver.documents.isNotEmpty()) {
-            val id = receiver.documents[0].id
-            db.collection(FRIEND_COLLECTION)
-                .document(id)
-                .delete().await()
-            return
-        }
-
-        Log.w(TAG, "friends에 등록돼있지 않은데 삭제 시도함")
     }
 }

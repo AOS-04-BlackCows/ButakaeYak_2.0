@@ -7,8 +7,18 @@ data class Memo(
     @Expose(serialize = false)
     val id: String,
     val userId: String,
-    val groups: MedicineGroup,
+    val group: MedicineGroup,
     val content: String,
     val createdAt: LocalDate,
     val updatedAt: LocalDate
+)
+
+data class MemoOrigin(
+    @Expose(serialize = false)
+    val id: String,
+    val userId: String,
+    val groupId: String,
+    val content: String,
+    val createdAt: String,
+    val updatedAt: String
 )
