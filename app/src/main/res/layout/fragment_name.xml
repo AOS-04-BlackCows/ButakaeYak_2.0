@@ -119,11 +119,10 @@
         android:layout_marginStart="16dp"
         android:padding="8dp"
         android:paddingStart="16dp"
-        android:background="@drawable/user_tv_stroke_green_radius_12dp"
         app:layout_constraintTop_toTopOf="@id/cl_medicine_form"
         app:layout_constraintBottom_toBottomOf="@id/cl_medicine_form"
         app:layout_constraintStart_toEndOf="@id/cl_medicine_form" />
-    
+
     <ImageButton
         android:id="@+id/btn_plus_minus"
         android:layout_width="48dp"
