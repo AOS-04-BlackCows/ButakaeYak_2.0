@@ -2,9 +2,11 @@ package com.blackcows.butakaeyak.data.source.firebase
 
 import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.data.models.Memo
+import com.blackcows.butakaeyak.data.models.MemoRequest
 import com.blackcows.butakaeyak.data.models.User
 import com.blackcows.butakaeyak.data.source.firebase.UserDataSource.Companion.DUPLICATED_EXCEPTION
 import com.blackcows.butakaeyak.data.toMap
+import com.blackcows.butakaeyak.data.toObjectWithId
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.firestore
@@ -23,18 +25,33 @@ class MemoDataSource @Inject constructor(
         private const val MEDICINE_GROUP_ID = "groupId"
     }
 
-
     private val db = Firebase.firestore
 
     suspend fun saveMemo(memo: Memo) {
-        db.collection(MEMO_COLLECTION)
-            .add(memo.toMap()).await()
-    }
-    suspend fun getMemoById(id: String): Memo? {
-        val memo = db.collection(MEMO_COLLECTION)
-                        .document(id)
-                        .get().await()?
+        kotlin.runCatching {
+            val request = memo.toRequest()
 
-        return memo
+            db.collection(MEMO_COLLECTION)
+                .add(request.toMap())
+                .await()
+        }
     }
+
+    suspend fun editMemo(memo: Memo) {
+        kotlin.runCatching {
+            val request = memo.toRequest()
+
+            db.collection(MEMO_COLLECTION)
+                .document(memo.id)
+                .set(request.toMap())
+                .await()
+        }
+    }
+
+    suspend fun getMemoById(id: String): Memo? =
+        kotlin.runCatching {
+            db.collection(MEMO_COLLECTION)
+                .document(id)
+                .get().await().toObjectWithId<Memo>()
+        }.getOrNull()
 }

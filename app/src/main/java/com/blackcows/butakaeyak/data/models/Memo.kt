@@ -11,11 +11,14 @@ data class Memo(
     val content: String,
     val createdAt: LocalDate,
     val updatedAt: LocalDate
-)
+) {
+    fun toRequest()
+        = MemoRequest(
+            userId, group.id, content, createdAt.toString(), updatedAt.toString()
+        )
+}
 
-data class MemoOrigin(
-    @Expose(serialize = false)
-    val id: String,
+data class MemoRequest(
     val userId: String,
     val groupId: String,
     val content: String,
