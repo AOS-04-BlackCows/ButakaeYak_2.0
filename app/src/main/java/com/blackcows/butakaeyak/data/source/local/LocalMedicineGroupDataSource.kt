@@ -27,7 +27,7 @@ class LocalMedicineGroupDataSource @Inject constructor(
     private val editor = sharedPreferences.edit()
 
 
-    override fun getMedicineGroups(userId: String): List<MedicineGroup> {
+    override suspend fun getMedicineGroups(userId: String): List<MedicineGroup> {
         val list = sharedPreferences.getString(MEDICINE_DETAIL, null)?.let {
             val gson = Gson()
             val type = object : TypeToken<List<MedicineGroup>>() {}.type
@@ -37,19 +37,19 @@ class LocalMedicineGroupDataSource @Inject constructor(
         return list
     }
 
-    override fun saveMedicineGroup(groups: List<MedicineGroup>) {
+    override suspend fun saveMedicineGroup(groups: List<MedicineGroup>) {
         val gson = Gson()
         val json = gson.toJson(groups)
         editor.putString(MEDICINE_DETAIL, json).apply()
     }
 
-    override fun addSingleGroup(group: MedicineGroup) {
+    override suspend fun addSingleGroup(group: MedicineGroup) {
         saveMedicineGroup(
             listOf(group) + getMedicineGroups("0")
         )
     }
 
-    override fun removeGroup(group: MedicineGroup) {
+    override suspend fun removeGroup(group: MedicineGroup) {
         val lists = getMedicineGroups("").toMutableList().filterNot {
             it == group
         }
