@@ -116,11 +116,9 @@ class CycleFragment : Fragment() {
 
             if (myMedicine.alarms.isNotEmpty()) {
                 alarmList.clear() // 기존 알람 리스트 초기화
-                Log.d("CycleFragment", "Found alarms: ${myMedicine.alarms}")
+                Log.d("CycleFragment", "알람 시간: ${myMedicine.alarms}")
 
                 for (alarmString in myMedicine.alarms) {
-                    Log.d("CycleFragment", "Processing alarm: $alarmString")
-
                     // 시간 문자열 포맷이 맞는지 확인
                     val timeParts = alarmString.split(":")
                     if (timeParts.size == 2) {
@@ -221,8 +219,10 @@ class CycleFragment : Fragment() {
             Log.d("requestCode","${alarm.requestCode}")
             val intent = Intent(requireContext(), AlarmReceiver::class.java)
 
+            intent.putExtra("NOTIFICATION_ID", alarm.requestCode)
             intent.putExtra("NOTIFICATION_TITLE","${binding.tvCycleName.text}")
             intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
+
             val pendingIntent = PendingIntent.getBroadcast(
                 context, alarm.requestCode, intent, PendingIntent.FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
             )
@@ -231,13 +231,8 @@ class CycleFragment : Fragment() {
                 // Android 12 이상에서 정확한 알람 설정
                 try {
                     if (alarmManager?.canScheduleExactAlarms() == true) {
-                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
-                        alarmManager.setRepeating(
-                            AlarmManager.RTC_WAKEUP,
-                            alarm.timeInMillis,
-                            AlarmManager.INTERVAL_DAY,
-                            pendingIntent
-                        )
+                        val alarmClock = AlarmManager.AlarmClockInfo(alarm.timeInMillis, pendingIntent)
+                        alarmManager.setAlarmClock(alarmClock, pendingIntent)
                     } else {
                         val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
                         startActivity(intent)
@@ -245,15 +240,6 @@ class CycleFragment : Fragment() {
                 } catch (e: SecurityException) {
                     Toast.makeText(context, "알림 설정에 실패했습니다. 권한을 확인해주세요.", Toast.LENGTH_SHORT).show()
                 }
-            } else {
-                // Android 12 이하에서 정확한 알람 설정
-                alarmManager?.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
-                alarmManager?.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    alarm.timeInMillis,
-                    AlarmManager.INTERVAL_DAY,
-                    pendingIntent
-                )
             }
         }
 
