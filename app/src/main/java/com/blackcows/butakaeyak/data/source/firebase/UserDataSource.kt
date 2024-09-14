@@ -1,7 +1,11 @@
 package com.blackcows.butakaeyak.data.source.firebase
 
+import android.util.Log
 import com.blackcows.butakaeyak.data.models.User
+import com.blackcows.butakaeyak.data.models.UserRequest
 import com.blackcows.butakaeyak.data.toMap
+import com.blackcows.butakaeyak.data.toObjectsWithId
+import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.CoroutineScope
@@ -34,49 +38,54 @@ class UserDataSource @Inject constructor(
         }
     }
 
-    suspend fun getUserWithLoginId(id: String, pwd: String): Result<User> {
-        val result = db.collection(USER_COLLECTION)
-            .whereEqualTo(LOGIN_ID, id)
-            .whereEqualTo(PASSWORD, pwd)
-            .get().await()?.toObjects(User::class.java)?.getOrNull(0)
-
-        return if(result == null) Result.failure(USER_NOT_FOUND_EXCEPTION)
-                else Result.success(result)
+    suspend fun getUserWithLoginId(id: String, pwd: String): User? {
+        return kotlin.runCatching {
+            db.collection(USER_COLLECTION)
+                .whereEqualTo(LOGIN_ID, id)
+                .whereEqualTo(PASSWORD, pwd)
+                .get().await().toObjectsWithId<User>().getOrNull(0)
+        }.getOrNull()
     }
 
     private suspend fun isDuplicatedId(id: String): Boolean {
-        val result = db.collection(USER_COLLECTION)
-            .whereEqualTo(LOGIN_ID, id)
-            .get().await()?.toObjects(User::class.java)?.getOrNull(0)
+        return kotlin.runCatching {
+            val result = db.collection(USER_COLLECTION)
+                .whereEqualTo(LOGIN_ID, id)
+                .get().await()?.toObjects(User::class.java)?.getOrNull(0)
 
-        return (result != null)
+            (result != null)
+        }.getOrDefault(false)
     }
 
-    suspend fun getUserWithKakaoId(id: Long): Result<User> {
-        val result = db.collection(USER_COLLECTION)
-            .whereEqualTo(KAKAO_ID, id)
-            .get().await()?.toObjects(User::class.java)?.getOrNull(0)
-
-        return if(result == null) Result.failure(USER_NOT_FOUND_EXCEPTION)
-        else Result.success(result)
-    }
-
-    suspend fun saveUser(user: User): Result<User> = coroutineScope {
-        val hasAccount = async { user.loginId?.let { isDuplicatedId(user.loginId) } ?: false }
-        val hasKakaoAccount = async {
-            (user.kakaoId != null && getUserWithKakaoId(user.kakaoId).isSuccess)
-        }
-
-        if (!hasAccount.await() && !hasKakaoAccount.await()) {
+    suspend fun getUserWithKakaoId(id: Long): User? {
+        return kotlin.runCatching {
             db.collection(USER_COLLECTION)
-                .add(user.toMap()).await()
-
-            Result.success(user)
-        } else Result.failure(DUPLICATED_EXCEPTION)
+                .whereEqualTo(KAKAO_ID, id)
+                .get().await().toObjectsWithId<User>().firstOrNull()
+        }.getOrNull()
     }
 
-    //TODO: token 등록
-    suspend fun registerDeviceToken(token: String) {
+    suspend fun saveUser(userRequest: UserRequest) {
+        kotlin.runCatching {
+            db.collection(USER_COLLECTION)
+                .add(userRequest)
+                .await()
+        }.onFailure {
+            Log.w(TAG, "saveUser Failed) msg: ${it.message}")
+        }
+    }
 
+    suspend fun registerDeviceToken(user: User, token: String): User? {
+        return kotlin.runCatching {
+            val withToken = user.copy(
+                deviceToken = token
+            )
+
+            db.collection(USER_COLLECTION)
+                .document(user.id)
+                .set(withToken)
+
+            withToken
+        }.getOrNull()
     }
 }
