@@ -122,6 +122,7 @@ class CycleFragment : Fragment() {
 
         Log.d("CycleFragment", "${myMedicine.medicine.name}, ${myMedicine.medicine.id}")
 
+
         binding.apply {
             ivBack.setOnClickListener {
                 onBackPressed()
