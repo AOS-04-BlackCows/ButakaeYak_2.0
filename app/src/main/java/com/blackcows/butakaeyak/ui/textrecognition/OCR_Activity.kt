@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES
@@ -13,6 +14,8 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -25,7 +28,14 @@ import androidx.camera.video.Recording
 import androidx.camera.video.VideoCapture
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.blackcows.butakaeyak.databinding.ActivityOcrBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageContractOptions
+import com.canhub.cropper.CropImageOptions
 import com.google.android.gms.common.annotation.KeepName
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
@@ -46,18 +56,48 @@ class OCR_Activity : AppCompatActivity()  {
 
     private var videoCapture: VideoCapture<Recorder>? = null
     private var recording: Recording? = null
+    private var profileUri: Uri? = null
 
     private lateinit var cameraExecutor: ExecutorService
 
     val recognizer = TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build()) //텍스트 인식에 사용될 모델
-    var imageView: ImageView? = null // 갤러리에서 가져온 이미지를 보여줄 뷰
-    var uri: Uri? = null // 갤러리에서 가져온 이미지에 대한 Uri
-    var bitmap: Bitmap? = null // 갤러리에서 가져온 이미지를 담을 비트맵
-    var image: InputImage? = null // ML 모델이 인식할 인풋 이미지
-    var text_info: TextView? = null // ML 모델이 인식한 텍스트를 보여줄 뷰
-    var btn_get_image: Button? = null
-    var btn_detection_image:Button? = null // 이미지 가져오기 버튼, 이미지 인식 버튼
-    //var recognizer: TextRecognizer? = null //텍스트 인식에 사용될 모델
+
+    //이미지 자르기
+    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful) {
+            // returned uri 사용
+            Glide.with(this@OCR_Activity)
+                .load(result.uriContent)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
+                .into(binding.takeImage)
+
+            profileUri = result.uriContent
+            runTextRecognition(InputImage.fromFilePath(this@OCR_Activity, profileUri?:"".toUri()))
+        } else {
+            val exception = result.error
+        }
+    }
+
+    //이미지 가져오기
+    private val pickMedia =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            // Callback is invoked after the user selects a media item or closes the
+            // photo picker.
+            if (uri != null) {
+                Log.d("PhotoPicker", "Selected URI: $uri")
+                cropImage.launch(
+                    CropImageContractOptions(
+                        uri = uri, // 크롭할 이미지 uri
+                        cropImageOptions = CropImageOptions(
+                            outputCompressFormat = Bitmap.CompressFormat.PNG,//사진 확장자 변경
+                            // 원하는 옵션 추가
+                        )
+                    )
+                )
+            } else {
+                Log.d("PhotoPicker", "No media selected")
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +118,8 @@ class OCR_Activity : AppCompatActivity()  {
             Log.d(TAG, "takePhoto")
         }
         binding.videoCaptureButton.setOnClickListener {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+
             Log.d(TAG, "captureVideo")
         }
 
@@ -172,7 +214,6 @@ class OCR_Activity : AppCompatActivity()  {
                         try {
                             // 저장된 이미지의 URI로부터 InputImage 생성
                             val image = InputImage.fromFilePath(this@OCR_Activity, uri)
-
                             // 텍스트 인식 시작
                             runTextRecognition(image)
                         } catch (e: Exception) {
@@ -197,19 +238,21 @@ class OCR_Activity : AppCompatActivity()  {
     }
 
     private fun runTextRecognition(image: InputImage) {
-//        val image = InputImage.fromMediaImage(mSelectedImage, 0)
-
-        binding.videoCaptureButton.setEnabled(false)//임시로
+        binding.imageCaptureButton.setEnabled(false)
+        binding.videoCaptureButton.setEnabled(false)
         recognizer.process(image)
             .addOnSuccessListener { texts ->
-                binding.videoCaptureButton.setEnabled(true)//임시로
+                binding.imageCaptureButton.setEnabled(true)
+                binding.videoCaptureButton.setEnabled(true)
                 processTextRecognitionResult(texts)
             }
             .addOnFailureListener { e -> // Task failed with an exception
-                binding.videoCaptureButton.setEnabled(true)//임시로
+                binding.imageCaptureButton.setEnabled(true)
+                binding.videoCaptureButton.setEnabled(true)
                 e.printStackTrace()
             }
     }
+
     private fun processTextRecognitionResult(texts: Text) {
         val blocks: List<Text.TextBlock> = texts.textBlocks
         if (blocks.isEmpty()) {
