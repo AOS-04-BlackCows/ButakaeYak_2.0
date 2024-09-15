@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.home
 
+import android.content.Intent
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.databinding.FragmentHomeBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeViewPagerAdapter
+import com.blackcows.butakaeyak.ui.textrecognition.OCR_Activity
 
 private const val TAG = "HomeFragment"
 class HomeFragment : Fragment(), View.OnClickListener {
@@ -134,14 +136,15 @@ class HomeFragment : Fragment(), View.OnClickListener {
         binding.homeConnection3.setOnClickListener{
             Toast.makeText(context, "homeConnection3.onClicked", Toast.LENGTH_SHORT).show()
         }
-        // 사진 등록
+        // 직접 등록
         binding.btnAddMedicine1.setOnClickListener{
             Toast.makeText(context, "btnAddMedicine1.onClicked", Toast.LENGTH_SHORT).show()
             anim()
         }
-        // 직접 등록
+        // 사진 등록
         binding.btnAddMedicine2.setOnClickListener{
             Toast.makeText(context, "btnAddMedicine2.onClicked.", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(requireActivity(), OCR_Activity::class.java))
             anim()
         }
     }
