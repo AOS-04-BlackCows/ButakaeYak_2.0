@@ -22,6 +22,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
+import com.blackcows.butakaeyak.databinding.BottomsheetCalendarBinding
+import com.blackcows.butakaeyak.databinding.BottomsheetMapDetailBinding
+import com.blackcows.butakaeyak.databinding.BottomsheetRepeatCycleBinding
 import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
@@ -31,6 +34,7 @@ import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class CycleFragment : Fragment() {
 
@@ -47,6 +51,12 @@ class CycleFragment : Fragment() {
     //viewModel 설정
     private val viewModel: TakeViewModel by activityViewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
+
+    private lateinit var bottomSheetView: BottomsheetCalendarBinding
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+
+    private lateinit var bottomSheetView2: BottomsheetRepeatCycleBinding
+    private lateinit var bottomSheetDialog2: BottomSheetDialog
 
     //뒤로가기 설정
     private val onBackPressed = {
@@ -102,17 +112,34 @@ class CycleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        bottomSheetView = BottomsheetCalendarBinding.inflate(layoutInflater)
+        bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(bottomSheetView.root)
+
+        bottomSheetView2 = BottomsheetRepeatCycleBinding.inflate(layoutInflater)
+        bottomSheetDialog2 = BottomSheetDialog(requireContext())
+        bottomSheetDialog2.setContentView(bottomSheetView2.root)
+
         Log.d("CycleFragment", "${myMedicine.medicine.name}, ${myMedicine.medicine.id}")
 
         binding.apply {
             ivBack.setOnClickListener {
                 onBackPressed()
             }
+
             adapter = CycleAdapter(requireContext(),alarmList){ itemCount ->
                 btnNextUpdate(itemCount)
             }
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+            clStartDay.setOnClickListener {
+                bottomSheetDialog.show()
+            }
+
+            clRepeatCycle.setOnClickListener {
+                bottomSheetDialog2.show()
+            }
 
             if (myMedicine.alarms.isNotEmpty()) {
                 alarmList.clear() // 기존 알람 리스트 초기화
@@ -148,7 +175,7 @@ class CycleFragment : Fragment() {
                 showCustomTimePickerDialog()
             }
 
-            tvCycleName.text = "약 이름 : ${myMedicine.medicine.name}"
+//            tvCycleName.text = "약 이름 : ${myMedicine.medicine.name}"
 
 
         }
@@ -220,7 +247,7 @@ class CycleFragment : Fragment() {
             val intent = Intent(requireContext(), AlarmReceiver::class.java)
 
             intent.putExtra("NOTIFICATION_ID", alarm.requestCode)
-            intent.putExtra("NOTIFICATION_TITLE","${binding.tvCycleName.text}")
+            intent.putExtra("NOTIFICATION_TITLE","${binding.etMedicineGroup.text}")
             intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
 
             val pendingIntent = PendingIntent.getBroadcast(
