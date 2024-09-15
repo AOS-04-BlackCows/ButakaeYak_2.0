@@ -56,24 +56,24 @@ class UserFragment : Fragment() {
         }
 
         binding.apply {
-            binding.vp2Favorite.adapter = userFavoriteViewPagerAdapter
+            //binding.vp2Favorite.adapter = userFavoriteViewPagerAdapter
 
             userViewModel.currentUser.observe(viewLifecycleOwner) {
                 Log.d("UserFragment", "userName: ${it?.name ?: "없음"}")
                 if(it != null) {
-                    tvMyName.text = "환영합니다. ${it.name!!}님"
+                    //tvMyName.text = "환영합니다. ${it.name!!}님"
                     //로그아웃 버튼
-                    clMyLogin.visibility = View.INVISIBLE
-                    clMyLogout.visibility = View.VISIBLE
+                    //clMyLogin.visibility = View.INVISIBLE
+                    //clMyLogout.visibility = View.VISIBLE
                 } else {
-                    tvMyName.text = "환영합니다!"
+                    //tvMyName.text = "환영합니다!"
                     //로그인 버튼
-                    clMyLogout.visibility = View.INVISIBLE
-                    clMyLogin.visibility = View.VISIBLE
+                    //clMyLogout.visibility = View.INVISIBLE
+                    //clMyLogin.visibility = View.VISIBLE
                 }
             }
 
-            clMyTerms.setOnClickListener {
+            //clMyTerms.setOnClickListener {
                 parentFragmentManager.beginTransaction()
                     .setCustomAnimations(R.anim.alpha,R.anim.none)
                     .replace(R.id.fragment_container_view,TermsFragment())
@@ -95,29 +95,28 @@ class UserFragment : Fragment() {
 //                    }else{
 //                        Glide.with(ivMyProfile).load(userData.thumbnail).into(ivMyProfile)
 //                    }
-                    tvMyName.text = "환영합니다. ${userData.name}님"
+                    //tvMyName.text = "환영합니다. ${userData.name}님"
                 }
             }
 
-            clMyLogin.setOnClickListener {
-                    val intent = Intent(requireActivity(), SignInActivity::class.java)
-                    signInResultCallback.launch(intent)
-            }
-            clMyLogout.setOnClickListener {
-                CoroutineScope(Dispatchers.IO).launch {
-                    userViewModel.logout()
-                }
-            }
+//            clMyLogin.setOnClickListener {
+//                    val intent = Intent(requireActivity(), SignInActivity::class.java)
+//                    signInResultCallback.launch(intent)
+//            }
+//            clMyLogout.setOnClickListener {
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    userViewModel.logout()
+//                }
+//            }
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onResume() {
-        super.onResume()
-        userViewModel.loadUser()
-    }
-}
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//        _binding = null
+//    }
+//
+//    override fun onResume() {
+//        super.onResume()
+//        userViewModel.loadUser()
+//    }
