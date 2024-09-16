@@ -2,23 +2,28 @@ package com.blackcows.butakaeyak.ui.search
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.blackcows.butakaeyak.MainViewModel
+import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
+import com.blackcows.butakaeyak.databinding.BottomsheetSearchDetailBinding
 import com.blackcows.butakaeyak.databinding.FragmentMedicineResultBinding
-import com.blackcows.butakaeyak.ui.search.adapter.HomeRecyclerAdapter
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.search.adapter.HomeRecyclerAdapter
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
+import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 private const val TAG = "약 결과"
 class MedicineResultFragment : Fragment() {
@@ -72,10 +77,27 @@ class MedicineResultFragment : Fragment() {
         binding.apply {
             medicineAdapter = HomeRecyclerAdapter(object : HomeRecyclerAdapter.ClickListener{
                 override fun onItemClick(item: Medicine) {
-                    MainNavigation.addFragment(
-                        SearchDetailFragment.newInstance(item),
-                        FragmentTag.SearchDetailFragmentInSearch
-                    )
+                    val bottomSheetView = BottomsheetSearchDetailBinding.inflate(layoutInflater)
+                    val bottomSheetDialog = BottomSheetDialog(requireContext())
+                    with(bottomSheetView){
+                        Glide.with(root).load(item.imageUrl?: R.drawable.medicine).into(detailIvMedicine)
+                        detailTvName.text = item.name
+                        detailTvEnterprise.text = item.enterprise
+                        detailTvEffect.text = item.effect
+                        detailTvInstructions.text = item.instructions
+                        detailTvWarning.text = item.warning
+                        detailTvCaution.text = item.caution
+                        detailTvInteraction.text = item.interaction
+                        detailTvSideEffect.text = item.sideEffect
+                        detailTvStoringMethod.text = item.storingMethod
+                    }
+                    bottomSheetDialog.setContentView(bottomSheetView.root)
+                    bottomSheetDialog.show()
+
+//                    MainNavigation.addFragment(
+//                        SearchDetailFragment.newInstance(item),
+//                        FragmentTag.SearchDetailFragmentInSearch
+//                    )
                     Log.d(TAG,"${item.id}, ${item.name} ")
                 }
                 override fun isMedicineChecked(item: Medicine) : Boolean {
