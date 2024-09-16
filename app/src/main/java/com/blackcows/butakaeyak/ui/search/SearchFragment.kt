@@ -14,7 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.databinding.FragmentSearchBinding
-import com.blackcows.butakaeyak.ui.search.adapter.HomeViewPager
+import com.blackcows.butakaeyak.ui.search.adapter.SearchViewPager
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -56,10 +56,10 @@ class SearchFragment : Fragment() {
         initUiState()
 
         viewPager = binding.searchVp
-        binding.searchVp.adapter = HomeViewPager(this@SearchFragment)
+        binding.searchVp.adapter = SearchViewPager(this@SearchFragment)
 
         TabLayoutMediator(binding.searchLoTab, binding.searchVp) { tab, position ->
-            tab.text = HomeViewPager(this).pageTag[position]
+            tab.text = SearchViewPager(this).pageTag[position]
         }.attach()
 
         binding.searchBtnSearch.setOnClickListener {

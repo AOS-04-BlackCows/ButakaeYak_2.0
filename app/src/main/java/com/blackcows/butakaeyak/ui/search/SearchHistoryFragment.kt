@@ -13,7 +13,7 @@ import com.blackcows.butakaeyak.R
 /**
  * A fragment representing a list of Items.
  */
-class FeedFragment : Fragment() {
+class SearchHistoryFragment : Fragment() {
 
     private var columnCount = 2 //컬럼 갯수 = 2 그리드
 
@@ -29,7 +29,7 @@ class FeedFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_feed_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_search_history, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -51,7 +51,7 @@ class FeedFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(columnCount: Int) =
-            FeedFragment().apply {
+            SearchHistoryFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }

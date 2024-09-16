@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,7 +18,7 @@ import com.blackcows.butakaeyak.databinding.BottomsheetSearchDetailBinding
 import com.blackcows.butakaeyak.databinding.FragmentMedicineResultBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
-import com.blackcows.butakaeyak.ui.search.adapter.HomeRecyclerAdapter
+import com.blackcows.butakaeyak.ui.search.adapter.SearchRecyclerAdapter
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.bumptech.glide.Glide
@@ -31,7 +30,7 @@ class MedicineResultFragment : Fragment() {
     private var _binding: FragmentMedicineResultBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var medicineAdapter : HomeRecyclerAdapter
+    private lateinit var medicineAdapter : SearchRecyclerAdapter
 
     //viewModel 설정
     private val searchViewModel: SearchViewModel by activityViewModels()
@@ -75,7 +74,7 @@ class MedicineResultFragment : Fragment() {
 //        val dataSource = DataSource.getDataSoures().getMedicineList()
 
         binding.apply {
-            medicineAdapter = HomeRecyclerAdapter(object : HomeRecyclerAdapter.ClickListener{
+            medicineAdapter = SearchRecyclerAdapter(object : SearchRecyclerAdapter.ClickListener{
                 override fun onItemClick(item: Medicine) {
                     val bottomSheetView = BottomsheetSearchDetailBinding.inflate(layoutInflater)
                     val bottomSheetDialog = BottomSheetDialog(requireContext())

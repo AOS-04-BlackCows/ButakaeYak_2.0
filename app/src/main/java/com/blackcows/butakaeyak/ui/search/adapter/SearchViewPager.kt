@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.blackcows.butakaeyak.ui.search.MedicineResultFragment
 
-class HomeViewPager(fragment: Fragment): FragmentStateAdapter(fragment) {
+class SearchViewPager(fragment: Fragment): FragmentStateAdapter(fragment) {
     //TODO: update list.
     private val pages by lazy { listOf(MedicineResultFragment()) }//, FeedFragment()
     val pageTag = listOf(MedicineResultFragment.TAB_NAME)//,FeedFragment.TAB_NAME

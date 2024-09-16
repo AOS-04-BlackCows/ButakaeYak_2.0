@@ -1,7 +1,6 @@
 package com.blackcows.butakaeyak.ui.search.adapter
 
 import android.util.Log
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -9,13 +8,15 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.blackcows.butakaeyak.data.models.Medicine
-import com.blackcows.butakaeyak.databinding.FragmentFeedListBinding
+import com.blackcows.butakaeyak.databinding.FragmentSearchHistoryBinding
 import com.blackcows.butakaeyak.databinding.ItemResultsBinding
 import com.blackcows.butakaeyak.ui.search.data.ListItem
 import com.bumptech.glide.Glide
+
 private const val TAG = "홈 어뎁터"
-class HomeRecyclerAdapter(private val clickListener: ClickListener) :
+class SearchRecyclerAdapter(private val clickListener: ClickListener) :
     ListAdapter<Medicine, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
@@ -110,8 +111,8 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
         }
     }
 
-    inner class FeedHolder(feedView: FragmentFeedListBinding) :
-        RecyclerView.ViewHolder(feedView.root) {
+    inner class SearchHistoryHolder(searchHistory: FragmentSearchHistoryBinding) :
+        RecyclerView.ViewHolder(searchHistory.root) {
 //        val feedthumb: ImageView = binding.feedIvThumb
 //        val feedname: TextView = binding.feedTvName
 //        val feedwriter: TextView = binding.feedTvWriter
