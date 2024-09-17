@@ -2,11 +2,16 @@ package com.blackcows.butakaeyak.di
 
 import com.algolia.search.saas.Client
 import com.blackcows.butakaeyak.BuildConfig
+import com.blackcows.butakaeyak.data.repository.impl.MyPharmacyRepositoryImpl
 import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
 import com.blackcows.butakaeyak.data.retrofit.service.DrugApiService
 import com.blackcows.butakaeyak.data.retrofit.service.KakaoApiService
 import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
 import com.blackcows.butakaeyak.data.retrofit.service.MedicineInfoService
+import com.blackcows.butakaeyak.data.source.firebase.RemoteMyPharmacyDataSource
+import com.blackcows.butakaeyak.data.source.local.LocalMyPharmacyDataSource
+import com.blackcows.butakaeyak.data.source.local.LocalUtilsDataSource
+import com.blackcows.butakaeyak.domain.repo.MyPharmacyRepository
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -49,6 +54,19 @@ class ProvideModule {
     //@ViewModelScoped
     fun provideMedicineInfoApiService() : MedicineInfoService {
         return RetrofitClient.getInstance(ApiBaseUrl.MedicineInfoUrl).create(MedicineInfoService::class.java)
+    }
+
+    @Provides
+    fun provideMyPharmacyRepository(
+        localUtilsDataSource: LocalUtilsDataSource,
+        remoteMyPharmacyDataSource: RemoteMyPharmacyDataSource,
+        localMyPharmacyDataSource: LocalMyPharmacyDataSource
+    ): MyPharmacyRepository {
+        return if(localUtilsDataSource.isSignIn()) {
+            MyPharmacyRepositoryImpl(remoteMyPharmacyDataSource)
+        } else {
+            MyPharmacyRepositoryImpl(localMyPharmacyDataSource)
+        }
     }
     
 }

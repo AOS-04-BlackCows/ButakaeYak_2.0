@@ -19,10 +19,15 @@ class LocalUtilsDataSource @Inject constructor(
 
         private const val APP_SHARED_PREFS = "BUAKAEYAK"
         private const val USER_DATA = "USER_DATA"
+        private const val IS_LOGIN = "IS_LOGIN"
     }
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(APP_SHARED_PREFS, Activity.MODE_PRIVATE)
     private val editor = sharedPreferences.edit()
+
+    fun isSignIn(): Boolean {
+        return sharedPreferences.getBoolean(IS_LOGIN, false)
+    }
 
     fun saveAutoLoginData(userData: UserData) {
         val gson = Gson()

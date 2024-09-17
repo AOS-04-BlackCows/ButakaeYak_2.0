@@ -7,14 +7,14 @@ data class Memo(
     @Expose(serialize = false)
     val id: String,
     val userId: String,
-    val group: MedicineGroup,
+    val groupId: String,
     val content: String,
     val createdAt: LocalDate,
     val updatedAt: LocalDate
 ) {
     fun toRequest()
         = MemoRequest(
-            userId, group.id, content, createdAt.toString(), updatedAt.toString()
+            userId, groupId, content, createdAt.toString(), updatedAt.toString()
         )
 }
 
