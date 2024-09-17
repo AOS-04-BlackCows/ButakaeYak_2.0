@@ -2,15 +2,21 @@ package com.blackcows.butakaeyak.di
 
 import com.algolia.search.saas.Client
 import com.blackcows.butakaeyak.BuildConfig
+import com.blackcows.butakaeyak.data.repository.impl.MedicineGroupRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.MyPharmacyRepositoryImpl
 import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
 import com.blackcows.butakaeyak.data.retrofit.service.DrugApiService
 import com.blackcows.butakaeyak.data.retrofit.service.KakaoApiService
 import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
 import com.blackcows.butakaeyak.data.retrofit.service.MedicineInfoService
+import com.blackcows.butakaeyak.data.source.api.MedicineInfoDataSource
+import com.blackcows.butakaeyak.data.source.firebase.MemoDataSource
+import com.blackcows.butakaeyak.data.source.firebase.RemoteMedicineGroupDataSource
 import com.blackcows.butakaeyak.data.source.firebase.RemoteMyPharmacyDataSource
+import com.blackcows.butakaeyak.data.source.local.LocalMedicineGroupDataSource
 import com.blackcows.butakaeyak.data.source.local.LocalMyPharmacyDataSource
 import com.blackcows.butakaeyak.data.source.local.LocalUtilsDataSource
+import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
 import com.blackcows.butakaeyak.domain.repo.MyPharmacyRepository
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
@@ -66,6 +72,29 @@ class ProvideModule {
             MyPharmacyRepositoryImpl(remoteMyPharmacyDataSource)
         } else {
             MyPharmacyRepositoryImpl(localMyPharmacyDataSource)
+        }
+    }
+
+    @Provides
+    fun provideMedicineGroupRepository(
+        localUtilsDataSource: LocalUtilsDataSource,
+        remoteMedicineGroupDataSource: RemoteMedicineGroupDataSource,
+        localMedicineGroupDataSource: LocalMedicineGroupDataSource,
+        medicineInfoDataSource: MedicineInfoDataSource,
+        memoDataSource: MemoDataSource
+    ): MedicineGroupRepository {
+        return if(localUtilsDataSource.isSignIn()) {
+            MedicineGroupRepositoryImpl(
+                medicineGroupDataSource = remoteMedicineGroupDataSource,
+                medicineDetailDataSource = medicineInfoDataSource,
+                memoDataSource = memoDataSource
+            )
+        } else {
+            MedicineGroupRepositoryImpl(
+                medicineGroupDataSource = localMedicineGroupDataSource,
+                medicineDetailDataSource = medicineInfoDataSource,
+                memoDataSource = memoDataSource
+            )
         }
     }
     

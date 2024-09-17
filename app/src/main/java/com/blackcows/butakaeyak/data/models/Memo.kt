@@ -32,4 +32,15 @@ data class MemoResponse(
     val content: String,
     val createdAt: String,
     val updatedAt: String
-)
+) {
+    fun toMemo(): Memo {
+        return Memo(
+            id = this.id,
+            userId = this.userId,
+            groupId = this.groupId,
+            content = this.content,
+            createdAt = LocalDate.parse(this.createdAt),
+            updatedAt = LocalDate.parse(this.updatedAt)
+        )
+    }
+}

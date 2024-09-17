@@ -22,14 +22,7 @@ class MemoRepositoryImpl @Inject constructor(
     override suspend fun getMemosFromWhen(userId: String, createdAt: LocalDate): List<Memo> {
         return runCatching {
             memoDataSource.getMemosFromWhen(userId, createdAt).map {
-                Memo(
-                    id = it.id,
-                    userId = it.userId,
-                    groupId = it.groupId,
-                    content = it.content,
-                    createdAt = LocalDate.parse(it.createdAt),
-                    updatedAt = LocalDate.parse(it.updatedAt)
-                )
+                it.toMemo()
             }
         }.getOrDefault(listOf())
     }

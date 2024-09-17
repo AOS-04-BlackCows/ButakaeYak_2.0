@@ -1,0 +1,68 @@
+package com.blackcows.butakaeyak.data.repository.impl
+
+import android.util.Log
+import com.blackcows.butakaeyak.data.WeekDayUtils
+import com.blackcows.butakaeyak.data.models.MedicineGroup
+import com.blackcows.butakaeyak.data.source.api.MedicineInfoDataSource
+import com.blackcows.butakaeyak.data.source.firebase.MemoDataSource
+import com.blackcows.butakaeyak.data.source.link.MedicineGroupDataSource
+import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
+import io.ktor.util.date.WeekDay
+import java.time.LocalDate
+import javax.inject.Inject
+
+class MedicineGroupRepositoryImpl @Inject constructor(
+    private val medicineGroupDataSource: MedicineGroupDataSource,
+    private val medicineDetailDataSource: MedicineInfoDataSource,
+    private val memoDataSource: MemoDataSource
+): MedicineGroupRepository {
+
+    companion object {
+        private const val TAG = "MedicineGroupRepositoryImpl"
+    }
+
+    override suspend fun getMyGroups(userId: String): List<MedicineGroup> {
+        return kotlin.runCatching {
+            medicineGroupDataSource.getMedicineGroups(userId).map { group ->
+                val medicines = group.medicines.map {
+                    medicineDetailDataSource.searchMedicines(it)[0]
+                }
+                val memos = group.memos.mapNotNull {
+                    memoDataSource.getMemoById(it)?.toMemo()
+                }
+                val daysWeek = group.daysOfWeeks.map {
+                    WeekDayUtils.fromKorean(it)
+                }
+
+                MedicineGroup(
+                    id = group.id,
+                    name = group.name,
+                    userId = group.userId,
+                    medicines = medicines,
+                    customNameList = group.customNameList,
+                    memos = memos,
+                    startedAt = LocalDate.parse(group.startedAt),
+                    finishedAt = LocalDate.parse(group.finishedAt),
+                    daysOfWeeks = daysWeek,
+                    alarms = group.alarms
+                )
+            }
+        }.getOrDefault(listOf())
+    }
+
+    override suspend fun saveNewGroup(medicineGroup: MedicineGroup) {
+        runCatching {
+            medicineGroupDataSource.addSingleGroup(medicineGroup)
+        }.onFailure {
+            Log.w(TAG, "saveNewGroup failed) msg: ${it.message}")
+        }
+    }
+
+    override suspend fun removeGroup(medicineGroup: MedicineGroup) {
+        runCatching {
+            medicineGroupDataSource.removeGroup(medicineGroup)
+        }.onFailure {
+            Log.w(TAG, "removeGroup failed) msg: ${it.message}")
+        }
+    }
+}
