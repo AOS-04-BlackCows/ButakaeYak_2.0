@@ -60,6 +60,7 @@ class RemoteMyPharmacyDataSource @Inject constructor(
     override suspend fun removePharmacy(pharmacy: MyPharmacy) {
         kotlin.runCatching {
             val obj = db.collection(MY_PHARMACY_COLLECTION)
+                .whereEqualTo(USER_ID, pharmacy.userId)
                 .whereEqualTo(PHARMACY_ID, pharmacy.id)
                 .get().await()
 
