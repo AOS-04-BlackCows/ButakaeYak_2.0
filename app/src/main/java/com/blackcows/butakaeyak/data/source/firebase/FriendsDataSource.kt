@@ -36,6 +36,7 @@ class FriendsDataSource @Inject constructor(
             )
             db.collection(FRIEND_COLLECTION)
                 .add(obj)
+                .await()
         }.onFailure {
             Log.w(TAG, "propose failed) msg: ${it.message}")
         }
