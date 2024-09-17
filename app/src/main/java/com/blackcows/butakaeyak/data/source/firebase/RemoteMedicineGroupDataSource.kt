@@ -27,33 +27,36 @@ class RemoteMedicineGroupDataSource @Inject constructor(
         private const val USER_ID = "userId"
         private const val STARTED_AT = "startedAt"
         private const val FINISHED_AT = "finishedAt"
+
+        val NOT_REGISTERED_MEDICINE_GROUP = object : Exception() {
+            override val message: String
+                get() = "등록되지 않은 Medicine Group에 접근 시도함"
+        }
     }
     private val db = Firebase.firestore
 
     override suspend fun getMedicineGroups(userId: String): List<MedicineGroupResponse>
-        = kotlin.runCatching {
-            db.collection(MEDICINE_GROUP_COLLECTION)
-                .whereEqualTo(USER_ID, userId)
-                .get().await().toObjectsWithId<MedicineGroupResponse>()
-        }.getOrDefault(listOf())
+        = db.collection(MEDICINE_GROUP_COLLECTION)
+        .whereEqualTo(USER_ID, userId)
+        .get().await().toObjectsWithId<MedicineGroupResponse>()
 
     override suspend fun addSingleGroup(group: MedicineGroup) {
-        kotlin.runCatching {
-            db.collection(MEDICINE_GROUP_COLLECTION)
-                .add(group.toRequest().toMap()).await()
-        }.onFailure {
-            Log.w(TAG, "Adding single Medicine Group is failed due to ${it.message}")
-        }
+        db.collection(MEDICINE_GROUP_COLLECTION)
+            .add(group.toRequest().toMap()).await()
     }
 
     override suspend fun removeGroup(group: MedicineGroup) {
-        kotlin.runCatching {
+        val hasIt = db.collection(MEDICINE_GROUP_COLLECTION)
+            .document(group.id)
+            .get().await()
+
+        if(hasIt != null) {
             db.collection(MEDICINE_GROUP_COLLECTION)
                 .document(group.id)
                 .delete()
                 .await()
-        }.onFailure {
-            Log.w(TAG, "remove Medicine Group is failed due to ${it.message}")
+        } else {
+            throw NOT_REGISTERED_MEDICINE_GROUP
         }
     }
 

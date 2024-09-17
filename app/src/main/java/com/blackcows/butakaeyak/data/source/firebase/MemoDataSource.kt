@@ -6,7 +6,6 @@ import com.blackcows.butakaeyak.data.models.Memo
 import com.blackcows.butakaeyak.data.models.MemoRequest
 import com.blackcows.butakaeyak.data.models.MemoResponse
 import com.blackcows.butakaeyak.data.models.User
-import com.blackcows.butakaeyak.data.source.firebase.UserDataSource.Companion.DUPLICATED_EXCEPTION
 import com.blackcows.butakaeyak.data.toMap
 import com.blackcows.butakaeyak.data.toObjectWithId
 import com.blackcows.butakaeyak.data.toObjectsWithId
@@ -28,54 +27,64 @@ class MemoDataSource @Inject constructor(
         private const val USER_ID = "userId"
         private const val MEDICINE_GROUP_ID = "groupId"
         private const val CREATED_AT = "createdAt"
+
+        val NOT_REGISTERED_MEMO = object : Exception() {
+            override val message: String
+                get() = "등록되지 않은 Memo에 접근 시도함"
+        }
     }
 
     private val db = Firebase.firestore
 
     suspend fun getMemosFromWhen(userId: String, createdAt: LocalDate): List<MemoResponse> {
-        return runCatching {
-            db.collection(MEMO_COLLECTION)
-                .whereEqualTo(USER_ID, userId)
-                .whereGreaterThanOrEqualTo(CREATED_AT, createdAt.toString())
-                .get().await().toObjectsWithId<MemoResponse>()
-        }.getOrDefault(listOf())
+        return db.collection(MEMO_COLLECTION)
+            .whereEqualTo(USER_ID, userId)
+            .whereGreaterThanOrEqualTo(CREATED_AT, createdAt.toString())
+            .get().await().toObjectsWithId<MemoResponse>()
     }
 
     suspend fun saveMemo(memo: Memo) {
-        kotlin.runCatching {
-            val request = memo.toRequest()
+        val request = memo.toRequest()
 
-            db.collection(MEMO_COLLECTION)
-                .add(request.toMap())
-                .await()
-        }
+        db.collection(MEMO_COLLECTION)
+            .add(request.toMap())
+            .await()
     }
 
     suspend fun editMemo(memo: Memo) {
-        kotlin.runCatching {
-            val request = memo.toRequest()
+        val hasIt = db.collection(MEMO_COLLECTION)
+                    .document(memo.id)
+            .get().await()
 
+        if(hasIt == null) {
+            throw NOT_REGISTERED_MEMO
+        } else {
+            val request = memo.toRequest()
             db.collection(MEMO_COLLECTION)
                 .document(memo.id)
                 .set(request.toMap())
                 .await()
         }
+
+
     }
 
     suspend fun getMemoById(id: String): MemoResponse? =
-        kotlin.runCatching {
-            db.collection(MEMO_COLLECTION)
-                .document(id)
-                .get().await().toObjectWithId<MemoResponse>()
-        }.getOrNull()
+        db.collection(MEMO_COLLECTION)
+            .document(id)
+            .get().await().toObjectWithId<MemoResponse>()
 
     suspend fun deleteMemo(memo: Memo) {
-        runCatching {
+        val hasIt = db.collection(MEMO_COLLECTION)
+            .document(memo.id)
+            .get().await()
+
+        if(hasIt == null) {
+            throw NOT_REGISTERED_MEMO
+        } else {
             db.collection(MEMO_COLLECTION)
                 .document(memo.id)
                 .delete().await()
-        }.onFailure {
-            Log.w(TAG, "deleteMemo failed) msg: ${it.message}")
         }
     }
 

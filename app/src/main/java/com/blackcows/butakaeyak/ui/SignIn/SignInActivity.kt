@@ -22,7 +22,6 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.ActivitySignInBinding
 import com.blackcows.butakaeyak.domain.repo.LocalRepository
 import com.blackcows.butakaeyak.domain.repo.UserRepository
-import com.blackcows.butakaeyak.firebase.firebase_store.FirestoreManager
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.KakaoSdk
@@ -169,7 +168,7 @@ class SignInActivity : AppCompatActivity() {
                 Log.d(TAG, "카카오 로그인: ${result.second?.message ?: "에러없음"}")
 
                 //TODO: 나중에 flow로 바꿔서 처리하기...
-                userRepository.trySignInWithKakao()
+                userRepository.trySignUpWithKakao()
                     .onFailure {
                         Log.d(TAG, it.message!!)
                         withContext(Dispatchers.Main) {
