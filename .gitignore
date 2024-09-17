@@ -20,6 +20,7 @@ output.json
 /.idea/deploymentTargetDropDown.xml
 /.idea/misc.xml
 /.idea/render.experimental.xml
+/.idea/*
 .DS_Store
 /build
 /captures
