@@ -28,6 +28,11 @@ class LocalMedicineGroupDataSource @Inject constructor(
     private val editor = sharedPreferences.edit()
 
 
+    override suspend fun getMedicineGroupById(groupId: String): MedicineGroupResponse? {
+        //TODO: local에선 필요없는 기능.
+        return null
+    }
+
     override suspend fun getMedicineGroups(userId: String): List<MedicineGroupResponse> {
         val list = sharedPreferences.getString(MEDICINE_DETAIL, null)?.let {
             val gson = Gson()

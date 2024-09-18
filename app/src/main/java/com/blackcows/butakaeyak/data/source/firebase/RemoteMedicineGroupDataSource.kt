@@ -5,6 +5,7 @@ import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.data.models.MedicineGroupResponse
 import com.blackcows.butakaeyak.data.source.link.MedicineGroupDataSource
 import com.blackcows.butakaeyak.data.toMap
+import com.blackcows.butakaeyak.data.toObjectWithId
 import com.blackcows.butakaeyak.data.toObjectsWithId
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
@@ -34,6 +35,11 @@ class RemoteMedicineGroupDataSource @Inject constructor(
         }
     }
     private val db = Firebase.firestore
+    override suspend fun getMedicineGroupById(groupId: String): MedicineGroupResponse? {
+        return db.collection(MEDICINE_GROUP_COLLECTION)
+            .document(groupId)
+            .get().await().toObjectWithId<MedicineGroupResponse>()
+    }
 
     override suspend fun getMedicineGroups(userId: String): List<MedicineGroupResponse> {
         return db.collection(MEDICINE_GROUP_COLLECTION)

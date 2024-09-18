@@ -43,6 +43,12 @@ class MemoDataSource @Inject constructor(
             .get().await().toObjectsWithId<MemoResponse>()
     }
 
+    suspend fun getMemoByGroupId(groupId: String): List<MemoResponse> {
+        return db.collection(MEMO_COLLECTION)
+            .whereEqualTo(MEDICINE_GROUP_ID, groupId)
+            .get().await().toObjectsWithId()
+    }
+
     suspend fun saveMemo(memo: Memo) {
         val request = memo.toRequest()
 
@@ -65,9 +71,10 @@ class MemoDataSource @Inject constructor(
                 .set(request.toMap())
                 .await()
         }
-
-
     }
+
+
+
 
     suspend fun getMemoById(id: String): MemoResponse? =
         db.collection(MEMO_COLLECTION)

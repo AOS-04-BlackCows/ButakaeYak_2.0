@@ -26,9 +26,6 @@ class MedicineGroupRepositoryImpl @Inject constructor(
                 val medicines = group.medicineIdList?.map {
                     medicineDetailDataSource.searchMedicinesWithId(it)[0]
                 }
-                val memos = group.memos?.mapNotNull {
-                    memoDataSource.getMemoById(it)?.toMemo()
-                }
                 val daysWeek = group.daysOfWeeks?.map {
                     WeekDayUtils.fromKorean(it)
                 }
@@ -39,7 +36,6 @@ class MedicineGroupRepositoryImpl @Inject constructor(
                     userId = group.userId!!,
                     medicines = medicines!!,
                     customNameList = group.customNameList!!,
-                    memos = memos,
                     startedAt = LocalDate.parse(group.startedAt),
                     finishedAt = LocalDate.parse(group.finishedAt),
                     daysOfWeeks = daysWeek!!,

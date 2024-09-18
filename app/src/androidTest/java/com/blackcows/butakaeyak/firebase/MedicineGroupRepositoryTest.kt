@@ -2,10 +2,10 @@ package com.blackcows.butakaeyak.firebase
 
 import com.blackcows.butakaeyak.data.models.MedicineDetail
 import com.blackcows.butakaeyak.data.models.MedicineGroup
+import com.blackcows.butakaeyak.data.models.Memo
 import com.blackcows.butakaeyak.data.source.api.MedicineInfoDataSource
-import com.blackcows.butakaeyak.domain.repo.FriendRepository
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
-import com.blackcows.butakaeyak.domain.repo.UserRepository
+import com.blackcows.butakaeyak.domain.repo.MemoRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.ktor.util.date.WeekDay
@@ -28,6 +28,8 @@ class MedicineGroupRepositoryTest {
     lateinit var medicineGroupRepository: MedicineGroupRepository
     @Inject
     lateinit var medicineInfoDataSource: MedicineInfoDataSource
+    @Inject
+    lateinit var memoRepository: MemoRepository
 
     @Before
     fun setUp() {
@@ -63,7 +65,6 @@ class MedicineGroupRepositoryTest {
             userId = "erat",
             medicines = list,
             customNameList = listOf("비타민B", "비타민C"),
-            memos = listOf(),
             startedAt = LocalDate.parse("2024-09-15"),
             finishedAt =LocalDate.parse("2024-09-22"),
             daysOfWeeks = listOf(WeekDay.MONDAY, WeekDay.TUESDAY, WeekDay.WEDNESDAY),
@@ -97,5 +98,45 @@ class MedicineGroupRepositoryTest {
             medicineGroupRepository.removeGroup(it)
         }
         println("------------------------------------------")
+    }
+
+    @Test
+    fun addMemo() = runBlocking {
+        val userId = "erat"
+        val group = medicineGroupRepository.getMyGroups(userId)[0]
+
+        val newMemo = Memo(
+            id = "sapien",
+            userId = "perpetua",
+            group = group,
+            content = "persequeris",
+            createdAt = LocalDate.parse("2024-09-13"),
+            updatedAt = LocalDate.parse("2024-09-15")
+        )
+
+        memoRepository.createMemo(newMemo)
+    }
+
+    @Test
+    fun editMemo() = runBlocking {
+        val userId = "erat"
+        val group = medicineGroupRepository.getMyGroups(userId)[0]
+
+        val memo = memoRepository.getMemoByMedicineGroupId(group.id)[0]
+        val content = "hello!"
+
+        memoRepository.editMemo(memo, content)
+    }
+
+
+
+    @Test
+    fun removeMeo() = runBlocking {
+        val userId = "erat"
+        val group = medicineGroupRepository.getMyGroups(userId)[0]
+
+        val memo = memoRepository.getMemoByMedicineGroupId(group.id)[0]
+
+        memoRepository.deleteMemo(memo)
     }
 }

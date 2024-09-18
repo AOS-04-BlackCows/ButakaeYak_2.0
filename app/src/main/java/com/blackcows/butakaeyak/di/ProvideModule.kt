@@ -3,6 +3,7 @@ package com.blackcows.butakaeyak.di
 import com.algolia.search.saas.Client
 import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.data.repository.impl.MedicineGroupRepositoryImpl
+import com.blackcows.butakaeyak.data.repository.impl.MemoRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.MyPharmacyRepositoryImpl
 import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
 import com.blackcows.butakaeyak.data.retrofit.service.DrugApiService
@@ -17,8 +18,10 @@ import com.blackcows.butakaeyak.data.source.local.LocalMedicineGroupDataSource
 import com.blackcows.butakaeyak.data.source.local.LocalMyPharmacyDataSource
 import com.blackcows.butakaeyak.data.source.local.LocalUtilsDataSource
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
+import com.blackcows.butakaeyak.domain.repo.MemoRepository
 import com.blackcows.butakaeyak.domain.repo.MyPharmacyRepository
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -103,5 +106,18 @@ class ProvideModule {
                 memoDataSource = memoDataSource
             )
     }
-    
+
+    @Provides
+    //@ViewModelScoped
+    fun provideMemoRepository(
+        remoteMedicineGroupDataSource: RemoteMedicineGroupDataSource,
+        medicineInfoDataSource: MedicineInfoDataSource,
+        memoDataSource: MemoDataSource
+    ): MemoRepository {
+        return MemoRepositoryImpl(
+            memoDataSource = memoDataSource,
+            medicineGroupDataSource = remoteMedicineGroupDataSource,
+            medicineInfoDataSource = medicineInfoDataSource
+        )
+    }
 }
