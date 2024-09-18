@@ -111,4 +111,25 @@ class UserRepositoryTest {
         val result = userRepository.deleteAccount(user)
         println("delete!")
     }
+
+    @Test
+    fun uploadProfile() = runBlocking {
+        val loginId = "Esmeralda"
+        val pwd = "Esmeralda123"
+        val result = userRepository.loginWithId(loginId, pwd)
+        val user = when(result) {
+            is LoginResult.Success -> {
+                result.user
+            }
+             else -> {
+                 println("Exception!")
+                 return@runBlocking
+             }
+        }
+
+        val image = "https://img1.kakaocdn.net/thumb/R110x110.q70/?fname=https://t1.kakaocdn.net/account_images/default_profile.jpeg"
+        val newOne = userRepository.setProfile(user, image)
+
+        println(newOne.profileUrl!!)
+    }
 }

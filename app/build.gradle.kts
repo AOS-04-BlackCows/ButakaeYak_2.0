@@ -193,6 +193,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth-ktx")     //인증
+    implementation("com.google.firebase:firebase-storage")
 
     //Algoria
     implementation("com.algolia:algoliasearch-android:3.27.0")

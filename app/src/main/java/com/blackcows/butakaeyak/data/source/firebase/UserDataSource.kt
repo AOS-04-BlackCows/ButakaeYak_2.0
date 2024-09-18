@@ -28,6 +28,32 @@ class UserDataSource @Inject constructor(
         private const val LOGIN_ID = "loginId"
         private const val PASSWORD = "pwd"
         private const val KAKAO_ID = "kakaoId"
+
+        val NOT_REGISTER_USER = object: Exception() {
+            override val message: String
+                get() = "존재하지 않는 User에 접근 시도함."
+        }
+    }
+
+    suspend fun getUserWithId(id: String): User? {
+        return db.collection(USER_COLLECTION)
+            .document(id)
+            .get().await().toObjectWithId()
+    }
+
+    suspend fun updateUser(user: User): User {
+        val saved = db.collection(USER_COLLECTION)
+            .document(user.id).get().await()
+
+        if(saved == null) {
+            throw NOT_REGISTER_USER
+        } else {
+            db.collection(USER_COLLECTION)
+                .document(user.id)
+                .set(user.toRequest()).await()
+
+            return getUserWithId(user.id)!!
+        }
     }
 
     suspend fun getUserWithLoginId(id: String, pwd: String): User? {

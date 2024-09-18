@@ -1,8 +1,10 @@
 package com.blackcows.butakaeyak.data.repository.impl
 
+import android.graphics.Bitmap
 import android.util.Log
 import com.blackcows.butakaeyak.data.models.User
 import com.blackcows.butakaeyak.data.models.UserRequest
+import com.blackcows.butakaeyak.data.source.firebase.ImageDataSource
 import com.blackcows.butakaeyak.data.source.firebase.UserDataSource
 import com.blackcows.butakaeyak.data.source.local.LocalUtilsDataSource
 import com.blackcows.butakaeyak.domain.repo.UserRepository
@@ -16,14 +18,12 @@ import kotlin.coroutines.suspendCoroutine
 
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
-    private val localUtilsDataSource: LocalUtilsDataSource
+    private val localUtilsDataSource: LocalUtilsDataSource,
+    private val imageDataSource: ImageDataSource
 ) : UserRepository {
-
-
 
     companion object {
         private const val TAG = "UserRepositoryImpl"
-
 
     }
 
@@ -118,5 +118,29 @@ class UserRepositoryImpl @Inject constructor(
             Log.w(TAG, "deleteAccount failed) msg: ${it.message}")
             println("deleteAccount failed) msg: ${it.message}")
         }
+    }
+
+    override suspend fun setProfile(user: User, bitmap: Bitmap): User {
+        imageDataSource.uploadProfile(user.id, bitmap)
+
+        val url = imageDataSource.getHttpUrl(user.id)
+        val updated = user.copy(
+            profileUrl = url
+        )
+        return userDataSource.updateUser(updated)
+    }
+
+    override suspend fun setProfile(user: User, url: String): User {
+        val updated = user.copy(
+            profileUrl = url
+        )
+        return userDataSource.updateUser(updated)
+    }
+
+    override suspend fun deleteProfile(user: User): User {
+        val updated = user.copy(
+            profileUrl = null
+        )
+        return userDataSource.updateUser(updated)
     }
 }
