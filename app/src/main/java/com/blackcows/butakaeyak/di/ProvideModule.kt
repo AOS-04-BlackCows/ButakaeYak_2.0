@@ -71,11 +71,14 @@ class ProvideModule {
         remoteMyPharmacyDataSource: RemoteMyPharmacyDataSource,
         localMyPharmacyDataSource: LocalMyPharmacyDataSource
     ): MyPharmacyRepository {
-        return if(localUtilsDataSource.isSignIn()) {
-            MyPharmacyRepositoryImpl(remoteMyPharmacyDataSource)
-        } else {
-            MyPharmacyRepositoryImpl(localMyPharmacyDataSource)
-        }
+//        return if(localUtilsDataSource.isSignIn()) {
+//            MyPharmacyRepositoryImpl(remoteMyPharmacyDataSource)
+//        } else {
+//            MyPharmacyRepositoryImpl(localMyPharmacyDataSource)
+//        }
+
+        //TODO: 테스트 후 고치기
+        return MyPharmacyRepositoryImpl(remoteMyPharmacyDataSource)
     }
 
     @Provides

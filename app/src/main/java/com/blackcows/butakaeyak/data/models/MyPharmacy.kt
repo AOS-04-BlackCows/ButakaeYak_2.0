@@ -1,11 +1,11 @@
 package com.blackcows.butakaeyak.data.models
 
 data class MyPharmacy(
-    val pharmacyId: String,
-    val userId: String,
-    val placeName: String,
-    val phone: String,
-    val placeUrl: String,
-    val addressName: String,
-    val roadAddressName: String
+    val pharmacyId: String? = null,
+    val userId: String? = null,
+    val placeName: String? = null,
+    val phone: String? = null,
+    val placeUrl: String? = null,
+    val addressName: String? = null,
+    val roadAddressName: String? = null
 )

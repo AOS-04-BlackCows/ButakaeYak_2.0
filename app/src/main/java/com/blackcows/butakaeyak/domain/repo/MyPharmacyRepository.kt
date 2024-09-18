@@ -4,6 +4,6 @@ import com.blackcows.butakaeyak.data.models.MyPharmacy
 
 interface MyPharmacyRepository {
     suspend fun getMyFavorites(userId: String): List<MyPharmacy>
-    suspend fun addToFavorite(userId: String, myPharmacy: MyPharmacy)
+    suspend fun addToFavorite(myPharmacy: MyPharmacy)
     suspend fun cancelFavorite(userId: String, myPharmacy: MyPharmacy)
 }

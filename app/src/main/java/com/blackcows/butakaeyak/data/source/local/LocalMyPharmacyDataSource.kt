@@ -45,7 +45,7 @@ class LocalMyPharmacyDataSource @Inject constructor(
         Log.d(TAG, "saveMyPharmacy() Run. myPharmacy.size: ${pharmacies.size}")
     }
 
-    override suspend fun addSinglePharmacy(userId: String, pharmacy: MyPharmacy) {
+    override suspend fun addSinglePharmacy(pharmacy: MyPharmacy) {
         saveMyPharmacies(
             listOf(pharmacy) + getMyPharmacies("")
         )

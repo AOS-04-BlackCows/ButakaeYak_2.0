@@ -82,6 +82,19 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-1307401539">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Medium_Phone_API_35" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="-956872555">
           <value>
             <AndroidTestResultsTableState>
@@ -134,6 +147,19 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-218554566">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Medium_Phone_API_35" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="213612625">
           <value>
             <AndroidTestResultsTableState>
@@ -154,6 +180,19 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="Pixel_3a_API_34" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1735221212">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Medium_Phone_API_35" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
               </option>

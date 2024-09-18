@@ -19,7 +19,7 @@ class RemoteMyPharmacyDataSource @Inject constructor(
         private const val TAG = "RemoteMyPharmacyDataSource"
         private const val MY_PHARMACY_COLLECTION = "myPharmacies"
 
-        private const val PHARMACY_ID = "id"
+        private const val PHARMACY_ID = "pharmacyId"
         private const val USER_ID = "userId"
 
         val NOT_REGISTERED_MY_PHARMACY = object : Exception() {
@@ -49,9 +49,10 @@ class RemoteMyPharmacyDataSource @Inject constructor(
         }
     }
 
-    override suspend fun addSinglePharmacy(userId: String, pharmacy: MyPharmacy) {
-        val myList = getMyPharmacies(userId)
-        saveMyPharmacies(myList + pharmacy)
+    override suspend fun addSinglePharmacy(pharmacy: MyPharmacy) {
+        db.collection(MY_PHARMACY_COLLECTION)
+            .add(pharmacy.toMap())
+            .await()
     }
 
     override suspend fun removePharmacy(pharmacy: MyPharmacy) {
@@ -61,11 +62,14 @@ class RemoteMyPharmacyDataSource @Inject constructor(
             .get().await()
 
         if(obj.documents.isNotEmpty()) {
+            obj.documents.forEach {
+                println(it.id)
+            }
             val id = obj.documents[0].id
 
             db.collection(MY_PHARMACY_COLLECTION)
                 .document(id)
-                .delete()
+                .delete().await()
         } else {
             throw NOT_REGISTERED_MY_PHARMACY
         }

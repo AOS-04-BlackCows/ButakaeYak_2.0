@@ -17,12 +17,14 @@ class MyPharmacyRepositoryImpl @Inject constructor(
     override suspend fun getMyFavorites(userId: String): List<MyPharmacy> {
         return runCatching {
             myPharmacyDataSource.getMyPharmacies(userId)
+        }.onFailure {
+            Log.w(TAG, "getMyFavorites Failed) msg: ${it.message}")
         }.getOrDefault(listOf())
     }
 
-    override suspend fun addToFavorite(userId: String, myPharmacy: MyPharmacy) {
+    override suspend fun addToFavorite(myPharmacy: MyPharmacy) {
         runCatching {
-            myPharmacyDataSource.addSinglePharmacy(userId, myPharmacy)
+            myPharmacyDataSource.addSinglePharmacy(myPharmacy)
         }.onFailure {
             Log.w(TAG, "addToFavorite Failed) msg: ${it.message}")
         }
