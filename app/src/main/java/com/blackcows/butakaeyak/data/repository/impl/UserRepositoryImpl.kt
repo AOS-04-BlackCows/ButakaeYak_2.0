@@ -116,6 +116,7 @@ class UserRepositoryImpl @Inject constructor(
             userDataSource.deleteAccount(user)
         }.onFailure {
             Log.w(TAG, "deleteAccount failed) msg: ${it.message}")
+            println("deleteAccount failed) msg: ${it.message}")
         }
     }
 }

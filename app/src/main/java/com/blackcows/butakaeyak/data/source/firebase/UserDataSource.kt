@@ -39,8 +39,8 @@ class UserDataSource @Inject constructor(
 
     suspend fun isDuplicatedId(id: String): Boolean {
         val result = db.collection(USER_COLLECTION)
-            .whereEqualTo(LOGIN_ID, id)
-            .get().await()?.toObjects(User::class.java)?.getOrNull(0)
+                .whereEqualTo(LOGIN_ID, id)
+                .get().await()?.toObjectsWithId<User>()
 
         return (result != null)
     }
@@ -78,6 +78,6 @@ class UserDataSource @Inject constructor(
     suspend fun deleteAccount(user: User) {
         db.collection(USER_COLLECTION)
             .document(user.id)
-            .delete()
+            .delete().await()
     }
 }
