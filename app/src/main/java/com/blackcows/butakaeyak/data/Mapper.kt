@@ -4,10 +4,24 @@ import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.gson.ExclusionStrategy
+import com.google.gson.FieldAttributes
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 
 fun <T> T.toMap(): Map<String, Any> {
-    val gson = Gson()
+    val gson = GsonBuilder()
+        .addSerializationExclusionStrategy(object: ExclusionStrategy {
+            override fun shouldSkipField(f: FieldAttributes?): Boolean {
+                return f?.name!!.lowercase() == "id"
+            }
+
+            override fun shouldSkipClass(clazz: Class<*>?): Boolean {
+                return false
+            }
+        })
+        .create()
+
     val json = gson.toJson(this)
     return gson.fromJson(json, object: TypeToken<Map<String, Any>>() {}.type)
 }

@@ -40,7 +40,7 @@ class UserDataSource @Inject constructor(
     suspend fun isDuplicatedId(id: String): Boolean {
         val result = db.collection(USER_COLLECTION)
                 .whereEqualTo(LOGIN_ID, id)
-                .get().await()?.toObjectsWithId<User>()
+                .get().await().toObjectsWithId<User>().getOrNull(0)
 
         return (result != null)
     }

@@ -4,6 +4,7 @@ import android.util.Log
 import com.blackcows.butakaeyak.data.models.Friend
 import com.blackcows.butakaeyak.data.models.FriendRequest
 import com.blackcows.butakaeyak.data.toMap
+import com.blackcows.butakaeyak.data.toObjectWithId
 import com.blackcows.butakaeyak.data.toObjectsWithId
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
@@ -74,6 +75,24 @@ class FriendsDataSource @Inject constructor(
             db.collection(FRIEND_COLLECTION)
                 .document(relationship.id)
                 .delete()
+                .await()
+        } else {
+            throw NOT_REGISTERED
+        }
+    }
+
+    suspend fun accept(friend: Friend) {
+        val relationship = db.collection(FRIEND_COLLECTION)
+            .document(friend.id)
+            .get().await().toObjectWithId<Friend>()
+
+        if(relationship != null) {
+            val accepted = friend.copy(
+                isConnected = true
+            )
+            db.collection(FRIEND_COLLECTION)
+                .document(accepted.id)
+                .set(accepted.toMap())
                 .await()
         } else {
             throw NOT_REGISTERED

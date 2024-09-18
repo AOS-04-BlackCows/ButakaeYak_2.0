@@ -1,5 +1,7 @@
 package com.blackcows.butakaeyak
 
+import com.blackcows.butakaeyak.data.models.Friend
+import com.blackcows.butakaeyak.data.toMap
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -13,5 +15,15 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+    }
+
+    @Test
+    fun toMapExposeTest() {
+        val friends = Friend(
+            id = "habemus", proposer = "indoctum", receiver = "similique", isConnected = false
+        )
+
+        val map = friends.toMap()
+        println(map.toString())
     }
 }

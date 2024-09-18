@@ -34,9 +34,24 @@ class FriendRepositoryImpl @Inject constructor(
 
     override suspend fun requestFriend(userId: String, opponentId: String) {
         runCatching {
-            friendsDataSource.propose(userId, opponentId)
+            val requestList = getMyProposal(userId) + getMyReceived(opponentId)
+            val sameRequest = requestList.filter {
+                (it.proposer == userId && it.receiver == opponentId) || (it.proposer == opponentId && it.receiver == userId)
+            }
+
+            if(sameRequest.isEmpty()) {
+                friendsDataSource.propose(userId, opponentId)
+            }
         }.onFailure {
             Log.w(TAG, "requestFriend failed) msg: ${it.message}")
+        }
+    }
+
+    override suspend fun acceptRequest(friend: Friend) {
+        runCatching {
+            friendsDataSource.accept(friend)
+        }.onFailure {
+            Log.w(TAG, "acceptRequest failed) msg: ${it.message}")
         }
     }
 
