@@ -83,19 +83,25 @@ class ProvideModule {
         medicineInfoDataSource: MedicineInfoDataSource,
         memoDataSource: MemoDataSource
     ): MedicineGroupRepository {
-        return if(localUtilsDataSource.isSignIn()) {
-            MedicineGroupRepositoryImpl(
+//        return if(localUtilsDataSource.isSignIn()) {
+//            MedicineGroupRepositoryImpl(
+//                medicineGroupDataSource = remoteMedicineGroupDataSource,
+//                medicineDetailDataSource = medicineInfoDataSource,
+//                memoDataSource = memoDataSource
+//            )
+//        } else {
+//            MedicineGroupRepositoryImpl(
+//                medicineGroupDataSource = localMedicineGroupDataSource,
+//                medicineDetailDataSource = medicineInfoDataSource,
+//                memoDataSource = memoDataSource
+//            )
+//        }
+        //TODO: 테스트 후 고치기
+        return MedicineGroupRepositoryImpl(
                 medicineGroupDataSource = remoteMedicineGroupDataSource,
                 medicineDetailDataSource = medicineInfoDataSource,
                 memoDataSource = memoDataSource
             )
-        } else {
-            MedicineGroupRepositoryImpl(
-                medicineGroupDataSource = localMedicineGroupDataSource,
-                medicineDetailDataSource = medicineInfoDataSource,
-                memoDataSource = memoDataSource
-            )
-        }
     }
     
 }

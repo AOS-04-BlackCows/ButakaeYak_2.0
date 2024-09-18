@@ -7,7 +7,6 @@ import com.blackcows.butakaeyak.data.source.api.MedicineInfoDataSource
 import com.blackcows.butakaeyak.data.source.firebase.MemoDataSource
 import com.blackcows.butakaeyak.data.source.link.MedicineGroupDataSource
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
-import io.ktor.util.date.WeekDay
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -24,29 +23,31 @@ class MedicineGroupRepositoryImpl @Inject constructor(
     override suspend fun getMyGroups(userId: String): List<MedicineGroup> {
         return kotlin.runCatching {
             medicineGroupDataSource.getMedicineGroups(userId).map { group ->
-                val medicines = group.medicines.map {
-                    medicineDetailDataSource.searchMedicines(it)[0]
+                val medicines = group.medicineIdList?.map {
+                    medicineDetailDataSource.searchMedicinesWithId(it)[0]
                 }
-                val memos = group.memos.mapNotNull {
+                val memos = group.memos?.mapNotNull {
                     memoDataSource.getMemoById(it)?.toMemo()
                 }
-                val daysWeek = group.daysOfWeeks.map {
+                val daysWeek = group.daysOfWeeks?.map {
                     WeekDayUtils.fromKorean(it)
                 }
 
                 MedicineGroup(
-                    id = group.id,
-                    name = group.name,
-                    userId = group.userId,
-                    medicines = medicines,
-                    customNameList = group.customNameList,
+                    id = group.id!!,
+                    name = group.name!!,
+                    userId = group.userId!!,
+                    medicines = medicines!!,
+                    customNameList = group.customNameList!!,
                     memos = memos,
                     startedAt = LocalDate.parse(group.startedAt),
                     finishedAt = LocalDate.parse(group.finishedAt),
-                    daysOfWeeks = daysWeek,
-                    alarms = group.alarms
+                    daysOfWeeks = daysWeek!!,
+                    alarms = group.alarms!!
                 )
             }
+        }.onFailure {
+            Log.w(TAG, "getMyGroups failed) msg: ${it.message}")
         }.getOrDefault(listOf())
     }
 

@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak
 
 import com.blackcows.butakaeyak.data.models.UserRequest
+import com.blackcows.butakaeyak.data.source.api.MedicineInfoDataSource
 import com.blackcows.butakaeyak.domain.repo.DrugRepository
 import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.domain.result.SignUpResult

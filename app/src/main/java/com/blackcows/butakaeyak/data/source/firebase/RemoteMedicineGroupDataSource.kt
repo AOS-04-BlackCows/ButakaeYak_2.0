@@ -35,10 +35,11 @@ class RemoteMedicineGroupDataSource @Inject constructor(
     }
     private val db = Firebase.firestore
 
-    override suspend fun getMedicineGroups(userId: String): List<MedicineGroupResponse>
-        = db.collection(MEDICINE_GROUP_COLLECTION)
-        .whereEqualTo(USER_ID, userId)
-        .get().await().toObjectsWithId<MedicineGroupResponse>()
+    override suspend fun getMedicineGroups(userId: String): List<MedicineGroupResponse> {
+        return db.collection(MEDICINE_GROUP_COLLECTION)
+            .whereEqualTo(USER_ID, userId)
+            .get().await().toObjectsWithId<MedicineGroupResponse>()
+    }
 
     override suspend fun addSingleGroup(group: MedicineGroup) {
         db.collection(MEDICINE_GROUP_COLLECTION)

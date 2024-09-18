@@ -82,7 +82,16 @@ class DataSourceUnitTest {
 
     @Test
     fun getMedicineDetail() = runBlocking {
-        val result = medicineInfoDataSource.searchMedicines("타이레놀")
+        val result = medicineInfoDataSource.searchMedicines("아미")
+
+        result.forEachIndexed { i, it->
+            println("$i) ${it.name} \n effect: ${it.effect} \n cation: ${it.caution}")
+        }
+    }
+
+    @Test
+    fun getMedicineDetailId() = runBlocking {
+        val result = medicineInfoDataSource.searchMedicinesWithId("195700013")
 
         result.forEachIndexed { i, it->
             println("$i) ${it.name} \n effect: ${it.effect} \n cation: ${it.caution}")

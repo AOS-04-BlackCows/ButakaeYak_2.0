@@ -5,6 +5,7 @@ import com.blackcows.butakaeyak.data.toMap
 import org.junit.Test
 
 import org.junit.Assert.*
+import java.time.LocalDate
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -25,5 +26,14 @@ class ExampleUnitTest {
 
         val map = friends.toMap()
         println(map.toString())
+    }
+
+    @Test
+    fun localDataParser() {
+        val str = "2024-09-12"
+
+        val toLocalDate = LocalDate.parse(str)
+
+        println(toLocalDate)
     }
 }

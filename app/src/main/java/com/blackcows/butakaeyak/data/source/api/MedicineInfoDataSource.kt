@@ -14,19 +14,35 @@ class MedicineInfoDataSource @Inject constructor(
         = retrofit.getMedicineInfo(name).body.items.map {
 
             MedicineDetail(
-                name = it.itemName!!,
-                id = it.itemSeq!!,
-                entpName = it.entpName!!,
-                shape = it.chart!!,
+                name = it.itemName ?: "없음",
+                id = it.itemSeq ?: "없음",
+                entpName = it.entpName ?: "없음",
+                shape = it.chart,
                 effect = parseXml(it.eeDocData),
                 instruction = parseXml(it.udDocData),
                 caution = parseXml(it.nbDocData),
-                storing = it.storageMethod!!
+                storing = it.storageMethod
             )
         }?: listOf()
 
+    suspend fun searchMedicinesWithId(id: String): List<MedicineDetail>
+     = retrofit.getMedicineInfoWithId(id).body.items.map {
+        MedicineDetail(
+            name = it.itemName ?: "없음",
+            id = it.itemSeq ?: "없음",
+            entpName = it.entpName ?: "없음",
+            shape = it.chart,
+            effect = parseXml(it.eeDocData),
+            instruction = parseXml(it.udDocData),
+            caution = parseXml(it.nbDocData),
+            storing = it.storageMethod
+        )
+    }
+
 
     private fun parseXml(xml: String): String {
+        if(xml.isBlank()) return "없음"
+
         val factory = XmlPullParserFactory.newInstance()
         factory.isNamespaceAware = true
         val parser = factory.newPullParser()
