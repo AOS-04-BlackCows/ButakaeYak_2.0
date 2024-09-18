@@ -108,14 +108,14 @@ class SignInActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         binding.progressContainer.visibility = View.VISIBLE
                     }
-                    userRepository.loginWithId(userId, pw)
-                        .onSuccess {
-                            onSuccessLogin(it)
-                        }.onFailure {
-                            withContext(Dispatchers.Main) {
-                                Toast.makeText(this@SignInActivity, "아이디와 비밀번호를 확인해주세요.", Toast.LENGTH_LONG).show()
-                            }
-                        }
+//                    userRepository.loginWithId(userId, pw)
+//                        .onSuccess {
+//                            onSuccessLogin(it)
+//                        }.onFailure {
+//                            withContext(Dispatchers.Main) {
+//                                Toast.makeText(this@SignInActivity, "아이디와 비밀번호를 확인해주세요.", Toast.LENGTH_LONG).show()
+//                            }
+//                        }
 
                     withContext(Dispatchers.Main) {
                         binding.progressContainer.visibility = View.GONE
@@ -169,19 +169,19 @@ class SignInActivity : AppCompatActivity() {
 
                 //TODO: 나중에 flow로 바꿔서 처리하기...
                 userRepository.trySignUpWithKakao()
-                    .onFailure {
-                        Log.d(TAG, it.message!!)
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(this@SignInActivity, it.message, Toast.LENGTH_SHORT).show()
-                            binding.progressContainer.visibility = View.GONE
-                        }
-
-                    }.onSuccess {
-                        onSuccessLogin(it)
-                        withContext(Dispatchers.Main) {
-                            binding.progressContainer.visibility = View.GONE
-                        }
-                    }
+//                    .onFailure {
+//                        Log.d(TAG, it.message!!)
+//                        withContext(Dispatchers.Main) {
+//                            Toast.makeText(this@SignInActivity, it.message, Toast.LENGTH_SHORT).show()
+//                            binding.progressContainer.visibility = View.GONE
+//                        }
+//
+//                    }.onSuccess {
+//                        onSuccessLogin(it)
+//                        withContext(Dispatchers.Main) {
+//                            binding.progressContainer.visibility = View.GONE
+//                        }
+//                    }
             }
         }
     }

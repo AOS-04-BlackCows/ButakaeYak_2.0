@@ -96,40 +96,40 @@ class SignUpActivity : AppCompatActivity() {
                             binding.progressContainer.visibility = View.VISIBLE
                         }
 
-                        userRepository.signUpUserData(userData)
-                            .onSuccess {
-                                withContext(Dispatchers.Main) {
-                                    Toast.makeText(
-                                        this@SignUpActivity,
-                                        "회원가입 성공",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-
-                                withContext(Dispatchers.Main) {
-                                    binding.progressContainer.visibility = View.GONE
-                                }
-
-                                // 로그인에 아이디 & 비밀번호 전달
-                                val intent = Intent().apply {
-                                    putExtra("id", userId.text.toString())
-                                    putExtra("pw", userPw.text.toString())
-                                    imageUri?.let { uri ->
-                                        putExtra("thumbnail", uri.toString())
-                                    }
-                                }
-                                setResult(RESULT_OK, intent)
-                                finish()
-                            }.onFailure {
-                                withContext(Dispatchers.Main) {
-                                    Toast.makeText(
-                                        this@SignUpActivity,
-                                        "회원가입 실패: ${it.message}",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                    binding.progressContainer.visibility = View.GONE
-                                }
-                            }
+//                        userRepository.signUpUserData(userData)
+//                            .onSuccess {
+//                                withContext(Dispatchers.Main) {
+//                                    Toast.makeText(
+//                                        this@SignUpActivity,
+//                                        "회원가입 성공",
+//                                        Toast.LENGTH_LONG
+//                                    ).show()
+//                                }
+//
+//                                withContext(Dispatchers.Main) {
+//                                    binding.progressContainer.visibility = View.GONE
+//                                }
+//
+//                                // 로그인에 아이디 & 비밀번호 전달
+//                                val intent = Intent().apply {
+//                                    putExtra("id", userId.text.toString())
+//                                    putExtra("pw", userPw.text.toString())
+//                                    imageUri?.let { uri ->
+//                                        putExtra("thumbnail", uri.toString())
+//                                    }
+//                                }
+//                                setResult(RESULT_OK, intent)
+//                                finish()
+//                            }.onFailure {
+//                                withContext(Dispatchers.Main) {
+//                                    Toast.makeText(
+//                                        this@SignUpActivity,
+//                                        "회원가입 실패: ${it.message}",
+//                                        Toast.LENGTH_LONG
+//                                    ).show()
+//                                    binding.progressContainer.visibility = View.GONE
+//                                }
+//                            }
                     }
                 }
             }

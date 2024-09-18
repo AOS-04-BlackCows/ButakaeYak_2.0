@@ -15,6 +15,7 @@ class MedicineInfoDataSource @Inject constructor(
 
             MedicineDetail(
                 name = it.itemName!!,
+                id = it.itemSeq!!,
                 entpName = it.entpName!!,
                 shape = it.chart!!,
                 effect = parseXml(it.eeDocData),

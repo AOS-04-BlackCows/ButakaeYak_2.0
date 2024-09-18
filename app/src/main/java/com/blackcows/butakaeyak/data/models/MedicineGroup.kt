@@ -1,6 +1,6 @@
 package com.blackcows.butakaeyak.data.models
 
-import com.blackcows.butakaeyak.ui.take.toKorean
+import com.blackcows.butakaeyak.data.toKorean
 import com.google.gson.annotations.Expose
 import io.ktor.util.date.WeekDay
 import java.time.LocalDate

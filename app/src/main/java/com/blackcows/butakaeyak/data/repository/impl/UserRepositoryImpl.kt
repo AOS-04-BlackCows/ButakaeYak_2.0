@@ -45,14 +45,14 @@ class UserRepositoryImpl @Inject constructor(
         }.getOrDefault(LoginResult.Failure)
     }
 
-    override suspend fun signUpUserData(userData: User): SignUpResult {
+    override suspend fun signUpUserData(userRequest: UserRequest): SignUpResult {
         return runCatching {
-            val isDuplicated = userDataSource.isDuplicatedId(userData.loginId!!)
+            val isDuplicated = userDataSource.isDuplicatedId(userRequest.loginId!!)
 
             if(isDuplicated) {
                 SignUpResult.LoginIdDuplicate
             } else {
-                SignUpResult.Success(userDataSource.saveUser(userData))
+                SignUpResult.Success(userDataSource.saveUser(userRequest))
             }
         }.onFailure {
             Log.w(TAG, "signUpUserData failed) msg: ${it.message}")

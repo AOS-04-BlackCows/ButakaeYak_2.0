@@ -25,6 +25,10 @@ android {
         buildConfig = true
     }
 
+    kapt {
+        correctErrorTypes = true
+    }
+
     defaultConfig {
         applicationId = "com.blackcows.butakaeyak"
         minSdk = 26
@@ -160,13 +164,13 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.47")
     // For Robolectric tests.
-    testImplementation("com.google.dagger:hilt-android-testing:2.48")
-    kaptTest("com.google.dagger:hilt-android-compiler:2.47")
+    //testImplementation("com.google.dagger:hilt-android-testing:2.48")
+    //kaptTest("com.google.dagger:hilt-android-compiler:2.47")
     // For instrumented tests.
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.48")
     // ...with Kotlin.
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.47")
-
+    androidTestImplementation("androidx.test:runner:1.5.2")
     testImplementation("org.robolectric:robolectric:4.9")
 
     // LiveData (optional)
