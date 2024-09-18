@@ -7,7 +7,7 @@
     tools:context=".ui.map.MapFragment">
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/favorite_list"
+        android:id="@+id/btn_favorite_list"
         style="@style/body"
         android:layout_width="40dp"
         android:layout_height="40dp"
