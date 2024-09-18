@@ -27,6 +27,8 @@
 
 
 
+
+
         <receiver
             android:name=".ui.take.AlarmReceiver"
             android:exported="false" />

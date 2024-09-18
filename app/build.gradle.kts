@@ -194,6 +194,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth-ktx")     //인증
     implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-messaging-ktx")
 
     //Algoria
     implementation("com.algolia:algoliasearch-android:3.27.0")

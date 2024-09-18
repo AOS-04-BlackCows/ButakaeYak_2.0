@@ -19,4 +19,6 @@ interface UserRepository {
     suspend fun setProfile(user: User, bitmap: Bitmap): User
     suspend fun setProfile(user: User, url: String): User
     suspend fun deleteProfile(user: User): User
+
+    suspend fun registerDeviceToken(user: User): User
 }

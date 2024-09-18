@@ -11,7 +11,9 @@ import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.domain.result.LoginResult
 import com.blackcows.butakaeyak.domain.result.SignUpResult
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
+import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.user.UserApiClient
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -142,5 +144,14 @@ class UserRepositoryImpl @Inject constructor(
             profileUrl = null
         )
         return userDataSource.updateUser(updated)
+    }
+
+    override suspend fun registerDeviceToken(user: User): User {
+        val token = FirebaseMessaging.getInstance().token.await()
+        val newOne = user.copy(
+            deviceToken = token
+        )
+
+        return userDataSource.updateUser(newOne)
     }
 }
