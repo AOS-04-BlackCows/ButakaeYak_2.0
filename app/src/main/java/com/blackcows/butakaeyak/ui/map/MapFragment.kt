@@ -38,6 +38,7 @@ import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
+import io.ktor.http.HttpMethod.Companion.Get
 
 private const val TAG = "k3f_MapFragment"
 class MapFragment : Fragment() {
@@ -114,13 +115,19 @@ class MapFragment : Fragment() {
         }
         binding.btnPharmacyList.setOnClickListener {
             Log.d(TAG, "mapViewModel.items = ${mapViewModel.items.value}")
+            bottomSheetListView.mapListTitle.text = "약국 목록"
             pharmacyListRvAdapter.submitList(mapViewModel.items.value)
             bottomSheetListDialog.show()
         }
         binding.btnFavoriteList.setOnClickListener {
             Log.d(TAG, "mainViewModel.pharmacies = ${mainViewModel.pharmacies.value}")
-            pharmacyListRvAdapter.submitList(mainViewModel.pharmacies.value?.toList())
+            bottomSheetListView.mapListTitle.text = "즐겨찾기한 약국"
+            mainViewModel.getPharmacyList()
+            pharmacyListRvAdapter.submitList(mainViewModel.pharmacies.value?.toList()?: listOf())
             bottomSheetListDialog.show()
+        }
+        bottomSheetListView.closeBottomSheetList.setOnClickListener {
+            bottomSheetListDialog.cancel()
         }
         /*
         해시키 발급하는 키
