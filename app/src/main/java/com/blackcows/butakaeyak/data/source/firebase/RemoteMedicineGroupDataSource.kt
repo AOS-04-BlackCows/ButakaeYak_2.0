@@ -67,4 +67,11 @@ class RemoteMedicineGroupDataSource @Inject constructor(
         }
     }
 
+    override suspend fun updateGroup(takenGroup: MedicineGroup) {
+        db.collection(MEDICINE_GROUP_COLLECTION)
+            .document(takenGroup.id)
+            .set(takenGroup.toRequest())
+            .await()
+    }
+
 }

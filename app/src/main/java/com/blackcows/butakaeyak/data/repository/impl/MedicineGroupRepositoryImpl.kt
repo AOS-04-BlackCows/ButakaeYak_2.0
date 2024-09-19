@@ -38,8 +38,9 @@ class MedicineGroupRepositoryImpl @Inject constructor(
                     customNameList = group.customNameList!!,
                     startedAt = LocalDate.parse(group.startedAt),
                     finishedAt = LocalDate.parse(group.finishedAt),
-                    daysOfWeeks = daysWeek!!,
-                    alarms = group.alarms!!
+                    daysOfWeeks = daysWeek ?: listOf(),
+                    alarms = group.alarms ?: listOf(),
+                    hasTaken = group.hasTaken ?: listOf()
                 )
             }
         }.onFailure {
@@ -61,5 +62,19 @@ class MedicineGroupRepositoryImpl @Inject constructor(
         }.onFailure {
             Log.w(TAG, "removeGroup failed) msg: ${it.message}")
         }
+    }
+
+    override suspend fun notifyTaken(medicineGroup: MedicineGroup, takenTime: String): MedicineGroup {
+        return kotlin.runCatching {
+            val format = "${LocalDate.now()} $takenTime"
+            val takenGroup = medicineGroup.copy(
+                hasTaken = medicineGroup.hasTaken.toMutableList().apply { add(format) }
+            )
+            medicineGroupDataSource.updateGroup(takenGroup)
+
+            takenGroup
+        }.onFailure {
+            Log.w(TAG, "notifyTaken failed) msg: ${it.message}")
+        }.getOrDefault(medicineGroup)
     }
 }

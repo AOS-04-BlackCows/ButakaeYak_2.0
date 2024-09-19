@@ -9,4 +9,5 @@ interface MedicineGroupDataSource {
     //suspend fun saveMedicineGroup(groups: List<MedicineGroup>)
     suspend fun addSingleGroup(group: MedicineGroup)
     suspend fun removeGroup(group: MedicineGroup)
+    suspend fun updateGroup(takenGroup: MedicineGroup)
 }
