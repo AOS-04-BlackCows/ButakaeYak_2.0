@@ -69,6 +69,7 @@ class MedicineGroupRepositoryTest {
             finishedAt =LocalDate.parse("2024-09-22"),
             daysOfWeeks = listOf(WeekDay.MONDAY, WeekDay.TUESDAY, WeekDay.WEDNESDAY),
             alarms = listOf("8:00", "12:00", "18:00"),
+            hasTaken = listOf()
         )
 
         medicineGroupRepository.saveNewGroup(newOne)

@@ -56,6 +56,9 @@ object RetrofitClient {
                     )
                     .build()
             }
+            ApiBaseUrl.GPTUrl->{
+                OkHttpClient().newBuilder().build()
+            }
             else -> {
                 OkHttpClient().newBuilder().build()
             }

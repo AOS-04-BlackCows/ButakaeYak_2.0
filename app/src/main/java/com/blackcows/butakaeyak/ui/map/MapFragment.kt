@@ -23,17 +23,11 @@ import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
-import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.data.source.LocalDataSource
 import com.blackcows.butakaeyak.databinding.BottomsheetMapDetailBinding
 import com.blackcows.butakaeyak.databinding.BottomsheetMapListBinding
 import com.blackcows.butakaeyak.databinding.FragmentMapBinding
 import com.blackcows.butakaeyak.ui.map.adapter.PharmacyListRvAdapter
-import com.blackcows.butakaeyak.ui.navigation.FragmentTag
-import com.blackcows.butakaeyak.ui.navigation.MainNavigation
-import com.blackcows.butakaeyak.ui.search.SearchDetailFragment
-import com.blackcows.butakaeyak.ui.search.adapter.HomeRecyclerAdapter
-import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
