@@ -55,14 +55,14 @@ class NameFragment : Fragment() {
 
     //TODO: 여기!
     //bundle에서 medicine 가져오기
-    private val medicine: Medicine by lazy {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelable(MEDICINE_DATA, Medicine::class.java)!!
-        } else {
-            @Suppress("DEPRECATION")
-            arguments?.getParcelable(MEDICINE_DATA)!!
-        }
-    }
+//    private val medicine: Medicine by lazy {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            arguments?.getParcelable(MEDICINE_DATA, Medicine::class.java)!!
+//        } else {
+//            @Suppress("DEPRECATION")
+//            arguments?.getParcelable(MEDICINE_DATA)!!
+//        }
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -86,7 +86,6 @@ class NameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-
             btnMedicineForm.setOnClickListener {
                 val formDialog = FormSelectDialog(requireContext(),object :
                     FormSelectDialog.OnFormSelectListener {
@@ -97,7 +96,7 @@ class NameFragment : Fragment() {
                 formDialog.show()
             }
 
-            etMedicineName.setText(medicine.name!!)
+//            etMedicineName.setText(medicine.name!!)
 
             adapter = NameAdapter(mItems, requireContext())
             recyclerView.adapter = adapter
@@ -109,30 +108,25 @@ class NameFragment : Fragment() {
                 val text = etMedicineName.text.toString()
                 val nameItem = NameItem(bitmap, text)
                 adapter.addItem(nameItem)
+                hideKeyboard()
             }
 
             tvSize.text = "총 ${adapter.itemCount}개의 약이 등록 예정"
 
-            if(etMedicineName.length() > 0){
-                btnNext.apply{
-                    isEnabled = true
-                    setBackgroundResource(R.color.green)
-                    setTextColor(Color.WHITE)
-                    setOnClickListener {
+
+                btnNext.setOnClickListener {
+                    if(etMedicineName.length() > 0){
                         Log.d("버튼","버튼 눌림")
-                        val newMedicine = medicine.copy(
-                            name = binding.etMedicineName.text.toString()
-                        )
                         parentFragmentManager.beginTransaction()
                             .add(
-                                R.id.fragment_container,
-                                FormFragment.newInstance(newMedicine)
+                                R.id.fragment_container, CycleFragment()
                             )
                             .addToBackStack(null)
                             .commit()
+                        }
                     }
-                }
-            }
+
+
         }
 
         //TODO: 여기!
@@ -175,20 +169,27 @@ class NameFragment : Fragment() {
         }
     }
 
+    private fun hideKeyboard(){
+        if(activity != null && requireActivity().currentFocus != null){
+            val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    companion object {
-        private const val MEDICINE_DATA = "medicine_data"
-
-        @JvmStatic
-        fun newInstance(medicine: Medicine) =
-            NameFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(MEDICINE_DATA, medicine)
-                }
-            }
-    }
+//    companion object {
+//        private const val MEDICINE_DATA = "medicine_data"
+//
+//        @JvmStatic
+//        fun newInstance(medicine: Medicine) =
+//            NameFragment().apply {
+//                arguments = Bundle().apply {
+//                    putParcelable(MEDICINE_DATA, medicine)
+//                }
+//            }
+//    }
 }

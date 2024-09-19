@@ -35,6 +35,7 @@ import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.util.Calendar
 
 class CycleFragment : Fragment() {
 
@@ -60,35 +61,14 @@ class CycleFragment : Fragment() {
 
     //뒤로가기 설정
     private val onBackPressed = {
-        if(fragmentTag == FragmentTag.CycleFragmentInHome) {
             MainNavigation.popCurrentFragment()
-        } else {
             parentFragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.move_enter,R.anim.move_exit)
                 .remove(this)
                 .commitNow()
-        }
     }
 
-    //bundle에서 medicine 가져오기
-    private val myMedicine: MyMedicine by lazy {
-        val medicine = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelable(MEDICINE_DATA, Medicine::class.java)!!
-        } else {
-            @Suppress("DEPRECATION")
-            arguments?.getParcelable(MEDICINE_DATA)!!
-        }
-
-        mainViewModel.getMyMedicineOnList(medicine.id!!) ?: MyMedicine(medicine, listOf())
-    }
-    //bundle에서 medicine 가져오기
-    private val fragmentTag by lazy {
-        when(arguments?.getString(FRAGMENT_TAG)!!) {
-            FragmentTag.CycleFragmentInHome.name -> FragmentTag.CycleFragmentInHome
-            FragmentTag.CycleFragmentInTakeAdd.name -> FragmentTag.CycleFragmentInTakeAdd
-            else -> null
-        }!!
-    }
+    private val myMedicine : MyMedicine? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -120,9 +100,6 @@ class CycleFragment : Fragment() {
         bottomSheetDialog2 = BottomSheetDialog(requireContext())
         bottomSheetDialog2.setContentView(bottomSheetView2.root)
 
-        Log.d("CycleFragment", "${myMedicine.medicine.name}, ${myMedicine.medicine.id}")
-
-
         binding.apply {
             ivBack.setOnClickListener {
                 onBackPressed()
@@ -136,49 +113,94 @@ class CycleFragment : Fragment() {
 
             clStartDay.setOnClickListener {
                 bottomSheetDialog.show()
-            }
-
-            clRepeatCycle.setOnClickListener {
-                bottomSheetDialog2.show()
-            }
-
-            if (myMedicine.alarms.isNotEmpty()) {
-                alarmList.clear() // 기존 알람 리스트 초기화
-                Log.d("CycleFragment", "알람 시간: ${myMedicine.alarms}")
-
-                for (alarmString in myMedicine.alarms) {
-                    // 시간 문자열 포맷이 맞는지 확인
-                    val timeParts = alarmString.split(":")
-                    if (timeParts.size == 2) {
-                        try {
-                            val hour = timeParts[0].toInt()
-                            val minute = timeParts[1].toInt()
-                            val alarmItem = AlarmItem(
-                                timeText = alarmString,
-                                timeInMillis = adapter.getTimeInMillis(hour, minute)
-                            )
-                            alarmList.add(alarmItem)
-                            Log.d("CycleFragment", "Added alarm item: $alarmItem")
-                        } catch (e: NumberFormatException) {
-                            Log.e("CycleFragment", "Error parsing time: $alarmString", e)
-                        }
-                    } else {
-                        Log.e("CycleFragment", "Invalid time format: $alarmString")
+                    bottomSheetView.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+                        val selectDate = "$year-${month + 1}-$dayOfMonth"
+                        binding.tvStartDay.setText(selectDate)
                     }
+            }
+
+            binding.clRepeatCycle.setOnClickListener {
+                bottomSheetDialog2.show()
+
+                val selectedDays = mutableListOf<String>()
+
+                bottomSheetView2.tvMonday.setOnClickListener {
+                    handleDaySelection(it as TextView, "월요일", selectedDays)
                 }
 
-                adapter.notifyDataSetChanged() // 어댑터에 변경사항 알림
-            } else {
-                Log.e("CycleFragment", "No alarms found")
+                bottomSheetView2.tvTuesday.setOnClickListener {
+                    handleDaySelection(it as TextView, "화요일", selectedDays)
+                }
+
+                bottomSheetView2.tvWednesday.setOnClickListener {
+                    handleDaySelection(it as TextView, "수요일", selectedDays)
+                }
+
+                bottomSheetView2.tvThursday.setOnClickListener {
+                    handleDaySelection(it as TextView, "목요일", selectedDays)
+                }
+
+                bottomSheetView2.tvFriday.setOnClickListener {
+                    handleDaySelection(it as TextView, "금요일", selectedDays)
+                }
+
+                bottomSheetView2.tvSaturday.setOnClickListener {
+                    handleDaySelection(it as TextView, "토요일", selectedDays)
+                }
+
+                bottomSheetView2.tvSunday.setOnClickListener {
+                    handleDaySelection(it as TextView, "일요일", selectedDays)
+                }
+
+                bottomSheetView2.btnNext.setOnClickListener {
+                    if(bottomSheetView2.etCustom.text.isNotEmpty()){
+                        binding.tvRepeatCycle.text = "${bottomSheetView2.etCustom.text}일"
+                        bottomSheetView2.tvCustomCaption.setText("${bottomSheetView2.etCustom.text}일마다 반복합니다.")
+                    }
+                    else {
+                        val selectedDaysString = selectedDays.joinToString(", ")
+                        binding.tvRepeatCycle.text = selectedDaysString
+                    }
+                    bottomSheetDialog2.dismiss()
+                }
+            }
+
+
+
+            myMedicine?.let {
+                if (myMedicine.alarms.isNotEmpty()) {
+                    alarmList.clear() // 기존 알람 리스트 초기화
+
+                    for (alarmString in myMedicine.alarms) {
+                        // 시간 문자열 포맷이 맞는지 확인
+                        val timeParts = alarmString.split(":")
+                        if (timeParts.size == 2) {
+                            try {
+                                val hour = timeParts[0].toInt()
+                                val minute = timeParts[1].toInt()
+                                val alarmItem = AlarmItem(
+                                    timeText = alarmString,
+                                    timeInMillis = adapter.getTimeInMillis(hour, minute)
+                                )
+                                alarmList.add(alarmItem)
+                                Log.d("CycleFragment", "Added alarm item: $alarmItem")
+                            } catch (e: NumberFormatException) {
+                                Log.e("CycleFragment", "Error parsing time: $alarmString", e)
+                            }
+                        } else {
+                            Log.e("CycleFragment", "Invalid time format: $alarmString")
+                        }
+                    }
+
+                    adapter.notifyDataSetChanged() // 어댑터에 변경사항 알림
+                } else {
+                    Log.e("CycleFragment", "No alarms found")
+                }
             }
 
             clCycleAlarmAdd.setOnClickListener {
                 showCustomTimePickerDialog()
             }
-
-//            tvCycleName.text = "약 이름 : ${myMedicine.medicine.name}"
-
-
         }
         btnNextUpdate(adapter.itemCount)
     }
@@ -221,12 +243,12 @@ class CycleFragment : Fragment() {
                     .commit()
 
                 setAlarmForAllItems()
-                val newMyMedicine = myMedicine.copy(
+                val newMyMedicine = myMedicine?.copy(
                     alarms = alarmList.map {
                         it.timeText!!
                     }
                 )
-                mainViewModel.addToMyMedicineList(newMyMedicine)
+                newMyMedicine?.let { it1 -> mainViewModel.addToMyMedicineList(it1) }
                 MainNavigation.popCurrentFragment()
             }
         } else {
@@ -276,10 +298,20 @@ class CycleFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if(fragmentTag == FragmentTag.CycleFragmentInHome) {
             MainNavigation.hideBottomNavigation(false)
-        }
         _binding = null
+    }
+
+    private fun handleDaySelection(textView: TextView, day: String, selectedDays: MutableList<String>) {
+        if (textView.isSelected) {
+            textView.setBackgroundResource(android.R.color.white)
+            selectedDays.remove(day)
+        } else {
+            // 선택되지 않은 상태일 때, 배경을 원하는 색으로 변경하고 리스트에 추가
+            textView.setBackgroundResource(R.drawable.user_cl_bg_green_gradient_gray)
+            selectedDays.add(day)
+        }
+        textView.isSelected = !textView.isSelected
     }
 
     companion object {
@@ -294,5 +326,8 @@ class CycleFragment : Fragment() {
                     putString(FRAGMENT_TAG, fragmentTag.name)
                 }
             }
+
+        @JvmStatic
+        fun newInstance() = CycleFragment()
     }
 }

@@ -38,16 +38,6 @@
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:selectedDateVerticalBar="@drawable/bottomsheet_select_green_radius"
         app:layout_constraintTop_toBottomOf="@id/tv_calendar"/>
-    
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:text="@string/check"
-        style="@style/body_b"
-        android:background="@drawable/name_cl_bg_light_green_radius"
-        app:layout_constraintTop_toBottomOf="@id/calendarView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

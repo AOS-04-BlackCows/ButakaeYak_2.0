@@ -12,12 +12,18 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.MedicineDetail
 import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.databinding.FragmentHomeBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeViewPagerAdapter
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.take.data.MyMedicine
+import com.blackcows.butakaeyak.ui.take.fragment.NameFragment
+import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OCR_Activity
 import io.ktor.util.date.WeekDay
 import java.time.LocalDate
@@ -37,6 +43,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     //binding 설정
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+//    private val item : MyMedicine? = null
 
     //ViewPager 설정
     private val homeViewPagerAdapter by lazy {
@@ -148,6 +155,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         // 직접 등록
         binding.btnAddMedicine1.setOnClickListener{
             Toast.makeText(context, "btnAddMedicine1.onClicked", Toast.LENGTH_SHORT).show()
+            MainNavigation.addFragment(TakeAddFragment(), FragmentTag.TakeAddFragment)
             anim()
         }
         // 사진 등록

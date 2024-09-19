@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/back_700" /> <!-- 선택된 날짜의 배경색을 노란색으로 설정 -->
-            <corners android:radius="12dp" />
-        </shape>
-</selector>
