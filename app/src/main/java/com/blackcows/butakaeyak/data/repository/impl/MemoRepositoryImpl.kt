@@ -43,8 +43,9 @@ class MemoRepositoryImpl @Inject constructor(
                     customNameList = group.customNameList!!,
                     startedAt = LocalDate.parse(group.startedAt),
                     finishedAt = LocalDate.parse(group.finishedAt),
-                    daysOfWeeks = daysWeek!!,
-                    alarms = group.alarms!!
+                    daysOfWeeks = daysWeek ?: listOf(),
+                    alarms = group.alarms ?: listOf(),
+                    hasTaken = group.hasTaken ?: listOf()
                 ))
             }
         }.onFailure {
@@ -74,8 +75,9 @@ class MemoRepositoryImpl @Inject constructor(
                     customNameList = group.customNameList!!,
                     startedAt = LocalDate.parse(group.startedAt),
                     finishedAt = LocalDate.parse(group.finishedAt),
-                    daysOfWeeks = daysWeek!!,
-                    alarms = group.alarms!!
+                    daysOfWeeks = daysWeek ?: listOf(),
+                    alarms = group.alarms ?: listOf(),
+                    hasTaken = group.hasTaken ?: listOf()
                 ))
             }
         }.onFailure {
