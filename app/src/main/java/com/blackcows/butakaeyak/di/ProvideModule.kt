@@ -71,14 +71,14 @@ class ProvideModule {
         remoteMyPharmacyDataSource: RemoteMyPharmacyDataSource,
         localMyPharmacyDataSource: LocalMyPharmacyDataSource
     ): MyPharmacyRepository {
-//        return if(localUtilsDataSource.isSignIn()) {
-//            MyPharmacyRepositoryImpl(remoteMyPharmacyDataSource)
-//        } else {
-//            MyPharmacyRepositoryImpl(localMyPharmacyDataSource)
-//        }
+        return if(localUtilsDataSource.isSignIn()) {
+            MyPharmacyRepositoryImpl(remoteMyPharmacyDataSource)
+        } else {
+            MyPharmacyRepositoryImpl(localMyPharmacyDataSource)
+        }
 
         //TODO: 테스트 후 고치기
-        return MyPharmacyRepositoryImpl(remoteMyPharmacyDataSource)
+        //return MyPharmacyRepositoryImpl(remoteMyPharmacyDataSource)
     }
 
     @Provides
@@ -89,25 +89,25 @@ class ProvideModule {
         medicineInfoDataSource: MedicineInfoDataSource,
         memoDataSource: MemoDataSource
     ): MedicineGroupRepository {
-//        return if(localUtilsDataSource.isSignIn()) {
-//            MedicineGroupRepositoryImpl(
-//                medicineGroupDataSource = remoteMedicineGroupDataSource,
-//                medicineDetailDataSource = medicineInfoDataSource,
-//                memoDataSource = memoDataSource
-//            )
-//        } else {
-//            MedicineGroupRepositoryImpl(
-//                medicineGroupDataSource = localMedicineGroupDataSource,
-//                medicineDetailDataSource = medicineInfoDataSource,
-//                memoDataSource = memoDataSource
-//            )
-//        }
-        //TODO: 테스트 후 고치기
-        return MedicineGroupRepositoryImpl(
+        return if(localUtilsDataSource.isSignIn()) {
+            MedicineGroupRepositoryImpl(
                 medicineGroupDataSource = remoteMedicineGroupDataSource,
                 medicineDetailDataSource = medicineInfoDataSource,
                 memoDataSource = memoDataSource
             )
+        } else {
+            MedicineGroupRepositoryImpl(
+                medicineGroupDataSource = localMedicineGroupDataSource,
+                medicineDetailDataSource = medicineInfoDataSource,
+                memoDataSource = memoDataSource
+            )
+        }
+        //TODO: 테스트 후 고치기
+//        return MedicineGroupRepositoryImpl(
+//                medicineGroupDataSource = remoteMedicineGroupDataSource,
+//                medicineDetailDataSource = medicineInfoDataSource,
+//                memoDataSource = memoDataSource
+//            )
     }
 
     @Provides

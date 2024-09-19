@@ -91,14 +91,16 @@ class UserRepositoryImpl @Inject constructor(
                     userDataSource.saveUser(result)
                 )
             }
-        }.onSuccess {
-            if(it is SignUpResult.Success) {
-                val userData = it.user
-                loginWithKakaoId(userData.kakaoId!!)
-            } else {
-                Log.w(TAG, "trySignUpWithKakao Succeed but SignUpResult is not Success")
-            }
-        }.onFailure {
+        }
+//            .onSuccess {
+//            if(it is SignUpResult.Success) {
+//                val userData = it.user
+//                loginWithKakaoId(userData.kakaoId!!)
+//            } else {
+//                Log.w(TAG, "trySignUpWithKakao Succeed but SignUpResult is not Success")
+//            }
+//        }
+            .onFailure {
             Log.w(TAG, "trySignUpWithKakao failed) msg: ${it.message}")
         }.getOrDefault(SignUpResult.Failure)
     }
