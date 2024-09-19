@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak.ui.search
 
 import android.os.Bundle
+import android.util.ArraySet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -40,6 +41,7 @@ class MedicineResultFragment : Fragment() {
     private val viewModel: TakeViewModel by activityViewModels()
 
     private var columnCount = 1 //컬럼 갯수 = 1 리니어
+    private var touch_logs = mutableListOf<Medicine>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +78,7 @@ class MedicineResultFragment : Fragment() {
         binding.apply {
             medicineAdapter = SearchRecyclerAdapter(object : SearchRecyclerAdapter.ClickListener{
                 override fun onItemClick(item: Medicine) {
+                    touch_logs.add(item)
                     val bottomSheetView = BottomsheetSearchDetailBinding.inflate(layoutInflater)
                     val bottomSheetDialog = BottomSheetDialog(requireContext())
                     with(bottomSheetView){
@@ -130,6 +133,7 @@ class MedicineResultFragment : Fragment() {
     companion object {
         const val ARG_COLUMN_COUNT = "column-count"
         const val TAB_NAME = "결과 화면"
+        const val TOUCH_LOGS = "touch_logs"
 
         @JvmStatic
         fun newInstance(columnCount: Int) =

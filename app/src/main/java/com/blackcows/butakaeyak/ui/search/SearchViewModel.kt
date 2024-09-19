@@ -21,7 +21,7 @@ class SearchViewModel @Inject constructor(
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
     }
-    val text: LiveData<String> = _text          //LiveData는 뭐 때문에 넣은거야?? 몰라... 들어가 있었어...
+    val text: LiveData<String> = _text          //뷰페이저의 현재 아이템(화면)용
 
     private val _medicineResult = MutableLiveData(listOf<Medicine>())
     val medicineResult get() = _medicineResult

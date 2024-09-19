@@ -9,11 +9,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.databinding.FragmentSearchHistoryBinding
+import com.blackcows.butakaeyak.ui.search.adapter.SearchRecyclerAdapter
 
-/**
- * A fragment representing a list of Items.
- */
+private const val TAG = "검색 기록"
 class SearchHistoryFragment : Fragment() {
+    //binding 설정
+    private var _binding: FragmentSearchHistoryBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var searchHistoryAdapter : SearchRecyclerAdapter
+
 
     private var columnCount = 2 //컬럼 갯수 = 2 그리드
 
@@ -47,7 +53,7 @@ class SearchHistoryFragment : Fragment() {
     companion object {
 
         const val ARG_COLUMN_COUNT = "column-count"
-        const val TAB_NAME = "약사 피드"
+        const val TAB_NAME = "검색 기록"
 
         @JvmStatic
         fun newInstance(columnCount: Int) =
