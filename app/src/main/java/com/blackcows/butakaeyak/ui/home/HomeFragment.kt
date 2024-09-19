@@ -32,6 +32,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     lateinit var fab_open: Animation
     lateinit var fab_close: Animation
     var openFlag = false
+
     private val homeViewModel: HomeViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     //binding 설정
