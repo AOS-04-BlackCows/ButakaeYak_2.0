@@ -36,11 +36,13 @@ class MedicineGroupRepositoryImpl @Inject constructor(
                     userId = group.userId!!,
                     medicines = medicines!!,
                     customNameList = group.customNameList!!,
+                    imageUrlList = group.imageUrlList ?: listOf(),
                     startedAt = LocalDate.parse(group.startedAt),
                     finishedAt = LocalDate.parse(group.finishedAt),
                     daysOfWeeks = daysWeek ?: listOf(),
                     alarms = group.alarms ?: listOf(),
                     hasTaken = group.hasTaken ?: listOf()
+
                 )
             }
         }.onFailure {
