@@ -254,6 +254,8 @@ class OCR_Activity : AppCompatActivity()  {
     }
 
     private fun processTextRecognitionResult(texts: Text) {
+        Log.d(TAG, "${texts.text}\n >>${texts.textBlocks}")
+
         val blocks: List<Text.TextBlock> = texts.textBlocks
         if (blocks.isEmpty()) {
             Toast.makeText(baseContext, "No text found", Toast.LENGTH_SHORT).show()
