@@ -15,7 +15,8 @@ data class MedicineGroup (
     val startedAt: LocalDate,
     val finishedAt: LocalDate,
     val daysOfWeeks: List<WeekDay>,
-    val alarms: List<String>        //format: "10:30", "12:40"
+    val alarms: List<String>,        //format: "10:30", "12:40"
+    val hasTaken: String            //format: "2024-09-12 10:30", "2024-09-12 10:30"
 ) {
     fun toRequest() = MedicineGroupRequest(
         name = name,
@@ -25,7 +26,8 @@ data class MedicineGroup (
         startedAt = startedAt.toString(),
         finishedAt = finishedAt.toString(),
         daysOfWeeks = daysOfWeeks.map { it.toKorean() },
-        alarms = alarms
+        alarms = alarms,
+        hasTaken = hasTaken
     )
     fun toResponse() = MedicineGroupResponse(
         id = id,
@@ -36,7 +38,8 @@ data class MedicineGroup (
         startedAt = startedAt.toString(),
         finishedAt = finishedAt.toString(),
         daysOfWeeks = daysOfWeeks.map { it.toKorean() },
-        alarms = alarms
+        alarms = alarms,
+        hasTaken = hasTaken
     )
 }
 
@@ -48,7 +51,8 @@ data class MedicineGroupRequest(
     val startedAt: String,
     val finishedAt: String,
     val daysOfWeeks: List<String>,
-    val alarms: List<String>
+    val alarms: List<String>,
+    val hasTaken: String
 )
 
 data class MedicineGroupResponse(
@@ -60,5 +64,6 @@ data class MedicineGroupResponse(
     val startedAt: String? = null,
     val finishedAt: String? = null,
     val daysOfWeeks: List<String>? = null,
-    val alarms: List<String>? = null
+    val alarms: List<String>? = null,
+    val hasTaken: String? = null
 )
