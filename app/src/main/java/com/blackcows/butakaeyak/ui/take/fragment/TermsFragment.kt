@@ -52,7 +52,7 @@ class TermsFragment : Fragment() {
                 binding.tvTerms1.visibility = View.VISIBLE
                 binding.ivTerms1.animate().apply {
                     duration = 300
-                    rotation(180f)
+                    rotation(90f)
                 }
             } else {
                 binding.tvTerms1.visibility = View.GONE
@@ -68,7 +68,7 @@ class TermsFragment : Fragment() {
                 binding.tvTerms2.visibility = View.VISIBLE
                 binding.ivTerms2.animate().apply {
                     duration = 300
-                    rotation(180f)
+                    rotation(90f)
                 }
             } else {
                 binding.tvTerms2.visibility = View.GONE
@@ -84,7 +84,7 @@ class TermsFragment : Fragment() {
                 binding.tvTerms3.visibility = View.VISIBLE
                 binding.ivTerms3.animate().apply {
                     duration = 300
-                    rotation(180f)
+                    rotation(90f)
                 }
             } else {
                 binding.tvTerms3.visibility = View.GONE
@@ -100,7 +100,7 @@ class TermsFragment : Fragment() {
                 binding.tvTerms4.visibility = View.VISIBLE
                 binding.ivTerms4.animate().apply {
                     duration = 300
-                    rotation(180f)
+                    rotation(90f)
                 }
             } else {
                 binding.tvTerms4.visibility = View.GONE
@@ -116,7 +116,7 @@ class TermsFragment : Fragment() {
                 binding.tvTerms5.visibility = View.VISIBLE
                 binding.ivTerms5.animate().apply {
                     duration = 300
-                    rotation(180f)
+                    rotation(90f)
                 }
             } else {
                 binding.tvTerms5.visibility = View.GONE
@@ -132,7 +132,7 @@ class TermsFragment : Fragment() {
                 binding.tvTerms6.visibility = View.VISIBLE
                 binding.ivTerms6.animate().apply {
                     duration = 300
-                    rotation(180f)
+                    rotation(90f)
                 }
             } else {
                 binding.tvTerms6.visibility = View.GONE
@@ -148,7 +148,7 @@ class TermsFragment : Fragment() {
                 binding.tvTerms7.visibility = View.VISIBLE
                 binding.ivTerms7.animate().apply {
                     duration = 300
-                    rotation(180f)
+                    rotation(90f)
                 }
             } else {
                 binding.tvTerms7.visibility = View.GONE
@@ -164,7 +164,7 @@ class TermsFragment : Fragment() {
                 binding.tvTerms8.visibility = View.VISIBLE
                 binding.ivTerms8.animate().apply {
                     duration = 300
-                    rotation(180f)
+                    rotation(90f)
                 }
             } else {
                 binding.tvTerms8.visibility = View.GONE
