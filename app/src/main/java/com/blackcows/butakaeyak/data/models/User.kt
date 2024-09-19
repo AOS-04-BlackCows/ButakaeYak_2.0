@@ -13,6 +13,8 @@ data class User(
     val pwd: String?,
     val profileUrl: String?,
     val kakaoId: Long?,
+    val naverId: String?,
+    val googleId: String?,
     val deviceToken: String?
 ): Parcelable {
     fun toRequest() = UserRequest(
@@ -21,6 +23,8 @@ data class User(
         pwd = pwd,
         profileUrl = profileUrl,
         kakaoId = kakaoId,
+        naverId = naverId,
+        googleId = googleId,
         deviceToken = deviceToken
     )
 }
@@ -32,5 +36,7 @@ data class UserRequest(
     val pwd: String? = null,
     val profileUrl: String? = null,
     val kakaoId: Long? = null,
+    val naverId: String? = null,
+    val googleId: String? = null,
     val deviceToken: String? = null
 )
