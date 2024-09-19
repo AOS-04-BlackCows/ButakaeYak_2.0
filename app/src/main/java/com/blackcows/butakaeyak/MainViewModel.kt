@@ -6,9 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.blackcows.butakaeyak.domain.repo.LocalRepository
-import com.blackcows.butakaeyak.domain.repo.MyPharmacyRepository
 import com.blackcows.butakaeyak.domain.repo.PharmacyRepository
-import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,8 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    private val myPharmacyRepository: MyPharmacyRepository
+    private val localRepository: LocalRepository,
+    private val pharmacyRepository: PharmacyRepository
 ): ViewModel() {
     private val _pharmacies = MutableLiveData<Set<KakaoPlacePharmacy>>(setOf())
     val pharmacies get() = _pharmacies
