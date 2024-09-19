@@ -20,7 +20,7 @@
         android:id="@+id/my_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,8 +35,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            style="@style/headline_b"
             android:id="@+id/tv_name"
+            style="@style/headline_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -47,8 +47,8 @@
             app:layout_constraintTop_toTopOf="@+id/iv_profile" />
 
         <TextView
-            style="@style/caption_gray"
             android:id="@+id/tv_login_info"
+            style="@style/caption_gray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -60,15 +60,15 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_name" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- 아침 점심 저녁 -->
+    <!-- 나의 활동 -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv_set_time"
+        android:id="@+id/cv_activity_history"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_marginHorizontal="16dp"
+        android:layout_height="120dp"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="16dp"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
@@ -78,14 +78,107 @@
         app:strokeColor="@color/gray"
         app:strokeWidth="1dp">
 
+        <!-- ConstraintLayout을 사용하여 내용을 두 부분으로 나누기 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <!-- 가족 연동 부분 -->
+            <LinearLayout
+                android:id="@+id/family_sync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <!-- 가족 연동 아이콘 -->
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"/>
+
+                <!-- 가족 연동 개수 텍스트 -->
+                <TextView
+                    android:id="@+id/family_sync_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="3"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"/>
+            </LinearLayout>
+
+            <!-- 수직 구분선 -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/gray"
+                app:layout_constraintStart_toEndOf="@id/family_sync"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginHorizontal="16dp" />
+
+            <!-- 나의 복약 등록 개수 부분 -->
+            <LinearLayout
+                android:id="@+id/my_medication_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintStart_toEndOf="@+id/family_sync"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="나의 복약 등록 개수"
+                    android:textSize="14sp"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/medication_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3개"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- 아침 점심 저녁 -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_set_time"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginHorizontal="20dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cv_activity_history"
+        app:strokeColor="@color/gray"
+        app:strokeWidth="1dp">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp">
 
             <TextView
-                style="@style/body_big"
                 android:id="@+id/BreakfastLunchDinner"
+                style="@style/body_big"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -112,9 +205,9 @@
         android:id="@+id/cv_services"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="20dp"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
@@ -130,8 +223,8 @@
             android:padding="16dp">
 
             <TextView
-                style="@style/body_big"
                 android:id="@+id/Services"
+                style="@style/body_big"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -158,9 +251,9 @@
         android:id="@+id/cv_open_API"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="20dp"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
@@ -176,8 +269,8 @@
             android:padding="16dp">
 
             <TextView
-                style="@style/body_big"
                 android:id="@+id/open_API"
+                style="@style/body_big"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -204,9 +297,9 @@
         android:id="@+id/cv_version"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="20dp"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
@@ -222,8 +315,8 @@
             android:padding="16dp">
 
             <TextView
-                style="@style/body_big"
                 android:id="@+id/version"
+                style="@style/body_big"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -253,9 +346,9 @@
         android:id="@+id/cv_logout"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="20dp"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
@@ -271,8 +364,8 @@
             android:padding="16dp">
 
             <TextView
-                style="@style/body_big"
                 android:id="@+id/logout"
+                style="@style/body_big"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"

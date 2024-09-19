@@ -14,7 +14,6 @@ import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentUserBinding
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
-import com.blackcows.butakaeyak.ui.SignIn.SignInActivity
 import com.blackcows.butakaeyak.ui.take.fragment.TermsFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
