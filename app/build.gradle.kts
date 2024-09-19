@@ -25,6 +25,10 @@ android {
         buildConfig = true
     }
 
+    kapt {
+        correctErrorTypes = true
+    }
+
     defaultConfig {
         applicationId = "com.blackcows.butakaeyak"
         minSdk = 26
@@ -32,7 +36,9 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        //testInstrumentationRunner = "dagger.hilt.android.testing.HiltTestRunner"
         testInstrumentationRunner = "com.blackcows.butakaeyak.HiltTestRunner"
+
 
         buildConfigField(
             "String",
@@ -89,6 +95,11 @@ android {
             "String",
             "PHARMACY_LIST_INFO_KEY",
             properties.getProperty("pharmacy_list_info_key")
+        )
+        buildConfigField(
+            "String",
+            "MEDICINE_INFO_KEY",
+            properties.getProperty("medicine_info_key")
         )
     }
 
@@ -168,8 +179,9 @@ dependencies {
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.48")
     // ...with Kotlin.
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.47")
-
+    androidTestImplementation("androidx.test:runner:1.5.2")
     testImplementation("org.robolectric:robolectric:4.9")
+    androidTestImplementation("org.robolectric:robolectric:4.9")
 
     // LiveData (optional)
     implementation("androidx.lifecycle:lifecycle-livedata-ktx")
@@ -188,6 +200,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth-ktx")     //인증
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-messaging-ktx")
 
     //Algoria
     implementation("com.algolia:algoliasearch-android:3.27.0")

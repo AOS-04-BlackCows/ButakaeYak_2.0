@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
 
+
     <application
         android:name=".di.HiltApplication"
         android:allowBackup="true"
@@ -39,13 +40,17 @@
             android:name=".ui.textrecognition.OCR_Activity"
             android:exported="false" />
 
+
+
+
+
         <receiver
             android:name=".ui.take.AlarmReceiver"
             android:exported="false" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="d4ce3a86b1d0a8895e9eccdf9fb16fc4" />
+            android:value="d4ce3a86b1d0a8895e9eccdf9fb16fc4"/>
 
         <activity
             android:name=".ui.splash.LoadingActivity"

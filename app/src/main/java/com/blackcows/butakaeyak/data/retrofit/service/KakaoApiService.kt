@@ -1,6 +1,5 @@
-package com.blackcows.butakaeyak.data.retrofit
+package com.blackcows.butakaeyak.data.retrofit.service
 
-import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.data.dto.KakaoMapDTO
 import retrofit2.http.GET
 import retrofit2.http.Query

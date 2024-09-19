@@ -22,7 +22,6 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.ActivitySignInBinding
 import com.blackcows.butakaeyak.domain.repo.LocalRepository
 import com.blackcows.butakaeyak.domain.repo.UserRepository
-import com.blackcows.butakaeyak.firebase.firebase_store.FirestoreManager
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.KakaoSdk
@@ -109,14 +108,14 @@ class SignInActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         binding.progressContainer.visibility = View.VISIBLE
                     }
-                    userRepository.loginWithId(userId, pw)
-                        .onSuccess {
-                            onSuccessLogin(it)
-                        }.onFailure {
-                            withContext(Dispatchers.Main) {
-                                Toast.makeText(this@SignInActivity, "아이디와 비밀번호를 확인해주세요.", Toast.LENGTH_LONG).show()
-                            }
-                        }
+//                    userRepository.loginWithId(userId, pw)
+//                        .onSuccess {
+//                            onSuccessLogin(it)
+//                        }.onFailure {
+//                            withContext(Dispatchers.Main) {
+//                                Toast.makeText(this@SignInActivity, "아이디와 비밀번호를 확인해주세요.", Toast.LENGTH_LONG).show()
+//                            }
+//                        }
 
                     withContext(Dispatchers.Main) {
                         binding.progressContainer.visibility = View.GONE
@@ -169,20 +168,20 @@ class SignInActivity : AppCompatActivity() {
                 Log.d(TAG, "카카오 로그인: ${result.second?.message ?: "에러없음"}")
 
                 //TODO: 나중에 flow로 바꿔서 처리하기...
-                userRepository.trySignInWithKakao()
-                    .onFailure {
-                        Log.d(TAG, it.message!!)
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(this@SignInActivity, it.message, Toast.LENGTH_SHORT).show()
-                            binding.progressContainer.visibility = View.GONE
-                        }
-
-                    }.onSuccess {
-                        onSuccessLogin(it)
-                        withContext(Dispatchers.Main) {
-                            binding.progressContainer.visibility = View.GONE
-                        }
-                    }
+                userRepository.trySignUpWithKakao()
+//                    .onFailure {
+//                        Log.d(TAG, it.message!!)
+//                        withContext(Dispatchers.Main) {
+//                            Toast.makeText(this@SignInActivity, it.message, Toast.LENGTH_SHORT).show()
+//                            binding.progressContainer.visibility = View.GONE
+//                        }
+//
+//                    }.onSuccess {
+//                        onSuccessLogin(it)
+//                        withContext(Dispatchers.Main) {
+//                            binding.progressContainer.visibility = View.GONE
+//                        }
+//                    }
             }
         }
     }
