@@ -52,7 +52,7 @@ data class MedicineGroupRequest(
     val finishedAt: String,
     val daysOfWeeks: List<String>,
     val alarms: List<String>,
-    val hasTaken: String
+    val hasTaken: List<String>
 )
 
 data class MedicineGroupResponse(
