@@ -20,6 +20,7 @@ import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
+import com.blackcows.butakaeyak.data.toKorean
 import com.blackcows.butakaeyak.databinding.FragmentTakeBinding
 import com.blackcows.butakaeyak.ui.example.UserUiState
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
@@ -28,7 +29,6 @@ import com.blackcows.butakaeyak.ui.take.TakeUiState
 import com.blackcows.butakaeyak.ui.take.adapter.MyMedicinesRvAdapter
 import com.blackcows.butakaeyak.ui.take.adapter.TakeRvDecorator
 import com.blackcows.butakaeyak.ui.take.adapter.TodayMedicineRvAdapter
-import com.blackcows.butakaeyak.ui.take.toKorean
 import com.google.api.Distribution.BucketOptions.Linear
 import io.ktor.util.date.WeekDay
 import kotlinx.coroutines.flow.collectLatest

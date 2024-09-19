@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.home
 
+import android.content.Intent
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.Log
@@ -13,9 +14,13 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.MedicineDetail
 import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.databinding.FragmentHomeBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeViewPagerAdapter
+import com.blackcows.butakaeyak.ui.textrecognition.OCR_Activity
+import io.ktor.util.date.WeekDay
+import java.time.LocalDate
 
 private const val TAG = "HomeFragment"
 class HomeFragment : Fragment(), View.OnClickListener {
@@ -27,6 +32,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     lateinit var fab_open: Animation
     lateinit var fab_close: Animation
     var openFlag = false
+
     private val homeViewModel: HomeViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     //binding 설정
@@ -60,10 +66,16 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         // MockUp Data
         val mockUpMedicineGroup = listOf(
-            MedicineGroup("감기약","","","","","","","","AM 07:50"),
-            MedicineGroup("종합비타민비타민D루테인밀크씨슬마그네슘아르기닌유산균오메가3","","","","","","","","PM 01:10"),
-            MedicineGroup("자기전 먹는 약","","","","","","","","PM 11:59")
+            MedicineGroup("0001","그룹 1","1",listOf<MedicineDetail>(MedicineDetail("","","","","","","","")),listOf("커스텀 약","커스텀 약"),listOf(), LocalDate.now(), LocalDate.now(),listOf(WeekDay.SUNDAY,WeekDay.MONDAY),listOf("07:50", "12:50"),listOf<String>()),
+            MedicineGroup("0002","그룹 2","2",listOf<MedicineDetail>(MedicineDetail("","","","","","","","")),listOf(),listOf(), LocalDate.now(), LocalDate.now(),listOf(WeekDay.SUNDAY,WeekDay.MONDAY),listOf("01:10", "04:10"),listOf<String>()),
+            MedicineGroup("0003","그룹 3","3",listOf<MedicineDetail>(MedicineDetail("","","","","","","","")),listOf("커스텀 약1","커스텀 약2"),listOf(), LocalDate.now(), LocalDate.now(),listOf(WeekDay.SUNDAY,WeekDay.MONDAY),listOf("11:59", "14:59"),listOf<String>())
         )
+//        감기약
+//        종합비타민비타민D루테인밀크씨슬마그네슘아르기닌유산균오메가3
+//        자기전_먹는_약
+
+
+
         homeViewPagerAdapter.submitList(mockUpMedicineGroup)
         binding.vpTodayMedicine.adapter = homeViewPagerAdapter
         val dotsIndicator = binding.dotsIndicator
@@ -134,14 +146,15 @@ class HomeFragment : Fragment(), View.OnClickListener {
         binding.homeConnection3.setOnClickListener{
             Toast.makeText(context, "homeConnection3.onClicked", Toast.LENGTH_SHORT).show()
         }
-        // 사진 등록
+        // 직접 등록
         binding.btnAddMedicine1.setOnClickListener{
             Toast.makeText(context, "btnAddMedicine1.onClicked", Toast.LENGTH_SHORT).show()
             anim()
         }
-        // 직접 등록
+        // 사진 등록
         binding.btnAddMedicine2.setOnClickListener{
             Toast.makeText(context, "btnAddMedicine2.onClicked.", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(requireActivity(), OCR_Activity::class.java))
             anim()
         }
     }

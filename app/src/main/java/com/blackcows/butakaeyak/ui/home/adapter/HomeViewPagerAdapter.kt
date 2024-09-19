@@ -25,7 +25,7 @@ class HomeViewPagerAdapter(
         fun bind(item: MedicineGroup) {
             with(binding) {
                 ivTodayMedicine.setImageResource(R.drawable.medicine_type_1)
-                tvTodayMedicineTime.text = item.alarms
+                tvTodayMedicineTime.text = item.alarms[0]
                 tvTodayMedicineName.text = item.name
                 layoutTodayMedicine.setOnClickListener {
                     onClickItem(item)

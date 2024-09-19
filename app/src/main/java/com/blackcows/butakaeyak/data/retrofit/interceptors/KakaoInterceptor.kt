@@ -1,4 +1,4 @@
-package com.blackcows.butakaeyak.data.retrofit
+package com.blackcows.butakaeyak.data.retrofit.interceptors
 
 import com.blackcows.butakaeyak.BuildConfig
 import okhttp3.Interceptor
