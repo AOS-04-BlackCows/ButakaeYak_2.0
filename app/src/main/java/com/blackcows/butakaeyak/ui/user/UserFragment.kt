@@ -118,7 +118,6 @@ class UserFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         userViewModel.loadUser()
     }
 }

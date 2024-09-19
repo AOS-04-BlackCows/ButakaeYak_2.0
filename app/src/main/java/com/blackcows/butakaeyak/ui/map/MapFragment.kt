@@ -18,13 +18,22 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.data.source.LocalDataSource
 import com.blackcows.butakaeyak.databinding.BottomsheetMapDetailBinding
+import com.blackcows.butakaeyak.databinding.BottomsheetMapListBinding
 import com.blackcows.butakaeyak.databinding.FragmentMapBinding
+import com.blackcows.butakaeyak.ui.map.adapter.PharmacyListRvAdapter
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.search.SearchDetailFragment
+import com.blackcows.butakaeyak.ui.search.adapter.HomeRecyclerAdapter
+import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
@@ -52,10 +61,13 @@ class MapFragment : Fragment() {
 //    private var mFusedLocationProviderClient: FusedLocationProviderClient? = null // 현재 위치를 가져오기 위한 변수
 //    lateinit var mLastLocation: Location // 위치 값을 가지고 있는 객체
 //    private lateinit var mLocationRequest: LocationRequest // 위치 정보
-    private lateinit var bottomSheetView: BottomsheetMapDetailBinding
-    private lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var bottomSheetDetailView: BottomsheetMapDetailBinding
+    private lateinit var bottomSheetDetailDialog: BottomSheetDialog
+    private lateinit var bottomSheetListView: BottomsheetMapListBinding
+    private lateinit var bottomSheetListDialog: BottomSheetDialog
     private lateinit var kakaoMapCall: KakaoMap
     private val mainViewModel: MainViewModel by activityViewModels()
+    private lateinit var pharmacyListRvAdapter : PharmacyListRvAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,11 +88,46 @@ class MapFragment : Fragment() {
 
 
 
-        bottomSheetView = BottomsheetMapDetailBinding.inflate(layoutInflater)
-        bottomSheetDialog = BottomSheetDialog(requireContext())
-        bottomSheetDialog.setContentView(bottomSheetView.root)
+        bottomSheetDetailView = BottomsheetMapDetailBinding.inflate(layoutInflater)
+        bottomSheetDetailDialog = BottomSheetDialog(requireContext())
+        bottomSheetDetailDialog.setContentView(bottomSheetDetailView.root)
+
+        bottomSheetListView = BottomsheetMapListBinding.inflate(layoutInflater)
+        bottomSheetListDialog = BottomSheetDialog(requireContext())
+        bottomSheetListDialog.setContentView(bottomSheetListView.root)
+
         kakaoMapInit()
 
+        //ViewPager 설정
+        pharmacyListRvAdapter = PharmacyListRvAdapter (object : PharmacyListRvAdapter.ClickListener {
+            override fun onFavoriteClick(item: KakaoPlacePharmacy) {
+//                if (LocalDataSource(requireContext()).isPharmacyChecked(item.id)) {
+//
+//                }
+            }
+
+            override fun onCallClick(item: KakaoPlacePharmacy) {
+                // TODO("Not yet implemented")
+            }
+
+            override fun onFindRoadClick(item: KakaoPlacePharmacy) {
+                // TODO("Not yet implemented")
+            }
+        })
+        bottomSheetListView.bottomsheetMapList.run {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = pharmacyListRvAdapter
+        }
+        binding.btnPharmacyList.setOnClickListener {
+            Log.d(TAG, "mapViewModel.items = ${mapViewModel.items.value}")
+            pharmacyListRvAdapter.submitList(mapViewModel.items.value)
+            bottomSheetListDialog.show()
+        }
+        binding.btnFavoriteList.setOnClickListener {
+            Log.d(TAG, "mainViewModel.pharmacies = ${mainViewModel.pharmacies.value}")
+            pharmacyListRvAdapter.submitList(mainViewModel.pharmacies.value?.toList()?: listOf())
+            bottomSheetListDialog.show()
+        }
         /*
         해시키 발급하는 키
         try {
@@ -225,22 +272,23 @@ class MapFragment : Fragment() {
 
 
             mapViewModel.items.observe(viewLifecycleOwner) { items ->
-                drawLabels(items)
+                labelStyle(items)
             }
             mainViewModel.pharmacies.observe(viewLifecycleOwner) {
-                drawLabels(mapViewModel.items.value!!)
+                labelStyle(mapViewModel.items.value!!)
             }
         }
     }
 
-    private fun drawLabels(items: List<KakaoPlacePharmacy>) {
+    // label style set
+
+    // label style set end
+
+    private fun labelStyle(items: List<KakaoPlacePharmacy>) {
         // draw labels init
         kakaoMapCall.labelManager?.removeAllLabelLayer()
         kakaoMapCall.labelManager?.layer
         kakaoMapCall.labelManager?.lodLayer
-        var style: LabelStyles?
-        var options: LabelOptions?
-        val layer: LabelLayer? = kakaoMapCall.labelManager?.layer
         val styleClicked = kakaoMapCall.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon_pharmacy_label_clicked)))
         val styleFavorite = kakaoMapCall.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon_pharmacy_label_favorite)))
         val styleDefault = kakaoMapCall.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon_pharmacy_label)))
@@ -254,10 +302,13 @@ class MapFragment : Fragment() {
         fun pharmacyChecked(thisData: KakaoPlacePharmacy): Boolean = LocalDataSource(requireContext()).isPharmacyChecked(thisData.id)
         fun selectIconType(iconType: Boolean) {
             when (iconType) {
-                false -> bottomSheetView.btnFavorite.setImageResource(R.drawable.icon_favorite)
-                true -> bottomSheetView.btnFavorite.setImageResource(R.drawable.icon_favorite_active)
+                false -> bottomSheetDetailView.btnFavorite.setImageResource(R.drawable.icon_favorite)
+                true -> bottomSheetDetailView.btnFavorite.setImageResource(R.drawable.icon_favorite_active)
             }
         }
+        var style: LabelStyles? = null
+        var options: LabelOptions? = null
+        val layer: LabelLayer? = kakaoMapCall.labelManager?.layer
         fun labelDraw (item: KakaoPlacePharmacy) {
             // id가 이미 pharmacy에 있을 때
             style = styleCheck(item.id)
@@ -273,7 +324,7 @@ class MapFragment : Fragment() {
 
         kakaoMapCall.setOnLabelClickListener { kakaoMap, labelLayer, label ->
             val pharmacyItem = items.first { it.id == label.tag }
-            with(bottomSheetView) {
+            with(bottomSheetDetailView) {
                 distance.text = "${pharmacyItem.distance}m"
                 placeName.text = pharmacyItem.placeName
                 phone.text = pharmacyItem.phone
@@ -281,7 +332,7 @@ class MapFragment : Fragment() {
                 addressName.text = pharmacyItem.addressName
                 roadAddressName.text = pharmacyItem.roadAddressName
                 label.changeStyles(styleClicked)
-                bottomSheetDialog.setOnCancelListener {
+                bottomSheetDetailDialog.setOnCancelListener {
                     style = styleCheck(pharmacyItem.id)
                     label.changeStyles(style)
                 }
@@ -316,7 +367,7 @@ class MapFragment : Fragment() {
                     }
                 }
             }
-            bottomSheetDialog.show()
+            bottomSheetDetailDialog.show()
             true
         }
 
