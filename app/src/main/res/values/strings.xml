@@ -14,6 +14,8 @@
     <string name="check">확인</string>
     <string name="next">다음</string>
 
+    <string name="btn_call">전화</string>
+    <string name="btn_nav">길찾기</string>
     <!-- FireBase -->
     <string name="set">set</string>
 
@@ -75,7 +77,7 @@
     <string name="form">약 모형</string>
 
     <!-- Map -->
-    <string name="view_more">목록 더보기</string>
+    <string name="view_more">더 불러오기</string>
     <string name="map_research">현 위치에서 재검색</string>
 
     <!-- Name -->
