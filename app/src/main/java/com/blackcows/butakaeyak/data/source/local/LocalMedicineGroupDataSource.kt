@@ -61,4 +61,20 @@ class LocalMedicineGroupDataSource @Inject constructor(
         }
         saveMedicineGroup(lists)
     }
+
+    override suspend fun updateGroup(takenGroup: MedicineGroup) {
+        val list = getMedicineGroups("").toMutableList()
+        val component = list.filter { it.id == takenGroup.id }
+
+        if(component.isEmpty()) {
+            throw Exception("존재하지 않는 Local MedicineGroup에 접근 시도함.")
+        }
+
+        val index = list.indexOf(component[0])
+
+        list.removeAt(index)
+        list.add(takenGroup.toResponse())
+
+        saveMedicineGroup(list)
+    }
 }
