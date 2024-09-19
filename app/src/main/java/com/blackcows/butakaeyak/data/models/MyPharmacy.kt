@@ -7,5 +7,7 @@ data class MyPharmacy(
     val phone: String? = null,
     val placeUrl: String? = null,
     val addressName: String? = null,
-    val roadAddressName: String? = null
+    val roadAddressName: String? = null,
+    val x: Double? = null,
+    val y: Double? = null,
 )
