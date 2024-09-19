@@ -32,7 +32,7 @@ class PharmacyListRvAdapter(private val clickListener: ClickListener): ListAdapt
                 tvPharmacyName.text = item.placeName
                 tvPharmacyTelNum.text = item.phone
 //                placeUrl.text = pharmacyItem.placeUrl
-                tvPharmacyAddress.text = item.addressName
+//                tvPharmacyAddress.text = item.addressName
                 tvPharmacyRoadAddress.text = item.roadAddressName
                 btnFavoritePharmacy.setOnClickListener {
                     clickListener.onFavoriteClick(item)

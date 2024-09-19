@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/tv_pharmacy_name"
-        style="@style/body_b"
+        style="@style/medium_b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -29,18 +29,19 @@
         android:layout_marginStart="8dp"
         android:paddingEnd="28dp"
         android:text="@string/distance"
+        android:textColor="@color/any_200"
         app:layout_constraintBottom_toBottomOf="@+id/tv_pharmacy_name"
         app:layout_constraintStart_toEndOf="@+id/tv_pharmacy_name" />
 
-    <TextView
-        android:id="@+id/tv_pharmacy_address"
-        style="@style/body"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/address_name"
-        app:layout_constraintStart_toStartOf="@+id/tv_pharmacy_name"
-        app:layout_constraintTop_toBottomOf="@+id/tv_pharmacy_name" />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_pharmacy_address"-->
+<!--        style="@style/body"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="4dp"-->
+<!--        android:text="@string/address_name"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/tv_pharmacy_name"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_pharmacy_name" />-->
 
     <TextView
         android:id="@+id/tv_pharmacy_road_address"
@@ -50,7 +51,7 @@
         android:layout_marginTop="4dp"
         android:text="@string/road_address_name"
         app:layout_constraintStart_toStartOf="@+id/tv_pharmacy_name"
-        app:layout_constraintTop_toBottomOf="@+id/tv_pharmacy_address" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_pharmacy_name" />
 
     <TextView
         android:id="@+id/tv_pharmacy_tel_num"
@@ -59,6 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/phone_number"
+        android:textColor="@color/any_500"
         app:layout_constraintStart_toStartOf="@+id/tv_pharmacy_name"
         app:layout_constraintTop_toBottomOf="@+id/tv_pharmacy_road_address" />
 
@@ -77,7 +79,7 @@
         style="@style/body"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/round_long_rect_500"
         android:backgroundTint="@color/white"

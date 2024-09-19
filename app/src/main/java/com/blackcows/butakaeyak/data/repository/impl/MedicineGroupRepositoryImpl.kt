@@ -42,6 +42,7 @@ class MedicineGroupRepositoryImpl @Inject constructor(
                     daysOfWeeks = daysWeek ?: listOf(),
                     alarms = group.alarms ?: listOf(),
                     hasTaken = group.hasTaken ?: listOf()
+
                 )
             }
         }.onFailure {
