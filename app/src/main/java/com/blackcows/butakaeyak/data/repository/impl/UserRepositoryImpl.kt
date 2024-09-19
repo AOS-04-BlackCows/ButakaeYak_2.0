@@ -33,6 +33,7 @@ class UserRepositoryImpl @Inject constructor(
         return runCatching {
             val result = userDataSource.getUserWithLoginId(id, pwd)
             if(result != null) {
+                localUtilsDataSource.setSignIn(true)
                 LoginResult.Success(result)
             } else LoginResult.UnknownAccount
         }.getOrDefault(LoginResult.Failure)
@@ -42,6 +43,7 @@ class UserRepositoryImpl @Inject constructor(
         return runCatching {
             val result = userDataSource.getUserWithKakaoId(kakaoId)
             if(result != null) {
+                localUtilsDataSource.setSignIn(true)
                 LoginResult.Success(result)
             } else LoginResult.UnknownAccount
         }.getOrDefault(LoginResult.Failure)
@@ -88,6 +90,13 @@ class UserRepositoryImpl @Inject constructor(
                 SignUpResult.Success(
                     userDataSource.saveUser(result)
                 )
+            }
+        }.onSuccess {
+            if(it is SignUpResult.Success) {
+                val userData = it.user
+                loginWithKakaoId(userData.kakaoId!!)
+            } else {
+                Log.w(TAG, "trySignUpWithKakao Succeed but SignUpResult is not Success")
             }
         }.onFailure {
             Log.w(TAG, "trySignUpWithKakao failed) msg: ${it.message}")
