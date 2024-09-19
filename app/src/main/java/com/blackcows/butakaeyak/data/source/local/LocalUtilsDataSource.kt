@@ -25,6 +25,9 @@ class LocalUtilsDataSource @Inject constructor(
     fun isSignIn(): Boolean {
         return sharedPreferences.getBoolean(IS_LOGIN, false)
     }
+    fun setSignIn(isSignIn: Boolean) {
+        editor.putBoolean(IS_LOGIN, isSignIn)
+    }
 
     fun saveAutoLoginData(loginData: AutoLoginData) {
         val gson = Gson()
