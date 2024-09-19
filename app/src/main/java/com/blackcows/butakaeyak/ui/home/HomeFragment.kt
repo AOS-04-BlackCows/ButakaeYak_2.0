@@ -28,6 +28,7 @@ import com.blackcows.butakaeyak.ui.textrecognition.OCR_Activity
 import io.ktor.util.date.WeekDay
 import java.time.LocalDate
 
+
 private const val TAG = "HomeFragment"
 class HomeFragment : Fragment(), View.OnClickListener {
 
