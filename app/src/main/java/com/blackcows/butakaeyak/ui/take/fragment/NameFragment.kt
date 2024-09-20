@@ -25,7 +25,6 @@ import com.blackcows.butakaeyak.databinding.FragmentNameBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.FormSelectDialog
-import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
 import com.blackcows.butakaeyak.ui.take.adapter.NameAdapter
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem

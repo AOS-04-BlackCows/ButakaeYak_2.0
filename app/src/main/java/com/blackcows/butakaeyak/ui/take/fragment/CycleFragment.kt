@@ -26,13 +26,12 @@ import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.BottomsheetCalendarBinding
-import com.blackcows.butakaeyak.databinding.BottomsheetMapDetailBinding
 import com.blackcows.butakaeyak.databinding.BottomsheetRepeatCycleBinding
 import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.AlarmReceiver
-import com.blackcows.butakaeyak.ui.take.TakeViewModel
+import com.blackcows.butakaeyak.ui.take.TakeAddViewModel
 import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
@@ -53,7 +52,7 @@ class CycleFragment : Fragment() {
     private val alarmList = mutableListOf<AlarmItem>()
 
     //viewModel 설정
-    private val viewModel: TakeViewModel by activityViewModels()
+    private val viewModel: TakeAddViewModel by activityViewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
 
     private lateinit var bottomSheetView: BottomsheetCalendarBinding
@@ -102,17 +101,12 @@ class CycleFragment : Fragment() {
         bottomSheetView2 = BottomsheetRepeatCycleBinding.inflate(layoutInflater)
         bottomSheetDialog2 = BottomSheetDialog(requireContext())
         bottomSheetDialog2.setContentView(bottomSheetView2.root)
-        bottomSheetDialog2.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         binding.etMedicineGroup.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     btnNext()
             }
-
             override fun afterTextChanged(s: Editable?) {}
         })
 
@@ -122,7 +116,7 @@ class CycleFragment : Fragment() {
             }
 
             adapter = CycleAdapter(requireContext(),alarmList){ itemCount ->
-                btnNextUpdate(itemCount)
+                alarmAddTextUpdate(itemCount)
             }
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -130,7 +124,7 @@ class CycleFragment : Fragment() {
             clStartDay.setOnClickListener {
                 bottomSheetDialog.show()
                     bottomSheetView.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-                        val selectDate = "$year-${month + 1}-$dayOfMonth"
+                        val selectDate = "${year}년 ${month + 1}월 ${dayOfMonth}일"
                         binding.tvStartDay.setText(selectDate)
                         btnNext()
                     }
@@ -142,31 +136,31 @@ class CycleFragment : Fragment() {
                 val selectedDays = mutableListOf<String>()
 
                 bottomSheetView2.tvMonday.setOnClickListener {
-                    handleDaySelection(it as TextView, "월요일", selectedDays)
+                    handleDaySelection(it as TextView, "월", selectedDays)
                 }
 
                 bottomSheetView2.tvTuesday.setOnClickListener {
-                    handleDaySelection(it as TextView, "화요일", selectedDays)
+                    handleDaySelection(it as TextView, "화", selectedDays)
                 }
 
                 bottomSheetView2.tvWednesday.setOnClickListener {
-                    handleDaySelection(it as TextView, "수요일", selectedDays)
+                    handleDaySelection(it as TextView, "수", selectedDays)
                 }
 
                 bottomSheetView2.tvThursday.setOnClickListener {
-                    handleDaySelection(it as TextView, "목요일", selectedDays)
+                    handleDaySelection(it as TextView, "목", selectedDays)
                 }
 
                 bottomSheetView2.tvFriday.setOnClickListener {
-                    handleDaySelection(it as TextView, "금요일", selectedDays)
+                    handleDaySelection(it as TextView, "금", selectedDays)
                 }
 
                 bottomSheetView2.tvSaturday.setOnClickListener {
-                    handleDaySelection(it as TextView, "토요일", selectedDays)
+                    handleDaySelection(it as TextView, "토", selectedDays)
                 }
 
                 bottomSheetView2.tvSunday.setOnClickListener {
-                    handleDaySelection(it as TextView, "일요일", selectedDays)
+                    handleDaySelection(it as TextView, "일", selectedDays)
                 }
 
                 bottomSheetView2.btnNext.setOnClickListener {
@@ -228,10 +222,7 @@ class CycleFragment : Fragment() {
                             Log.e("CycleFragment", "Invalid time format: $alarmString")
                         }
                     }
-
                     adapter.notifyDataSetChanged() // 어댑터에 변경사항 알림
-                } else {
-                    Log.e("CycleFragment", "No alarms found")
                 }
             }
 
@@ -239,11 +230,11 @@ class CycleFragment : Fragment() {
                 showCustomTimePickerDialog()
             }
         }
-        btnNextUpdate(adapter.itemCount)
+        alarmAddTextUpdate(adapter.itemCount)
     }
 
     private fun orderSelectedDays(selectedDays: List<String>): List<String> {
-        val dayOrder = listOf("월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일")
+        val dayOrder = listOf("월", "화", "수", "목", "금", "토", "일")
 
         return selectedDays.sortedBy { dayOrder.indexOf(it) }
     }
@@ -258,12 +249,13 @@ class CycleFragment : Fragment() {
             val selectedTime = tempTextView.text.toString()
             if (selectedTime.isNotEmpty()) {
                 addAlarmItem(selectedTime)
-                btnNextUpdate(adapter.itemCount)
+                alarmAddTextUpdate(adapter.itemCount)
             }
         }
         timePickerDialog.show()
     }
 
+    //adapter에 알람 추가
     private fun addAlarmItem(timeText: String) {
         val timeParts = timeText.split(":")
         val hour = timeParts[0].toInt()
@@ -275,7 +267,8 @@ class CycleFragment : Fragment() {
         adapter.addItem(alarmItem)
     }
 
-    private fun btnNextUpdate(itemCount: Int) {
+    //tvCycleAlarmAdd text 업데이트
+    private fun alarmAddTextUpdate(itemCount: Int) {
         if(itemCount>0) {
             binding.tvCycleAlarmAdd.setText("${itemCount}개 설정")
         }
@@ -286,7 +279,6 @@ class CycleFragment : Fragment() {
     }
 
     private fun btnNext(){
-
         val isMedicineGroup = binding.etMedicineGroup.text.isNotEmpty()
         val isStartDay = binding.tvStartDay.text.isNotEmpty()
         val isRepeatCycle = binding.tvRepeatCycle.text.isNotEmpty()
@@ -302,7 +294,11 @@ class CycleFragment : Fragment() {
                         .remove(this@CycleFragment)
                         .commit()
 
-                    setAlarmForAllItems()
+                    val repeatCycle = tvRepeatCycle.text.toString()
+                    val selectDate = tvStartDay.text.toString()
+                    val dateFormat = dateFormatText(selectDate)
+                    val startDate = dateFormat.timeInMillis
+                    setAlarmForAllItems(repeatCycle,startDate)
                     val newMyMedicine = myMedicine?.copy(
                         alarms = alarmList.map {
                             it.timeText!!
@@ -323,9 +319,7 @@ class CycleFragment : Fragment() {
         }
     }
 
-
-
-    private fun setAlarmForAllItems() {
+    private fun setAlarmForAllItems(repeatType:String, startDate : Long) {
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
         val alarmList = adapter.getAlarmList()
 
@@ -337,6 +331,7 @@ class CycleFragment : Fragment() {
             intent.putExtra("NOTIFICATION_ID", alarm.requestCode)
             intent.putExtra("NOTIFICATION_TITLE","${binding.etMedicineGroup.text}")
             intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
+            intent.putExtra("REPEAT_TYPE", repeatType)
 
             val pendingIntent = PendingIntent.getBroadcast(
                 context, alarm.requestCode, intent, PendingIntent.FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
@@ -346,8 +341,12 @@ class CycleFragment : Fragment() {
                 // Android 12 이상에서 정확한 알람 설정
                 try {
                     if (alarmManager?.canScheduleExactAlarms() == true) {
-                        val alarmClock = AlarmManager.AlarmClockInfo(alarm.timeInMillis, pendingIntent)
+                        val adjustedTimeInMillis = startDate + (alarm.timeInMillis % (24 * 60 * 60 * 1000))
+                        val alarmClock = AlarmManager.AlarmClockInfo(adjustedTimeInMillis, pendingIntent)
                         alarmManager.setAlarmClock(alarmClock, pendingIntent)
+
+                        //TODO 반복 주기에 따른 알람 설정 추가
+                        scheduleNextAlarm(repeatType, alarmManager, pendingIntent, adjustedTimeInMillis)
                     } else {
                         val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
                         startActivity(intent)
@@ -361,6 +360,97 @@ class CycleFragment : Fragment() {
         Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
+    //TODO 년,월,일 추출하는 메소드
+    fun dateFormatText(dateText: String): Calendar {
+        val year = dateText.substringBefore("년").trim().toInt()
+        val month = dateText.substringAfter("년").substringBefore("월").trim().toInt() - 1 // Calendar는 0부터 시작
+        val day = dateText.substringAfter("월").substringBefore("일").trim().toInt()
+
+        // Calendar 날짜 설정
+        return Calendar.getInstance().apply {
+            set(Calendar.YEAR, year)
+            set(Calendar.MONTH, month)
+            set(Calendar.DAY_OF_MONTH, day)
+        }
+    }
+
+    private fun scheduleNextAlarm(repeatType: String, alarmManager: AlarmManager, pendingIntent: PendingIntent, currentTimeMillis: Long) {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = currentTimeMillis
+
+        when (repeatType) {
+            "월, 화, 수, 목, 금, 토, 일" -> {
+                calendar.add(Calendar.DAY_OF_YEAR, 1)  // 매일 반복
+            }
+            "2일" -> {
+                calendar.add(Calendar.DAY_OF_YEAR, 2)
+            }
+            "3일" -> {
+                calendar.add(Calendar.DAY_OF_YEAR, 3)  // 3일마다 반복
+            }
+            "4일" -> {
+                calendar.add(Calendar.DAY_OF_YEAR, 4)
+            }
+            "5일" -> {
+                calendar.add(Calendar.DAY_OF_YEAR, 5)
+            }
+            "6일" -> {
+                calendar.add(Calendar.DAY_OF_YEAR, 6)
+            }
+            "7일" -> {
+                calendar.add(Calendar.DAY_OF_YEAR, 7)
+            }
+
+            "월" -> {
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+                if (calendar.timeInMillis < System.currentTimeMillis()) {
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
+                }
+            }
+            "화" -> {
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY)
+                if (calendar.timeInMillis < System.currentTimeMillis()) {
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
+                }
+            }
+            "수" -> {
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY)
+                if (calendar.timeInMillis < System.currentTimeMillis()) {
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
+                }
+            }
+            "목" -> {
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY)
+                if (calendar.timeInMillis < System.currentTimeMillis()) {
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1)
+                }
+            }
+            "금" -> {
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY)
+                if (calendar.timeInMillis < System.currentTimeMillis()) {
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1)
+                }
+            }
+            "토" -> {
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY)
+                if (calendar.timeInMillis < System.currentTimeMillis()) {
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1)
+                }
+            }
+            "일" -> {
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
+                if (calendar.timeInMillis < System.currentTimeMillis()) {
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1)
+                }
+            }
+        }
+
+        // 반복되는 알람 설정
+        val nextAlarmClock = AlarmManager.AlarmClockInfo(calendar.timeInMillis, pendingIntent)
+        alarmManager.setAlarmClock(nextAlarmClock, pendingIntent)
+    }
+
+    //날짜 선택 시 색 변경
     private fun handleDaySelection(textView: TextView, day: String, selectedDays: MutableList<String>) {
         if (textView.isSelected) {
             textView.setBackgroundResource(android.R.color.white)
