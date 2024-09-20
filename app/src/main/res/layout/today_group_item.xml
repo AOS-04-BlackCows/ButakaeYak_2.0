@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/round_white_radius12"
     android:elevation="5dp"
-    android:padding="18dp">
+    android:padding="18dp"
+    android:layout_margin="5dp">
 
     <ToggleButton
         android:id="@+id/taken_cb"
