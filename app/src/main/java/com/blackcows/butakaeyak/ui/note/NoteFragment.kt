@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentNoteBinding
+import com.google.android.material.tabs.TabLayoutMediator
 
 class NoteFragment : Fragment() {
 
@@ -26,5 +27,21 @@ class NoteFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        initView()
+    }
+
+    private fun initView() {
+        val tabLayout = binding.tabLo
+        val noteAdapter = NoteViewPager(requireActivity())
+        val viewPager = binding.viewpager.apply {
+            adapter = noteAdapter
+        }
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = noteAdapter.tabName[position]
+        }.attach()
+    }
 }
