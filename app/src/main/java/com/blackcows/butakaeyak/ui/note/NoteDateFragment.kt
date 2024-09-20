@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.blackcows.butakaeyak.R
-import com.blackcows.butakaeyak.databinding.FragmentNoteBinding
+import com.blackcows.butakaeyak.databinding.FragmentNoteDateBinding
 
-class NoteFragment : Fragment() {
 
-    private var _binding: FragmentNoteBinding? = null
+class NoteDateFragment : Fragment() {
+    private var _binding: FragmentNoteDateBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,9 +22,8 @@ class NoteFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNoteBinding.inflate(inflater)
+        _binding = FragmentNoteDateBinding.inflate(inflater)
         return binding.root
     }
-
 
 }
