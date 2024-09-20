@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
-        android:checked="true"
+        android:checked="false"
 
         android:background="@drawable/taken_checkbox_selector"
 
