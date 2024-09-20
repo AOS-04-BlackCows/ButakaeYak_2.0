@@ -9,11 +9,14 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -99,6 +102,19 @@ class CycleFragment : Fragment() {
         bottomSheetView2 = BottomsheetRepeatCycleBinding.inflate(layoutInflater)
         bottomSheetDialog2 = BottomSheetDialog(requireContext())
         bottomSheetDialog2.setContentView(bottomSheetView2.root)
+        bottomSheetDialog2.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+        binding.etMedicineGroup.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    btnNext()
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         binding.apply {
             ivBack.setOnClickListener {
@@ -116,6 +132,7 @@ class CycleFragment : Fragment() {
                     bottomSheetView.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
                         val selectDate = "$year-${month + 1}-$dayOfMonth"
                         binding.tvStartDay.setText(selectDate)
+                        btnNext()
                     }
             }
 
@@ -158,14 +175,34 @@ class CycleFragment : Fragment() {
                         bottomSheetView2.tvCustomCaption.setText("${bottomSheetView2.etCustom.text}일마다 반복합니다.")
                     }
                     else {
-                        val selectedDaysString = selectedDays.joinToString(", ")
+                        val orderedDays = orderSelectedDays(selectedDays)
+                        val selectedDaysString = orderedDays.joinToString(", ")
                         binding.tvRepeatCycle.text = selectedDaysString
                     }
                     bottomSheetDialog2.dismiss()
+                    btnNext()
+                }
+
+                bottomSheetDialog2.setOnDismissListener {
+                    bottomSheetView2.etCustom.setText("")
+
+                    bottomSheetView2.tvMonday.setBackgroundResource(android.R.color.white)
+                    bottomSheetView2.tvTuesday.setBackgroundResource(android.R.color.white)
+                    bottomSheetView2.tvWednesday.setBackgroundResource(android.R.color.white)
+                    bottomSheetView2.tvThursday.setBackgroundResource(android.R.color.white)
+                    bottomSheetView2.tvFriday.setBackgroundResource(android.R.color.white)
+                    bottomSheetView2.tvSaturday.setBackgroundResource(android.R.color.white)
+                    bottomSheetView2.tvSunday.setBackgroundResource(android.R.color.white)
+
+                    bottomSheetView2.tvMonday.isSelected = false
+                    bottomSheetView2.tvTuesday.isSelected = false
+                    bottomSheetView2.tvWednesday.isSelected = false
+                    bottomSheetView2.tvThursday.isSelected = false
+                    bottomSheetView2.tvFriday.isSelected = false
+                    bottomSheetView2.tvSaturday.isSelected = false
+                    bottomSheetView2.tvSunday.isSelected = false
                 }
             }
-
-
 
             myMedicine?.let {
                 if (myMedicine.alarms.isNotEmpty()) {
@@ -205,6 +242,12 @@ class CycleFragment : Fragment() {
         btnNextUpdate(adapter.itemCount)
     }
 
+    private fun orderSelectedDays(selectedDays: List<String>): List<String> {
+        val dayOrder = listOf("월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일")
+
+        return selectedDays.sortedBy { dayOrder.indexOf(it) }
+    }
+
     private fun showCustomTimePickerDialog() {
         // text 임시 설정
         val tempTextView = TextView(requireContext())
@@ -233,32 +276,54 @@ class CycleFragment : Fragment() {
     }
 
     private fun btnNextUpdate(itemCount: Int) {
-        binding.btnNext.isEnabled = itemCount > 0
-        if (itemCount > 0) {
-            binding.btnNext.setBackgroundResource(R.color.green)
-            binding.btnNext.setTextColor(Color.WHITE)
-            binding.btnNext.setOnClickListener {
-                parentFragmentManager.beginTransaction()
-                    .remove(this@CycleFragment)
-                    .commit()
+        if(itemCount>0) {
+            binding.tvCycleAlarmAdd.setText("${itemCount}개 설정")
+        }
+        else{
+            binding.tvCycleAlarmAdd.text = ""
+        }
+        btnNext()
+    }
 
-                setAlarmForAllItems()
-                val newMyMedicine = myMedicine?.copy(
-                    alarms = alarmList.map {
-                        it.timeText!!
-                    }
-                )
-                newMyMedicine?.let { it1 -> mainViewModel.addToMyMedicineList(it1) }
-                MainNavigation.popCurrentFragment()
+    private fun btnNext(){
+
+        val isMedicineGroup = binding.etMedicineGroup.text.isNotEmpty()
+        val isStartDay = binding.tvStartDay.text.isNotEmpty()
+        val isRepeatCycle = binding.tvRepeatCycle.text.isNotEmpty()
+        val isCycleAlarmAdd = binding.tvCycleAlarmAdd.text.isNotEmpty()
+
+        binding.apply {
+            if(isMedicineGroup && isStartDay && isRepeatCycle && isCycleAlarmAdd){
+                btnNext.isEnabled = true
+                btnNext.setBackgroundResource(R.color.green)
+                btnNext.setTextColor(Color.WHITE)
+                btnNext.setOnClickListener {
+                    parentFragmentManager.beginTransaction()
+                        .remove(this@CycleFragment)
+                        .commit()
+
+                    setAlarmForAllItems()
+                    val newMyMedicine = myMedicine?.copy(
+                        alarms = alarmList.map {
+                            it.timeText!!
+                        }
+                    )
+                    newMyMedicine?.let { it1 -> mainViewModel.addToMyMedicineList(it1) }
+                    MainNavigation.popCurrentFragment()
+                }
             }
-        } else {
-            binding.btnNext.setBackgroundResource(R.color.gray)
-            binding.btnNext.setTextColor(Color.DKGRAY)
-            binding.btnNext.setOnClickListener {
+            else{
+                btnNext.isEnabled = false
+                btnNext.setBackgroundResource(R.color.gray)
+                btnNext.setTextColor(Color.DKGRAY)
+                btnNext.setOnClickListener {
                 Toast.makeText(context, "시간 설정이 완료되지 않았습니다.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
+
+
 
     private fun setAlarmForAllItems() {
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
@@ -296,22 +361,21 @@ class CycleFragment : Fragment() {
         Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-            MainNavigation.hideBottomNavigation(false)
-        _binding = null
-    }
-
     private fun handleDaySelection(textView: TextView, day: String, selectedDays: MutableList<String>) {
         if (textView.isSelected) {
             textView.setBackgroundResource(android.R.color.white)
             selectedDays.remove(day)
         } else {
-            // 선택되지 않은 상태일 때, 배경을 원하는 색으로 변경하고 리스트에 추가
             textView.setBackgroundResource(R.drawable.user_cl_bg_green_gradient_gray)
             selectedDays.add(day)
         }
         textView.isSelected = !textView.isSelected
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+            MainNavigation.hideBottomNavigation(false)
+        _binding = null
     }
 
     companion object {
