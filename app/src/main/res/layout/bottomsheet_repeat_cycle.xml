@@ -46,7 +46,6 @@
             android:layout_height="40dp"
             android:text="토"
             style="@style/body"
-            android:textColor="#1DB5DB"
             android:paddingTop="4dp"
             android:gravity="center_horizontal"
             app:layout_constraintEnd_toEndOf="parent"
