@@ -160,6 +160,7 @@ class OcrFragment : Fragment(), View.OnClickListener {
 
         // 결과를 TextView에 표시
         lifecycleScope.launch {
+            medicineList?.clear()
             ocrViewModel.uiState.collect{uiState ->
                 binding.textViewOcrResult.text = when(uiState){
                     is GPTResultUIState.Loading -> "약 이름 찾는중...🧐"
@@ -171,12 +172,12 @@ class OcrFragment : Fragment(), View.OnClickListener {
                     is GPTResultUIState.Success -> {
                         if (!uiState.response.gptMessage.trim().equals("약 이름 없음")){
                             medicineList.let {
-                                it!!.removeAll(it)
+                                it!!.clear()
                                 it.addAll(uiState.response.gptMessage.trim().split(","))
                             }
                             MainNavigation.addFragment(TakeAddFragment(), FragmentTag.TakeAddFragment)
                         }
-                        Log.d(TAG, "medicineList size:${medicineList?.size}\nmedicineList size:${medicineList?.getOrNull(0)}")
+                        Log.d(TAG, "${uiState.response.gptMessage.trim()} medicineList size:${medicineList?.size}\nmedicineList size:${medicineList?.getOrNull(0)}")
                         binding.lodingProgress.visibility = View.GONE
                     }
                     is GPTResultUIState.Error -> {
