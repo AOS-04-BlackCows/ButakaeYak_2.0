@@ -78,7 +78,7 @@
 
                 android:layout_marginTop="24dp"
 
-                tools:listitem="@layout/today_alarm_item"
+                tools:listitem="@layout/schedule_item"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

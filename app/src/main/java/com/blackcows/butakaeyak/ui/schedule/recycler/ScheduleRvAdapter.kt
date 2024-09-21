@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.blackcows.butakaeyak.R
-import com.blackcows.butakaeyak.databinding.NoteItemBinding
-import com.blackcows.butakaeyak.databinding.TodayAlarmItemBinding
+import com.blackcows.butakaeyak.databinding.ScheduleItemBinding
 import com.blackcows.butakaeyak.ui.note.recycler.NoteRvDecoration
 import com.blackcows.butakaeyak.ui.schedule.TimeToGroup
 
@@ -25,7 +24,7 @@ class ScheduleRvAdapter(
     }
 ) {
 
-    inner class TimeToGroupViewHolder(private val binding: TodayAlarmItemBinding): ViewHolder(binding.root) {
+    inner class TimeToGroupViewHolder(private val binding: ScheduleItemBinding): ViewHolder(binding.root) {
         fun bind(item: TimeToGroup) {
             val timeGroupRvAdapter = TimeGroupRvAdapter()
             with(binding) {
@@ -42,8 +41,8 @@ class ScheduleRvAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimeToGroupViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.today_alarm_item, parent, false)
-        return TimeToGroupViewHolder(TodayAlarmItemBinding.bind(view))
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.schedule_item, parent, false)
+        return TimeToGroupViewHolder(ScheduleItemBinding.bind(view))
     }
 
     override fun onBindViewHolder(holder: TimeToGroupViewHolder, position: Int) {
