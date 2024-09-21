@@ -1,8 +1,6 @@
 package com.blackcows.butakaeyak.ui.home
 
 import android.content.Intent
-import android.net.Uri
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -14,25 +12,20 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.HomeRvGroup
-import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.blackcows.butakaeyak.data.models.MedicineDetail
 import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.databinding.FragmentHomeBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeTodayMedicineRvAdapter
 import com.blackcows.butakaeyak.ui.home.adapter.HomeViewPagerAdapter
 import com.blackcows.butakaeyak.ui.map.MapFragment
-import com.blackcows.butakaeyak.ui.map.adapter.PharmacyListRvAdapter
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
-import com.blackcows.butakaeyak.ui.take.adapter.TodayMedicineRvAdapter
-import com.blackcows.butakaeyak.ui.take.data.MyMedicine
-import com.blackcows.butakaeyak.ui.take.fragment.NameFragment
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
-import com.blackcows.butakaeyak.ui.textrecognition.OCR_Activity
+import com.blackcows.butakaeyak.ui.textrecognition.OCRActivity
+import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import io.ktor.util.date.WeekDay
 import java.time.LocalDate
@@ -228,7 +221,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
         // 사진 등록
         binding.btnAddMedicine2.setOnClickListener{
-            startActivity(Intent(requireActivity(), OCR_Activity::class.java))
+//            startActivity(Intent(requireActivity(), OCRActivity::class.java))
+            MainNavigation.addFragment(OcrFragment(), FragmentTag.OCRFragment)
             anim()
         }
     }
