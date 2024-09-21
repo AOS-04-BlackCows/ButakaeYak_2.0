@@ -22,20 +22,11 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.Recorder
-import androidx.camera.video.Recording
-import androidx.camera.video.VideoCapture
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.blackcows.butakaeyak.databinding.ActivityOcrBinding
-import com.blackcows.butakaeyak.ui.navigation.FragmentTag
-import com.blackcows.butakaeyak.ui.navigation.MainNavigation
-import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
@@ -44,7 +35,6 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -117,13 +107,12 @@ class OCRActivity : AppCompatActivity()  {
         }
 
         // Set up the listeners for take photo and video capture buttons
-        binding.imageCaptureButton.setOnClickListener {
+        binding.takePhotoBtn.setOnClickListener {
             takePhoto()
             Log.d(TAG, "takePhoto")
         }
-        binding.videoCaptureButton.setOnClickListener {
+        binding.selectPhotoBtn.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-
             Log.d(TAG, "captureVideo")
         }
 
@@ -242,17 +231,17 @@ class OCRActivity : AppCompatActivity()  {
     }
 
     private fun runTextRecognition(image: InputImage) {
-        binding.imageCaptureButton.setEnabled(false)
-        binding.videoCaptureButton.setEnabled(false)
+        binding.takePhotoBtn.setEnabled(false)
+        binding.selectPhotoBtn.setEnabled(false)
         recognizer.process(image)
             .addOnSuccessListener { texts ->
-                binding.imageCaptureButton.setEnabled(true)
-                binding.videoCaptureButton.setEnabled(true)
+                binding.takePhotoBtn.setEnabled(true)
+                binding.selectPhotoBtn.setEnabled(true)
                 processTextRecognitionResult(texts)
             }
             .addOnFailureListener { e -> // Task failed with an exception
-                binding.imageCaptureButton.setEnabled(true)
-                binding.videoCaptureButton.setEnabled(true)
+                binding.takePhotoBtn.setEnabled(true)
+                binding.selectPhotoBtn.setEnabled(true)
                 e.printStackTrace()
             }
     }

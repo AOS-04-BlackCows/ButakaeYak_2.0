@@ -25,6 +25,7 @@ import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OCRActivity
+import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import io.ktor.util.date.WeekDay
 import java.time.LocalDate
@@ -220,7 +221,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
         // 사진 등록
         binding.btnAddMedicine2.setOnClickListener{
-            startActivity(Intent(requireActivity(), OCRActivity::class.java))
+//            startActivity(Intent(requireActivity(), OCRActivity::class.java))
+            MainNavigation.addFragment(OcrFragment(), FragmentTag.OCRFragment)
             anim()
         }
     }
