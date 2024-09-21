@@ -10,6 +10,7 @@ import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +30,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.blackcows.butakaeyak.databinding.ActivityOcrBinding
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -66,10 +70,10 @@ class OCRActivity : AppCompatActivity()  {
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
             // returned uri 사용
-            Glide.with(this@OCRActivity)
-                .load(result.uriContent)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
-                .into(binding.takeImage)
+//            Glide.with(this@OCRActivity)
+//                .load(result.uriContent)
+//                .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
+//                .into(binding.takeImage)
 
             profileUri = result.uriContent
             runTextRecognition(InputImage.fromFilePath(this@OCRActivity, profileUri?:"".toUri()))
@@ -277,6 +281,16 @@ class OCRActivity : AppCompatActivity()  {
                     is GPTResultUIState.Loading -> "약 이름 찾는중...🧐"
                     is GPTResultUIState.Success -> uiState.response.gptMessage.trim()
                     is GPTResultUIState.Error -> uiState.errorMessage
+                }
+                when(uiState){
+                    is GPTResultUIState.Loading -> binding.lodingProgress.visibility = View.VISIBLE
+                    is GPTResultUIState.Success -> {
+                        binding.lodingProgress.visibility = View.GONE
+                    }
+                    is GPTResultUIState.Error -> {
+                        binding.lodingProgress.visibility = View.GONE
+                        uiState.errorMessage
+                    }
                 }
             }
         }
