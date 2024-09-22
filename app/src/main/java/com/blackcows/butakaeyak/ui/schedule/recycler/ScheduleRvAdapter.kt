@@ -7,12 +7,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.databinding.ScheduleItemBinding
 import com.blackcows.butakaeyak.ui.note.recycler.NoteRvDecoration
 import com.blackcows.butakaeyak.ui.schedule.TimeToGroup
 
 class ScheduleRvAdapter(
-
+    private val isDisabled: Boolean,
+    private val clickListener: ClickListener,
 ): ListAdapter<TimeToGroup, ScheduleRvAdapter.TimeToGroupViewHolder>(
     object: DiffUtil.ItemCallback<TimeToGroup>() {
         override fun areItemsTheSame(oldItem: TimeToGroup, newItem: TimeToGroup): Boolean {
@@ -23,10 +25,15 @@ class ScheduleRvAdapter(
         }
     }
 ) {
-
     inner class TimeToGroupViewHolder(private val binding: ScheduleItemBinding): ViewHolder(binding.root) {
         fun bind(item: TimeToGroup) {
-            val timeGroupRvAdapter = TimeGroupRvAdapter()
+            val onTakingCheck: (MedicineGroup, Boolean, String) -> Unit = { group, isTaken, alarm ->
+                clickListener.onCheckClick(group, isTaken, alarm)
+            }
+            val onModify: (MedicineGroup) -> Unit = { group ->
+                clickListener.onModifyClick(group)
+            }
+            val timeGroupRvAdapter = TimeGroupRvAdapter(item.alarm, isDisabled, onModify, onTakingCheck)
             with(binding) {
                 timeTv.text = item.alarm
 
@@ -35,6 +42,7 @@ class ScheduleRvAdapter(
                     layoutManager = LinearLayoutManager(binding.root.context)
                     NoteRvDecoration.getLinearDecoSimpleItem()
                 }
+
                 timeGroupRvAdapter.submitList(item.groups)
             }
         }
@@ -49,5 +57,8 @@ class ScheduleRvAdapter(
         holder.bind(getItem(position))
     }
 
-
+    interface ClickListener {
+        fun onModifyClick(medicineGroup: MedicineGroup)
+        fun onCheckClick(medicineGroup: MedicineGroup, taken: Boolean, alarm: String)
+    }
 }
