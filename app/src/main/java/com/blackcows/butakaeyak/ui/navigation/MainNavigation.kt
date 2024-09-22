@@ -72,6 +72,13 @@ object MainNavigation {
         curStack.pop()
     }
 
+    fun showLoadingBar() {
+        binding.loadingView.visibility = View.VISIBLE
+    }
+    fun disableLoadingBar() {
+        binding.loadingView.visibility = View.GONE
+    }
+
 
 
     fun toOtherTab(tabTag: TabTag) {

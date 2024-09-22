@@ -44,10 +44,16 @@ class ScheduleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        scheduleViewModel.getFriends()
+
         with(binding) {
             profileRv.run {
                 adapter = profileRvAdapter
                 addItemDecoration(ProfileRvDecoration.getLinearDecoSimpleItem())
+            }
+
+            profileAddBtn.setOnClickListener {
+                //TODO: open the friend dialog.
             }
         }
     }
