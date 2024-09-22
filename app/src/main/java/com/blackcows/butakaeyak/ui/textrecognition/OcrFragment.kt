@@ -28,7 +28,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentOcrBinding
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OCRActivity.Companion
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
@@ -158,6 +160,7 @@ class OcrFragment : Fragment(), View.OnClickListener {
 
         // 결과를 TextView에 표시
         lifecycleScope.launch {
+            medicineList?.clear()
             ocrViewModel.uiState.collect{uiState ->
                 binding.textViewOcrResult.text = when(uiState){
                     is GPTResultUIState.Loading -> "약 이름 찾는중...🧐"
@@ -167,11 +170,14 @@ class OcrFragment : Fragment(), View.OnClickListener {
                 when(uiState){
                     is GPTResultUIState.Loading -> binding.lodingProgress.visibility = View.VISIBLE
                     is GPTResultUIState.Success -> {
-                        medicineList.let {
-                            it!!.removeAll(it)
-                            it.addAll(uiState.response.gptMessage.trim().split(","))
+                        if (!uiState.response.gptMessage.trim().equals("약 이름 없음")){
+                            medicineList.let {
+                                it!!.clear()
+                                it.addAll(uiState.response.gptMessage.trim().split(","))
+                            }
+                            MainNavigation.addFragment(TakeAddFragment(), FragmentTag.TakeAddFragment)
                         }
-                        Log.d(TAG, "medicineList size:${medicineList?.size}\nmedicineList size:${medicineList?.getOrNull(0)}")
+                        Log.d(TAG, "${uiState.response.gptMessage.trim()} medicineList size:${medicineList?.size}\nmedicineList size:${medicineList?.getOrNull(0)}")
                         binding.lodingProgress.visibility = View.GONE
                     }
                     is GPTResultUIState.Error -> {
@@ -182,6 +188,7 @@ class OcrFragment : Fragment(), View.OnClickListener {
             }
         }
         ocrViewModel.fetchAiAnalysisResult(texts.text)
+
     }
 
     private fun takePhoto() {
