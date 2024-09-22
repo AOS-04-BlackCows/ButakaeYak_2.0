@@ -19,14 +19,7 @@ class ScheduleFragment : Fragment() {
     private var _binding: FragmentScheduleBinding? = null
     private val binding get() = _binding!!
 
-    private val scheduleRvAdapter = ScheduleRvAdapter()
 
-    private val userId by lazy {
-        arguments?.getString(FRIEND_ID_DATA)
-    }
-    private val isMine by lazy {
-        arguments?.getBoolean(IS_MINE)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,31 +37,9 @@ class ScheduleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding) {
-            todayAlarmRv.run {
-                adapter = scheduleRvAdapter
-                layoutManager = LinearLayoutManager(requireContext())
-                addItemDecoration(NoteRvDecoration.getLinearDecoSimpleItem())
-            }
 
-            openCalendarBtn.setOnClickListener {
-
-            }
-        }
     }
 
-    companion object {
-        private const val FRIEND_ID_DATA = "FRIEND_ID_DATA"
-        private const val IS_MINE = "IS_MINE"
 
-        @JvmStatic
-        fun newInstance(friendId: String, isMine: Boolean) =
-            ScheduleFragment().apply {
-                arguments = Bundle().apply {
-                    putString(FRIEND_ID_DATA, friendId)
-                    putBoolean(IS_MINE, isMine)
-                }
-            }
-    }
 
 }
