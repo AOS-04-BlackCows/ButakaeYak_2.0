@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -16,29 +16,66 @@
         android:orientation="vertical"
         >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/profile_rv"
+        <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            >
 
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-            android:orientation="horizontal"
-            android:scrollbars="horizontal"
+                android:orientation="horizontal"
+                >
 
-            tools:listitem="@layout/schedule_profile_item"
-            />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/profile_rv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/view_pager"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+                    android:orientation="horizontal"
+
+                    tools:listitem="@layout/schedule_profile_item"
+                    tools:itemCount="8"
+                    />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginStart="14dp"
+                    android:layout_marginEnd="14dp"
+
+                    app:cardCornerRadius="12dp"
+                    >
+                    <ImageView
+                        android:layout_width="74dp"
+                        android:layout_height="74dp"
+
+                        android:src="@drawable/profile_add_btn"
+                        />
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/schedule_detail_fcv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             android:layout_marginTop="13dp"
-            >
 
-
-        </androidx.viewpager2.widget.ViewPager2>
+            android:name="com.blackcows.butakaeyak.ui.schedule.ScheduleDetailFragment"
+            tools:layout = "@layout/fragment_schedule_detail"
+            />
 
     </LinearLayout>
-</ScrollView>
+
+
+</androidx.core.widget.NestedScrollView>
