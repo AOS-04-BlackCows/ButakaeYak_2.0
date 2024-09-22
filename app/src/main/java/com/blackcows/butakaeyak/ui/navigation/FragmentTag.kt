@@ -10,5 +10,7 @@ enum class FragmentTag {
     SearchDetailFragmentInSearch,
     NameFragment,
     FormFragment,
-    SearchDetailFragmentInTake
+    SearchDetailFragmentInTake,
+    SignInFragment,
+    TermsFragment
 }
