@@ -7,7 +7,9 @@ import com.blackcows.butakaeyak.data.models.Friend
 import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.domain.repo.FriendRepository
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
+import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.ui.example.UserUiState
+import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleProfile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
     private val medicineGroupRepository: MedicineGroupRepository,
+    private val userRepository: UserRepository,
     private val friendRepository: FriendRepository
 ): ViewModel() {
 
@@ -29,6 +32,9 @@ class ScheduleViewModel @Inject constructor(
     private val _friends = MutableLiveData<List<Friend>>(listOf())
     val friends = _friends
 
+    private val _scheduleProfile = MutableLiveData<List<ScheduleProfile>>(listOf())
+    val scheduleProfile = _scheduleProfile
+
     fun getMedicineGroup(userId: String) {
         viewModelScope.launch {
             _uiState.value = ScheduleUiState.Loading
@@ -37,10 +43,16 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
-    fun getFriends(userId: String) {
+    fun getFriendProfile(userId: String) {
         viewModelScope.launch {
             _uiState.value = ScheduleUiState.Loading
-            _friends.value = friendRepository.getMyFriends(userId)
+
+            _scheduleProfile.value = friendRepository.getMyFriends(userId).map {
+                val friendId = if(userId != it.proposer) it.proposer
+                                else it.receiver
+                userRepository.getProfileAndName(friendId)
+            }
+
             _uiState.value = ScheduleUiState.Success
         }
     }

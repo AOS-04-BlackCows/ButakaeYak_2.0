@@ -11,6 +11,7 @@ import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.domain.result.LoginResult
 import com.blackcows.butakaeyak.domain.result.SignUpResult
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
+import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleProfile
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.user.UserApiClient
 import kotlinx.coroutines.tasks.await
@@ -164,5 +165,14 @@ class UserRepositoryImpl @Inject constructor(
         )
 
         return userDataSource.updateUser(newOne)
+    }
+
+    override suspend fun getProfileAndName(userId: String): ScheduleProfile {
+        val imageUrl = imageDataSource.getHttpUrl(userId)
+        val name = userDataSource.getUserWithId(userId)!!.name
+
+        return ScheduleProfile(
+            userId, name, imageUrl
+        )
     }
 }
