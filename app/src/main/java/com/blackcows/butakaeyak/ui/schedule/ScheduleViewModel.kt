@@ -3,17 +3,16 @@ package com.blackcows.butakaeyak.ui.schedule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blackcows.butakaeyak.data.models.Friend
 import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.domain.repo.FriendRepository
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
 import com.blackcows.butakaeyak.domain.repo.UserRepository
-import com.blackcows.butakaeyak.ui.example.UserUiState
 import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleProfile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,19 +25,23 @@ class ScheduleViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<ScheduleUiState>(ScheduleUiState.Init)
     val uiState = _uiState.asStateFlow()
 
-    private val _medicineGroup = MutableLiveData<List<MedicineGroup>>(listOf())
-    val medicineGroup = _medicineGroup
+    private val _dateToMedicineGroup = MutableLiveData<List<MedicineGroup>>(listOf())
+    val dateToMedicineGroup = _dateToMedicineGroup
 
-    private val _friends = MutableLiveData<List<Friend>>(listOf())
-    val friends = _friends
+    lateinit var selectedScheduleProfile: ScheduleProfile
 
     private val _scheduleProfile = MutableLiveData<List<ScheduleProfile>>(listOf())
     val scheduleProfile = _scheduleProfile
 
-    fun getMedicineGroup(userId: String) {
+    fun getDateToMedicineGroup(userId: String, date: LocalDate) {
         viewModelScope.launch {
             _uiState.value = ScheduleUiState.Loading
-            _medicineGroup.value = medicineGroupRepository.getMyGroups(userId)
+
+            val allGroups = medicineGroupRepository.getMyGroups(userId)
+            _dateToMedicineGroup.value =  allGroups.filter {
+                it.startedAt <= date && it.finishedAt >= date
+            }
+
             _uiState.value = ScheduleUiState.Success
         }
     }

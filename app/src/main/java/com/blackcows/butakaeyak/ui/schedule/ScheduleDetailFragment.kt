@@ -1,19 +1,15 @@
 package com.blackcows.butakaeyak.ui.schedule
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.MedicineGroup
-import com.blackcows.butakaeyak.databinding.BottomsheetMapListBinding
 import com.blackcows.butakaeyak.databinding.BottomsheetMedicineGroupBinding
 import com.blackcows.butakaeyak.databinding.FragmentScheduleDetailBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
@@ -22,6 +18,7 @@ import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleRvAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 
 class ScheduleDetailFragment : Fragment() {
@@ -45,12 +42,10 @@ class ScheduleDetailFragment : Fragment() {
     private val scheduleRvAdapter =
         ScheduleRvAdapter(!isMine, object: ScheduleRvAdapter.ClickListener {
             override fun onModifyClick(medicineGroup: MedicineGroup) {
-                //TODO: Open the Bottom Sheet
                 selectedMedicineGroup = medicineGroup
                 bottomSheetDialog.show()
             }
             override fun onCheckClick(medicineGroup: MedicineGroup, taken: Boolean, alarm: String) {
-                //TODO: Check Taking a Medicine.
                 scheduleViewModel.checkTakenMedicineGroup(medicineGroup, taken, alarm)
             }
         })
@@ -98,6 +93,10 @@ class ScheduleDetailFragment : Fragment() {
 
 
         with(binding) {
+            val today = LocalDate.now()
+
+            dateTv.text = today.toString().replace("-", ".")
+
             todayAlarmRv.run {
                 adapter = scheduleRvAdapter
                 layoutManager = LinearLayoutManager(requireContext())
@@ -106,10 +105,11 @@ class ScheduleDetailFragment : Fragment() {
 
             openCalendarBtn.setOnClickListener {
                 //TODO: show calendar and select a date.
+                //  after selecting a date, call the method: scheduleViewModel.getDateToMedicineGroup(userId, date)
             }
         }
 
-        scheduleViewModel.medicineGroup.observe(viewLifecycleOwner) {
+        scheduleViewModel.dateToMedicineGroup.observe(viewLifecycleOwner) {
 
         }
 

@@ -67,6 +67,7 @@ class ScheduleFragment : Fragment() {
             .commitNow()
 
 
+
         with(binding) {
             profileRv.run {
                 adapter = profileRvAdapter
