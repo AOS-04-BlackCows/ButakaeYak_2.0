@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentTermsBinding
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 
 // TODO 이용 약관 Fragment 작성
 
@@ -44,7 +45,7 @@ class TermsFragment : Fragment() {
         })
 
         binding.ivBack.setOnClickListener {
-            onBackPressed()
+            MainNavigation.popCurrentFragment()
         }
 
         binding.clTerms1.setOnClickListener {
