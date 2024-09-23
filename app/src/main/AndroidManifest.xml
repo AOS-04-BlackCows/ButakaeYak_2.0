@@ -37,7 +37,7 @@
             android:theme="@style/Base.Theme.AppCompat"
             />
         <activity
-            android:name=".ui.textrecognition.OCR_Activity"
+            android:name=".ui.textrecognition.OCRActivity"
             android:exported="false" />
 
 
@@ -57,12 +57,6 @@
             android:exported="false" />
         <activity
             android:name=".ui.splash.SplashActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.SignIn.SignInActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.SignIn.SignUpActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

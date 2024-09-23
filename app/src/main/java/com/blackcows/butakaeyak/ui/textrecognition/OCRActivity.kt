@@ -4,18 +4,17 @@ import android.Manifest
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -23,16 +22,11 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.Recorder
-import androidx.camera.video.Recording
-import androidx.camera.video.VideoCapture
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
 import com.blackcows.butakaeyak.databinding.ActivityOcrBinding
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
@@ -41,7 +35,7 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
-import com.kakao.sdk.template.model.Button
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -50,12 +44,12 @@ import java.util.concurrent.Executors
 
 @KeepName
 @RequiresApi(VERSION_CODES.LOLLIPOP)
-class OCR_Activity : AppCompatActivity()  {
+class OCRActivity : AppCompatActivity()  {
     private lateinit var binding : ActivityOcrBinding
     private var imageCapture: ImageCapture? = null
 
-    private var videoCapture: VideoCapture<Recorder>? = null
-    private var recording: Recording? = null
+    private val ocrViewModel : OCRViewModel by viewModels()
+
     private var profileUri: Uri? = null
 
     private lateinit var cameraExecutor: ExecutorService
@@ -66,13 +60,13 @@ class OCR_Activity : AppCompatActivity()  {
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
             // returned uri 사용
-            Glide.with(this@OCR_Activity)
-                .load(result.uriContent)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
-                .into(binding.takeImage)
+//            Glide.with(this@OCRActivity)
+//                .load(result.uriContent)
+//                .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
+//                .into(binding.takeImage)
 
             profileUri = result.uriContent
-            runTextRecognition(InputImage.fromFilePath(this@OCR_Activity, profileUri?:"".toUri()))
+            runTextRecognition(InputImage.fromFilePath(this@OCRActivity, profileUri?:"".toUri()))
         } else {
             val exception = result.error
         }
@@ -113,13 +107,12 @@ class OCR_Activity : AppCompatActivity()  {
         }
 
         // Set up the listeners for take photo and video capture buttons
-        binding.imageCaptureButton.setOnClickListener {
+        binding.takePhotoBtn.setOnClickListener {
             takePhoto()
             Log.d(TAG, "takePhoto")
         }
-        binding.videoCaptureButton.setOnClickListener {
+        binding.selectPhotoBtn.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-
             Log.d(TAG, "captureVideo")
         }
 
@@ -185,7 +178,7 @@ class OCR_Activity : AppCompatActivity()  {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/prescription-Image")
             }
         }
 
@@ -213,7 +206,7 @@ class OCR_Activity : AppCompatActivity()  {
                     output.savedUri?.let { uri ->
                         try {
                             // 저장된 이미지의 URI로부터 InputImage 생성
-                            val image = InputImage.fromFilePath(this@OCR_Activity, uri)
+                            val image = InputImage.fromFilePath(this@OCRActivity, uri)
                             // 텍스트 인식 시작
                             runTextRecognition(image)
                         } catch (e: Exception) {
@@ -238,27 +231,27 @@ class OCR_Activity : AppCompatActivity()  {
     }
 
     private fun runTextRecognition(image: InputImage) {
-        binding.imageCaptureButton.setEnabled(false)
-        binding.videoCaptureButton.setEnabled(false)
+        binding.takePhotoBtn.setEnabled(false)
+        binding.selectPhotoBtn.setEnabled(false)
         recognizer.process(image)
             .addOnSuccessListener { texts ->
-                binding.imageCaptureButton.setEnabled(true)
-                binding.videoCaptureButton.setEnabled(true)
+                binding.takePhotoBtn.setEnabled(true)
+                binding.selectPhotoBtn.setEnabled(true)
                 processTextRecognitionResult(texts)
             }
             .addOnFailureListener { e -> // Task failed with an exception
-                binding.imageCaptureButton.setEnabled(true)
-                binding.videoCaptureButton.setEnabled(true)
+                binding.takePhotoBtn.setEnabled(true)
+                binding.selectPhotoBtn.setEnabled(true)
                 e.printStackTrace()
             }
     }
 
     private fun processTextRecognitionResult(texts: Text) {
-        Log.d(TAG, "${texts.text}\n >>${texts.textBlocks}")
+        Log.d(TAG, "${texts.text}")
 
         val blocks: List<Text.TextBlock> = texts.textBlocks
         if (blocks.isEmpty()) {
-            Toast.makeText(baseContext, "No text found", Toast.LENGTH_SHORT).show()
+            Toast.makeText(baseContext, "글자가 없어요...😥", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -271,12 +264,31 @@ class OCR_Activity : AppCompatActivity()  {
         }
 
         // 결과를 TextView에 표시
-        binding.textViewOcrResult.text = resultText.toString()
+        lifecycleScope.launch {
+            ocrViewModel.uiState.collect{uiState ->
+                binding.textViewOcrResult.text = when(uiState){
+                    is GPTResultUIState.Loading -> "약 이름 찾는중...🧐"
+                    is GPTResultUIState.Success -> uiState.response.gptMessage.trim()
+                    is GPTResultUIState.Error -> uiState.errorMessage
+                }
+                when(uiState){
+                    is GPTResultUIState.Loading -> binding.lodingProgress.visibility = View.VISIBLE
+                    is GPTResultUIState.Success -> {
+                        binding.lodingProgress.visibility = View.GONE
+                    }
+                    is GPTResultUIState.Error -> {
+                        binding.lodingProgress.visibility = View.GONE
+                        uiState.errorMessage
+                    }
+                }
+            }
+        }
+        ocrViewModel.fetchAiAnalysisResult(texts.text)
     }
 
 
     companion object {
-        private const val TAG = "CameraXApp"
+        private const val TAG = "TextRecognition"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS =

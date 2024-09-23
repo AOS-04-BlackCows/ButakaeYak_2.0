@@ -101,6 +101,11 @@ android {
             "MEDICINE_INFO_KEY",
             properties.getProperty("medicine_info_key")
         )
+        buildConfigField(
+            "String",
+            "OPEN_AI_KEY",
+            properties.getProperty("open_ai_key")
+        )
     }
 
     buildTypes {

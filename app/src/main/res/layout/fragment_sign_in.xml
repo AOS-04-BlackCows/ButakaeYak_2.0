@@ -4,9 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.SignIn.SignIn">
+    android:background="@color/white"
+    tools:context=".ui.SignIn.SignInFragment">
 
     <!-- 임시 레이아웃 -->
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_back_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/logo"
