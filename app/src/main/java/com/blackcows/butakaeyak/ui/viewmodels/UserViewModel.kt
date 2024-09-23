@@ -59,6 +59,7 @@ class UserViewModel @Inject constructor(
         }
     }
 
+    // 카카오 로그인에 사용
     fun signUpWithKakaoAndLogin() {
         viewModelScope.launch {
             when(val signUpResult = userRepository.trySignUpWithKakao()) {
