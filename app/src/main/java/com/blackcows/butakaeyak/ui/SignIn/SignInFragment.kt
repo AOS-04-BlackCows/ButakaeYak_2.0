@@ -84,6 +84,7 @@ class SignInFragment : Fragment() {
                     }
                 }
 
+
                 // 로그인 결과 처리
                 withContext(Dispatchers.Main) {
                     if (result.second == null) {
