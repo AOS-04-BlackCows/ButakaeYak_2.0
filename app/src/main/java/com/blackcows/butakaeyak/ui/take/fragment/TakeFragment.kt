@@ -22,7 +22,6 @@ import com.blackcows.butakaeyak.ui.take.adapter.TodayMedicineRvAdapter
 import io.ktor.util.date.WeekDay
 import java.util.Calendar
 import java.util.Date
-import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import java.util.Locale
 import com.blackcows.butakaeyak.ui.take.adapter.TakeAdapter
 import com.blackcows.butakaeyak.ui.take.data.MedicineAtTime
