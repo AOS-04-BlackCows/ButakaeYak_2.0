@@ -26,16 +26,12 @@ class SearchHistoryFragment : Fragment() {
     private lateinit var searchHistoryAdapter : SearchRecyclerAdapter
 
     private var columnCount = 1 //컬럼 갯수 = 2 그리드
-    private var mediHistory : MutableList<Medicine> = mutableListOf()
-    private var searchHistory : MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
-            searchHistory = it.getStringArrayList(SEARCH_HISTOROY)?:mutableListOf()
-            mediHistory = it.getParcelableArrayList(MEDICINE_HISTOROY)?:mutableListOf()
         }
     }
 
@@ -56,33 +52,40 @@ class SearchHistoryFragment : Fragment() {
 //                adapter = HomeRecyclerAdapter(PlaceholderContent.ITEMS)
             }
         }
-        lateinit var searchChip : Chip
-        if (!searchHistory.isEmpty()){
-            for ( i in searchHistory){
-                searchChip.text = i
-                searchChip.setOnClickListener {
-                    _searchBinding!!.searchEtSearchtext.setText(searchChip.text)
-                }
-                binding.searchHistoryChipgroup.addView(searchChip)
-            }
+        binding.searchHistoryDelete.setOnClickListener {
+            binding.searchHistoryChipgroup.removeAllViews()
         }
+        binding.medicineHistoryDelete.setOnClickListener {
+            //TODO 내역 삭제하는거 만들어야 함....
+        }
+        //TODO
+        // 저장된 검색 기록 만큼 칩 생성
+        // 클릭하면 검색 창에 검색어 입력 + 검색 결과 화면으로 이동 + 검색 실행
+        lateinit var searchChip : Chip
+//        if (!searchHistory.isEmpty()){
+//            for ( i in searchHistory){
+//                searchChip.text = i
+//                searchChip.setOnClickListener {
+//                    _searchBinding!!.searchEtSearchtext.setText(searchChip.text)
+//                }
+//                binding.searchHistoryChipgroup.addView(searchChip)
+//            }
+//        }
+        //TODO 클릭한 약 만큼아이탬을 뿌리든 뭘하든 리스트 만들어서 보여줘야함
+
         return view
     }
 
     companion object {
 
         const val ARG_COLUMN_COUNT = "column-count"
-        private const val MEDICINE_HISTOROY = "medicine_data"
-        private const val SEARCH_HISTOROY = "medicine_data"
         const val TAB_NAME = "검색 기록"
 
         @JvmStatic
-        fun newInstance(columnCount: Int, searchHistory: ArrayList<String>, mediHistory: ArrayList<Medicine>) =
+        fun newInstance(columnCount: Int) =
             SearchHistoryFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
-                    putStringArrayList(SEARCH_HISTOROY,searchHistory)
-                    putParcelableArrayList(MEDICINE_HISTOROY, mediHistory)
                 }
             }
     }
