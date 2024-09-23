@@ -13,17 +13,17 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_map"
-        android:name="com.blackcows.butakaeyak.ui.map.MapFragment"
-        android:label="@string/title_map"
-        tools:layout="@layout/fragment_map" >
+        android:id="@+id/navigation_schedule"
+        android:name="com.blackcows.butakaeyak.ui.schedule.ScheduleFragment"
+        android:label="@string/title_schedule"
+        tools:layout="@layout/fragment_schedule" >
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_user"
-        android:name="com.blackcows.butakaeyak.ui.user.UserFragment"
-        android:label="@string/title_user"
-        tools:layout="@layout/fragment_user" >
+        android:id="@+id/navigation_note"
+        android:name="com.blackcows.butakaeyak.ui.note.NoteFragment"
+        android:label="@string/title_note"
+        tools:layout="@layout/fragment_note" >
     </fragment>
 
     <fragment

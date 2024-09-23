@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">부탁해약</string>
-    <string name="title_home">Home</string>
-    <string name="title_search">Search</string>
-    <string name="title_map">map</string>
-    <string name="title_user">user</string>
+    <string name="title_home">홈</string>
+    <string name="title_note">노트</string>
+    <string name="title_schedule">스케줄</string>
+    <string name="title_user">마이페이지</string>
     <string name="title">부탁해약</string>
 
     <string name="phone_number">전화번호</string>
