@@ -20,7 +20,10 @@ class SearchViewModel @Inject constructor(
     private val localUtilsRepository: LocalUtilsRepository
 ) : ViewModel() {
 
-    private val queryHistory = MutableLiveData<String>()
+    private val _queryHistory = MutableLiveData<List<String>>()
+    val queryHistory get() = _queryHistory
+    private val _viewedHistory = MutableLiveData<List<Medicine>>()
+    val viewedHistory get() = _viewedHistory
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
@@ -44,10 +47,21 @@ class SearchViewModel @Inject constructor(
     fun getQueryHistory(){
         //TODO 검색한 기록 저장 (반환타입 List<String>)
 //        queryHistory.value = localUtilsRepository.getQueryHistory()
+        _queryHistory.apply {
+            value = listOf("코펜","타이레놀","사방정","뉴프")
+        }
     }
 
     fun getViewedHistory(){
         //TODO 검색후 클릭한 기록 저장 (반환타입 List<Medicine>)
 //        queryHistory.value = localUtilsRepository.getViewedViewedHistory()
+//        queryHistory.value = localUtilsRepository.getViewedViewedHistory()
+        _viewedHistory.apply {
+            value = listOf(
+                Medicine(name = "알코펜연질켑슐",effect = "감기에 좋음",imageUrl = ""),
+                Medicine(name = "알코펜",effect = "감기에 좋음?",imageUrl = ""),
+                Medicine(name = "알코켑슐",effect = "감기에 좋음!",imageUrl = ""),
+            )
+        }
     }
 }
