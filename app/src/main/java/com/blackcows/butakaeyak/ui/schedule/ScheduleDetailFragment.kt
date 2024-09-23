@@ -2,6 +2,7 @@ package com.blackcows.butakaeyak.ui.schedule
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -36,34 +37,16 @@ class ScheduleDetailFragment : Fragment() {
     private lateinit var calenderBottomSheetDialog: BottomSheetDialog
 
     private val userId by lazy {
+        Log.d("ScheduleFragment", "detail: userId: ${arguments?.getString(FRIEND_ID_DATA)!!}")
         arguments?.getString(FRIEND_ID_DATA)!!
     }
     private val isMine by lazy {
+        Log.d("ScheduleFragment", "detail: userId: ${arguments?.getString(FRIEND_ID_DATA)!!}")
         arguments?.getBoolean(IS_MINE)!!
     }
 
     private var selectedMedicineGroup: MedicineGroup? = null
-    private val scheduleRvAdapter =
-        ScheduleRvAdapter(!isMine, object: ScheduleRvAdapter.ClickListener {
-            override fun onModifyClick(medicineGroup: MedicineGroup) {
-                selectedMedicineGroup = medicineGroup
-                medicineGroupBottomSheetDialog.show()
-            }
-            override fun onCheckClick(medicineGroup: MedicineGroup, taken: Boolean, alarm: String) {
-                scheduleViewModel.checkTakenMedicineGroup(medicineGroup, taken, alarm)
-            }
-        })
-
-    private val removeDialog
-        = AlertDialog.Builder(requireContext())
-                    .setTitle("정말로 지우시겠습니까?")
-        .setPositiveButton("네") { dialog, _ ->
-            scheduleViewModel.removeMedicineGroup(selectedMedicineGroup!!)
-            selectedMedicineGroup = null
-            dialog.dismiss()
-        }.setNegativeButton("아니요") { dialog, _ ->
-            dialog.dismiss()
-        }.setOnDismissListener { medicineGroupBottomSheetDialog.dismiss() }
+    private lateinit var scheduleRvAdapter: ScheduleRvAdapter
 
 
     override fun onCreateView(
@@ -103,6 +86,16 @@ class ScheduleDetailFragment : Fragment() {
 
             dateTv.text = today.toString().replace("-", ".")
 
+            scheduleRvAdapter = ScheduleRvAdapter(!isMine, object: ScheduleRvAdapter.ClickListener {
+                override fun onModifyClick(medicineGroup: MedicineGroup) {
+                    selectedMedicineGroup = medicineGroup
+                    medicineGroupBottomSheetDialog.show()
+                }
+                override fun onCheckClick(medicineGroup: MedicineGroup, taken: Boolean, alarm: String) {
+                    scheduleViewModel.checkTakenMedicineGroup(medicineGroup, taken, alarm)
+                }
+            })
+
             todayAlarmRv.run {
                 adapter = scheduleRvAdapter
                 layoutManager = LinearLayoutManager(requireContext())
@@ -113,6 +106,8 @@ class ScheduleDetailFragment : Fragment() {
                 calenderBottomSheetDialog.show()
             }
         }
+
+
 
         scheduleViewModel.dateToMedicineGroup.observe(viewLifecycleOwner) {
             scheduleRvAdapter.submitList(scheduleViewModel.changeToTimeToGroup())
@@ -139,6 +134,17 @@ class ScheduleDetailFragment : Fragment() {
     }
 
     private fun initMedicineGroupBottomSheet() {
+        val removeDialog
+                = AlertDialog.Builder(requireContext())
+            .setTitle("정말로 지우시겠습니까?")
+            .setPositiveButton("네") { dialog, _ ->
+                scheduleViewModel.removeMedicineGroup(selectedMedicineGroup!!)
+                selectedMedicineGroup = null
+                dialog.dismiss()
+            }.setNegativeButton("아니요") { dialog, _ ->
+                dialog.dismiss()
+            }.setOnDismissListener { medicineGroupBottomSheetDialog.dismiss() }
+
         medicineGroupBottomSheet = BottomsheetMedicineGroupBinding.inflate(layoutInflater)
         medicineGroupBottomSheetDialog = BottomSheetDialog(requireContext())
         medicineGroupBottomSheetDialog.setContentView(medicineGroupBottomSheet.root)
@@ -156,8 +162,15 @@ class ScheduleDetailFragment : Fragment() {
         calenderBottomSheetDialog = BottomSheetDialog(requireContext())
         calenderBottomSheetDialog.setContentView(calenderBottomSheet.root)
         calenderBottomSheet.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            val date = LocalDate.parse("$year-$month-$dayOfMonth")
+            val monthStr = if(month < 10) "0${month+1}"
+                            else month.toString()
+            val dayOfMonthStr = if(dayOfMonth < 10) "0$dayOfMonth"
+                            else dayOfMonth.toString()
+
+            val date = LocalDate.parse("$year-$monthStr-$dayOfMonthStr")
             scheduleViewModel.getDateToMedicineGroup(userId, date)
+
+            binding.dateTv.text = date.toString().replace("-", ".")
 
             calenderBottomSheetDialog.dismiss()
         }

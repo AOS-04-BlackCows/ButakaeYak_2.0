@@ -24,7 +24,9 @@ class FriendViewPager(fragmentActivity: FragmentActivity): FragmentStateAdapter(
 
     fun setScheduleProfiles(profiles: List<ScheduleProfile>) {
         profiles.forEachIndexed { i, it ->
-            removeFriend(it)
+            if(scheduleProfileList.contains(it)) {
+                removeFriend(it)
+            }
             addFriend(it, i==0)
         }
 
@@ -49,7 +51,6 @@ class FriendViewPager(fragmentActivity: FragmentActivity): FragmentStateAdapter(
         }
         viewPager2.currentItem = index
     }
-
 
     private fun addFriend(scheduleProfile: ScheduleProfile, isMine: Boolean) {
         val scheduleFragment = ScheduleDetailFragment.newInstance(scheduleProfile.userId, isMine)

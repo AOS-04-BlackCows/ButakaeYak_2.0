@@ -1,19 +1,29 @@
 package com.blackcows.butakaeyak.ui.user
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import com.blackcows.butakaeyak.BuildConfig
+import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentUserBinding
 import com.blackcows.butakaeyak.ui.SignIn.SignInFragment
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.state.LoginUiState
+import com.blackcows.butakaeyak.ui.state.SignUpUiState
 import com.blackcows.butakaeyak.ui.take.fragment.OpenAPIFragment
 import com.blackcows.butakaeyak.ui.take.fragment.TermsFragment
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,7 +36,7 @@ class UserFragment : Fragment() {
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
 
-    //private val userViewModel = UserViewModel()
+    private val userViewModel: UserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +53,8 @@ class UserFragment : Fragment() {
 
         val isLoggedIn = checkLoginStatus()
 
+        KakaoSdk.init(requireContext(), BuildConfig.NATIVE_APP_KEY)
+
         if (isLoggedIn) {
             //로그인 된 경우
             binding.loggedInLayout.visibility = View.VISIBLE
@@ -56,6 +68,7 @@ class UserFragment : Fragment() {
             binding.notLoggedInLayout.setOnClickListener {
                 // 로그인 화면으로 이동하는 로직
                 MainNavigation.addFragment(SignInFragment(), FragmentTag.SignInFragment)
+                //userViewModel.signUpWithKakaoAndLogin()
             }
         }
 
