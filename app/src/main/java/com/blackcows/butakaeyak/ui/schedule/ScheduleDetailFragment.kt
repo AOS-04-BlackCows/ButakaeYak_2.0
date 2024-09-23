@@ -56,8 +56,6 @@ class ScheduleDetailFragment : Fragment() {
                 addItemDecoration(NoteRvDecoration.getLinearDecoSimpleItem())
             }
 
-
-
             openCalendarBtn.setOnClickListener {
 
             }
