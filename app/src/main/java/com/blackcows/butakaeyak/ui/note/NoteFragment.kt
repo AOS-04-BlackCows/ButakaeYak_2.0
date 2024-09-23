@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentNoteBinding
+import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleProfile
+import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
 class NoteFragment : Fragment() {
@@ -16,11 +18,7 @@ class NoteFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val noteViewModel: NoteViewModel by activityViewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    private val userViewModel: UserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +31,14 @@ class NoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if(userViewModel.user.value == null) {
+            binding.loginGuideCl.visibility = View.VISIBLE
+            return
+        } else {
+            binding.loginGuideCl.visibility = View.GONE
+        }
+
+        setObserver()
         initView()
     }
 
@@ -46,5 +52,15 @@ class NoteFragment : Fragment() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = noteAdapter.tabName[position]
         }.attach()
+    }
+
+    private fun setObserver() {
+        userViewModel.user.observe(viewLifecycleOwner) { user ->
+            if(user == null) {
+                binding.loginGuideCl.visibility = View.VISIBLE
+            } else {
+                binding.loginGuideCl.visibility = View.GONE
+            }
+        }
     }
 }
