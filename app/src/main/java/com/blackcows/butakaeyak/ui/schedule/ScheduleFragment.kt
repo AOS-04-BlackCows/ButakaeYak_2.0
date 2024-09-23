@@ -66,7 +66,7 @@ class ScheduleFragment : Fragment() {
             .replace(R.id.schedule_detail_fcv, myDetailFragment)
             .commitNow()
 
-
+        scheduleViewModel.getFriendProfile(userViewModel.user.value!!.id)
 
         with(binding) {
             profileRv.run {
@@ -76,6 +76,7 @@ class ScheduleFragment : Fragment() {
 
             profileAddBtn.setOnClickListener {
                 //TODO: open the friend dialog.
+                //  and if scheduleProfile is changed, call the method: scheduleViewModel.getFriends(userId)
             }
         }
 
@@ -90,5 +91,9 @@ class ScheduleFragment : Fragment() {
 
             profileRvAdapter.submitList(list)
         }
+    }
+
+    private fun initFriendsViewPager() {
+
     }
 }

@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.data.models.Friend
+import com.blackcows.butakaeyak.ui.schedule.ScheduleDetailFragment
 import com.blackcows.butakaeyak.ui.schedule.ScheduleFragment
 
 class FriendViewPager(fragmentActivity: FragmentActivity): FragmentStateAdapter(fragmentActivity) {
@@ -19,7 +20,7 @@ class FriendViewPager(fragmentActivity: FragmentActivity): FragmentStateAdapter(
     }
 
     fun addFriend(friendId: String, isMine: Boolean) {
-        val scheduleFragment = ScheduleFragment.newInstance(friendId, isMine)
+        val scheduleFragment = ScheduleDetailFragment.newInstance(friendId, isMine)
         fragmentList.add(scheduleFragment)
         friendIdList.add(friendId)
 
@@ -36,5 +37,10 @@ class FriendViewPager(fragmentActivity: FragmentActivity): FragmentStateAdapter(
             throw Exception("FriendViewPager: 등록되지 않은 friendId 입니다.")
         }
 
+    }
+
+    fun getFragment(viewPager2: ViewPager2, friendId: String) {
+        val index = friendIdList.indexOf(friendId)
+        viewPager2.currentItem = index
     }
 }

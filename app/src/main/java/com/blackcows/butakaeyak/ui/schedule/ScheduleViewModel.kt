@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.sql.Time
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -43,6 +44,22 @@ class ScheduleViewModel @Inject constructor(
             }
 
             _uiState.value = ScheduleUiState.Success
+        }
+    }
+
+    fun changeToTimeToGroup(): List<TimeToGroup> {
+        val alarmMap = mutableMapOf<String, MutableList<MedicineGroup>>()
+        val groups = dateToMedicineGroup.value!!
+        groups.forEach {
+            it.alarms.forEach { alarm ->
+                alarmMap.getOrPut(alarm) { mutableListOf() }.add(it)
+            }
+        }
+
+        return alarmMap.map {
+            TimeToGroup(
+                alarm = it.key, groups = it.value
+            )
         }
     }
 

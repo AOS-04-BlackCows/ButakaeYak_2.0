@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.data.models.MedicineGroup
+import com.blackcows.butakaeyak.databinding.BottomsheetCalendarBinding
 import com.blackcows.butakaeyak.databinding.BottomsheetMedicineGroupBinding
 import com.blackcows.butakaeyak.databinding.FragmentScheduleDetailBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
@@ -29,7 +30,10 @@ class ScheduleDetailFragment : Fragment() {
     private val scheduleViewModel: ScheduleViewModel by activityViewModels()
 
     private lateinit var medicineGroupBottomSheet: BottomsheetMedicineGroupBinding
-    private lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var medicineGroupBottomSheetDialog: BottomSheetDialog
+
+    private lateinit var calenderBottomSheet: BottomsheetCalendarBinding
+    private lateinit var calenderBottomSheetDialog: BottomSheetDialog
 
     private val userId by lazy {
         arguments?.getString(FRIEND_ID_DATA)!!
@@ -43,7 +47,7 @@ class ScheduleDetailFragment : Fragment() {
         ScheduleRvAdapter(!isMine, object: ScheduleRvAdapter.ClickListener {
             override fun onModifyClick(medicineGroup: MedicineGroup) {
                 selectedMedicineGroup = medicineGroup
-                bottomSheetDialog.show()
+                medicineGroupBottomSheetDialog.show()
             }
             override fun onCheckClick(medicineGroup: MedicineGroup, taken: Boolean, alarm: String) {
                 scheduleViewModel.checkTakenMedicineGroup(medicineGroup, taken, alarm)
@@ -59,7 +63,7 @@ class ScheduleDetailFragment : Fragment() {
             dialog.dismiss()
         }.setNegativeButton("아니요") { dialog, _ ->
             dialog.dismiss()
-        }
+        }.setOnDismissListener { medicineGroupBottomSheetDialog.dismiss() }
 
 
     override fun onCreateView(
@@ -91,6 +95,8 @@ class ScheduleDetailFragment : Fragment() {
             }
         }
 
+        initMedicineGroupBottomSheet()
+        initCalendarBottomSheet()
 
         with(binding) {
             val today = LocalDate.now()
@@ -104,24 +110,12 @@ class ScheduleDetailFragment : Fragment() {
             }
 
             openCalendarBtn.setOnClickListener {
-                //TODO: show calendar and select a date.
-                //  after selecting a date, call the method: scheduleViewModel.getDateToMedicineGroup(userId, date)
+                calenderBottomSheetDialog.show()
             }
         }
 
         scheduleViewModel.dateToMedicineGroup.observe(viewLifecycleOwner) {
-
-        }
-
-        medicineGroupBottomSheet = BottomsheetMedicineGroupBinding.inflate(layoutInflater)
-        bottomSheetDialog = BottomSheetDialog(requireContext())
-        bottomSheetDialog.setContentView(medicineGroupBottomSheet.root)
-        medicineGroupBottomSheet.modifyBtn.setOnClickListener {
-            //TODO: takeAddViewModel.selectedGroup = selectedGroup
-            //  MainNavigation.addFragment(TakeAddFragment(), FragmentTag.TakeAddFragmentInSchedule)
-        }
-        medicineGroupBottomSheet.removeBtn.setOnClickListener {
-            removeDialog.show()
+            scheduleRvAdapter.submitList(scheduleViewModel.changeToTimeToGroup())
         }
     }
 
@@ -142,5 +136,30 @@ class ScheduleDetailFragment : Fragment() {
                     putBoolean(IS_MINE, isMine)
                 }
             }
+    }
+
+    private fun initMedicineGroupBottomSheet() {
+        medicineGroupBottomSheet = BottomsheetMedicineGroupBinding.inflate(layoutInflater)
+        medicineGroupBottomSheetDialog = BottomSheetDialog(requireContext())
+        medicineGroupBottomSheetDialog.setContentView(medicineGroupBottomSheet.root)
+
+        medicineGroupBottomSheet.modifyBtn.setOnClickListener {
+            //TODO: takeAddViewModel.selectedGroup = selectedGroup
+            //  MainNavigation.addFragment(TakeAddFragment(), FragmentTag.TakeAddFragmentInSchedule)
+        }
+        medicineGroupBottomSheet.removeBtn.setOnClickListener {
+            removeDialog.show()
+        }
+    }
+    private fun initCalendarBottomSheet() {
+        calenderBottomSheet = BottomsheetCalendarBinding.inflate(layoutInflater)
+        calenderBottomSheetDialog = BottomSheetDialog(requireContext())
+        calenderBottomSheetDialog.setContentView(calenderBottomSheet.root)
+        calenderBottomSheet.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            val date = LocalDate.parse("$year-$month-$dayOfMonth")
+            scheduleViewModel.getDateToMedicineGroup(userId, date)
+
+            calenderBottomSheetDialog.dismiss()
+        }
     }
 }
