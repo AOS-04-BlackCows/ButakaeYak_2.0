@@ -1,17 +1,23 @@
 package com.blackcows.butakaeyak.ui.schedule
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.MedicineGroup
+import com.blackcows.butakaeyak.databinding.BottomsheetMapListBinding
+import com.blackcows.butakaeyak.databinding.BottomsheetMedicineGroupBinding
 import com.blackcows.butakaeyak.databinding.FragmentScheduleDetailBinding
 import com.blackcows.butakaeyak.ui.note.recycler.NoteRvDecoration
 import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleRvAdapter
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class ScheduleDetailFragment : Fragment() {
@@ -21,6 +27,9 @@ class ScheduleDetailFragment : Fragment() {
 
     private val scheduleViewModel: ScheduleViewModel by activityViewModels()
 
+    private lateinit var medicineGroupBottomSheet: BottomsheetMedicineGroupBinding
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+
     private val userId by lazy {
         arguments?.getString(FRIEND_ID_DATA)!!
     }
@@ -28,15 +37,31 @@ class ScheduleDetailFragment : Fragment() {
         arguments?.getBoolean(IS_MINE)!!
     }
 
+    private var selectedMedicineGroup: MedicineGroup? = null
     private val scheduleRvAdapter =
         ScheduleRvAdapter(!isMine, object: ScheduleRvAdapter.ClickListener {
             override fun onModifyClick(medicineGroup: MedicineGroup) {
                 //TODO: Open the Bottom Sheet
+                selectedMedicineGroup = medicineGroup
+                bottomSheetDialog.show()
             }
             override fun onCheckClick(medicineGroup: MedicineGroup, taken: Boolean, alarm: String) {
                 //TODO: Check Taking a Medicine.
+                scheduleViewModel.checkTakenMedicineGroup(medicineGroup, taken, alarm)
             }
         })
+
+    private val removeDialog
+        = AlertDialog.Builder(requireContext())
+                    .setTitle("정말로 지우시겠습니까?")
+        .setPositiveButton("네") { _, _ ->
+            //TODO: 지우기
+            scheduleViewModel.removeMedicineGroup(selectedMedicineGroup!!)
+            selectedMedicineGroup = null
+        }.setNegativeButton("아니요") { dialog, _ ->
+            dialog.dismiss()
+        }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,6 +88,17 @@ class ScheduleDetailFragment : Fragment() {
 
         scheduleViewModel.medicineGroup.observe(viewLifecycleOwner) {
 
+        }
+
+        medicineGroupBottomSheet = BottomsheetMedicineGroupBinding.inflate(layoutInflater)
+        bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(medicineGroupBottomSheet.root)
+        medicineGroupBottomSheet.modifyBtn.setOnClickListener {
+            //TODO: takeAddViewModel.selectedGroup = selectedGroup
+            //  MainNavigation.addFragment(TakeAddFragment(), FragmentTag.TakeAddFragmentInSchedule)
+        }
+        medicineGroupBottomSheet.removeBtn.setOnClickListener {
+            removeDialog.show()
         }
     }
 

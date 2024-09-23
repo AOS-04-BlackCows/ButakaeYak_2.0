@@ -43,6 +43,22 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
+    fun removeMedicineGroup(medicineGroup: MedicineGroup) {
+        viewModelScope.launch {
+            _uiState.value = ScheduleUiState.Loading
+            medicineGroupRepository.removeGroup(medicineGroup)
+            _uiState.value = ScheduleUiState.Success
+        }
+    }
+
+    fun checkTakenMedicineGroup(medicineGroup: MedicineGroup, taken: Boolean, alarm: String) {
+        viewModelScope.launch {
+            _uiState.value = ScheduleUiState.Loading
+            medicineGroupRepository.notifyTaken(medicineGroup, taken, alarm)
+            _uiState.value = ScheduleUiState.Success
+        }
+    }
+
     fun getFriendProfile(userId: String) {
         viewModelScope.launch {
             _uiState.value = ScheduleUiState.Loading

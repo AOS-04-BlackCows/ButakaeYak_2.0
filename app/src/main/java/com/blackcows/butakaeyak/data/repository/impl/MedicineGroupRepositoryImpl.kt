@@ -66,12 +66,24 @@ class MedicineGroupRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun notifyTaken(medicineGroup: MedicineGroup, takenTime: String): MedicineGroup {
+    override suspend fun notifyTaken(medicineGroup: MedicineGroup, taken: Boolean, takenTime: String): MedicineGroup {
         return kotlin.runCatching {
             val format = "${LocalDate.now()} $takenTime"
-            val takenGroup = medicineGroup.copy(
-                hasTaken = medicineGroup.hasTaken.toMutableList().apply { add(format) }
-            )
+
+            val takenGroup
+            = if(taken) {
+                medicineGroup.copy(
+                    hasTaken = medicineGroup.hasTaken.toMutableList().apply { add(format) }
+                )
+            } else {
+                val removedList = medicineGroup.hasTaken.toMutableList()
+                removedList.removeIf { it == format }
+
+                medicineGroup.copy(
+                    hasTaken = removedList
+                )
+            }
+
             medicineGroupDataSource.updateGroup(takenGroup)
 
             takenGroup
