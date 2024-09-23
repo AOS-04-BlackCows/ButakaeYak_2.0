@@ -11,36 +11,54 @@ import com.blackcows.butakaeyak.ui.schedule.ScheduleFragment
 class FriendViewPager(fragmentActivity: FragmentActivity): FragmentStateAdapter(fragmentActivity) {
 
     private val fragmentList = mutableListOf<Fragment>()
-    private val friendIdList = mutableListOf<String>()
+    private val scheduleProfileList = mutableListOf<ScheduleProfile>()
 
     override fun getItemCount(): Int = fragmentList.size
     override fun createFragment(position: Int): Fragment = fragmentList[position]
-    override fun containsItem(itemId: Long): Boolean {
-        return friendIdList.contains(itemId.toString())
-    }
+    //TODO: notifyDataSetChanged 제대로 작동하기 위해서 필요하다는데 long id를 무엇으로 설정할건가?
+    //  https://stackoverflow.com/questions/68382901/what-is-purpose-of-overriding-containsitem-and-getitemid-in-fragmentstatead
 
-    fun addFriend(friendId: String, isMine: Boolean) {
-        val scheduleFragment = ScheduleDetailFragment.newInstance(friendId, isMine)
-        fragmentList.add(scheduleFragment)
-        friendIdList.add(friendId)
+//    override fun containsItem(itemId: Long): Boolean {
+//        return fragmentList.any { it.value.fragId == itemId }
+//    }
+
+    fun setScheduleProfiles(profiles: List<ScheduleProfile>) {
+        profiles.forEachIndexed { i, it ->
+            removeFriend(it)
+            addFriend(it, i==0)
+        }
 
         notifyDataSetChanged()
     }
 
-    fun removeFriend(friendId: String) {
-        if(friendId.contains(friendId)) {
-            val index = friendIdList.indexOf(friendId)
-            friendIdList.removeAt(index)
+    fun getFragment(viewPager2: ViewPager2, scheduleProfile: ScheduleProfile) {
+        val index = scheduleProfileList.indexOf(scheduleProfile)
+
+        if(index == -1) {
+            throw Exception("FriendViewPager: 등록되지 않은 scheduleProfile 입니다.")
+        }
+
+        viewPager2.currentItem = index
+    }
+
+    private fun addFriend(scheduleProfile: ScheduleProfile, isMine: Boolean) {
+        val scheduleFragment = ScheduleDetailFragment.newInstance(scheduleProfile.userId, isMine)
+        fragmentList.add(scheduleFragment)
+        scheduleProfileList.add(scheduleProfile)
+
+
+    }
+
+    private fun removeFriend(scheduleProfile: ScheduleProfile) {
+        if(scheduleProfileList.contains(scheduleProfile)) {
+            val index = scheduleProfileList.indexOf(scheduleProfile)
+            scheduleProfileList.removeAt(index)
             fragmentList.removeAt(index)
-            notifyDataSetChanged()
         } else {
-            throw Exception("FriendViewPager: 등록되지 않은 friendId 입니다.")
+            throw Exception("FriendViewPager: 등록되지 않은 scheduleProfile 입니다.")
         }
 
     }
 
-    fun getFragment(viewPager2: ViewPager2, friendId: String) {
-        val index = friendIdList.indexOf(friendId)
-        viewPager2.currentItem = index
-    }
+
 }

@@ -29,8 +29,6 @@ class ScheduleViewModel @Inject constructor(
     private val _dateToMedicineGroup = MutableLiveData<List<MedicineGroup>>(listOf())
     val dateToMedicineGroup = _dateToMedicineGroup
 
-    lateinit var selectedScheduleProfile: ScheduleProfile
-
     private val _scheduleProfile = MutableLiveData<List<ScheduleProfile>>(listOf())
     val scheduleProfile = _scheduleProfile
 

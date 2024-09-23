@@ -13,6 +13,7 @@ import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentScheduleBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.note.recycler.NoteRvDecoration
+import com.blackcows.butakaeyak.ui.schedule.recycler.FriendViewPager
 import com.blackcows.butakaeyak.ui.schedule.recycler.ProfileRvAdapter
 import com.blackcows.butakaeyak.ui.schedule.recycler.ProfileRvDecoration
 import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleProfile
@@ -45,6 +46,8 @@ class ScheduleFragment : Fragment() {
             .commitNow()
     }
 
+    private lateinit var viewPagerAdapter: FriendViewPager
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,12 +64,6 @@ class ScheduleFragment : Fragment() {
         }
 
         curScheduleProfileId = myId
-        val myDetailFragment = ScheduleDetailFragment.newInstance(myId, true)
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.schedule_detail_fcv, myDetailFragment)
-            .commitNow()
-
-        scheduleViewModel.getFriendProfile(userViewModel.user.value!!.id)
 
         with(binding) {
             profileRv.run {
@@ -90,10 +87,17 @@ class ScheduleFragment : Fragment() {
             }
 
             profileRvAdapter.submitList(list)
+            viewPagerAdapter.setScheduleProfiles(list)
+            viewPagerAdapter.getFragment(binding.scheduleDetailViewPager, myScheduleProfile)
         }
+
+        initFriendsViewPager()
     }
 
     private fun initFriendsViewPager() {
+        viewPagerAdapter = FriendViewPager(requireActivity())
+        binding.scheduleDetailViewPager.adapter = viewPagerAdapter
 
+        scheduleViewModel.getFriendProfile(userViewModel.user.value!!.id)
     }
 }

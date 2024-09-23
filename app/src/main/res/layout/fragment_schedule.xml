@@ -72,6 +72,17 @@
 
             android:layout_marginTop="13dp"
 
+            android:visibility="gone"
+
+            android:name="com.blackcows.butakaeyak.ui.schedule.ScheduleDetailFragment"
+            tools:layout = "@layout/fragment_schedule_detail"
+            />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/schedule_detail_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
             android:name="com.blackcows.butakaeyak.ui.schedule.ScheduleDetailFragment"
             tools:layout = "@layout/fragment_schedule_detail"
             />
