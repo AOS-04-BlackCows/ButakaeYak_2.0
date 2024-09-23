@@ -60,7 +60,10 @@ class ScheduleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if(userViewModel.user.value == null) {
+            binding.loginGuideCl.visibility = View.VISIBLE
             return
+        } else {
+            binding.loginGuideCl.visibility = View.GONE
         }
 
         curScheduleProfileId = myId
@@ -77,6 +80,27 @@ class ScheduleFragment : Fragment() {
             }
         }
 
+        setObserver()
+        initFriendsViewPager()
+    }
+
+    private fun initFriendsViewPager() {
+        viewPagerAdapter = FriendViewPager(requireActivity())
+        binding.scheduleDetailViewPager.adapter = viewPagerAdapter
+
+        scheduleViewModel.getFriendProfile(userViewModel.user.value!!.id)
+    }
+
+    private fun setObserver() {
+
+        userViewModel.user.observe(viewLifecycleOwner) { user ->
+            if(user == null) {
+                binding.loginGuideCl.visibility = View.VISIBLE
+            } else {
+                binding.loginGuideCl.visibility = View.GONE
+            }
+        }
+
         scheduleViewModel.scheduleProfile.observe(viewLifecycleOwner) { friendsProfiles ->
             val myScheduleProfile = with(userViewModel.user.value!!) {
                 ScheduleProfile(id, name, profileUrl!!)
@@ -90,14 +114,5 @@ class ScheduleFragment : Fragment() {
             viewPagerAdapter.setScheduleProfiles(list)
             viewPagerAdapter.getFragment(binding.scheduleDetailViewPager, myScheduleProfile)
         }
-
-        initFriendsViewPager()
-    }
-
-    private fun initFriendsViewPager() {
-        viewPagerAdapter = FriendViewPager(requireActivity())
-        binding.scheduleDetailViewPager.adapter = viewPagerAdapter
-
-        scheduleViewModel.getFriendProfile(userViewModel.user.value!!.id)
     }
 }
