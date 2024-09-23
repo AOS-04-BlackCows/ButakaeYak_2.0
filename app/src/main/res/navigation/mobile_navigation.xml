@@ -9,7 +9,7 @@
         android:id="@+id/navigation_home"
         android:name="com.blackcows.butakaeyak.ui.search.SearchFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_home" >
     </fragment>
 
     <fragment
@@ -27,9 +27,9 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_take"
-        android:name="com.blackcows.butakaeyak.ui.take.fragment.TakeFragment"
+        android:id="@+id/navigation_user"
+        android:name="com.blackcows.butakaeyak.ui.user.UserFragment"
         android:label="@string/title_user"
-        tools:layout="@layout/fragment_take" >
+        tools:layout="@layout/fragment_user" >
     </fragment>
 </navigation>
