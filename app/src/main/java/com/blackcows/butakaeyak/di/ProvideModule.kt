@@ -64,46 +64,46 @@ class ProvideModule {
     fun provideMedicineInfoApiService() : MedicineInfoService {
         return RetrofitClient.getInstance(ApiBaseUrl.MedicineInfoUrl).create(MedicineInfoService::class.java)
     }
-
-    @Provides
-    fun provideMyPharmacyRepository(
-        localUtilsDataSource: LocalUtilsDataSource,
-        remoteMyPharmacyDataSource: RemoteMyPharmacyDataSource,
-        localMyPharmacyDataSource: LocalMyPharmacyDataSource,
-    ): MyPharmacyRepository {
-        return MyPharmacyRepositoryImpl(
-            localMyPharmacyDataSource = localMyPharmacyDataSource,
-            remoteMyPharmacyDataSource = remoteMyPharmacyDataSource,
-            localUtilsDataSource = localUtilsDataSource
-        )
-    }
-
-    @Provides
-    fun provideMedicineGroupRepository(
-        localUtilsDataSource: LocalUtilsDataSource,
-        remoteMedicineGroupDataSource: RemoteMedicineGroupDataSource,
-        localMedicineGroupDataSource: LocalMedicineGroupDataSource,
-        medicineInfoDataSource: MedicineInfoDataSource
-    ): MedicineGroupRepository {
-        return MedicineGroupRepositoryImpl(
-            localMedicineGroupDataSource = localMedicineGroupDataSource,
-            remoteMedicineGroupDataSource = remoteMedicineGroupDataSource,
-            localUtilsRepository = localUtilsDataSource,
-            medicineDetailDataSource = medicineInfoDataSource
-        )
-    }
-
-    @Provides
-    //@ViewModelScoped
-    fun provideMemoRepository(
-        remoteMedicineGroupDataSource: RemoteMedicineGroupDataSource,
-        medicineInfoDataSource: MedicineInfoDataSource,
-        memoDataSource: MemoDataSource
-    ): MemoRepository {
-        return MemoRepositoryImpl(
-            memoDataSource = memoDataSource,
-            medicineGroupDataSource = remoteMedicineGroupDataSource,
-            medicineInfoDataSource = medicineInfoDataSource
-        )
-    }
+//
+//    @Provides
+//    fun provideMyPharmacyRepository(
+//        localUtilsDataSource: LocalUtilsDataSource,
+//        remoteMyPharmacyDataSource: RemoteMyPharmacyDataSource,
+//        localMyPharmacyDataSource: LocalMyPharmacyDataSource,
+//    ): MyPharmacyRepository {
+//        return MyPharmacyRepositoryImpl(
+//            localMyPharmacyDataSource = localMyPharmacyDataSource,
+//            remoteMyPharmacyDataSource = remoteMyPharmacyDataSource,
+//            localUtilsDataSource = localUtilsDataSource
+//        )
+//    }
+//
+//    @Provides
+//    fun provideMedicineGroupRepository(
+//        localUtilsDataSource: LocalUtilsDataSource,
+//        remoteMedicineGroupDataSource: RemoteMedicineGroupDataSource,
+//        localMedicineGroupDataSource: LocalMedicineGroupDataSource,
+//        medicineInfoDataSource: MedicineInfoDataSource
+//    ): MedicineGroupRepository {
+//        return MedicineGroupRepositoryImpl(
+//            localMedicineGroupDataSource = localMedicineGroupDataSource,
+//            remoteMedicineGroupDataSource = remoteMedicineGroupDataSource,
+//            localUtilsRepository = localUtilsDataSource,
+//            medicineDetailDataSource = medicineInfoDataSource
+//        )
+//    }
+//
+//    @Provides
+//    //@ViewModelScoped
+//    fun provideMemoRepository(
+//        remoteMedicineGroupDataSource: RemoteMedicineGroupDataSource,
+//        medicineInfoDataSource: MedicineInfoDataSource,
+//        memoDataSource: MemoDataSource
+//    ): MemoRepository {
+//        return MemoRepositoryImpl(
+//            memoDataSource = memoDataSource,
+//            medicineGroupDataSource = remoteMedicineGroupDataSource,
+//            medicineInfoDataSource = medicineInfoDataSource
+//        )
+//    }
 }
