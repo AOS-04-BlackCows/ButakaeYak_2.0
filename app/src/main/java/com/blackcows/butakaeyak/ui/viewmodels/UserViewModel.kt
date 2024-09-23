@@ -37,6 +37,8 @@ class UserViewModel @Inject constructor(
 
     fun autoLogin() {
         viewModelScope.launch {
+            _loginUiState.value = LoginUiState.Loading
+
             val data = localUtilsRepository.getAutoLoginData()
             val result =
                 if(data == null) LoginResult.Failure
