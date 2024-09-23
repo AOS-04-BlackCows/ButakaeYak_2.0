@@ -10,6 +10,7 @@ import com.blackcows.butakaeyak.data.retrofit.service.DrugApiService
 import com.blackcows.butakaeyak.data.retrofit.service.KakaoApiService
 import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
 import com.blackcows.butakaeyak.data.retrofit.service.MedicineInfoService
+import com.blackcows.butakaeyak.ui.textrecognition.OCRTextRecApiService
 import com.blackcows.butakaeyak.data.source.api.MedicineInfoDataSource
 import com.blackcows.butakaeyak.data.source.firebase.MemoDataSource
 import com.blackcows.butakaeyak.data.source.firebase.RemoteMedicineGroupDataSource
@@ -20,17 +21,12 @@ import com.blackcows.butakaeyak.data.source.local.LocalUtilsDataSource
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
 import com.blackcows.butakaeyak.domain.repo.MemoRepository
 import com.blackcows.butakaeyak.domain.repo.MyPharmacyRepository
-import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import retrofit2.Converter
-import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -63,6 +59,12 @@ class ProvideModule {
     //@ViewModelScoped
     fun provideMedicineInfoApiService() : MedicineInfoService {
         return RetrofitClient.getInstance(ApiBaseUrl.MedicineInfoUrl).create(MedicineInfoService::class.java)
+    }
+
+    @Provides
+    //@ViewModelScoped
+    fun provideOCR_TextResApiService() : OCRTextRecApiService {
+        return RetrofitClient.getInstance(ApiBaseUrl.GPTUrl).create(OCRTextRecApiService::class.java)
     }
 
     @Provides

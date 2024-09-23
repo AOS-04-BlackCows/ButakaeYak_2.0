@@ -101,6 +101,11 @@ android {
             "MEDICINE_INFO_KEY",
             properties.getProperty("medicine_info_key")
         )
+        buildConfigField(
+            "String",
+            "OPEN_AI_KEY",
+            properties.getProperty("open_ai_key")
+        )
     }
 
     buildTypes {
@@ -203,6 +208,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-messaging-ktx")
 
+
     //Algoria
     implementation("com.algolia:algoliasearch-android:3.27.0")
     implementation("com.algolia:algoliasearch-client-kotlin:2.1.9")
@@ -216,7 +222,6 @@ dependencies {
     //ML Kit
     // To recognize Korean script
     implementation ("com.google.mlkit:text-recognition-korean:16.0.1")
-
     // viewPager2 Indicator
     implementation("com.tbuonomo:dotsindicator:5.0")
     implementation("com.vanniktech:android-image-cropper:4.5.0")
