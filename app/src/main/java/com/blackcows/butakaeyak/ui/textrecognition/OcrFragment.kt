@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,14 +23,14 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentOcrBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
-import com.blackcows.butakaeyak.ui.textrecognition.OCRActivity.Companion
+import com.blackcows.butakaeyak.ui.take.TakeAddViewModel
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
@@ -52,6 +51,7 @@ class OcrFragment : Fragment(), View.OnClickListener {
     private var _binding : FragmentOcrBinding? = null
     private val binding get() = _binding!!
     private val ocrViewModel : OCRViewModel by activityViewModels()
+    private val takeAddViewModel : TakeAddViewModel by activityViewModels()
 
     private var imageCapture: ImageCapture? = null
     private var profileUri: Uri? = null
@@ -161,6 +161,7 @@ class OcrFragment : Fragment(), View.OnClickListener {
         // 결과를 TextView에 표시
         lifecycleScope.launch {
             medicineList?.clear()
+            ocrViewModel.fetchAiAnalysisResult(texts.text)
             ocrViewModel.uiState.collect{uiState ->
                 binding.textViewOcrResult.text = when(uiState){
                     is GPTResultUIState.Loading -> "약 이름 찾는중...🧐"
@@ -170,14 +171,14 @@ class OcrFragment : Fragment(), View.OnClickListener {
                 when(uiState){
                     is GPTResultUIState.Loading -> binding.lodingProgress.visibility = View.VISIBLE
                     is GPTResultUIState.Success -> {
+                        Log.d(TAG, "약이름 찾기후${uiState.response.gptMessage.trim()}")
                         if (!uiState.response.gptMessage.trim().equals("약 이름 없음")){
                             medicineList.let {
-                                it!!.clear()
-                                it.addAll(uiState.response.gptMessage.trim().split(","))
+                                takeAddViewModel.saveNames(it?: mutableListOf())
                             }
                             MainNavigation.addFragment(TakeAddFragment(), FragmentTag.TakeAddFragment)
+                            Log.d(TAG, "뮤터블 리스트에 넣은 후${uiState.response.gptMessage.trim()}\n medicineList size:${medicineList?.size}\nmedicineList first:${medicineList?.first()}")
                         }
-                        Log.d(TAG, "${uiState.response.gptMessage.trim()} medicineList size:${medicineList?.size}\nmedicineList size:${medicineList?.getOrNull(0)}")
                         binding.lodingProgress.visibility = View.GONE
                     }
                     is GPTResultUIState.Error -> {
@@ -187,8 +188,6 @@ class OcrFragment : Fragment(), View.OnClickListener {
                 }
             }
         }
-        ocrViewModel.fetchAiAnalysisResult(texts.text)
-
     }
 
     private fun takePhoto() {
@@ -220,6 +219,7 @@ class OcrFragment : Fragment(), View.OnClickListener {
             outputOptions,
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageSavedCallback {
+                //TODO 사진 저장 로직 삭제 필요
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                 }
