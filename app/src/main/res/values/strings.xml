@@ -38,6 +38,11 @@
     <string name="version">버전</string>
     <string name="version_num">2.0</string>
 
+    <string name="set_time">시간 설정</string>
+    <string name="breakfast">아침</string>
+    <string name="lunch">점심</string>
+    <string name="dinner">저녁</string>
+
     <string name="today_medicine">오늘 먹어야 할 약</string>
     <string name="neighbor">내 지인</string>
     <string name="my_medicine">복용 중인 약</string>
@@ -146,5 +151,11 @@
     <string name="remove_text">삭제하기</string>
     <string name="do_login_please_text">로그인이 필요한 서비스입니다. 로그인해주세요.</string>
 
+
+    <!-- Open API -->
+    <string name="api">
+        api 작성하면 됨요
+
+    </string>
 
 </resources>

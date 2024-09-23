@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentSignInBinding
@@ -38,12 +39,6 @@ class SignInFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val TAG = "SignIn"
-
-    @Inject
-    lateinit var userRepository: UserRepository
-
-    @Inject
-    lateinit var localRepository: LocalRepository
 
     private val userViewModel: UserViewModel by activityViewModels()
 
@@ -83,6 +78,8 @@ class SignInFragment : Fragment() {
             }
         }
 
+        
+        
         lifecycleScope.launch {
             userViewModel.signUpUiState.collectLatest {
                 Log.d("SignInFragment: SignUp", it.toString())
@@ -99,24 +96,24 @@ class SignInFragment : Fragment() {
                     is SignUpUiState.KakaoSignUpFail -> {
                         Toast.makeText(requireContext(), "카카오 실패", Toast.LENGTH_SHORT).show()
                     }
-
                     is SignUpUiState.Failure -> {
                         Toast.makeText(requireContext(), "로그인 실패...", Toast.LENGTH_SHORT).show()
                     }
 
                     else -> {
                         Toast.makeText(requireContext(), "뭐여...", Toast.LENGTH_SHORT).show()
+
                     }
                 }
             }
         }
-
-        binding.ivBack.setOnClickListener {
-            MainNavigation.popCurrentFragment()
-        }
+        
 
         binding.ivKakaoLogin.setOnClickListener {
             userViewModel.signUpWithKakaoAndLogin()
+        }
+        binding.ivBack.setOnClickListener {
+            MainNavigation.popCurrentFragment()
         }
     }
 }

@@ -17,12 +17,15 @@ import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.state.LoginUiState
 import com.blackcows.butakaeyak.ui.state.SignUpUiState
+import com.blackcows.butakaeyak.ui.take.fragment.OpenAPIFragment
 import com.blackcows.butakaeyak.ui.take.fragment.TermsFragment
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -47,6 +50,7 @@ class UserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val isLoggedIn = checkLoginStatus()
 
         KakaoSdk.init(requireContext(), BuildConfig.NATIVE_APP_KEY)
@@ -72,7 +76,28 @@ class UserFragment : Fragment() {
         binding.cvServices.setOnClickListener {
             MainNavigation.addFragment(TermsFragment(), FragmentTag.TermsFragment)
         }
+
+        // 오픈 소스
+        binding.cvOpenAPI.setOnClickListener {
+            MainNavigation.addFragment(OpenAPIFragment(), FragmentTag.OpenAPIFragment)
+        }
+
+        // 아침/점심/저녁 시간 설정
+        binding.cvSetTime.setOnClickListener{
+            val mealTimeDialog = MealTimeDialog()
+            mealTimeDialog.show(childFragmentManager, "MealTimeDialog")
+        }
+
+        // 로그아웃
+//        binding.logout.setOnClickListener {
+//            CoroutineScope(Dispatchers.IO).launch {
+//                userViewModel.logout {
+//
+//                }
+//            }
+//        }
     }
+
     // 로그인 상태를 확인하는 메서드
     private fun checkLoginStatus() : Boolean {
         return FirebaseAuth.getInstance().currentUser != null
