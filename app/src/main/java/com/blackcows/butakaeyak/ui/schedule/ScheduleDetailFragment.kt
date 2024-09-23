@@ -9,15 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.databinding.BottomsheetMapListBinding
 import com.blackcows.butakaeyak.databinding.BottomsheetMedicineGroupBinding
 import com.blackcows.butakaeyak.databinding.FragmentScheduleDetailBinding
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.note.recycler.NoteRvDecoration
 import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleRvAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 class ScheduleDetailFragment : Fragment() {
@@ -54,10 +58,10 @@ class ScheduleDetailFragment : Fragment() {
     private val removeDialog
         = AlertDialog.Builder(requireContext())
                     .setTitle("정말로 지우시겠습니까?")
-        .setPositiveButton("네") { _, _ ->
-            //TODO: 지우기
+        .setPositiveButton("네") { dialog, _ ->
             scheduleViewModel.removeMedicineGroup(selectedMedicineGroup!!)
             selectedMedicineGroup = null
+            dialog.dismiss()
         }.setNegativeButton("아니요") { dialog, _ ->
             dialog.dismiss()
         }
@@ -74,6 +78,25 @@ class ScheduleDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        lifecycleScope.launch {
+            scheduleViewModel.uiState.collectLatest {
+                when(it) {
+                    is ScheduleUiState.Loading -> {
+                        MainNavigation.showLoadingBar()
+                    }
+
+                    is ScheduleUiState.Success -> {
+                        MainNavigation.disableLoadingBar()
+                    }
+
+                    is ScheduleUiState.Init -> {
+
+                    }
+                }
+            }
+        }
+
+
         with(binding) {
             todayAlarmRv.run {
                 adapter = scheduleRvAdapter
@@ -82,7 +105,7 @@ class ScheduleDetailFragment : Fragment() {
             }
 
             openCalendarBtn.setOnClickListener {
-
+                //TODO: show calendar and select a date.
             }
         }
 
