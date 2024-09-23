@@ -23,6 +23,36 @@ class MemoRepositoryImpl @Inject constructor(
         private const val TAG = "MemoRepositoryImpl"
     }
 
+    override suspend fun getMemosByUserId(userId: String): List<Memo> {
+        return kotlin.runCatching {
+            memoDataSource.getMemosFromWhen(userId, LocalDate.parse("1999-12-12")).map { response ->
+                val group = medicineGroupDataSource.getMedicineGroupById(response.groupId)!!
+                val medicines = group.medicineIdList?.map { id ->
+                    medicineInfoDataSource.searchMedicinesWithId(id)[0]
+                }
+                val daysWeek = group.daysOfWeeks?.map { week ->
+                    WeekDayUtils.fromKorean(week)
+                }
+
+                response.toMemo(MedicineGroup(
+                    id = group.id!!,
+                    name = group.name!!,
+                    userId = group.userId!!,
+                    medicines = medicines!!,
+                    customNameList = group.customNameList!!,
+                    imageUrlList = group.imageUrlList ?: listOf(),
+                    startedAt = LocalDate.parse(group.startedAt),
+                    finishedAt = LocalDate.parse(group.finishedAt),
+                    daysOfWeeks = daysWeek ?: listOf(),
+                    alarms = group.alarms ?: listOf(),
+                    hasTaken = group.hasTaken ?: listOf()
+                ))
+            }
+        }.onFailure {
+                Log.w(TAG, "getMemosByUserId Failed) msg: ${it.message}")
+        }.getOrDefault(listOf())
+    }
+
     override suspend fun getMemoByMedicineGroupId(groupId: String): List<Memo> {
         return kotlin.runCatching {
             memoDataSource.getMemoByGroupId(groupId).map {

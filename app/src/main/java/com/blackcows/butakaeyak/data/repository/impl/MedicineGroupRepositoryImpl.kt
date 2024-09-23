@@ -35,7 +35,7 @@ class MedicineGroupRepositoryImpl @Inject constructor(
                     name = group.name!!,
                     userId = group.userId!!,
                     medicines = medicines!!,
-                    customNameList = group.customNameList!!,
+                    customNameList = group.customNameList ?: listOf(),
                     imageUrlList = group.imageUrlList ?: listOf(),
                     startedAt = LocalDate.parse(group.startedAt),
                     finishedAt = LocalDate.parse(group.finishedAt),

@@ -38,7 +38,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.adapter.TakeAdapter
 import com.blackcows.butakaeyak.ui.take.data.MedicineAtTime
 
@@ -79,9 +78,6 @@ class TakeFragment : Fragment() {
     }
 
     private lateinit var adapter: TakeAdapter
-
-    //viewModel 설정
-    private val viewModel: TakeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

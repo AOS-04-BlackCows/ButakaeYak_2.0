@@ -16,7 +16,6 @@ import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentTakeAddBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
-import com.blackcows.butakaeyak.ui.take.TakeViewModel
 
 class TakeAddFragment : Fragment() {
 
@@ -27,22 +26,15 @@ class TakeAddFragment : Fragment() {
     //viewPager 설정
     private var viewPager : ViewPager2? = null
 
-    //viewModel 설정
-    private val viewModel: TakeViewModel by activityViewModels()
-
     //bundle에서 medicine 가져오기
-    private val medicine: Medicine by lazy {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelable(MEDICINE_DATA, Medicine::class.java)!!
-        } else {
-            @Suppress("DEPRECATION")
-            arguments?.getParcelable(MEDICINE_DATA)!!
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+//    private val medicine: Medicine? by lazy {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            arguments?.getParcelable(MEDICINE_DATA, Medicine::class.java)
+//        } else {
+//            @Suppress("DEPRECATION")
+//            arguments?.getParcelable(MEDICINE_DATA)
+//        }
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,9 +51,16 @@ class TakeAddFragment : Fragment() {
 
         MainNavigation.hideBottomNavigation(true)
 
-        childFragmentManager.beginTransaction().add(
-            R.id.fragment_container, NameFragment.newInstance(medicine)
-        ).commitNow()
+//        medicine?.let {
+//            childFragmentManager.beginTransaction().add(
+//                R.id.fragment_container, NameFragment.newInstance(it)
+//            ).commitNow()
+//        } ?: run {
+//            Log.e("TakeAddFragment", "Medicine data is missing")
+            childFragmentManager.beginTransaction().add(
+                R.id.fragment_container, NameFragment()
+            ).commitNow()
+//        }
     }
 
     companion object {
@@ -74,6 +73,9 @@ class TakeAddFragment : Fragment() {
                     putParcelable(MEDICINE_DATA, medicine)
                 }
             }
+
+        @JvmStatic
+        fun newInstance() = TakeAddFragment()
     }
 
     override fun onDestroyView() {
@@ -82,6 +84,5 @@ class TakeAddFragment : Fragment() {
         MainNavigation.hideBottomNavigation(false)
         _binding = null
     }
-
 
 }

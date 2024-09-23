@@ -20,7 +20,6 @@ import com.blackcows.butakaeyak.databinding.FragmentMedicineResultBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.search.adapter.SearchRecyclerAdapter
-import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -36,9 +35,6 @@ class MedicineResultFragment : Fragment() {
     //viewModel 설정
     private val searchViewModel: SearchViewModel by activityViewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
-
-    //TODO NameFragment로 데이터 넘겨줄 viewModel
-    private val viewModel: TakeViewModel by activityViewModels()
 
     private var columnCount = 1 //컬럼 갯수 = 1 리니어
     private var touch_logs = mutableListOf<Medicine>()
