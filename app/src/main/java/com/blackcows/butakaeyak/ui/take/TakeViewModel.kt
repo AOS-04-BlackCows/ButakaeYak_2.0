@@ -3,8 +3,10 @@ package com.blackcows.butakaeyak.ui.take
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.blackcows.butakaeyak.data.models.MedicineGroup
+import com.blackcows.butakaeyak.data.models.TakeAddMedicine
 import com.blackcows.butakaeyak.domain.repo.LocalRepository
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
 import com.blackcows.butakaeyak.domain.repo.UserRepository
@@ -20,6 +22,8 @@ class TakeAddViewModel @Inject constructor(
     private val _medicineGroup = MutableLiveData<MedicineGroup?>(null)
     val medicineGroup get() = _medicineGroup
     private val medicineNameList = mutableListOf<String>()
+    private var _nameRvGroup = MutableLiveData<MutableList<TakeAddMedicine>>(null)
+    val nameRvGroup get() = _nameRvGroup
 
     fun saveGroup () {
         viewModelScope.launch {
@@ -33,6 +37,13 @@ class TakeAddViewModel @Inject constructor(
         medicineNameList.addAll(medicines)
     }
     fun loadNames() : List<String>{
+        _nameRvGroup.value = medicineNameList.map {
+            TakeAddMedicine(
+                imageUrl = null,
+                name = it,
+                isDetail = false
+            )
+        }.toMutableList()
         return medicineNameList
     }
 
