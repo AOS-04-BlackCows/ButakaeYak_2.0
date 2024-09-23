@@ -71,39 +71,7 @@ class SignInFragment : Fragment() {
                         Toast.makeText(requireContext(), "login: 로그인 실패...", Toast.LENGTH_SHORT).show()
                     }
 
-                    else -> {
-                        Toast.makeText(requireContext(), "login: 뭐여...", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
-
-        
-        
-        lifecycleScope.launch {
-            userViewModel.signUpUiState.collectLatest {
-                Log.d("SignInFragment: SignUp", it.toString())
-                when(it) {
-                    is SignUpUiState.Success -> {
-                        Log.d("SignInFragment: SignUp", "success!!!!!!!!!!!!!!")
-                        Toast.makeText(requireContext(), "로그인 완료", Toast.LENGTH_SHORT).show()
-                    }
-
-                    is SignUpUiState.UnKnownUserData -> {
-                        Toast.makeText(requireContext(), "언노운", Toast.LENGTH_SHORT).show()
-                    }
-
-                    is SignUpUiState.KakaoSignUpFail -> {
-                        Toast.makeText(requireContext(), "카카오 실패", Toast.LENGTH_SHORT).show()
-                    }
-                    is SignUpUiState.Failure -> {
-                        Toast.makeText(requireContext(), "로그인 실패...", Toast.LENGTH_SHORT).show()
-                    }
-
-                    else -> {
-                        Toast.makeText(requireContext(), "뭐여...", Toast.LENGTH_SHORT).show()
-
-                    }
+                    else -> { }
                 }
             }
         }
