@@ -13,7 +13,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentSearchBinding
+import com.blackcows.butakaeyak.ui.search.SearchHistoryFragment.Companion
 import com.blackcows.butakaeyak.ui.search.adapter.SearchViewPager
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.flow.collectLatest
@@ -24,13 +26,23 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
+    private var columnCount = 2 //컬럼 갯수 = 2 그리드
+    private var mediHistory : MutableList<Medicine> = mutableListOf()
+    private var searchHistory : MutableList<String> = mutableListOf()
+
     private lateinit var viewPager: ViewPager2
 
     private val searchViewModel: SearchViewModel by activityViewModels()
 
     private var imm : InputMethodManager? =null
-    private object homeData{
-        var userEffectList = mutableListOf<Pair<String,String>>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            columnCount = it.getInt(ARG_COLUMN_COUNT)
+            searchHistory = it.getStringArrayList(SEARCH_HISTOROY)?:mutableListOf()
+            mediHistory = it.getParcelableArrayList(MEDICINE_HISTOROY)?:mutableListOf()
+        }
     }
 
     override fun onCreateView(
@@ -82,7 +94,7 @@ class SearchFragment : Fragment() {
             binding.searchLoImageblock.visibility = View.GONE
             imm!!.hideSoftInputFromWindow(binding.searchBtnSearch.windowToken, 0)
             searchViewModel.searchMedicinesWithName(query)
-
+            searchHistory.add(query)
             //TODO 키보드 내리기
             val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(view?.windowToken ?: null, 0)
@@ -126,6 +138,24 @@ class SearchFragment : Fragment() {
 
     private fun initView(){
 
+    }
+
+    companion object {
+
+        const val ARG_COLUMN_COUNT = "column-count"
+        private const val MEDICINE_HISTOROY = "medicine_data"
+        private const val SEARCH_HISTOROY = "medicine_data"
+        const val TAB_NAME = "검색 기록"
+
+        @JvmStatic
+        fun newInstance(columnCount: Int, searchHistory: ArrayList<String>, mediHistory: ArrayList<Medicine>) =
+            SearchFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(ARG_COLUMN_COUNT, columnCount)
+                    putStringArrayList(SEARCH_HISTOROY,searchHistory)
+                    putParcelableArrayList(MEDICINE_HISTOROY, mediHistory)
+                }
+            }
     }
 
 }
