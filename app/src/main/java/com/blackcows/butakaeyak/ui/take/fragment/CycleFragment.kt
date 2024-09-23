@@ -17,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -80,7 +81,6 @@ class CycleFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         MainNavigation.hideBottomNavigation(true)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
@@ -103,7 +103,7 @@ class CycleFragment : Fragment() {
         bottomSheetDialog.setContentView(bottomSheetView.root)
 
         bottomSheetView2 = BottomsheetRepeatCycleBinding.inflate(layoutInflater)
-        bottomSheetDialog2 = BottomSheetDialog(requireContext())
+        bottomSheetDialog2 = BottomSheetDialog(requireContext(), R.style.DialogStyle)
         bottomSheetDialog2.setContentView(bottomSheetView2.root)
 
         binding.etMedicineGroup.addTextChangedListener(object : TextWatcher {
@@ -113,8 +113,6 @@ class CycleFragment : Fragment() {
             }
             override fun afterTextChanged(s: Editable?) {}
         })
-
-
 
         binding.apply {
             ivBack.setOnClickListener {
@@ -139,71 +137,23 @@ class CycleFragment : Fragment() {
                     }
             }
 
+            val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
             binding.clRepeatCycle.setOnClickListener {
                 bottomSheetDialog2.show()
-
-                val selectedDays = mutableListOf<String>()
-
-                bottomSheetView2.tvMonday.setOnClickListener {
-                    handleDaySelection(it as TextView, "월", selectedDays)
-                }
-
-                bottomSheetView2.tvTuesday.setOnClickListener {
-                    handleDaySelection(it as TextView, "화", selectedDays)
-                }
-
-                bottomSheetView2.tvWednesday.setOnClickListener {
-                    handleDaySelection(it as TextView, "수", selectedDays)
-                }
-
-                bottomSheetView2.tvThursday.setOnClickListener {
-                    handleDaySelection(it as TextView, "목", selectedDays)
-                }
-
-                bottomSheetView2.tvFriday.setOnClickListener {
-                    handleDaySelection(it as TextView, "금", selectedDays)
-                }
-
-                bottomSheetView2.tvSaturday.setOnClickListener {
-                    handleDaySelection(it as TextView, "토", selectedDays)
-                }
-
-                bottomSheetView2.tvSunday.setOnClickListener {
-                    handleDaySelection(it as TextView, "일", selectedDays)
-                }
 
                 bottomSheetView2.btnNext.setOnClickListener {
                     if(bottomSheetView2.etCustom.text.isNotEmpty()){
                         binding.tvRepeatCycle.text = "${bottomSheetView2.etCustom.text}일"
                         bottomSheetView2.tvCustomCaption.setText("${bottomSheetView2.etCustom.text}일마다 반복합니다.")
                     }
-                    else {
-                        val orderedDays = orderSelectedDays(selectedDays)
-                        val selectedDaysString = orderedDays.joinToString(", ")
-                        binding.tvRepeatCycle.text = selectedDaysString
-                    }
+                    inputMethodManager.hideSoftInputFromWindow(bottomSheetView2.root.windowToken,0)
                     bottomSheetDialog2.dismiss()
                     btnNext()
                 }
 
                 bottomSheetDialog2.setOnDismissListener {
-                    bottomSheetView2.etCustom.setText("")
-
-                    bottomSheetView2.tvMonday.setBackgroundResource(android.R.color.white)
-                    bottomSheetView2.tvTuesday.setBackgroundResource(android.R.color.white)
-                    bottomSheetView2.tvWednesday.setBackgroundResource(android.R.color.white)
-                    bottomSheetView2.tvThursday.setBackgroundResource(android.R.color.white)
-                    bottomSheetView2.tvFriday.setBackgroundResource(android.R.color.white)
-                    bottomSheetView2.tvSaturday.setBackgroundResource(android.R.color.white)
-                    bottomSheetView2.tvSunday.setBackgroundResource(android.R.color.white)
-
-                    bottomSheetView2.tvMonday.isSelected = false
-                    bottomSheetView2.tvTuesday.isSelected = false
-                    bottomSheetView2.tvWednesday.isSelected = false
-                    bottomSheetView2.tvThursday.isSelected = false
-                    bottomSheetView2.tvFriday.isSelected = false
-                    bottomSheetView2.tvSaturday.isSelected = false
-                    bottomSheetView2.tvSunday.isSelected = false
+//                    bottomSheetView2.etCustom.setText("")
                 }
             }
 
@@ -240,12 +190,6 @@ class CycleFragment : Fragment() {
             }
         }
         alarmAddTextUpdate(adapter.itemCount)
-    }
-
-    private fun orderSelectedDays(selectedDays: List<String>): List<String> {
-        val dayOrder = listOf("월", "화", "수", "목", "금", "토", "일")
-
-        return selectedDays.sortedBy { dayOrder.indexOf(it) }
     }
 
     private fun showCustomTimePickerDialog() {
@@ -417,8 +361,6 @@ class CycleFragment : Fragment() {
         val repeatInterval: Long
         Log.d("AlarmDebug", "Repeat Type: $repeatType")
 
-        val daysOfWeek = mutableListOf<Int>()
-
         when (repeatType) {
             "1일", "2일", "3일", "4일", "5일", "6일", "7일" -> {
                 // 일 단위 반복
@@ -431,47 +373,11 @@ class CycleFragment : Fragment() {
                     pendingIntent
                 )
             }
-
-            "월" -> daysOfWeek.add(Calendar.MONDAY)
-            "화" -> daysOfWeek.add(Calendar.TUESDAY)
-            "수" -> daysOfWeek.add(Calendar.WEDNESDAY)
-            "목" -> daysOfWeek.add(Calendar.THURSDAY)
-            "금" -> daysOfWeek.add(Calendar.FRIDAY)
-            "토" -> daysOfWeek.add(Calendar.SATURDAY)
-            "일" -> daysOfWeek.add(Calendar.SUNDAY)
-
-            else -> throw IllegalArgumentException("잘못된 요일입니다.")
         }
-
-        for (dayOfWeek in daysOfWeek) {
-            calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek)
-            if (calendar.timeInMillis < System.currentTimeMillis()) {
-                calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 해당 요일로 설정
-            }
-
-            alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                AlarmManager.INTERVAL_DAY * 7, // 매주 반복
-                pendingIntent
-            )
-            }
 
         // 반복되는 알람 설정
         val nextAlarmClock = AlarmManager.AlarmClockInfo(calendar.timeInMillis, pendingIntent)
         alarmManager.setAlarmClock(nextAlarmClock, pendingIntent)
-    }
-
-    //날짜 선택 시 색 변경
-    private fun handleDaySelection(textView: TextView, day: String, selectedDays: MutableList<String>) {
-        if (textView.isSelected) {
-            textView.setBackgroundResource(android.R.color.white)
-            selectedDays.remove(day)
-        } else {
-            textView.setBackgroundResource(R.drawable.user_cl_bg_green_gradient_gray)
-            selectedDays.add(day)
-        }
-        textView.isSelected = !textView.isSelected
     }
 
     override fun onDestroyView() {
