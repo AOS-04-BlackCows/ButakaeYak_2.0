@@ -58,6 +58,12 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="medium_gray">
+        <item name="fontFamily">@font/pretendard</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="body_big">
         <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
