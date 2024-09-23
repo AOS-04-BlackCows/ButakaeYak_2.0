@@ -18,6 +18,7 @@ import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.state.LoginUiState
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
+import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -43,6 +44,8 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
         // GPS 권한 체크 후 없을 시 요청
         checkPermissionForLocation()
+
+        KakaoSdk.init(this, BuildConfig.NATIVE_APP_KEY)
 
         lifecycleScope.launch {
             userViewModel.loginUiState.collectLatest {

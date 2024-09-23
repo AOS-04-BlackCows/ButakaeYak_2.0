@@ -15,9 +15,11 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentSignInBinding
 import com.blackcows.butakaeyak.domain.repo.LocalRepository
 import com.blackcows.butakaeyak.domain.repo.UserRepository
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.state.LoginUiState
 import com.blackcows.butakaeyak.ui.state.SignUpUiState
+import com.blackcows.butakaeyak.ui.user.UserFragment
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.KakaoSdk
@@ -53,29 +55,39 @@ class SignInFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        KakaoSdk.init(requireContext(), BuildConfig.NATIVE_APP_KEY)
 
         lifecycleScope.launch {
             userViewModel.loginUiState.collectLatest {
                 Log.d("SignInFragment: Login", it.toString())
                 when(it) {
                     is LoginUiState.Success -> {
-                        Toast.makeText(requireContext(), "login: 로그인 완료", Toast.LENGTH_SHORT).show()
+                        // 로그인 성공하면 마이페이지로 이동!
+                        Toast.makeText(requireContext(), "login: 로그인 성공", Toast.LENGTH_SHORT).show()
+                        MainNavigation.popCurrentFragment()
+                        MainNavigation.disableLoadingBar()
+                    }
+
+                    is LoginUiState.Loading -> {
+                        MainNavigation.showLoadingBar()
                     }
 
                     is LoginUiState.UnKnownUserData -> {
                         Toast.makeText(requireContext(), "login: 언노운", Toast.LENGTH_SHORT).show()
+                        MainNavigation.disableLoadingBar()
                     }
 
                     is LoginUiState.Failure -> {
                         Toast.makeText(requireContext(), "login: 로그인 실패...", Toast.LENGTH_SHORT).show()
+                        MainNavigation.disableLoadingBar()
                     }
 
-                    else -> { }
+                    else -> { MainNavigation.disableLoadingBar() }
                 }
             }
         }
-        
+
+
+
 
         binding.ivKakaoLogin.setOnClickListener {
             userViewModel.signUpWithKakaoAndLogin()
