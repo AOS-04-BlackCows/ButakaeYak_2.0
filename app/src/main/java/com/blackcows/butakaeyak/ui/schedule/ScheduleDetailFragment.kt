@@ -162,8 +162,15 @@ class ScheduleDetailFragment : Fragment() {
         calenderBottomSheetDialog = BottomSheetDialog(requireContext())
         calenderBottomSheetDialog.setContentView(calenderBottomSheet.root)
         calenderBottomSheet.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            val date = LocalDate.parse("$year-$month-$dayOfMonth")
+            val monthStr = if(month < 10) "0${month+1}"
+                            else month.toString()
+            val dayOfMonthStr = if(dayOfMonth < 10) "0$dayOfMonth"
+                            else dayOfMonth.toString()
+
+            val date = LocalDate.parse("$year-$monthStr-$dayOfMonthStr")
             scheduleViewModel.getDateToMedicineGroup(userId, date)
+
+            binding.dateTv.text = date.toString().replace("-", ".")
 
             calenderBottomSheetDialog.dismiss()
         }

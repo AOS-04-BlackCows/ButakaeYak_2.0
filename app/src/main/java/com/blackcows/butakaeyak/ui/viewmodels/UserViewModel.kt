@@ -45,6 +45,7 @@ class UserViewModel @Inject constructor(
                     else userRepository.loginWithId(data.loginId, data.pwd)
                 }
 
+
             when(result) {
                 is LoginResult.Success -> {
                     _user.value = result.user
@@ -54,7 +55,7 @@ class UserViewModel @Inject constructor(
                     _loginUiState.value = LoginUiState.UnKnownUserData
                 }
                 is LoginResult.Failure -> {
-                    _loginUiState.value = LoginUiState.Failure
+                    _loginUiState.value = LoginUiState.NotFoundAutoLoginData
                 }
             }
         }

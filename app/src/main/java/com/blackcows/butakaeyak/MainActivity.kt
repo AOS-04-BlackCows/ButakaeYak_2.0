@@ -55,9 +55,17 @@ class MainActivity : AppCompatActivity() {
                         MainNavigation.showLoadingBar()
                     }
 
-                    else -> {
+                    is LoginUiState.NotFoundAutoLoginData -> {
+                        MainNavigation.disableLoadingBar()
+                    }
+
+                    is LoginUiState.Failure -> {
                         MainNavigation.disableLoadingBar()
                         Toast.makeText(this@MainActivity, "로그인에 실패하였습니다. 다시 로그인해주세요.", Toast.LENGTH_SHORT).show()
+                    }
+
+                    else -> {
+                        MainNavigation.disableLoadingBar()
                     }
                 }
             }
