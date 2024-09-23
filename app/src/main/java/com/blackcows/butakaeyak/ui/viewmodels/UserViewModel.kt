@@ -35,6 +35,8 @@ class UserViewModel @Inject constructor(
     private val _signUpUiState = MutableStateFlow<SignUpUiState>(SignUpUiState.Init)
     val signUpUiState = _signUpUiState.asStateFlow()
 
+
+
     fun autoLogin() {
         viewModelScope.launch {
             _loginUiState.value = LoginUiState.Loading
@@ -126,6 +128,8 @@ class UserViewModel @Inject constructor(
 
     fun logout(onFinished: () -> Unit) {
         viewModelScope.launch {
+            _user.value = null
+            _loginUiState.value = LoginUiState.Init
             userRepository.logout()
             onFinished()
         }
