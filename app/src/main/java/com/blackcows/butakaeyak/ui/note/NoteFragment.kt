@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak.ui.note
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -31,15 +32,13 @@ class NoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setObserver()
+        initView()
         if(userViewModel.user.value == null) {
             binding.loginGuideCl.visibility = View.VISIBLE
-            return
         } else {
             binding.loginGuideCl.visibility = View.GONE
         }
-
-        setObserver()
-        initView()
     }
 
     private fun initView() {
@@ -56,6 +55,7 @@ class NoteFragment : Fragment() {
 
     private fun setObserver() {
         userViewModel.user.observe(viewLifecycleOwner) { user ->
+            Log.d("UserViewModel", "NoteFragment: user is null? :${user==null}")
             if(user == null) {
                 binding.loginGuideCl.visibility = View.VISIBLE
             } else {

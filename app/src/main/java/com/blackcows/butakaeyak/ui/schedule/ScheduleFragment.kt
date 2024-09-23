@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak.ui.schedule
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -56,6 +57,8 @@ class ScheduleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setObserver()
+
         if(userViewModel.user.value == null) {
             binding.loginGuideCl.visibility = View.VISIBLE
             return
@@ -77,7 +80,7 @@ class ScheduleFragment : Fragment() {
             }
         }
 
-        setObserver()
+
         initFriendsViewPager()
     }
 
@@ -91,6 +94,7 @@ class ScheduleFragment : Fragment() {
     private fun setObserver() {
 
         userViewModel.user.observe(viewLifecycleOwner) { user ->
+            Log.d("UserViewModel", "ScheduleFragment: user is null? :${user==null}")
             if(user == null) {
                 binding.loginGuideCl.visibility = View.VISIBLE
             } else {
@@ -99,6 +103,8 @@ class ScheduleFragment : Fragment() {
         }
 
         scheduleViewModel.scheduleProfile.observe(viewLifecycleOwner) { friendsProfiles ->
+            if(userViewModel.user.value == null) return@observe
+
             val myScheduleProfile = with(userViewModel.user.value!!) {
                 ScheduleProfile(id, name, profileUrl!!)
             }
@@ -108,6 +114,9 @@ class ScheduleFragment : Fragment() {
             }
 
             profileRvAdapter.submitList(list)
+
+            Log.d("ScheduleFragment", "size: ${profileRvAdapter.currentList.size}")
+
             viewPagerAdapter.setScheduleProfiles(list)
             viewPagerAdapter.getFragment(binding.scheduleDetailViewPager, myScheduleProfile)
         }
