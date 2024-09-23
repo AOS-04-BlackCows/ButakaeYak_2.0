@@ -144,6 +144,7 @@
         \n개발자는 "구체적인 약의 정보 및 복용"에 대해 애플리케이션 이용 시 이용자에게 "약사에게 확인할 것"을 고지하고 있으며, 이를 이용자가 확인하지 않아 발생한 사고에 대해서는 개발자는 책임을 지지 않습니다.</string>
     <string name="modifying_text">수정하기</string>
     <string name="remove_text">삭제하기</string>
+    <string name="do_login_please_text">로그인이 필요한 서비스입니다. 로그인해주세요.</string>
 
 
 </resources>
