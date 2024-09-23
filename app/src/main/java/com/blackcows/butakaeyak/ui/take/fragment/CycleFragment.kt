@@ -25,6 +25,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
+import com.blackcows.butakaeyak.data.models.MedicineGroup
+import com.blackcows.butakaeyak.data.models.MedicineGroupRequest
+import com.blackcows.butakaeyak.data.models.MedicineGroupResponse
 import com.blackcows.butakaeyak.databinding.BottomsheetCalendarBinding
 import com.blackcows.butakaeyak.databinding.BottomsheetRepeatCycleBinding
 import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
@@ -37,6 +40,7 @@ import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.time.LocalDate
 import java.util.Calendar
 
 class CycleFragment : Fragment() {
@@ -128,6 +132,9 @@ class CycleFragment : Fragment() {
                     bottomSheetView.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
                         val selectDate = "${year}년 ${month + 1}월 ${dayOfMonth}일"
                         binding.tvStartDay.setText(selectDate)
+
+                        //TODO viewModel startDate 값 설정
+                        viewModel.startDate = binding.tvStartDay.text.toString()
                         btnNext()
                     }
             }
@@ -252,6 +259,10 @@ class CycleFragment : Fragment() {
             if (selectedTime.isNotEmpty()) {
                 addAlarmItem(selectedTime)
                 alarmAddTextUpdate(adapter.itemCount)
+
+                //TODO viewModel alarms 값 설정
+                val alarms: List<String> = alarmList.mapNotNull { it.timeText }
+                viewModel.alarms = alarms
             }
         }
         timePickerDialog.show()
@@ -293,6 +304,17 @@ class CycleFragment : Fragment() {
                 btnNext.setTextColor(Color.WHITE)
 
                 btnNext.setOnClickListener {
+                    val nameGroup = etMedicineGroup.text.toString()
+                    val finishDate = LocalDate.parse("2100-12-31").toString()
+
+                    //TODO viewModel 약 그룹이랑 끝나는 날짜 값 설정
+                    viewModel.groupName = nameGroup
+                    viewModel.finishDate = finishDate
+
+                    //TODO viewModel create, save
+//                    val groupCycle = viewModel.createNewMedicineGroupRequest()
+//                    viewModel.saveGroup(groupCycle)
+
                     val repeatCycle = tvRepeatCycle.text.toString()
                     val selectDate = tvStartDay.text.toString()
                     val dateFormat = dateFormatText(selectDate)
@@ -310,6 +332,7 @@ class CycleFragment : Fragment() {
                             it.timeText!!
                         }
                     )
+
                     newMyMedicine?.let { it1 -> mainViewModel.addToMyMedicineList(it1) }
                     MainNavigation.popCurrentFragment()
                 }
@@ -321,7 +344,7 @@ class CycleFragment : Fragment() {
             }
         }
     }
-//
+
     private fun setAlarmForAllItems(repeatType:String, startDate : Long) {
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
         val alarmList = adapter.getAlarmList()
@@ -348,12 +371,10 @@ class CycleFragment : Fragment() {
                     val alarmTime = alarm.timeInMillis
                     //선택한 날짜 + 알람 설정한 시간 더하는 변수
                     val adjustedTimeInMillis = startDate + (alarmTime % (24 * 60 * 60 * 1000)) + (9 * 60 * 60 * 1000)
-                    val alarmClock =
-//                        AlarmManager.AlarmClockInfo(adjustedTimeInMillis, pendingIntent)
-//                    alarmManager.setAlarmClock(alarmClock, pendingIntent)
+
                     Log.d("AlarmTest", "Adjusted Time In Millis: $adjustedTimeInMillis")
 
-                    //TODO 반복 주기에 따른 알람 설정 추가
+                    //반복 주기에 따른 알람 설정 추가
                     scheduleNextAlarm(repeatType, alarmManager, pendingIntent, adjustedTimeInMillis)
 
                 } catch (e: SecurityException) {
@@ -369,7 +390,7 @@ class CycleFragment : Fragment() {
         Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
-    //TODO 년,월,일 추출하는 메소드
+    //년,월,일 추출하는 메소드
     fun dateFormatText(dateText: String): Long {
         val year = dateText.substringBefore("년").trim().toInt()
         val month = dateText.substringAfter("년").substringBefore("월").trim().toInt() - 1 // Calendar는 0부터 시작
@@ -418,11 +439,7 @@ class CycleFragment : Fragment() {
             "금" -> daysOfWeek.add(Calendar.FRIDAY)
             "토" -> daysOfWeek.add(Calendar.SATURDAY)
             "일" -> daysOfWeek.add(Calendar.SUNDAY)
-            //TODO 요일 두 개 이상 선택 시 기능 구현 안 됨
-            "월, 화" -> {
-                daysOfWeek.add(Calendar.MONDAY)
-                daysOfWeek.add(Calendar.TUESDAY)
-            }
+
             else -> throw IllegalArgumentException("잘못된 요일입니다.")
         }
 
