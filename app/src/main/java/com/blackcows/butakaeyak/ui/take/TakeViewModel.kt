@@ -19,6 +19,7 @@ class TakeAddViewModel @Inject constructor(
 ) : ViewModel() {
     private val _medicineGroup = MutableLiveData<MedicineGroup?>(null)
     val medicineGroup get() = _medicineGroup
+    private val medicineNameList = mutableListOf<String>()
 
     fun saveGroup () {
         viewModelScope.launch {
@@ -26,6 +27,13 @@ class TakeAddViewModel @Inject constructor(
                 medicineGroupRepository.saveNewGroup(it)
             }
         }
+    }
+
+    fun saveNames(medicines: MutableList<String>){
+        medicineNameList.addAll(medicines)
+    }
+    fun loadNames() : List<String>{
+        return medicineNameList
     }
 
 }
