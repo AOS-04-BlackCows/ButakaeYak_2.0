@@ -5,16 +5,23 @@ import com.blackcows.butakaeyak.data.models.MyPharmacy
 import com.blackcows.butakaeyak.data.source.firebase.RemoteMyPharmacyDataSource
 import com.blackcows.butakaeyak.data.source.link.MyPharmacyDataSource
 import com.blackcows.butakaeyak.data.source.local.LocalMyPharmacyDataSource
+import com.blackcows.butakaeyak.data.source.local.LocalUtilsDataSource
 import com.blackcows.butakaeyak.domain.repo.MyPharmacyRepository
 import javax.inject.Inject
 
 class MyPharmacyRepositoryImpl @Inject constructor(
-    private val myPharmacyDataSource: MyPharmacyDataSource
+    private val localMyPharmacyDataSource: LocalMyPharmacyDataSource,
+    private val remoteMyPharmacyDataSource: RemoteMyPharmacyDataSource,
+    private val localUtilsDataSource: LocalUtilsDataSource
 ): MyPharmacyRepository {
 
     companion object {
         private const val TAG= "MyPharmacyRepositoryImpl"
     }
+
+    private val myPharmacyDataSource
+    = if(localUtilsDataSource.isSignIn()) remoteMyPharmacyDataSource
+    else localMyPharmacyDataSource
 
     override suspend fun getMyFavorites(userId: String): List<MyPharmacy> {
         return runCatching {

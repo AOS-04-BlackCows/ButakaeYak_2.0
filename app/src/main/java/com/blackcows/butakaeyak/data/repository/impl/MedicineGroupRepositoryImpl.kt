@@ -5,20 +5,30 @@ import com.blackcows.butakaeyak.data.WeekDayUtils
 import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.data.source.api.MedicineInfoDataSource
 import com.blackcows.butakaeyak.data.source.firebase.MemoDataSource
+import com.blackcows.butakaeyak.data.source.firebase.RemoteMedicineGroupDataSource
 import com.blackcows.butakaeyak.data.source.link.MedicineGroupDataSource
+import com.blackcows.butakaeyak.data.source.local.LocalMedicineGroupDataSource
+import com.blackcows.butakaeyak.data.source.local.LocalUtilsDataSource
+import com.blackcows.butakaeyak.domain.repo.LocalUtilsRepository
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
 import java.time.LocalDate
 import javax.inject.Inject
 
 class MedicineGroupRepositoryImpl @Inject constructor(
-    private val medicineGroupDataSource: MedicineGroupDataSource,
+    private val localMedicineGroupDataSource: LocalMedicineGroupDataSource,
+    private val remoteMedicineGroupDataSource: RemoteMedicineGroupDataSource,
     private val medicineDetailDataSource: MedicineInfoDataSource,
-    private val memoDataSource: MemoDataSource
+    private val localUtilsRepository: LocalUtilsDataSource
 ): MedicineGroupRepository {
 
     companion object {
         private const val TAG = "MedicineGroupRepositoryImpl"
     }
+
+    private val medicineGroupDataSource
+    = if(localUtilsRepository.isSignIn()) remoteMedicineGroupDataSource
+        else localMedicineGroupDataSource
+
 
     override suspend fun getMyGroups(userId: String): List<MedicineGroup> {
         return kotlin.runCatching {
