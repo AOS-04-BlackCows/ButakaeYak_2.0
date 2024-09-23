@@ -66,29 +66,6 @@ class UserFragment : Fragment() {
                 MainNavigation.addFragment(SignInFragment(), FragmentTag.SignInFragment)
                 //userViewModel.signUpWithKakaoAndLogin()
             }
-
-            lifecycleScope.launch {
-                userViewModel.loginUiState.collectLatest {
-                    when(it) {
-                        is LoginUiState.Success -> {
-                            Log.d("SignInFragment", "Sucees !!!!!!!!!!! in user")
-                            Toast.makeText(requireContext(), "로그인 완료", Toast.LENGTH_SHORT).show()
-                        }
-
-                        is LoginUiState.UnKnownUserData -> {
-                            Toast.makeText(requireContext(), "언노운", Toast.LENGTH_SHORT).show()
-                        }
-
-                        is LoginUiState.Failure -> {
-                            Toast.makeText(requireContext(), "로그인 실패...", Toast.LENGTH_SHORT).show()
-                        }
-
-                        else -> {
-                            Toast.makeText(requireContext(), "뭐여...", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            }
         }
 
         // 서비스 이용 약관
