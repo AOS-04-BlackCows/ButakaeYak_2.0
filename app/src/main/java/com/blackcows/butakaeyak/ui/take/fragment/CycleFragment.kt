@@ -110,6 +110,8 @@ class CycleFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+
+
         binding.apply {
             ivBack.setOnClickListener {
                 onBackPressed()
@@ -289,16 +291,20 @@ class CycleFragment : Fragment() {
                 btnNext.isEnabled = true
                 btnNext.setBackgroundResource(R.color.green)
                 btnNext.setTextColor(Color.WHITE)
+
                 btnNext.setOnClickListener {
+                    val repeatCycle = tvRepeatCycle.text.toString()
+                    val selectDate = tvStartDay.text.toString()
+                    val dateFormat = dateFormatText(selectDate)
+                    val startDate = dateFormat
+                    Log.d("startDate","${startDate}")
+
+                    setAlarmForAllItems(repeatCycle,startDate)
+
                     parentFragmentManager.beginTransaction()
                         .remove(this@CycleFragment)
                         .commit()
 
-                    val repeatCycle = tvRepeatCycle.text.toString()
-                    val selectDate = tvStartDay.text.toString()
-                    val dateFormat = dateFormatText(selectDate)
-                    val startDate = dateFormat.timeInMillis
-                    setAlarmForAllItems(repeatCycle,startDate)
                     val newMyMedicine = myMedicine?.copy(
                         alarms = alarmList.map {
                             it.timeText!!
@@ -312,13 +318,10 @@ class CycleFragment : Fragment() {
                 btnNext.isEnabled = false
                 btnNext.setBackgroundResource(R.color.gray)
                 btnNext.setTextColor(Color.DKGRAY)
-                btnNext.setOnClickListener {
-                Toast.makeText(context, "시간 설정이 완료되지 않았습니다.", Toast.LENGTH_SHORT).show()
-                }
             }
         }
     }
-
+//
     private fun setAlarmForAllItems(repeatType:String, startDate : Long) {
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
         val alarmList = adapter.getAlarmList()
@@ -331,7 +334,6 @@ class CycleFragment : Fragment() {
             intent.putExtra("NOTIFICATION_ID", alarm.requestCode)
             intent.putExtra("NOTIFICATION_TITLE","${binding.etMedicineGroup.text}")
             intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
-            intent.putExtra("REPEAT_TYPE", repeatType)
 
             val pendingIntent = PendingIntent.getBroadcast(
                 context, alarm.requestCode, intent, PendingIntent.FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
@@ -339,21 +341,28 @@ class CycleFragment : Fragment() {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 // Android 12 이상에서 정확한 알람 설정
-                try {
-                    if (alarmManager?.canScheduleExactAlarms() == true) {
-                        val adjustedTimeInMillis = startDate + (alarm.timeInMillis % (24 * 60 * 60 * 1000))
-                        val alarmClock = AlarmManager.AlarmClockInfo(adjustedTimeInMillis, pendingIntent)
-                        alarmManager.setAlarmClock(alarmClock, pendingIntent)
 
-                        //TODO 반복 주기에 따른 알람 설정 추가
-                        scheduleNextAlarm(repeatType, alarmManager, pendingIntent, adjustedTimeInMillis)
-                    } else {
-                        val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                        startActivity(intent)
-                    }
+                Log.d("buildTest", "okay")
+                if (alarmManager?.canScheduleExactAlarms() == true){
+                try {
+                    val alarmTime = alarm.timeInMillis
+                    //선택한 날짜 + 알람 설정한 시간 더하는 변수
+                    val adjustedTimeInMillis = startDate + (alarmTime % (24 * 60 * 60 * 1000)) + (9 * 60 * 60 * 1000)
+                    val alarmClock =
+//                        AlarmManager.AlarmClockInfo(adjustedTimeInMillis, pendingIntent)
+//                    alarmManager.setAlarmClock(alarmClock, pendingIntent)
+                    Log.d("AlarmTest", "Adjusted Time In Millis: $adjustedTimeInMillis")
+
+                    //TODO 반복 주기에 따른 알람 설정 추가
+                    scheduleNextAlarm(repeatType, alarmManager, pendingIntent, adjustedTimeInMillis)
+
                 } catch (e: SecurityException) {
                     Toast.makeText(context, "알림 설정에 실패했습니다. 권한을 확인해주세요.", Toast.LENGTH_SHORT).show()
                 }
+            }
+            }
+            else{
+                Log.d("alarmTest","if문 false뜸")
             }
         }
 
@@ -361,17 +370,23 @@ class CycleFragment : Fragment() {
     }
 
     //TODO 년,월,일 추출하는 메소드
-    fun dateFormatText(dateText: String): Calendar {
+    fun dateFormatText(dateText: String): Long {
         val year = dateText.substringBefore("년").trim().toInt()
         val month = dateText.substringAfter("년").substringBefore("월").trim().toInt() - 1 // Calendar는 0부터 시작
         val day = dateText.substringAfter("월").substringBefore("일").trim().toInt()
 
         // Calendar 날짜 설정
-        return Calendar.getInstance().apply {
+        val calendar = Calendar.getInstance().apply {
             set(Calendar.YEAR, year)
             set(Calendar.MONTH, month)
             set(Calendar.DAY_OF_MONTH, day)
+            set(Calendar.HOUR_OF_DAY, 0) // 시간 설정
+            set(Calendar.MINUTE, 0) // 분 설정
+            set(Calendar.SECOND, 0) // 초 설정
+            set(Calendar.MILLISECOND, 0) // 밀리초 설정
         }
+
+        return calendar.timeInMillis // 밀리초 단위로 반환
     }
 
     private fun scheduleNextAlarm(repeatType: String, alarmManager: AlarmManager, pendingIntent: PendingIntent, currentTimeMillis: Long) {
@@ -379,69 +394,131 @@ class CycleFragment : Fragment() {
         calendar.timeInMillis = currentTimeMillis
 
         when (repeatType) {
-            "월, 화, 수, 목, 금, 토, 일" -> {
-                calendar.add(Calendar.DAY_OF_YEAR, 1)  // 매일 반복
-            }
-            "2일" -> {
-                calendar.add(Calendar.DAY_OF_YEAR, 2)
-            }
-            "3일" -> {
-                calendar.add(Calendar.DAY_OF_YEAR, 3)  // 3일마다 반복
-            }
-            "4일" -> {
-                calendar.add(Calendar.DAY_OF_YEAR, 4)
-            }
-            "5일" -> {
-                calendar.add(Calendar.DAY_OF_YEAR, 5)
-            }
-            "6일" -> {
-                calendar.add(Calendar.DAY_OF_YEAR, 6)
-            }
-            "7일" -> {
-                calendar.add(Calendar.DAY_OF_YEAR, 7)
-            }
-
+            "1일" -> alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                AlarmManager.INTERVAL_DAY,
+                pendingIntent
+            )
+            "2일" -> alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                2*AlarmManager.INTERVAL_DAY,
+                pendingIntent
+            )
+            "3일" -> alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                3*AlarmManager.INTERVAL_DAY,
+                pendingIntent
+            )
+            "4일" -> alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                4*AlarmManager.INTERVAL_DAY,
+                pendingIntent
+            )
+            "5일" -> alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                5*AlarmManager.INTERVAL_DAY,
+                pendingIntent
+            )
+            "6일" -> alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                6*AlarmManager.INTERVAL_DAY,
+                pendingIntent
+            )
+            "7일" -> alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                7*AlarmManager.INTERVAL_DAY,
+                pendingIntent
+            )
             "월" -> {
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
                 if (calendar.timeInMillis < System.currentTimeMillis()) {
                     calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
                 }
+                alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
+                    pendingIntent
+                )
             }
             "화" -> {
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY)
                 if (calendar.timeInMillis < System.currentTimeMillis()) {
                     calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
                 }
+                alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
+                    pendingIntent
+                )
             }
             "수" -> {
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY)
                 if (calendar.timeInMillis < System.currentTimeMillis()) {
                     calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
                 }
+                alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
+                    pendingIntent
+                )
             }
             "목" -> {
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY)
                 if (calendar.timeInMillis < System.currentTimeMillis()) {
-                    calendar.add(Calendar.WEEK_OF_YEAR, 1)
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
                 }
+                alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
+                    pendingIntent
+                )
             }
             "금" -> {
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY)
                 if (calendar.timeInMillis < System.currentTimeMillis()) {
-                    calendar.add(Calendar.WEEK_OF_YEAR, 1)
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
                 }
+                alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
+                    pendingIntent
+                )
             }
             "토" -> {
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY)
                 if (calendar.timeInMillis < System.currentTimeMillis()) {
-                    calendar.add(Calendar.WEEK_OF_YEAR, 1)
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
                 }
+                alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
+                    pendingIntent
+                )
             }
             "일" -> {
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
                 if (calendar.timeInMillis < System.currentTimeMillis()) {
-                    calendar.add(Calendar.WEEK_OF_YEAR, 1)
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 일요일 설정
                 }
+                alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
+                    pendingIntent
+                )
             }
         }
 
