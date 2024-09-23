@@ -49,7 +49,7 @@ class TakeAddFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        MainNavigation.hideBottomNavigation(true)
+        MainNavigation.hideBottomNavigation(true)
 
 //        medicine?.let {
 //            childFragmentManager.beginTransaction().add(
