@@ -40,10 +40,7 @@ class ScheduleFragment : Fragment() {
 
         curScheduleProfileId = userId
 
-        val detailFragment = ScheduleDetailFragment.newInstance(userId, userId == myId)
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.schedule_detail_fcv, detailFragment)
-            .commitNow()
+        viewPagerAdapter.getFragment(binding.scheduleDetailViewPager, curScheduleProfileId)
     }
 
     private lateinit var viewPagerAdapter: FriendViewPager

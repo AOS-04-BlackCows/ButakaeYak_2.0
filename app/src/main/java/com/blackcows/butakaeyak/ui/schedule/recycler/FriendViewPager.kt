@@ -40,13 +40,21 @@ class FriendViewPager(fragmentActivity: FragmentActivity): FragmentStateAdapter(
 
         viewPager2.currentItem = index
     }
+    fun getFragment(viewPager2: ViewPager2, scheduleProfileId: String) {
+        val index = scheduleProfileList.indexOfFirst {
+            it.userId == scheduleProfileId
+        }
+        if(index == -1) {
+            throw Exception("FriendViewPager: 등록되지 않은 scheduleProfile 입니다.")
+        }
+        viewPager2.currentItem = index
+    }
+
 
     private fun addFriend(scheduleProfile: ScheduleProfile, isMine: Boolean) {
         val scheduleFragment = ScheduleDetailFragment.newInstance(scheduleProfile.userId, isMine)
         fragmentList.add(scheduleFragment)
         scheduleProfileList.add(scheduleProfile)
-
-
     }
 
     private fun removeFriend(scheduleProfile: ScheduleProfile) {
@@ -57,7 +65,6 @@ class FriendViewPager(fragmentActivity: FragmentActivity): FragmentStateAdapter(
         } else {
             throw Exception("FriendViewPager: 등록되지 않은 scheduleProfile 입니다.")
         }
-
     }
 
 
