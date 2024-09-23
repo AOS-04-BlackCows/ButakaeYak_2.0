@@ -118,8 +118,8 @@
         <EditText
             android:id="@+id/et_medicine_name"
             style="@style/body_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="226dp"
+            android:layout_height="48dp"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
@@ -153,8 +153,11 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_size"
         app:layout_constraintTop_toBottomOf="@id/divider2"
-        app:layout_constraintBottom_toTopOf="@id/tv_size"/>
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="0dp"
+        tools:listitem="@layout/item_recyclerview_name" />
 
     <TextView
         android:id="@+id/tv_size"
