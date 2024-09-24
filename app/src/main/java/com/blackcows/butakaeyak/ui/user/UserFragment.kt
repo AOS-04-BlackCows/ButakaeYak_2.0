@@ -68,6 +68,8 @@ class UserFragment : Fragment() {
             if (userViewModel.user.value == null) {
                 Log.d(TAG, "user == null")
             }
+
+            MainNavigation.showLoadingBar()
             Log.d(TAG, "로그아웃 버튼 클릭!")
             userViewModel.logout {
 
@@ -75,6 +77,15 @@ class UserFragment : Fragment() {
 
                 binding.loggedInLayout.visibility = View.GONE
                 binding.notLoggedInLayout.visibility = View.VISIBLE
+
+                MainNavigation.disableLoadingBar()
+            }
+        }
+
+        binding.textView4.setOnClickListener {
+            MainNavigation.showLoadingBar()
+            userViewModel.deleteAccount {
+                MainNavigation.disableLoadingBar()
             }
         }
     }

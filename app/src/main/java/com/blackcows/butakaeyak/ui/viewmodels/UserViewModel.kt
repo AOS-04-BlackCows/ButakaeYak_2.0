@@ -69,6 +69,7 @@ class UserViewModel @Inject constructor(
 
     // 카카오 로그인에 사용
     fun signUpWithKakaoAndLogin() {
+        _loginUiState.value = LoginUiState.Loading
         viewModelScope.launch {
             val signUpResult = userRepository.trySignUpWithKakao()
             Log.d("UserViewModel", signUpResult.toString())
@@ -122,10 +123,6 @@ class UserViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    fun saveAutoLoginData(autoLoginData: AutoLoginData) {
-        localUtilsRepository.saveAutoLoginData(autoLoginData)
     }
 
     fun logout(onFinished: () -> Unit) {
