@@ -89,6 +89,7 @@ class SearchFragment : Fragment() {
         if(query.isEmpty()){
             Toast.makeText(requireContext(), "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show()
         }else{
+            viewPager.currentItem = 0
             binding.searchLoImageblock.visibility = View.GONE
             imm!!.hideSoftInputFromWindow(binding.searchBtnSearch.windowToken, 0)
             searchViewModel.searchMedicinesWithName(query)

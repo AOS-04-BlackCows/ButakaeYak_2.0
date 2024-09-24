@@ -29,7 +29,7 @@ class SearchHistoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val historyViewModel: SearchViewModel by activityViewModels()
-
+    private lateinit var historyAdapter : SearchRecyclerAdapter
 
     private var columnCount = 1 //컬럼 갯수 = 1
 
@@ -77,11 +77,11 @@ class SearchHistoryFragment : Fragment() {
         super.onResume()
         historyViewModel.getQueryHistory()
         historyViewModel.getMedicineHistory()
-        Log.d(TAG,"히스토리 onResume ${historyViewModel.queryHistory.value.toString()}")
-
         val queryHistory = historyViewModel.queryHistory
-        Log.d(TAG,queryHistory.value!!.size.toString())
         val medicineHistory = historyViewModel.medicineHistory
+        Log.d(TAG,medicineHistory.value!!.size.toString())
+
+        Log.d(TAG,"히스토리 onResume ${medicineHistory.value.toString()}")
 
         if (queryHistory.value?.isNotEmpty() == true){
             binding.searchHistoryChipgroup.removeAllViews()
@@ -92,7 +92,6 @@ class SearchHistoryFragment : Fragment() {
                     setChipDrawable(ChipDrawable.createFromAttributes(context,null,0,R.style.CustomChipStyle))
                     setOnClickListener {
                         historyViewModel.setSelectedChip(this.text.toString())
-
                     }
                     setOnCloseIconClickListener {
                         binding.searchHistoryChipgroup.removeView(this)
@@ -101,6 +100,11 @@ class SearchHistoryFragment : Fragment() {
                 })
             }
         }
+
+        binding.apply {
+
+        }
+
     }
 
     private fun fragmentInit () {

@@ -89,7 +89,7 @@ class MedicineResultFragment : Fragment() {
                         detailTvSideEffect.text = item.sideEffect
                         detailTvStoringMethod.text = item.storingMethod
                     }
-                    //TODO 클릭한 약 정보 검색 기록으로 넘겨야 함...
+                    searchViewModel.saveMedicineHistory(item)
                     bottomSheetDialog.setContentView(bottomSheetView.root)
                     bottomSheetDialog.show()
 
