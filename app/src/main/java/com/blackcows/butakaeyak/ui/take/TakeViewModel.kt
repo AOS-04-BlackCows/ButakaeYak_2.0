@@ -29,17 +29,32 @@ class TakeAddViewModel @Inject constructor(
     private var _nameRvGroup = MutableLiveData<List<TakeAddMedicine>>(null)
     val nameRvGroup get() = _nameRvGroup
 
+    //TODO 변수 생성
     var groupName : String? = null
+    var userId: String? = null
+    var medicineIdList: List<String>? = null
+    var customNameList: List<String>? = null
+    var imageUrlList: List<String>? = null
     var startDate : String? = null
     var finishDate : String? = null
     var daysOfWeeks : List<String>? = null
     var alarms : List<String>? = null
+    var hasTaken: List<String>? = null
 
-    //TODO createNewMedicineGroupRequest
-//    fun createNewMedicineGroupRequest():MedicineGroupRequest{
-//        return MedicineGroupRequest(name = groupName, startedAt = startDate,
-//            finishedAt = finishDate, daysOfWeeks = daysOfWeeks, alarms = alarms)
-//    }
+//    TODO createNewMedicineGroupRequest
+    fun createNewMedicineGroupRequest(onFailed:() -> (Unit)):MedicineGroupRequest?{
+        if(groupName == null || startDate == null || finishDate == null
+            || alarms == null || customNameList == null || imageUrlList == null){
+            onFailed()
+            return null
+        } else {
+            return MedicineGroupRequest(
+                name = groupName!!, userId = userId!!, medicineIdList = medicineIdList!!,
+                customNameList = customNameList!!, imageUrlList = imageUrlList!!,
+                daysOfWeeks = daysOfWeeks!!, startedAt = startDate!!,
+                finishedAt = finishDate!!, alarms = alarms!!, hasTaken = hasTaken!!)
+        }
+    }
 
     fun saveGroup (newGroup : MedicineGroupRequest) {
         viewModelScope.launch {

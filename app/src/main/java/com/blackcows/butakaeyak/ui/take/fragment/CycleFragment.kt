@@ -106,6 +106,10 @@ class CycleFragment : Fragment() {
         bottomSheetDialog2 = BottomSheetDialog(requireContext(), R.style.DialogStyle)
         bottomSheetDialog2.setContentView(bottomSheetView2.root)
 
+        //TODO MealTimeBottomSheet에서 추가된 아침, 점심, 저녁 알람을 받아옴
+//        val alarm = viewModel.getDefaultAlarms()
+//        addAlarmItem(alarm.toString())
+
         binding.etMedicineGroup.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -256,8 +260,12 @@ class CycleFragment : Fragment() {
                     viewModel.finishDate = finishDate
 
                     //TODO viewModel create, save
-//                    val groupCycle = viewModel.createNewMedicineGroupRequest()
-//                    viewModel.saveGroup(groupCycle)
+                    val groupCycle = viewModel.createNewMedicineGroupRequest{
+                        Log.d("groupCycle","failed createNewMedicine")
+                    }
+                    if(groupCycle != null) {
+                        viewModel.saveGroup(groupCycle)
+                    }
 
                     val repeatCycle = tvRepeatCycle.text.toString()
                     val selectDate = tvStartDay.text.toString()
