@@ -2,7 +2,6 @@ package com.blackcows.butakaeyak.ui.take.fragment
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
@@ -19,13 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.TakeAddMedicine
 import com.blackcows.butakaeyak.databinding.FragmentNameBinding
-import com.blackcows.butakaeyak.ui.DrawableNameToResource
+import com.blackcows.butakaeyak.ui.getMedicineTypeToDrawable
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.FormSelectDialog
 import com.blackcows.butakaeyak.ui.take.TakeAddViewModel
 import com.blackcows.butakaeyak.ui.take.adapter.NameAdapter
 import com.blackcows.butakaeyak.ui.take.data.NameItem
 
+const val TAG = "NameFragment"
 class NameFragment : Fragment() {
 
     //binding 설정
@@ -33,6 +33,8 @@ class NameFragment : Fragment() {
     private val binding get() = _binding!!
     private val takeAddViewModel : TakeAddViewModel by activityViewModels()
     private lateinit var adapter : NameAdapter
+    private var addNamesImageUrl: String = "medicine_type_1"
+    private var nameRvGroup = mutableListOf<TakeAddMedicine>()
 
     //data class
     private val mItems = mutableListOf<NameItem>()
@@ -81,12 +83,12 @@ class NameFragment : Fragment() {
 
         binding.apply {
             btnMedicineForm.setOnClickListener {
-                val formDialog = FormSelectDialog(requireContext(),object :
-                    FormSelectDialog.OnFormSelectListener {
-                    override fun onFormSelected(image: Drawable) {
-                        btnMedicineForm.background = image
+                val formDialog = FormSelectDialog(requireContext(), object : FormSelectDialog.OnFormSelectListener {
+                    override fun onImageSelected(drawableName: String, drawable: Drawable) {
+                        addNamesImageUrl = drawableName
+                        btnMedicineForm.setBackgroundResource(getMedicineTypeToDrawable(addNamesImageUrl))
                     }
-                }, btnMedicineForm.background)
+                })
                 formDialog.show()
             }
 
@@ -94,56 +96,55 @@ class NameFragment : Fragment() {
 
 //            val nameList
 
-            takeAddViewModel.loadNames()
+            nameRvGroup = takeAddViewModel.loadNames().toMutableList()
             adapter = NameAdapter(object : NameAdapter.ClickListener {
-                override fun onMinusClick(item: TakeAddMedicine) {
+                override fun onMinusClick(item: TakeAddMedicine, position: Int) {
                     // TODO("Not yet implemented")
+                    nameRvGroup.removeAt(position)
+                    adapter.submitList(nameRvGroup.toList())
+                    Log.d(TAG, "$nameRvGroup")
                 }
-
+                override fun onMedicineClick(item: TakeAddMedicine, position: Int) {
+                    // TODO dadad
+                    FormSelectDialog(root.context, object :
+                        FormSelectDialog.OnFormSelectListener {
+                        override fun onImageSelected(drawableName: String, background: Drawable) {
+                            Log.d("drawableName", "drawableName = $drawableName")
+                            Log.d("drawableName", "getMedicineTypeToDrawable(drawableName) = ${getMedicineTypeToDrawable(drawableName)}")
+                            changeBackground(position, drawableName)
+                            adapter.notifyItemChanged(position)
+                        }
+                    }).show()
+                }
                 override fun onSearchClick(item: TakeAddMedicine) {
                     // TODO("Not yet implemented")
                 }
-            }
-            )
+            })
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            takeAddViewModel.nameRvGroup.observe(viewLifecycleOwner) {
-                adapter.submitList(it)
-                if(it.isNotEmpty()){
-                    btnNext.apply{
-                        isEnabled = true
-                        setBackgroundResource(R.color.green)
-                        setTextColor(Color.WHITE)
-                    }
-                } else {
-                    btnNext.apply{
-                        isEnabled = false
-                        setBackgroundResource(R.color.gray)
-                        setTextColor(Color.DKGRAY)
-                    }
+            recyclerView.setItemAnimator(null)
+            // 프래그먼트에 진입했을 때 데이터가 있을시
+            adapter.submitList(nameRvGroup.toList())
+
+            btnPlus.setOnClickListener {
+                addNames(addNamesImageUrl, etMedicineName.text.toString())
+                // 초기화
+                btnMedicineForm.setBackgroundResource(R.drawable.medicine_type_1)
+                etMedicineName.text.clear()
+                addNamesImageUrl = "medicine_type_1"
+                adapter.submitList(nameRvGroup.toList())
+                tvSize.text = "총 ${nameRvGroup.size}개의 약이 등록 예정"
+                isNameItem(nameRvGroup)
+            }
+            btnNext.setOnClickListener {
+                if(etMedicineName.length() > 0){
+                    Log.d("버튼","버튼 눌림")
+                    parentFragmentManager.beginTransaction()
+                        .add(R.id.fragment_container, CycleFragment())
+                        .addToBackStack(null)
+                        .commit()
                 }
             }
-            Log.d("제발되어라", "btnMedicineForm.background.toString() = ${btnMedicineForm.background.toString()}")
-            btnMedicineForm.setBackgroundResource(R.drawable.medicine_type_14)
-            btnPlusMinus.setOnClickListener {
-                takeAddViewModel.addNames("medicine_type_1", etMedicineName.text.toString())
-                etMedicineName.text.clear()
-            }
-
-            tvSize.text = "총 ${adapter.itemCount}개의 약이 등록 예정"
-
-
-                btnNext.setOnClickListener {
-                    if(etMedicineName.length() > 0){
-                        Log.d("버튼","버튼 눌림")
-                        parentFragmentManager.beginTransaction()
-                            .add(
-                                R.id.fragment_container, CycleFragment()
-                            )
-                            .addToBackStack(null)
-                            .commit()
-                        }
-                    }
 
 
         }
@@ -193,6 +194,30 @@ class NameFragment : Fragment() {
             val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         }
+    }
+    // 아이템이 비어있는지 체크
+    private fun isNameItem (nameRvGroup: List<TakeAddMedicine>) {
+        if(nameRvGroup.isNotEmpty()){
+            binding.btnNext.apply{
+                isEnabled = true
+                setBackgroundResource(R.color.green)
+                setTextColor(Color.WHITE)
+            }
+        } else {
+            binding.btnNext.apply{
+                isEnabled = false
+                setBackgroundResource(R.color.gray)
+                setTextColor(Color.DKGRAY)
+            }
+        }
+    }
+    private fun addNames(imageUrl: String, name: String) {
+        nameRvGroup = nameRvGroup.apply {
+            this.add(TakeAddMedicine(imageUrl, name, false))
+        }
+    }
+    private fun changeBackground(position: Int, background: String) {
+        nameRvGroup[position].imageUrl = background
     }
 
     override fun onDestroyView() {
