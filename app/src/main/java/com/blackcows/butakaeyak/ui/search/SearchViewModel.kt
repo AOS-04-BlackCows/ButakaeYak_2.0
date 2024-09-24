@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.search
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,6 +25,8 @@ class SearchViewModel @Inject constructor(
     private val searchHistoryRepository: SearchHistoryRepository,
     private val medicineRepository: MedicineRepository
 ) : ViewModel() {
+    private val _selectedChip = MutableLiveData<String>("")
+    val selectedCip get() = _selectedChip
 
     private val _queryHistory = MutableLiveData<List<String>>(listOf())
     val queryHistory get() = _queryHistory
@@ -42,10 +45,16 @@ class SearchViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<SearchUiState>(SearchUiState.Init)
     val uiState = _uiState.asStateFlow()
 
+    fun setSelectedChip(text: String){
+        _selectedChip.value = text
+    }
+
     fun searchMedicinesWithName(name: String) {
         viewModelScope.launch {
             _uiState.value = SearchUiState.Loading
             _medicineResult.value = getMedicinesNameUseCase.invoke(name)
+            getQueryHistory()
+            Log.d(TAG,_queryHistory.value.toString())
             _uiState.value = SearchUiState.SearchMedicinesSuccess(_medicineResult.value!!)
         }
     }

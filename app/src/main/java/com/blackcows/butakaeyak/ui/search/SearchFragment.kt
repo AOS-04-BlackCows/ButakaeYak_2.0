@@ -59,11 +59,15 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
         initUiState()
 
         viewPager = binding.searchVp
         binding.searchVp.adapter = SearchViewPager(this@SearchFragment)
+
+        searchViewModel.selectedCip.observe(viewLifecycleOwner){
+            binding.searchEtSearchtext.setText(it)
+            searchQuery()
+        }
 
         TabLayoutMediator(binding.searchLoTab, binding.searchVp) { tab, position ->
             tab.text = SearchViewPager(this).pageTag[position]
@@ -77,7 +81,6 @@ class SearchFragment : Fragment() {
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 searchQuery()
             }
-
             true
         }
     }
@@ -101,11 +104,9 @@ class SearchFragment : Fragment() {
                     is SearchUiState.SearchMedicinesSuccess -> {
                         binding.searchLoProgressContainer.visibility = View.GONE
                     }
-
                     is SearchUiState.Loading -> {
                         binding.searchLoProgressContainer.visibility = View.VISIBLE
                     }
-
                     else -> null
                 }
             }
@@ -127,10 +128,6 @@ class SearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun initView(){
-
     }
 
     companion object {

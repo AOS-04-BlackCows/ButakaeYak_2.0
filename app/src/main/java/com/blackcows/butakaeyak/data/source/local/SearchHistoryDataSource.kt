@@ -29,10 +29,10 @@ class SearchHistoryDataSource @Inject constructor(
         val list = getQueryHistory().toMutableList()
         list.add(query)
 
-        editor.putStringSet(QUERY_HISTORY, list.toSet())
+        editor.putStringSet(QUERY_HISTORY, list.toSet()).apply()
     }
     fun removeQueryHistory() {
-        editor.remove(QUERY_HISTORY)
+        editor.remove(QUERY_HISTORY).apply()
     }
 
     fun getMedicineDetailHistory(): List<String> {
@@ -42,9 +42,9 @@ class SearchHistoryDataSource @Inject constructor(
         val list = getMedicineDetailHistory().toMutableList()
         list.add(id)
 
-        editor.putStringSet(SEARCH_HISTORY, list.toSet())
+        editor.putStringSet(SEARCH_HISTORY, list.toSet()).apply()
     }
     fun removeMedicineDetailHistory() {
-        editor.remove(SEARCH_HISTORY)
+        editor.remove(SEARCH_HISTORY).apply()
     }
 }
