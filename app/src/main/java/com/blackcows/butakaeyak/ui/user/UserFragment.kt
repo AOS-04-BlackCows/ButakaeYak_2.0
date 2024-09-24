@@ -47,6 +47,13 @@ class UserFragment : Fragment() {
 
         setObserver()
 
+        //로그인 화면으로 이동
+        binding.notLoggedInLayout.setOnClickListener {
+            // 로그인 화면으로 이동하는 로직
+            MainNavigation.addFragment(SignInFragment(), FragmentTag.SignInFragment)
+            //userViewModel.signUpWithKakaoAndLogin()
+        }
+
         // 서비스 이용 약관
         binding.cvServices.setOnClickListener {
             MainNavigation.addFragment(TermsFragment(), FragmentTag.TermsFragment)
@@ -109,13 +116,6 @@ class UserFragment : Fragment() {
                 // 로그인 되지 않은 경우
                 binding.loggedInLayout.visibility = View.GONE
                 binding.notLoggedInLayout.visibility = View.VISIBLE
-
-                //로그인 화면으로 이동
-                binding.notLoggedInLayout.setOnClickListener {
-                    // 로그인 화면으로 이동하는 로직
-                    MainNavigation.addFragment(SignInFragment(), FragmentTag.SignInFragment)
-                    //userViewModel.signUpWithKakaoAndLogin()
-                }
             }
         }
     }
