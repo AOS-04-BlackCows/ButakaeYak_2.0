@@ -25,6 +25,8 @@ class ScheduleRvAdapter(
         }
     }
 ) {
+    //TODO: 처음 가져올때, 이미 먹은건 체크해두기
+
     inner class TimeToGroupViewHolder(private val binding: ScheduleItemBinding): ViewHolder(binding.root) {
         fun bind(item: TimeToGroup) {
             val onTakingCheck: (MedicineGroup, Boolean, String) -> Unit = { group, isTaken, alarm ->

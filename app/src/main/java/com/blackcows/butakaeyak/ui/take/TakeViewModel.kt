@@ -26,20 +26,34 @@ class TakeAddViewModel @Inject constructor(
     private val _medicineGroup = MutableLiveData<MedicineGroup?>(null)
     val medicineGroup get() = _medicineGroup
     private val medicineNameList = mutableListOf<String>()
-    private var _nameRvGroup = MutableLiveData<List<TakeAddMedicine>>(null)
-    val nameRvGroup get() = _nameRvGroup
 
+
+    //TODO 변수 생성
     var groupName : String? = null
+    var userId: String? = null
+    var medicineIdList: List<String>? = null
+    var customNameList: List<String>? = null
+    var imageUrlList: List<String>? = null
     var startDate : String? = null
     var finishDate : String? = null
     var daysOfWeeks : List<String>? = null
     var alarms : List<String>? = null
+    var hasTaken: List<String>? = null
 
-    //TODO createNewMedicineGroupRequest
-//    fun createNewMedicineGroupRequest():MedicineGroupRequest{
-//        return MedicineGroupRequest(name = groupName, startedAt = startDate,
-//            finishedAt = finishDate, daysOfWeeks = daysOfWeeks, alarms = alarms)
-//    }
+//    TODO createNewMedicineGroupRequest
+    fun createNewMedicineGroupRequest(onFailed:() -> (Unit)):MedicineGroupRequest?{
+        if(groupName == null || startDate == null || finishDate == null
+            || alarms == null || customNameList == null || imageUrlList == null){
+            onFailed()
+            return null
+        } else {
+            return MedicineGroupRequest(
+                name = groupName!!, userId = userId!!, medicineIdList = medicineIdList!!,
+                customNameList = customNameList!!, imageUrlList = imageUrlList!!,
+                daysOfWeeks = daysOfWeeks!!, startedAt = startDate!!,
+                finishedAt = finishDate!!, alarms = alarms!!, hasTaken = hasTaken!!)
+        }
+    }
 
     fun saveGroup (newGroup : MedicineGroupRequest) {
         viewModelScope.launch {
@@ -50,21 +64,15 @@ class TakeAddViewModel @Inject constructor(
     fun saveNames(medicines: MutableList<String>){
         medicineNameList.addAll(medicines)
     }
-    fun loadNames() {
-        _nameRvGroup.value = medicineNameList.map {
+    fun loadNames(): List<TakeAddMedicine> {
+        return medicineNameList.map {
             TakeAddMedicine(
-                imageUrl = null,
+                imageUrl = "medicine_type_1",
                 name = it,
                 isDetail = false
             )
         }
     }
-    fun addNames(imageUrl: String, name: String) {
-        _nameRvGroup.value = _nameRvGroup.value?.toMutableList().apply {
-            this?.add(TakeAddMedicine(imageUrl, name, false))
-        }
-    }
-
     fun getDefaultAlarms(): List<String> {
         return localSettingRepository.getDefaultAlarms()
     }

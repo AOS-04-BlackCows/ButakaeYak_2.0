@@ -1,5 +1,7 @@
 package com.blackcows.butakaeyak.ui
 
+import android.graphics.drawable.Drawable
+import android.util.Log
 import com.blackcows.butakaeyak.R
 
 enum class DrawableNameToResource(val drawableName: String, val resourceId: Int) {
@@ -16,13 +18,23 @@ enum class DrawableNameToResource(val drawableName: String, val resourceId: Int)
     MedicineType11("medicine_type_11" , R.drawable.medicine_type_11),
     MedicineType12("medicine_type_12" , R.drawable.medicine_type_12),
     MedicineType13("medicine_type_13" , R.drawable.medicine_type_13),
-    MedicineType14("medicine_type_14" , R.drawable.medicine_type_14)
+    MedicineType14("medicine_type_14" , R.drawable.medicine_type_14),
+    MedicineType15("medicine_type_15" , R.drawable.medicine_type_15)
 }
 
-fun getDrawableNames (name: String): Int {
-    DrawableNameToResource.entries.forEach {it ->
+fun getMedicineTypeToDrawable (name: String): Int {
+    Log.d("drawableName", "getMedicineTypeToDrawable this name = $name")
+    DrawableNameToResource.entries.forEach { it ->
         if (it.drawableName == name) {
             return it.resourceId
+        }
+    }
+    throw Exception("There is no drawable resource.")
+}
+fun getDrawableToMedicineType (drawable: Int): String {
+    DrawableNameToResource.entries.forEach { it ->
+        if (it.resourceId == drawable) {
+            return it.drawableName
         }
     }
     throw Exception("There is no drawable resource.")

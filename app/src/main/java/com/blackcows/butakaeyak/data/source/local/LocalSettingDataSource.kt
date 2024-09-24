@@ -22,7 +22,7 @@ class LocalSettingDataSource @Inject constructor(
     private val editor = sharedPreferences.edit()
 
     fun saveAlarms(alarms: List<String>) {
-        editor.putStringSet(ALARMS, alarms.toSet())
+        editor.putStringSet(ALARMS, alarms.toSet()).apply()
     }
 
     fun getAlarms(): List<String> {

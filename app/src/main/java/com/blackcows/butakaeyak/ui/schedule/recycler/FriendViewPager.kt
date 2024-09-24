@@ -51,6 +51,13 @@ class FriendViewPager(fragmentActivity: FragmentActivity): FragmentStateAdapter(
         }
         viewPager2.currentItem = index
     }
+    fun clearAll() {
+        while(scheduleProfileList.isNotEmpty()) {
+            removeFriend(scheduleProfileList[0])
+        }
+
+        notifyDataSetChanged()
+    }
 
     private fun addFriend(scheduleProfile: ScheduleProfile, isMine: Boolean) {
         val scheduleFragment = ScheduleDetailFragment.newInstance(scheduleProfile.userId, isMine)

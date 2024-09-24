@@ -38,137 +38,141 @@
         app:layout_constraintTop_toBottomOf="@id/iv_back"/>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_guide"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/name_cl_bg_light_green_radius"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider">
-
-        <TextView
-            android:id="@+id/tv_guide"
-            style="@style/subtitle_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="약 등록 안내"
-            android:textColor="@color/back_700"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_guide_particular"
-            style="@style/body"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:lineSpacingExtra="8dp"
-            android:text="@string/medicine_guide_particular"
-            android:textColor="@color/back_700"
-            app:layout_constraintStart_toStartOf="@id/tv_guide"
-            app:layout_constraintTop_toBottomOf="@id/tv_guide" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_add_medicine_container"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_guide">
+        app:layout_constraintTop_toBottomOf="@+id/divider">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_medicine_form"
-            android:layout_width="75dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true">
+            android:orientation="vertical"
+            android:paddingBottom="200dp">
 
-            <ImageButton
-                android:id="@+id/btn_medicine_form"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:background="@drawable/medicine_type_1"
-                android:foregroundGravity="center_horizontal"
-                android:scaleType="centerCrop"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                style="@style/caption"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_guide"
                 android:layout_width="match_parent"
-                android:layout_height="16dp"
-                android:background="@drawable/user_cl_bg_light_gray_radius"
-                android:gravity="center"
-                android:text="편집"
-                android:textColor="@color/gray"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:layout_height="150dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/name_cl_bg_light_green_radius">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tv_guide"
+                    style="@style/subtitle_b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="약 등록 안내"
+                    android:textColor="@color/back_700"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/et_medicine_name"
-            style="@style/body_b"
-            android:layout_width="226dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:layout_weight="1"
-            android:background="@drawable/user_tv_stroke_green_radius_12dp"
-            android:hint="@string/hint_medicine_name"
-            android:inputType="text|textMultiLine"
-            android:padding="8dp"
-            android:paddingStart="16dp"
-            android:scrollHorizontally="false"
-            android:textColorHint="@color/gray" />
+                <TextView
+                    android:id="@+id/tv_guide_particular"
+                    style="@style/body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingExtra="8dp"
+                    android:text="@string/medicine_guide_particular"
+                    android:textColor="@color/back_700"
+                    app:layout_constraintStart_toStartOf="@id/tv_guide"
+                    app:layout_constraintTop_toBottomOf="@id/tv_guide" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageButton
-            android:id="@+id/btn_plus_minus"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:background="@drawable/ic_plus" />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_add_medicine_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="16dp">
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/divider2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_add_medicine_container" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/tv_size"
-        app:layout_constraintTop_toBottomOf="@id/divider2"
-        app:layout_constraintVertical_bias="1.0"
-        tools:layout_editor_absoluteX="0dp"
-        tools:listitem="@layout/item_recyclerview_name" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_medicine_form"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:clickable="true">
+
+                    <ImageButton
+                        android:id="@+id/btn_medicine_form"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:background="@drawable/medicine_type_1"
+                        android:foregroundGravity="center_horizontal"
+                        android:scaleType="centerCrop"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        style="@style/caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="16dp"
+                        android:background="@drawable/user_cl_bg_light_gray_radius"
+                        android:gravity="center"
+                        android:text="편집"
+                        android:textColor="@color/gray"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <EditText
+                    android:id="@+id/et_medicine_name"
+                    style="@style/body_b"
+                    android:layout_width="226dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/user_tv_stroke_green_radius_12dp"
+                    android:hint="@string/hint_medicine_name"
+                    android:inputType="text|textMultiLine"
+                    android:padding="8dp"
+                    android:paddingStart="16dp"
+                    android:scrollHorizontally="false"
+                    android:textColorHint="@color/gray" />
+
+                <ImageButton
+                    android:id="@+id/btn_plus"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/ic_plus" />
+            </LinearLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_recyclerview_name" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <TextView
         android:id="@+id/tv_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:padding="8dp"
         style="@style/body"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/btn_next"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btn_next"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_next"

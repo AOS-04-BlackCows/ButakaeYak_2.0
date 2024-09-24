@@ -31,60 +31,62 @@ import com.blackcows.butakaeyak.domain.repo.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 abstract class BindModule {
     @Binds
-    //@ViewModelScoped
+    @ViewModelScoped
     abstract fun provideDrugRepository(impl: DrugRepositoryImpl): DrugRepository
 
     @Binds
-    //@ViewModelScoped
+    @ViewModelScoped
     abstract fun provideLocalRepository(impl: LocalRepositoryImpl): LocalRepository
 
     @Binds
-    //@ViewModelScoped
+    @ViewModelScoped
     abstract fun provideMedicineRepository(impl: MedicineRepositoryImpl): MedicineRepository
 
     @Binds
-    //@ViewModelScoped
+    @ViewModelScoped
     abstract fun provideKakaoRepository(impl: KakaoMapRepositoryImpl): KakaoMapRepository
 
     @Binds
-    //@ViewModelScoped
+    @ViewModelScoped
     abstract fun provideUserRepository(impl: UserRepositoryImpl): UserRepository
 
     @Binds
-    //@ViewModelScoped
+    @ViewModelScoped
     abstract fun providePharmacyRepository(impl: PharmacyRepositoryImpl): PharmacyRepository
 
     @Binds
     abstract fun provideFriendRepository(impl: FriendRepositoryImpl): FriendRepository
 
     @Binds
-    //@ViewModelScoped
+    @ViewModelScoped
     abstract fun provideLocalUtilsRepository(impl: LocalUtilsRepositoryImpl): LocalUtilsRepository
 
     @Binds
-    //@ViewModelScoped
+    @ViewModelScoped
     abstract fun provideMedicineGroupRepository(impl: MedicineGroupRepositoryImpl): MedicineGroupRepository
 
     @Binds
-    //@ViewModelScoped
+    @ViewModelScoped
     abstract fun provideMyPharmacyRepository(impl: MyPharmacyRepositoryImpl): MyPharmacyRepository
 
     @Binds
-    //@ViewModelScoped
+    @ViewModelScoped
     abstract fun provideMemoRepository(impl: MemoRepositoryImpl): MemoRepository
 
     @Binds
-    //@ViewModelScoped
+    @ViewModelScoped
     abstract fun provideMedicineInfoRepository(impl: MedicineInfoRepositoryImpl): MedicineInfoRepository
 
     @Binds
-    //@ViewModelScoped
+    @ViewModelScoped
     abstract fun provideSearchHistoryRepository(impl: SearchHistoryRepositoryImpl): SearchHistoryRepository
 
     @Binds
