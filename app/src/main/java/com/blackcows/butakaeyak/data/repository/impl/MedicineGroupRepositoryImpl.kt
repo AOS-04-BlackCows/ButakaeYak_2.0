@@ -3,6 +3,7 @@ package com.blackcows.butakaeyak.data.repository.impl
 import android.util.Log
 import com.blackcows.butakaeyak.data.WeekDayUtils
 import com.blackcows.butakaeyak.data.models.MedicineGroup
+import com.blackcows.butakaeyak.data.models.MedicineGroupRequest
 import com.blackcows.butakaeyak.data.source.api.MedicineInfoDataSource
 import com.blackcows.butakaeyak.data.source.firebase.MemoDataSource
 import com.blackcows.butakaeyak.data.source.firebase.RemoteMedicineGroupDataSource
@@ -60,9 +61,9 @@ class MedicineGroupRepositoryImpl @Inject constructor(
         }.getOrDefault(listOf())
     }
 
-    override suspend fun saveNewGroup(medicineGroup: MedicineGroup) {
+    override suspend fun saveNewGroup(medicineGroupRequest: MedicineGroupRequest) {
         runCatching {
-            medicineGroupDataSource.addSingleGroup(medicineGroup)
+            medicineGroupDataSource.addSingleGroup(medicineGroupRequest)
         }.onFailure {
             Log.w(TAG, "saveNewGroup failed) msg: ${it.message}")
         }
