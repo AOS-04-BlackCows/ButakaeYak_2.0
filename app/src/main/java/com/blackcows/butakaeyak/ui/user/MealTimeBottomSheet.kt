@@ -30,7 +30,7 @@ class MealTimeBottomSheet : BottomSheetDialogFragment() {
                 add(binding.lunchTimeTextView.text.toString())
                 add(binding.dinnerTimeTextView.text.toString())
             }
-            mypageViewModel.saveDefultAlams(list)
+            mypageViewModel.saveDefaultAlarms(list)
             dialog?.dismiss()
         }
 
