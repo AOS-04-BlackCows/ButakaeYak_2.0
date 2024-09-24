@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.R
@@ -77,6 +78,7 @@ class ScheduleFragment : Fragment() {
             profileAddBtn.setOnClickListener {
                 //TODO: open the friend dialog.
                 //  and if scheduleProfile is changed, call the method: scheduleViewModel.getFriends(userId)
+                Toast.makeText(requireContext(), "나중에 추가될 서비스입니다!", Toast.LENGTH_SHORT).show()
             }
         }
 

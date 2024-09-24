@@ -28,8 +28,9 @@ class LocalMedicineGroupDataSource @Inject constructor(
 
 
     override suspend fun getMedicineGroupById(groupId: String): MedicineGroupResponse? {
-        //TODO: local에선 필요없는 기능.
-        return null
+        return getMedicineGroups("").firstOrNull {
+            it.id == groupId
+        }
     }
 
     override suspend fun getMedicineGroups(userId: String): List<MedicineGroupResponse> {
