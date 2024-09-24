@@ -1,60 +1,46 @@
 package com.blackcows.butakaeyak.ui.take.adapter
 
 import android.graphics.drawable.Drawable
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.blackcows.butakaeyak.R
-import com.blackcows.butakaeyak.data.models.HomeRvGroup
-import com.blackcows.butakaeyak.data.models.MedicineDetail
-import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.data.models.TakeAddMedicine
-import com.blackcows.butakaeyak.databinding.ItemHomeTodayMedicineGroupBinding
 import com.blackcows.butakaeyak.databinding.ItemRecyclerviewNameBinding
-import com.blackcows.butakaeyak.ui.DrawableNameToResource
-import com.blackcows.butakaeyak.ui.getDrawableNames
-import com.blackcows.butakaeyak.ui.note.recycler.RecyclerItem
-import com.blackcows.butakaeyak.ui.take.FormSelectDialog
+import com.blackcows.butakaeyak.ui.getMedicineTypeToDrawable
 import com.blackcows.butakaeyak.ui.take.adapter.NameAdapter.DetailViewHolder
 import com.bumptech.glide.Glide
 
 class NameAdapter(private val clickListener: ClickListener): ListAdapter<TakeAddMedicine, DetailViewHolder>(
     object: DiffUtil.ItemCallback<TakeAddMedicine>() {
         override fun areItemsTheSame(oldItem: TakeAddMedicine, newItem: TakeAddMedicine): Boolean {
-            return (oldItem == newItem)
+            return (1 == 2)
         }
         override fun areContentsTheSame(oldItem: TakeAddMedicine, newItem: TakeAddMedicine): Boolean {
-            return oldItem == newItem
+            return 1 == 2
         }
     }
 ) {
     inner class DetailViewHolder(private val binding: ItemRecyclerviewNameBinding): ViewHolder(binding.root) {
-        fun bind(item: TakeAddMedicine) {
+        fun bind(item: TakeAddMedicine, position: Int) {
             with(binding){
                 Glide.with(root.context)
-                    .load(getDrawableNames(item.imageUrl!!))
-                    .into(btnMedicineForm)
-                btnMinus.setOnClickListener {
-                    clickListener.onMinusClick(item)
-                }
+                    .load(getMedicineTypeToDrawable(item.imageUrl))
+                    .into(rvBtnMedicineForm)
+
                 etMedicineName.setText(item.name)
-                clMedicineForm.setOnClickListener {
-                    FormSelectDialog(root.context, object :
-                        FormSelectDialog.OnFormSelectListener {
-                        override fun onFormSelected(image: Drawable) {
-                            Glide.with(root.context)
-                                .load(image)
-                                .into(btnMedicineForm)
-                            Log.d("imageLink", "$image")
-                        }
-                    }, btnMedicineForm.background).show()
+                rvBtnMedicineForm.setOnClickListener {
+                    clickListener.onMedicineClick(item, position)
                 }
+
                 btnMinus.setOnClickListener {
-                    clickListener.onMinusClick(item)
+                    Log.d("TAGTAGTAG", "${item.imageUrl}")
+                    clickListener.onMinusClick(item, position)
                 }
             }
         }
@@ -66,11 +52,12 @@ class NameAdapter(private val clickListener: ClickListener): ListAdapter<TakeAdd
     }
 
     override fun onBindViewHolder(holder: DetailViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), position)
     }
 
     interface ClickListener {
-        fun onMinusClick(item: TakeAddMedicine)
+        fun onMinusClick(item: TakeAddMedicine,position: Int)
+        fun onMedicineClick(item: TakeAddMedicine,position: Int)
         fun onSearchClick(item: TakeAddMedicine)
     }
 }
