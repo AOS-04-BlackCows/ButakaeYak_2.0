@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -99,22 +100,27 @@ class NameFragment : Fragment() {
             nameRvGroup = takeAddViewModel.loadNames().toMutableList()
             adapter = NameAdapter(object : NameAdapter.ClickListener {
                 override fun onMinusClick(item: TakeAddMedicine, position: Int) {
-                    // TODO("Not yet implemented")
-                    nameRvGroup.removeAt(position)
-                    adapter.submitList(nameRvGroup.toList())
-                    Log.d(TAG, "$nameRvGroup")
+                    recyclerView.clearFocus()
+                    val removedList = adapter.currentList.toMutableList().filter {
+                        it.name != item.name
+                    }
+                    adapter.submitList(removedList)
+                    tvSize.text = "총 ${removedList.size}개의 약이 등록 예정"
+                    isNameItem(removedList)
                 }
                 override fun onMedicineClick(item: TakeAddMedicine, position: Int) {
-                    // TODO dadad
-                    FormSelectDialog(root.context, object :
-                        FormSelectDialog.OnFormSelectListener {
-                        override fun onImageSelected(drawableName: String, background: Drawable) {
-                            Log.d("drawableName", "drawableName = $drawableName")
-                            Log.d("drawableName", "getMedicineTypeToDrawable(drawableName) = ${getMedicineTypeToDrawable(drawableName)}")
-                            changeBackground(position, drawableName)
-                            adapter.notifyItemChanged(position)
-                        }
-                    }).show()
+//                    FormSelectDialog(root.context, object :
+//                        FormSelectDialog.OnFormSelectListener {
+//                        override fun onImageSelected(drawableName: String, background: Drawable) {
+//                            Log.d("drawableName", "drawableName = $drawableName")
+//                            Log.d("drawableName", "getMedicineTypeToDrawable(drawableName) = ${getMedicineTypeToDrawable(drawableName)}")
+//                            changeBackground(position, drawableName)
+//                            adapter.currentList.toMutableList().apply {
+//
+//                            }
+//                            adapter.notifyItemChanged(position)
+//                        }
+//                    }).show()
                 }
                 override fun onSearchClick(item: TakeAddMedicine) {
                     // TODO("Not yet implemented")
@@ -123,22 +129,27 @@ class NameFragment : Fragment() {
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
             recyclerView.setItemAnimator(null)
+            recyclerView.setNestedScrollingEnabled(false)
             // 프래그먼트에 진입했을 때 데이터가 있을시
             adapter.submitList(nameRvGroup.toList())
+            isNameItem(nameRvGroup)
 
             btnPlus.setOnClickListener {
+                recyclerView.clearFocus()
                 addNames(addNamesImageUrl, etMedicineName.text.toString())
-                // 초기화
-                btnMedicineForm.setBackgroundResource(R.drawable.medicine_type_1)
-                etMedicineName.text.clear()
-                addNamesImageUrl = "medicine_type_1"
-                adapter.submitList(nameRvGroup.toList())
-                tvSize.text = "총 ${nameRvGroup.size}개의 약이 등록 예정"
-                isNameItem(nameRvGroup)
             }
             btnNext.setOnClickListener {
-                if(etMedicineName.length() > 0){
+                if(nameRvGroup.isNotEmpty()){
                     Log.d("버튼","버튼 눌림")
+                    takeAddViewModel.imageUrlList = listOf()
+                    takeAddViewModel.customNameList = listOf()
+                    val imageUrlList = mutableListOf<String>()
+                    val customNameList = mutableListOf<String>()
+                    adapter.currentList.forEach { i ->
+                        imageUrlList.add(i.imageUrl)
+                        customNameList.add(i.name!!)
+                    }
+
                     parentFragmentManager.beginTransaction()
                         .add(R.id.fragment_container, CycleFragment())
                         .addToBackStack(null)
@@ -156,36 +167,15 @@ class NameFragment : Fragment() {
         }
 
         binding.etMedicineName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                binding.apply{
-//                    if(etMedicineName.length() > 0){
-//                        btnNext.apply{
-//                            isEnabled = true
-//                            setBackgroundResource(R.color.green)
-//                            setTextColor(Color.WHITE)
-//                        }
-//                    }
-//                    else{
-//                        btnNext.apply{
-//                            isEnabled = false
-//                            setBackgroundResource(R.color.gray)
-//                            setTextColor(Color.DKGRAY)
-//                        }
-//                    }
-//                }
-            }
-
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {}
         })
 
         //editText 클릭 시 키보드 올리는 코드
         val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         binding.apply{
-                inputMethodManager.showSoftInput(etMedicineName, 0)
+            inputMethodManager.showSoftInput(etMedicineName, 0)
         }
     }
 
@@ -212,8 +202,17 @@ class NameFragment : Fragment() {
         }
     }
     private fun addNames(imageUrl: String, name: String) {
-        nameRvGroup = nameRvGroup.apply {
-            this.add(TakeAddMedicine(imageUrl, name, false))
+        if (adapter.currentList.any {it.name == name}) {
+            Toast.makeText(context, "이미 저장되어 있는 약 명칭입니다.", Toast.LENGTH_SHORT).show()
+        } else {
+            val addList = adapter.currentList.toMutableList().apply { this.add(TakeAddMedicine(imageUrl, name, false)) }
+            adapter.submitList(addList)
+            // 초기화
+            binding.btnMedicineForm.setBackgroundResource(R.drawable.medicine_type_1)
+            binding.etMedicineName.text.clear()
+            addNamesImageUrl = "medicine_type_1"
+            isNameItem(addList)
+            binding.tvSize.text = "총 ${addList.size}개의 약이 등록 예정"
         }
     }
     private fun changeBackground(position: Int, background: String) {
