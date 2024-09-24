@@ -99,6 +99,8 @@
         android:layout_height="match_parent"
 
         android:background="@color/bright_gray_green"
+
+        android:visibility="gone"
         >
 
         <TextView
