@@ -91,5 +91,15 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
+    fun clearScheduleProfiles() {
+        viewModelScope.launch {
+            _uiState.value = ScheduleUiState.Loading
+
+            _scheduleProfile.value = listOf()
+
+            _uiState.value = ScheduleUiState.Success
+        }
+    }
+
 
 }

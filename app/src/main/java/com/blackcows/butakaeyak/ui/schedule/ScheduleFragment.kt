@@ -99,11 +99,15 @@ class ScheduleFragment : Fragment() {
                 binding.loginGuideCl.visibility = View.VISIBLE
             } else {
                 binding.loginGuideCl.visibility = View.GONE
+                scheduleViewModel.getFriendProfile(user.id)
             }
         }
 
         scheduleViewModel.scheduleProfile.observe(viewLifecycleOwner) { friendsProfiles ->
-            if(userViewModel.user.value == null) return@observe
+            if(userViewModel.user.value == null) {
+                viewPagerAdapter.clearAll()
+                return@observe
+            }
 
             val myScheduleProfile = with(userViewModel.user.value!!) {
                 ScheduleProfile(id, name, profileUrl!!)

@@ -6,8 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.schedule.ScheduleFragment"
     android:background="@color/white"
-    android:paddingTop="13dp"
-    android:paddingHorizontal="13dp"
     >
 
     <androidx.core.widget.NestedScrollView
@@ -17,6 +15,8 @@
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+
+        android:padding="13dp"
         >
 
         <LinearLayout
