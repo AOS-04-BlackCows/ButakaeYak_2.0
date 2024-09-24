@@ -74,7 +74,7 @@ class ScheduleFragment : Fragment() {
             }
         }
 
-        initProfiles()
+        //initProfiles()
     }
 
     private fun initProfiles() {
@@ -94,11 +94,13 @@ class ScheduleFragment : Fragment() {
             Log.d("UserViewModel", "ScheduleFragment: user is null? :${user==null}")
 
             if(user == null) {
-                scheduleViewModel.clearScheduleProfiles()
+                initProfiles()
             } else {
                 curScheduleProfileId = user.id
                 binding.loginGuideCl.visibility = View.GONE
-                scheduleViewModel.getFriendProfile(user.id)
+                //scheduleViewModel.getFriendProfile(user.id)
+
+                initProfiles()
             }
         }
 
