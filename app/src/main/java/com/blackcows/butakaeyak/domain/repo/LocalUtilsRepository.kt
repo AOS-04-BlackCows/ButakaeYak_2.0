@@ -8,6 +8,4 @@ interface LocalUtilsRepository {
     fun saveAutoLoginData(data: AutoLoginData)
     fun getAutoLoginData(): AutoLoginData?
     fun removeAutoLoginData()
-
-    //fun saveAlarms()
 }
