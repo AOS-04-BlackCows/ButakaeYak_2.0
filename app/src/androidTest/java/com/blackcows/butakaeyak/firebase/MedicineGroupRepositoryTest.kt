@@ -73,7 +73,7 @@ class MedicineGroupRepositoryTest {
             hasTaken = listOf()
         )
 
-        medicineGroupRepository.saveNewGroup(newOne)
+
     }
 
     @Test

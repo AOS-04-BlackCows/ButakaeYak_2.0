@@ -36,10 +36,12 @@ class ScheduleViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = ScheduleUiState.Loading
 
-            val allGroups = medicineGroupRepository.getMyGroups(userId)
-            _dateToMedicineGroup.value =  allGroups.filter {
-                it.startedAt <= date && it.finishedAt >= date
-            }
+//            val allGroups = medicineGroupRepository.getMyGroups(userId)
+//            _dateToMedicineGroup.value =  allGroups.filter {
+//                it.startedAt <= date && it.finishedAt >= date
+//            }
+            //TODO: Test용 Mock Data
+            _dateToMedicineGroup.value = ScheduleMockData.medicineGroups
 
             _uiState.value = ScheduleUiState.Success
         }
@@ -86,6 +88,16 @@ class ScheduleViewModel @Inject constructor(
                                 else it.receiver
                 userRepository.getProfileAndName(friendId)
             }
+
+            _uiState.value = ScheduleUiState.Success
+        }
+    }
+
+    fun clearScheduleProfiles() {
+        viewModelScope.launch {
+            _uiState.value = ScheduleUiState.Loading
+
+            _scheduleProfile.value = listOf()
 
             _uiState.value = ScheduleUiState.Success
         }

@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             userViewModel.loginUiState.collectLatest {
+                Log.d("MainActivity", it.toString())
                 when(it) {
                     is LoginUiState.Success -> {
                         MainNavigation.disableLoadingBar()
