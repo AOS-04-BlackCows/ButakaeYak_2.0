@@ -64,7 +64,7 @@ class UserFragment : Fragment() {
         }
 
         // 로그아웃 콜백 구현
-        binding.logout.setOnClickListener {
+        binding.cvLogout.setOnClickListener {
             if (userViewModel.user.value == null) {
                 Log.d(TAG, "user == null")
             }

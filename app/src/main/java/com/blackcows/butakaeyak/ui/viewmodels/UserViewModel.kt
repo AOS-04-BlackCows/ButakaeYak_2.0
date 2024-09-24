@@ -86,7 +86,8 @@ class UserViewModel @Inject constructor(
                     val duplicated = Exception("SignUpWithKakao: 카카오로 로그인 시도했는데 LoginIdDuplicated가 반환됨.")
                     Log.w("UserViewModel", duplicated.message!!)
 
-                    _signUpUiState.value = SignUpUiState.Failure
+                    loginWithKakao(signUpResult.kakaoId.toLong())
+                    _signUpUiState.value = SignUpUiState.AlreadyKakaoUser
                 }
 
                 is SignUpResult.Failure -> {
@@ -138,13 +139,14 @@ class UserViewModel @Inject constructor(
         if(_user.value == null) return
 
         viewModelScope.launch {
+            val id = _user.value!!.id
             suspendCoroutine<String> {
                 logout {
                     it.resume("")
                 }
             }
 
-            userRepository.deleteAccount(_user.value!!)
+            userRepository.deleteAccount(id)
             onFinished()
         }
     }
