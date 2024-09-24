@@ -52,9 +52,10 @@ class FriendViewPager(fragmentActivity: FragmentActivity): FragmentStateAdapter(
         viewPager2.currentItem = index
     }
     fun clearAll() {
-        scheduleProfileList.forEach {
-            removeFriend(it)
+        while(scheduleProfileList.isNotEmpty()) {
+            removeFriend(scheduleProfileList[0])
         }
+
         notifyDataSetChanged()
     }
 
