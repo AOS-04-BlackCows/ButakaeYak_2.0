@@ -10,6 +10,7 @@ import com.blackcows.butakaeyak.data.models.TakeAddMedicine
 import com.blackcows.butakaeyak.data.models.MedicineGroupRequest
 import com.blackcows.butakaeyak.data.models.MedicineGroupResponse
 import com.blackcows.butakaeyak.domain.repo.LocalRepository
+import com.blackcows.butakaeyak.domain.repo.LocalSettingRepository
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
 import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.ui.take.data.CycleItem
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TakeAddViewModel @Inject constructor(
-    private val medicineGroupRepository: MedicineGroupRepository
+    private val medicineGroupRepository: MedicineGroupRepository,
+    private val localSettingRepository: LocalSettingRepository
 ) : ViewModel() {
     private val _medicineGroup = MutableLiveData<MedicineGroup?>(null)
     val medicineGroup get() = _medicineGroup
@@ -41,8 +43,7 @@ class TakeAddViewModel @Inject constructor(
 
     fun saveGroup (newGroup : MedicineGroupRequest) {
         viewModelScope.launch {
-            //TODO saveRequest 만들어주기
-//            medicineGroupRepository.saveNewGroup(newGroup)
+            medicineGroupRepository.saveNewGroup(newGroup)
         }
     }
 
@@ -64,4 +65,7 @@ class TakeAddViewModel @Inject constructor(
         }
     }
 
+    fun getDefaultAlarms(): List<String> {
+        return localSettingRepository.getDefaultAlarms()
+    }
 }

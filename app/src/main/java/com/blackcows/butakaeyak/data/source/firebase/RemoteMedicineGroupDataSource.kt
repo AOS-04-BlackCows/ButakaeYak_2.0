@@ -2,6 +2,7 @@ package com.blackcows.butakaeyak.data.source.firebase
 
 import android.util.Log
 import com.blackcows.butakaeyak.data.models.MedicineGroup
+import com.blackcows.butakaeyak.data.models.MedicineGroupRequest
 import com.blackcows.butakaeyak.data.models.MedicineGroupResponse
 import com.blackcows.butakaeyak.data.source.link.MedicineGroupDataSource
 import com.blackcows.butakaeyak.data.toMap
@@ -47,9 +48,9 @@ class RemoteMedicineGroupDataSource @Inject constructor(
             .get().await().toObjectsWithId<MedicineGroupResponse>()
     }
 
-    override suspend fun addSingleGroup(group: MedicineGroup) {
+    override suspend fun addSingleGroup(request: MedicineGroupRequest) {
         db.collection(MEDICINE_GROUP_COLLECTION)
-            .add(group.toRequest().toMap()).await()
+            .add(request).await()
     }
 
     override suspend fun removeGroup(group: MedicineGroup) {

@@ -8,6 +8,7 @@ import com.blackcows.butakaeyak.data.repository.impl.DrugRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.FriendRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.LocalRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.KakaoMapRepositoryImpl
+import com.blackcows.butakaeyak.data.repository.impl.LocalSettingRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.LocalUtilsRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.MedicineGroupRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.MedicineInfoRepositoryImpl
@@ -19,6 +20,7 @@ import com.blackcows.butakaeyak.data.repository.impl.SearchHistoryRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.UserRepositoryImpl
 import com.blackcows.butakaeyak.data.source.local.MedicineInfoRepository
 import com.blackcows.butakaeyak.domain.repo.FriendRepository
+import com.blackcows.butakaeyak.domain.repo.LocalSettingRepository
 import com.blackcows.butakaeyak.domain.repo.LocalUtilsRepository
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
 import com.blackcows.butakaeyak.domain.repo.MemoRepository
@@ -84,4 +86,7 @@ abstract class BindModule {
     @Binds
     //@ViewModelScoped
     abstract fun provideSearchHistoryRepository(impl: SearchHistoryRepositoryImpl): SearchHistoryRepository
+
+    @Binds
+    abstract fun provideLocalSettingRepository(imp: LocalSettingRepositoryImpl): LocalSettingRepository
 }
