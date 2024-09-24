@@ -86,9 +86,7 @@ class SearchFragment : Fragment() {
     }
     private fun searchQuery(){
         val query = binding.searchEtSearchtext.text.toString()
-        if(query.isEmpty()){
-            Toast.makeText(requireContext(), "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show()
-        }else{
+        if(query.isNotEmpty()){
             viewPager.currentItem = 0
             binding.searchLoImageblock.visibility = View.GONE
             imm!!.hideSoftInputFromWindow(binding.searchBtnSearch.windowToken, 0)
