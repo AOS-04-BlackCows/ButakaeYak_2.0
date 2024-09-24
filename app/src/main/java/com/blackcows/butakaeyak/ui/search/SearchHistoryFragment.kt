@@ -26,8 +26,7 @@ class SearchHistoryFragment : Fragment() {
     private var searchBinding: FragmentSearchBinding? = null
 
     private val historyViewModel: SearchViewModel by activityViewModels()
-    val queryHistory = historyViewModel.queryHistory
-    val viewedHistory = historyViewModel.viewedHistory
+
     private var columnCount = 1 //컬럼 갯수 = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +44,9 @@ class SearchHistoryFragment : Fragment() {
     ): View? {
         _binding = FragmentSearchHistoryBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        val queryHistory = historyViewModel.queryHistory
+        val medicineHistory = historyViewModel.medicineHistory
         fragmentInit()
         binding.searchHistoryDelete.setOnClickListener {
             binding.searchHistoryChipgroup.removeAllViews()
@@ -83,7 +85,7 @@ class SearchHistoryFragment : Fragment() {
 
     private fun fragmentInit () {
         historyViewModel.getQueryHistory()
-        historyViewModel.getViewedHistory()
+        historyViewModel.getMedicineHistory()
     }
 
     companion object {

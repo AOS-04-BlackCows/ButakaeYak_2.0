@@ -5,8 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blackcows.butakaeyak.data.models.Medicine
+import com.blackcows.butakaeyak.data.models.MedicineDetail
+import com.blackcows.butakaeyak.data.source.local.MedicineInfoRepository
 import com.blackcows.butakaeyak.domain.GetMedicinesNameUseCase
 import com.blackcows.butakaeyak.domain.repo.LocalUtilsRepository
+import com.blackcows.butakaeyak.domain.repo.MedicineRepository
+import com.blackcows.butakaeyak.domain.repo.SearchHistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,13 +21,15 @@ private const val TAG = "SearchResult"
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val getMedicinesNameUseCase: GetMedicinesNameUseCase,
-    private val localUtilsRepository: LocalUtilsRepository
+    private val searchHistoryRepository: SearchHistoryRepository,
+    private val medicineRepository: MedicineRepository
 ) : ViewModel() {
 
-    private val _queryHistory = MutableLiveData<List<String>>()
+    private val _queryHistory = MutableLiveData<List<String>>(listOf())
     val queryHistory get() = _queryHistory
-    private val _viewedHistory = MutableLiveData<List<Medicine>>()
-    val viewedHistory get() = _viewedHistory
+
+    private val _medicineHistory = MutableLiveData<List<MedicineDetail>>(listOf())
+    val medicineHistory get() = _medicineHistory
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
@@ -45,23 +51,25 @@ class SearchViewModel @Inject constructor(
     }
 
     fun getQueryHistory(){
-        //TODO 검색한 기록 저장 (반환타입 List<String>)
-//        queryHistory.value = localUtilsRepository.getQueryHistory()
-        _queryHistory.apply {
-            value = listOf("코펜","타이레놀","사방정","뉴프")
-        }
+        _queryHistory.value = searchHistoryRepository.getQueryHistory()
+    }
+    fun removeQueryHistory() {
+        searchHistoryRepository.removeQueryHistory()
     }
 
-    fun getViewedHistory(){
-        //TODO 검색후 클릭한 기록 저장 (반환타입 List<Medicine>)
-//        queryHistory.value = localUtilsRepository.getViewedViewedHistory()
-//        queryHistory.value = localUtilsRepository.getViewedViewedHistory()
-        _viewedHistory.apply {
-            value = listOf(
-                Medicine(name = "알코펜연질켑슐",effect = "감기에 좋음",imageUrl = ""),
-                Medicine(name = "알코펜",effect = "감기에 좋음?",imageUrl = ""),
-                Medicine(name = "알코켑슐",effect = "감기에 좋음!",imageUrl = ""),
-            )
+    fun getMedicineHistory(){
+        val idList = searchHistoryRepository.getMedicineDetailHistory()
+        viewModelScope.launch {
+            val list = idList.mapNotNull {
+                medicineRepository.searchMedicineById(it)
+            }
+            _medicineResult.value = list
         }
+    }
+    fun saveMedicineHistory(medicine: Medicine) {
+        searchHistoryRepository.saveMedicineDetailHistory(medicine)
+    }
+    fun removeMedicineHistory() {
+        searchHistoryRepository.removeMedicineDetailHistory()
     }
 }

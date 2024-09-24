@@ -10,17 +10,21 @@ import com.blackcows.butakaeyak.data.repository.impl.LocalRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.KakaoMapRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.LocalUtilsRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.MedicineGroupRepositoryImpl
+import com.blackcows.butakaeyak.data.repository.impl.MedicineInfoRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.MedicineRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.MemoRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.MyPharmacyRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.PharmacyRepositoryImpl
+import com.blackcows.butakaeyak.data.repository.impl.SearchHistoryRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.UserRepositoryImpl
+import com.blackcows.butakaeyak.data.source.local.MedicineInfoRepository
 import com.blackcows.butakaeyak.domain.repo.FriendRepository
 import com.blackcows.butakaeyak.domain.repo.LocalUtilsRepository
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
 import com.blackcows.butakaeyak.domain.repo.MemoRepository
 import com.blackcows.butakaeyak.domain.repo.MyPharmacyRepository
 import com.blackcows.butakaeyak.domain.repo.PharmacyRepository
+import com.blackcows.butakaeyak.domain.repo.SearchHistoryRepository
 import com.blackcows.butakaeyak.domain.repo.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -72,4 +76,12 @@ abstract class BindModule {
     @Binds
     //@ViewModelScoped
     abstract fun provideMemoRepository(impl: MemoRepositoryImpl): MemoRepository
+
+    @Binds
+    //@ViewModelScoped
+    abstract fun provideMedicineInfoRepository(impl: MedicineInfoRepositoryImpl): MedicineInfoRepository
+
+    @Binds
+    //@ViewModelScoped
+    abstract fun provideSearchHistoryRepository(impl: SearchHistoryRepositoryImpl): SearchHistoryRepository
 }
