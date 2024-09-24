@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.domain.repo
 
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.data.models.MedicineDetail
 
 interface SearchHistoryRepository {
@@ -8,6 +9,6 @@ interface SearchHistoryRepository {
     fun removeQueryHistory()
 
     fun getMedicineDetailHistory(): List<String>
-    fun saveMedicineDetailHistory(medicine: MedicineDetail)
+    fun saveMedicineDetailHistory(medicine: Medicine)
     fun removeMedicineDetailHistory()
 }

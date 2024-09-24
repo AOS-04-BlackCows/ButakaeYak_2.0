@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.data.repository.impl
 
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.data.models.MedicineDetail
 import com.blackcows.butakaeyak.data.source.local.SearchHistoryDataSource
 import com.blackcows.butakaeyak.domain.repo.SearchHistoryRepository
@@ -24,8 +25,8 @@ class SearchHistoryRepositoryImpl @Inject constructor(
         return searchHistoryDataSource.getMedicineDetailHistory()
     }
 
-    override fun saveMedicineDetailHistory(medicine: MedicineDetail) {
-        searchHistoryDataSource.saveMedicineDetailHistory(medicine.id)
+    override fun saveMedicineDetailHistory(medicine: Medicine) {
+        searchHistoryDataSource.saveMedicineDetailHistory(medicine.id!!)
     }
 
     override fun removeMedicineDetailHistory() {

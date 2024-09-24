@@ -9,6 +9,7 @@ import com.blackcows.butakaeyak.data.models.MedicineDetail
 import com.blackcows.butakaeyak.data.source.local.MedicineInfoRepository
 import com.blackcows.butakaeyak.domain.GetMedicinesNameUseCase
 import com.blackcows.butakaeyak.domain.repo.LocalUtilsRepository
+import com.blackcows.butakaeyak.domain.repo.MedicineRepository
 import com.blackcows.butakaeyak.domain.repo.SearchHistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,7 @@ private const val TAG = "SearchResult"
 class SearchViewModel @Inject constructor(
     private val getMedicinesNameUseCase: GetMedicinesNameUseCase,
     private val searchHistoryRepository: SearchHistoryRepository,
-    private val medicineInfoRepository: MedicineInfoRepository
+    private val medicineRepository: MedicineRepository
 ) : ViewModel() {
 
     private val queryHistory = MutableLiveData<List<String>>(listOf())
@@ -50,20 +51,24 @@ class SearchViewModel @Inject constructor(
     fun getQueryHistory(){
         queryHistory.value = searchHistoryRepository.getQueryHistory()
     }
-    fun saveQueryHistory(query: String) {
-        searchHistoryRepository.saveQueryHistory(query)
-    }
     fun removeQueryHistory() {
         searchHistoryRepository.removeQueryHistory()
     }
 
-    fun getMedicineDetailHistory(){
+    fun getMedicineHistory(){
         val idList = searchHistoryRepository.getMedicineDetailHistory()
+        viewModelScope.launch {
+            val list = idList.mapNotNull {
+                medicineRepository.searchMedicineById(it)
+            }
+
+            _medicineResult.value = list
+        }
     }
-    fun saveMedicineDetailHistory(medicine: MedicineDetail) {
+    fun saveMedicineHistory(medicine: Medicine) {
         searchHistoryRepository.saveMedicineDetailHistory(medicine)
     }
-    fun removeMedicineDetailHistory() {
+    fun removeMedicineHistory() {
         searchHistoryRepository.removeMedicineDetailHistory()
     }
 }
