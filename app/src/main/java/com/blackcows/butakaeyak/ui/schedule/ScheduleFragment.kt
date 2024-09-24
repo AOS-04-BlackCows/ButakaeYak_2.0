@@ -105,6 +105,7 @@ class ScheduleFragment : Fragment() {
 
         scheduleViewModel.scheduleProfile.observe(viewLifecycleOwner) { friendsProfiles ->
             if(userViewModel.user.value == null) {
+                scheduleViewModel.clearScheduleProfiles()
                 viewPagerAdapter.clearAll()
                 return@observe
             }
