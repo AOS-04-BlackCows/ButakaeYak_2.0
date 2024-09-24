@@ -76,17 +76,12 @@
 
             </LinearLayout>
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/schedule_detail_view_pager"
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/schedule_container_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                app:layout_constraintTop_toBottomOf="@id/profile_sv"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-
-                android:layout_marginTop="13dp"
+                android:layout_height="wrap_content"
                 />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

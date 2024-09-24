@@ -47,6 +47,13 @@ class UserFragment : Fragment() {
 
         setObserver()
 
+        //로그인 화면으로 이동
+        binding.notLoggedInLayout.setOnClickListener {
+            // 로그인 화면으로 이동하는 로직
+            MainNavigation.addFragment(SignInFragment(), FragmentTag.SignInFragment)
+            //userViewModel.signUpWithKakaoAndLogin()
+        }
+
         // 서비스 이용 약관
         binding.cvServices.setOnClickListener {
             MainNavigation.addFragment(TermsFragment(), FragmentTag.TermsFragment)
@@ -64,10 +71,12 @@ class UserFragment : Fragment() {
         }
 
         // 로그아웃 콜백 구현
-        binding.logout.setOnClickListener {
+        binding.cvLogout.setOnClickListener {
             if (userViewModel.user.value == null) {
                 Log.d(TAG, "user == null")
             }
+
+            MainNavigation.showLoadingBar()
             Log.d(TAG, "로그아웃 버튼 클릭!")
             userViewModel.logout {
 
@@ -75,6 +84,16 @@ class UserFragment : Fragment() {
 
                 binding.loggedInLayout.visibility = View.GONE
                 binding.notLoggedInLayout.visibility = View.VISIBLE
+
+                MainNavigation.disableLoadingBar()
+            }
+        }
+
+        binding.textView4.setOnClickListener {
+            MainNavigation.showLoadingBar()
+            userViewModel.deleteAccount {
+                MainNavigation.disableLoadingBar()
+                Toast.makeText(requireContext(), "회원탈퇴가 완료되었습니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -97,13 +116,6 @@ class UserFragment : Fragment() {
                 // 로그인 되지 않은 경우
                 binding.loggedInLayout.visibility = View.GONE
                 binding.notLoggedInLayout.visibility = View.VISIBLE
-
-                //로그인 화면으로 이동
-                binding.notLoggedInLayout.setOnClickListener {
-                    // 로그인 화면으로 이동하는 로직
-                    MainNavigation.addFragment(SignInFragment(), FragmentTag.SignInFragment)
-                    //userViewModel.signUpWithKakaoAndLogin()
-                }
             }
         }
     }
