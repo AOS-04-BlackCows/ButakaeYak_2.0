@@ -141,15 +141,14 @@ class NameFragment : Fragment() {
             btnNext.setOnClickListener {
                 if(nameRvGroup.isNotEmpty()){
                     Log.d("버튼","버튼 눌림")
-                    takeAddViewModel.imageUrlList = listOf()
-                    takeAddViewModel.customNameList = listOf()
                     val imageUrlList = mutableListOf<String>()
                     val customNameList = mutableListOf<String>()
                     adapter.currentList.forEach { i ->
                         imageUrlList.add(i.imageUrl)
                         customNameList.add(i.name!!)
                     }
-
+                    takeAddViewModel.imageUrlList = imageUrlList
+                    takeAddViewModel.customNameList = customNameList
                     parentFragmentManager.beginTransaction()
                         .add(R.id.fragment_container, CycleFragment())
                         .addToBackStack(null)
