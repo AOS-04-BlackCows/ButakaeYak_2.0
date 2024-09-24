@@ -86,6 +86,7 @@ class UserFragment : Fragment() {
             MainNavigation.showLoadingBar()
             userViewModel.deleteAccount {
                 MainNavigation.disableLoadingBar()
+                Toast.makeText(requireContext(), "회원탈퇴가 완료되었습니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }
