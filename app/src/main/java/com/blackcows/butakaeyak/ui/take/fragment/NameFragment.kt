@@ -139,7 +139,7 @@ class NameFragment : Fragment() {
                 addNames(addNamesImageUrl, etMedicineName.text.toString())
             }
             btnNext.setOnClickListener {
-                if(nameRvGroup.isNotEmpty()){
+                if(adapter.currentList.isNotEmpty()){
                     Log.d("버튼","버튼 눌림")
                     val imageUrlList = mutableListOf<String>()
                     val customNameList = mutableListOf<String>()
