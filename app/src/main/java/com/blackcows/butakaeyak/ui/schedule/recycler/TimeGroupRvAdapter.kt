@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.schedule.recycler
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,21 +31,30 @@ class TimeGroupRvAdapter(
         fun bind(item: MedicineGroup) {
             with(binding) {
                 groupNameTv.text = item.name
-                groupNameTv.text = "약 ${item.medicines.size}개"
+                medicineNumTv.text = "약 ${item.medicines.size}개"
+
+                val timeToTaken = "${LocalDate.now()} $alarm"
+                if(item.hasTaken.contains(timeToTaken)){
+                    takenCb.isChecked = true
+
+                    Log.d("ScheduleFragment: TimeGroupRvAdapter", "timeToTaken: $timeToTaken")
+                    Log.d("ScheduleFragment: TimeGroupRvAdapter", "hasTaken: ${item.hasTaken.joinToString()}")
+
+                    Log.d("ScheduleFragment: TimeGroupRvAdapter", "isChecked: ${takenCb.isChecked}")
+                    Log.d("ScheduleFragment: TimeGroupRvAdapter", "------------------------------------------------------------")
+
+                }
 
                 if(isDisabled) {
                     takenCb.isEnabled = false
                     modifyBtn.visibility = View.GONE
                 }
 
-                val timeToTaken = "${LocalDate.now()} $alarm"
-                if(item.hasTaken.contains(timeToTaken)){
-                    takenCb.isSelected = true
-                }
-
                 takenCb.setOnClickListener {
-                    takenCb.isSelected = !takenCb.isSelected
-                    onCheckClick(item, takenCb.isSelected, alarm)
+                    takenCb.isChecked = !takenCb.isChecked
+                    onCheckClick(item, takenCb.isChecked, alarm)
+
+                    Log.d("ScheduleFragment: TimeGroupRvAdapter", "isChecked click: ${takenCb.isChecked}")
                 }
 
                 modifyBtn.setOnClickListener {

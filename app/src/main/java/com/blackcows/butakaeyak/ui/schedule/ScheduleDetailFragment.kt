@@ -107,10 +107,12 @@ class ScheduleDetailFragment : Fragment() {
             }
         }
 
-
+        scheduleViewModel.getDateToMedicineGroup(userId, LocalDate.now())
 
         scheduleViewModel.dateToMedicineGroup.observe(viewLifecycleOwner) {
+            Log.d("ScheduleFragment", "detail size: ${it.size}")
             scheduleRvAdapter.submitList(scheduleViewModel.changeToTimeToGroup())
+            Log.d("ScheduleFragment", "detail curlist: ${scheduleRvAdapter.currentList.size}")
         }
     }
 
