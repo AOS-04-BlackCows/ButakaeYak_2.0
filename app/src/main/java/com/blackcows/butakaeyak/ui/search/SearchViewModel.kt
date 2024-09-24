@@ -25,9 +25,11 @@ class SearchViewModel @Inject constructor(
     private val medicineRepository: MedicineRepository
 ) : ViewModel() {
 
-    private val queryHistory = MutableLiveData<List<String>>(listOf())
+    private val _queryHistory = MutableLiveData<List<String>>(listOf())
+    val queryHistory get() = _queryHistory
 
-    private val medicineDetailHistory = MutableLiveData<List<MedicineDetail>>(listOf())
+    private val _medicineHistory = MutableLiveData<List<MedicineDetail>>(listOf())
+    val medicineHistory get() = _medicineHistory
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
@@ -49,7 +51,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun getQueryHistory(){
-        queryHistory.value = searchHistoryRepository.getQueryHistory()
+        _queryHistory.value = searchHistoryRepository.getQueryHistory()
     }
     fun removeQueryHistory() {
         searchHistoryRepository.removeQueryHistory()
@@ -61,7 +63,6 @@ class SearchViewModel @Inject constructor(
             val list = idList.mapNotNull {
                 medicineRepository.searchMedicineById(it)
             }
-
             _medicineResult.value = list
         }
     }
