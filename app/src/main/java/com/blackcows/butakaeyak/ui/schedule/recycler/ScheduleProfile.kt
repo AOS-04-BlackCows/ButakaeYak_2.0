@@ -4,5 +4,4 @@ data class ScheduleProfile(
     val userId: String,
     val name: String,
     val profileUrl: String,
-
 )

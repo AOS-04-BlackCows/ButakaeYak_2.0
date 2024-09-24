@@ -10,39 +10,41 @@ import com.blackcows.butakaeyak.data.retrofit.service.MedicineInfoService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 class ProvideModule {
     @Provides
-    //@ViewModelScoped
+    @ViewModelScoped
     fun provideRetrofitService() : DrugApiService {
         return RetrofitClient.getInstance(ApiBaseUrl.DrugInfoUrl).create(DrugApiService::class.java)
     }
 
     @Provides
-    //@ViewModelScoped
+    @ViewModelScoped
     fun provideIoDispatcher(): CoroutineDispatcher {
         return Dispatchers.IO
     }
 
     @Provides
-    //@ViewModelScoped
+    @ViewModelScoped
     fun provideAlgoliaClient(): Client {
         return Client(BuildConfig.ALGORIA_APP_ID, BuildConfig.ALGORIA_SEARCH_KEY)
     }
     
     @Provides
-    //@ViewModelScoped
+    @ViewModelScoped
     fun provideKakaoApiService() : KakaoApiService {
         return RetrofitClient.getInstance(ApiBaseUrl.KakaoPlaceSearchUrl).create(KakaoApiService::class.java)
     }
 
     @Provides
-    //@ViewModelScoped
+    @ViewModelScoped
     fun provideMedicineInfoApiService() : MedicineInfoService {
         return RetrofitClient.getInstance(ApiBaseUrl.MedicineInfoUrl).create(MedicineInfoService::class.java)
     }
