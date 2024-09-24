@@ -40,6 +40,7 @@ import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
+import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.time.LocalDate
 import java.util.Calendar
@@ -59,6 +60,7 @@ class CycleFragment : Fragment() {
     //viewModel 설정
     private val viewModel: TakeAddViewModel by activityViewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
+    private val userViewModel: UserViewModel by activityViewModels()
 
     private lateinit var bottomSheetView: BottomsheetCalendarBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
@@ -259,12 +261,21 @@ class CycleFragment : Fragment() {
                     viewModel.groupName = nameGroup
                     viewModel.finishDate = finishDate
 
+                    val userId = userViewModel.user.value?.id ?: ""
+
                     //TODO viewModel create, save
-                    val groupCycle = viewModel.createNewMedicineGroupRequest{
+                    val groupCycle = viewModel.createNewMedicineGroupRequest(userId!!){
                         Log.d("groupCycle","failed createNewMedicine")
                     }
                     if(groupCycle != null) {
                         viewModel.saveGroup(groupCycle)
+
+                        Log.d("takeViewModel","${viewModel.groupName}")
+                        Log.d("takeViewModel","${viewModel.customNameList}")
+                        Log.d("takeViewModel","${viewModel.imageUrlList}")
+                        Log.d("takeViewModel","${viewModel.startDate}")
+                        Log.d("takeViewModel","${viewModel.finishDate}")
+                        Log.d("takeViewModel","${viewModel.alarms}")
                     }
 
                     val repeatCycle = tvRepeatCycle.text.toString()
