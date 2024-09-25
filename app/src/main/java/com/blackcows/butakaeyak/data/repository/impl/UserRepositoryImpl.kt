@@ -52,6 +52,7 @@ class UserRepositoryImpl @Inject constructor(
             val result = userDataSource.getUserWithKakaoId(kakaoId)
             if(result != null) {
                 localUtilsDataSource.setSignIn(true)
+                Log.d(TAG, "signIn? ${localUtilsDataSource.isSignIn()}")
                 LoginResult.Success(result)
             } else LoginResult.UnknownAccount
         }.getOrDefault(LoginResult.Failure)

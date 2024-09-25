@@ -26,7 +26,7 @@ class LocalUtilsDataSource @Inject constructor(
         return sharedPreferences.getBoolean(IS_LOGIN, false)
     }
     fun setSignIn(isSignIn: Boolean) {
-        editor.putBoolean(IS_LOGIN, isSignIn)
+        editor.putBoolean(IS_LOGIN, isSignIn).apply()
     }
 
     fun saveAutoLoginData(loginData: AutoLoginData) {

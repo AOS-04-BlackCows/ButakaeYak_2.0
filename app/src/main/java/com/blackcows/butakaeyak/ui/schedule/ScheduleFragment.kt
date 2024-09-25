@@ -73,15 +73,23 @@ class ScheduleFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         initProfiles()
     }
 
     private fun initProfiles() {
-        val myScheduleProfile = if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
+        val myScheduleProfile: ScheduleProfile
+        if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
             scheduleViewModel.getFriendProfile(userViewModel.user.value!!.id)
             return
-        } else ScheduleProfile("", "나", "")
+        } else {
+            myScheduleProfile = ScheduleProfile("", "나", "")
+            profileRvAdapter.submitList(listOf(myScheduleProfile))
+        }
 
         val detailFragment = ScheduleDetailFragment.newInstance(myScheduleProfile.userId, true)
         parentFragmentManager.beginTransaction()
@@ -95,10 +103,9 @@ class ScheduleFragment : Fragment() {
 
             if(user != null) {
                 curScheduleProfileId = user.id
-                binding.loginGuideCl.visibility = View.GONE
+            } else {
+                curScheduleProfileId = ""
             }
-
-            initProfiles()
         }
 
         scheduleViewModel.scheduleProfile.observe(viewLifecycleOwner) { friendsProfiles ->
