@@ -13,10 +13,10 @@
     <TextView
         android:id="@+id/tv_home_today_medicine_time"
         style="@style/medium_b"
-        android:layout_width="60dp"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         android:text="16:00" />
 
     <TextView
@@ -38,7 +38,7 @@
         android:layout_width="80dp"
         android:layout_height="32dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/select_round_long_rect_500"
         android:paddingHorizontal="12dp"
         android:text="안먹음" />
