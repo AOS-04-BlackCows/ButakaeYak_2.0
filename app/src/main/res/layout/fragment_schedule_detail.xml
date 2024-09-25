@@ -31,7 +31,7 @@
                 app:layout_constraintStart_toStartOf="parent"
 
                 android:text="2024.12.12"
-                style="@style/subtitle"
+                style="@style/subtitle_b"
                 />
 
             <ImageView
