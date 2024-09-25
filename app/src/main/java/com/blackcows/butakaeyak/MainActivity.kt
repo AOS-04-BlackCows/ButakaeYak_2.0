@@ -8,11 +8,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
@@ -25,6 +24,15 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private val REQUIRED_PERMISSIONS =
+        mutableListOf (
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO
+        ).apply {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        }.toTypedArray()
 
     private lateinit var binding: ActivityMainBinding
     private val REQUEST_PERMISSION_LOCATION = 10
@@ -44,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
         // GPS 권한 체크 후 없을 시 요청
         checkPermissionForLocation()
+        //카메라 권한 체크 후 없을 시 요청
+        allPermissionsGranted()
 
         KakaoSdk.init(this, BuildConfig.NATIVE_APP_KEY)
 
@@ -114,6 +124,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             true
         }
+    }
+
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {//카메라 권한 관련
+        ContextCompat.checkSelfPermission(this@MainActivity, it) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

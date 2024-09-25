@@ -180,6 +180,7 @@ class OcrFragment : Fragment(), View.OnClickListener {
                             medicineList.let {
                                 takeAddViewModel.saveNames(it?: mutableListOf())
                             }
+                            MainNavigation.popCurrentFragment()
                             MainNavigation.addFragment(TakeAddFragment(), FragmentTag.TakeAddFragment)
                             Log.d(TAG, "뮤터블 리스트에 넣은 후${uiState.response.gptMessage.trim()}\n medicineList size:${medicineList?.size}\nmedicineList first:${medicineList?.first()}")
                         }
