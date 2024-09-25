@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.R
@@ -39,6 +40,14 @@ class NoteFragment : Fragment() {
             binding.loginGuideCl.visibility = View.VISIBLE
         } else {
             binding.loginGuideCl.visibility = View.GONE
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if(userViewModel.user.value != null) {
+            Toast.makeText(requireContext(), "나중에 추가될 기능입니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
