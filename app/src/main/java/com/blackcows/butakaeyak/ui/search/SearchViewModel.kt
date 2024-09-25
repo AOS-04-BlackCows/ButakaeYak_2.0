@@ -68,13 +68,15 @@ class SearchViewModel @Inject constructor(
 
     fun getMedicineHistory(){
         val idList = searchHistoryRepository.getMedicineDetailHistory()
-        Log.d(TAG, "id :${idList.size.toString()}")
+        Log.d("검색 기록", "id :${idList.size}")
         viewModelScope.launch {
+            _uiState.value = SearchUiState.Loading
             val list = idList.mapNotNull {
                 medicineRepository.searchMedicineById(it)
             }
             _medicineHistory.value = list
-            Log.d(TAG, "list :${list.size.toString()}")
+            Log.d("검색 기록", "list :${list.size}")
+            _uiState.value = SearchUiState.SearchMedicinesSuccess(_medicineHistory.value!!)
         }
     }
     fun saveMedicineHistory(medicine: Medicine) {
