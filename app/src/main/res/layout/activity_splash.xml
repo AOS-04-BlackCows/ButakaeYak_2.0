@@ -10,9 +10,9 @@
 
     <ImageView
         android:id="@+id/iv_medicine_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/medicine_search"
+        android:layout_width="160dp"
+        android:layout_height="140dp"
+        android:src="@drawable/icon_logo"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
