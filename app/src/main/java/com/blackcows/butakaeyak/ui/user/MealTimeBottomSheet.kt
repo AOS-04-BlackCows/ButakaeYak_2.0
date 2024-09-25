@@ -31,7 +31,7 @@ class MealTimeBottomSheet : BottomSheetDialogFragment() {
 
         // viewModel에서 저장된 알람 시간 가져오기
         val getAlarms = mypageViewModel.getDefaultAlarms()
-        Log.d(TAG, "getAlarms ${getAlarms}")
+        Log.d(TAG, "getAlarms ${getAlarms.joinToString()}")
         if (getAlarms.isNotEmpty()) {
             Log.d(
                 TAG,
