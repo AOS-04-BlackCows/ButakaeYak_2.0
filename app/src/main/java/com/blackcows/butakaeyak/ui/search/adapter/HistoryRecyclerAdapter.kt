@@ -72,12 +72,12 @@ class HistoryRecyclerAdapter(private val clickListener: ClickListener) :
         private val ivMedicine: ImageView = medicineView.ivMedicine
         private val tvMedicineName: TextView = medicineView.tvMedicineName
         private val tvMedicineType: TextView = medicineView.tvMedicineType
-        private val cbMyMedicine: CheckBox = medicineView.cbMyMedicine
+//        private val cbMyMedicine: CheckBox = medicineView.cbMyMedicine
         private val loMedicineInfo: ConstraintLayout = medicineView.loMedicineInfo
 
         fun bind(medicineItem: Medicine) {
-            val isSaved = clickListener.isMedicineChecked(medicineItem)
-            Log.d("HomeRecyclerView", "Name: ${medicineItem.name}, $isSaved")
+//            val isSaved = clickListener.isMedicineChecked(medicineItem)
+//            Log.d("HomeRecyclerView", "Name: ${medicineItem.name}, $isSaved")
 
             with(medicineItem) {
 
@@ -91,23 +91,18 @@ class HistoryRecyclerAdapter(private val clickListener: ClickListener) :
                     clickListener.onItemClick(medicineItem)
                     Log.d(TAG, "${name}")
                 }
-                cbMyMedicine.setOnCheckedChangeListener { buttonView, isChecked ->
-                    Log.d(TAG, "cbMyMedicine.isChecked: ${cbMyMedicine.isChecked}")
-                }
-//                    .setOnClickListener {
-//                    Log.d(TAG, "click!")
-//                    //clickListener.onMyMedicineClick(medicineItem,isChecked)
-//                    clickListener.setMedicineChecked(medicineItem, true)
-//                    Log.d(TAG, "${name}")
-//                    //TODO NameFragment로 약 이름 넘기기
+                //TODO 체크 한것들 한번에
+//                cbMyMedicine.setOnCheckedChangeListener { buttonView, isChecked ->
+//                    Log.d(TAG, "cbMyMedicine.isChecked: ${cbMyMedicine.isChecked}")
 //                }
+
             }
         }
     }
     interface ClickListener{
         fun onItemClick(item: Medicine)
-        fun onItemlLongClick(item: Medicine)
-        fun isMedicineChecked(item: Medicine) : Boolean
-        fun setMedicineChecked(item: Medicine, isChecked:Boolean)
+//        fun onItemlLongClick(item: Medicine)
+//        fun isMedicineChecked(item: Medicine) : Boolean
+//        fun setMedicineChecked(item: Medicine, isChecked:Boolean)
     }
 }
