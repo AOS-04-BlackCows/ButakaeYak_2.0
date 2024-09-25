@@ -235,7 +235,13 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
+        Log.d("HomeFragment", "onResume")
+        homeViewModel.getTodayMedicine(userViewModel.user.value?.id ?: "guest")
+    }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        Log.d("HomeFragment", "onHiddenChanged")
         homeViewModel.getTodayMedicine(userViewModel.user.value?.id ?: "guest")
     }
 }

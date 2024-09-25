@@ -11,6 +11,7 @@ import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.schedule.ScheduleUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,15 +27,17 @@ class HomeViewModel @Inject constructor (
     // 오늘 복용할 약 불러오기
     fun getTodayMedicine (user: String) {
         viewModelScope.launch {
-            _medicineGroup.value = listOf()
-            _medicineGroup.value = medicineGroupRepository.getMyGroups(user)
+            //_medicineGroup.value = listOf()
+            val date = LocalDate.now()
+            _medicineGroup.value = medicineGroupRepository.getMyGroups(user).filter {
+                it.startedAt <= date && it.finishedAt >= date
+            }
         }
     }
     fun checkTakenMedicineGroup(userId: String, groupId: String, taken: Boolean, alarm: String) {
         viewModelScope.launch {
             MainNavigation.showLoadingBar()
             medicineGroupRepository.notifyTaken(groupId, taken, alarm)
-            getTodayMedicine(userId)
             MainNavigation.disableLoadingBar()
         }
     }
