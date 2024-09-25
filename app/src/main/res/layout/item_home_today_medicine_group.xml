@@ -12,8 +12,8 @@
 
     <TextView
         android:id="@+id/tv_home_today_medicine_time"
-        style="@style/subtitle_b"
-        android:layout_width="86dp"
+        style="@style/medium_b"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="24dp"
@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/tv_home_today_medicine_group_name"
-        style="@style/medium"
+        style="@style/body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
