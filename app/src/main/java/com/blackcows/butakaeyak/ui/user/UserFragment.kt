@@ -89,7 +89,7 @@ class UserFragment : Fragment() {
             }
         }
 
-        binding.textView4.setOnClickListener {
+        binding.deleteAccount.setOnClickListener {
             MainNavigation.showLoadingBar()
             userViewModel.deleteAccount {
                 MainNavigation.disableLoadingBar()

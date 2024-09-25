@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.blackcows.butakaeyak.databinding.DialogMealTimeBinding
 import com.blackcows.butakaeyak.ui.take.TimePickerDialog
@@ -19,7 +20,7 @@ class MealTimeBottomSheet : BottomSheetDialogFragment() {
     private var _binding: DialogMealTimeBinding? = null
     private val binding get() = _binding!!
 
-    private val mypageViewModel: MypageViewModel by viewModels()
+    private val mypageViewModel: MypageViewModel by activityViewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = super.onCreateDialog(savedInstanceState)
