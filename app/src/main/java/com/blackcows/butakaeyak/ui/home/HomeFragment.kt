@@ -236,15 +236,15 @@ class HomeFragment : Fragment(), View.OnClickListener {
     override fun onPause() {
         super.onPause()
         // Fab이 눌려있을때 닫는 애니메이션
-        binding.btnAddMedicineContainer.startAnimation(fab_close)
+        binding.btnAddMedicineContainer.startAnimation(fab_close_no_delay)
         binding.btnAddMedicineContainer.isClickable = false
         binding.btnAddMedicine1.isClickable = false
         binding.btnAddMedicine2.isClickable = false
         openFlag = false
+        binding.btnAddMedicineContainer.visibility = View.GONE
     }
     override fun onResume() {
         super.onResume()
-        binding.btnAddMedicineContainer.visibility = View.GONE
         homeViewModel.getTodayMedicine(userViewModel.user.value?.id ?: "guest")
     }
 }
