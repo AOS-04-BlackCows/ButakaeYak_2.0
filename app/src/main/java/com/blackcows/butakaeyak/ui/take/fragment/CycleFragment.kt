@@ -298,6 +298,8 @@ class CycleFragment : Fragment() {
                         Log.d("takeViewModel","${viewModel.alarms}")
                     }
 
+                    Toast.makeText(requireContext(),"알람이 설정되었습니다.",Toast.LENGTH_SHORT).show()
+
                     //TODO 반복 주기 임시 제거
 //                    val repeatCycle = tvRepeatCycle.text.toString()
                     val selectDate = tvStartDay.text.toString()
