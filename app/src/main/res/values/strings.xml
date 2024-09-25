@@ -154,9 +154,14 @@
 
 
     <!-- Open API -->
-    <string name="api">
-        api 작성하면 됨요
-
+    <string name="data_go_kr">
+        공공데이터포털 [https://www.data.go.kr/index.do]
+    </string>
+    <string name="e">
+        e약은요 [https://www.data.go.kr/data/15075057/openapi.do#tab_layer_prcuse_exam]
+    </string>
+    <string name="selectApiDataDetailView">
+        의약품 제품 허가정보 [https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15095677]
     </string>
 
 </resources>
