@@ -25,7 +25,6 @@ import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.search.SearchFragment
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
-import com.blackcows.butakaeyak.ui.textrecognition.OCRActivity
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import io.ktor.util.date.WeekDay

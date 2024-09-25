@@ -146,7 +146,7 @@ class OcrFragment : Fragment(), View.OnClickListener {
 
         val blocks: List<Text.TextBlock> = texts.textBlocks
         if (blocks.isEmpty()) {
-            Toast.makeText(requireContext(), "글자가 없어요...😥", Toast.LENGTH_SHORT).show()
+            binding.textViewOcrResult.text = "글자가 없는 것 같아요...😥\n다시 촬영해 주세요"
             return
         }
 
@@ -172,7 +172,10 @@ class OcrFragment : Fragment(), View.OnClickListener {
                     is GPTResultUIState.Loading -> binding.lodingProgress.visibility = View.VISIBLE
                     is GPTResultUIState.Success -> {
                         Log.d(TAG, "약이름 찾기후${uiState.response.gptMessage.trim()}")
-                        if (!uiState.response.gptMessage.trim().equals("약 이름 없음")){
+
+                        if (uiState.response.gptMessage.trim().equals("약 이름 없음")){
+                            binding.textViewOcrResult.text = "약 이름이 없는 사진이에요...😥\n 다시 촬영해 주세요"
+                        }else{
                             medicineList = uiState.response.gptMessage.split(", ").toMutableList()
                             medicineList.let {
                                 takeAddViewModel.saveNames(it?: mutableListOf())
@@ -201,9 +204,9 @@ class OcrFragment : Fragment(), View.OnClickListener {
 
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/prescription-Image")
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/butakaeyak")
             }
         }
 
