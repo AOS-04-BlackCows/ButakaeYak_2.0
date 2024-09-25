@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.provider.AlarmClock
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
@@ -108,9 +109,7 @@ class CycleFragment : Fragment() {
         bottomSheetDialog2 = BottomSheetDialog(requireContext(), R.style.DialogStyle)
         bottomSheetDialog2.setContentView(bottomSheetView2.root)
 
-        //TODO MealTimeBottomSheet에서 추가된 아침, 점심, 저녁 알람을 받아옴
-//        val alarm = viewModel.getDefaultAlarms()
-//        addAlarmItem(alarm.toString())
+
 
         binding.etMedicineGroup.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -131,37 +130,51 @@ class CycleFragment : Fragment() {
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+            //TODO MealTimeBottomSheet에서 추가된 아침, 점심, 저녁 알람을 받아옴
+            val alarms = viewModel.getDefaultAlarms()
+            if(alarms != null) {
+                for (alarm in alarms) {
+                    addAlarmItem(alarm)
+                }
+            }
+
             clStartDay.setOnClickListener {
                 bottomSheetDialog.show()
-                    bottomSheetView.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-                        val selectDate = "${year}년 ${month + 1}월 ${dayOfMonth}일"
-                        binding.tvStartDay.setText(selectDate)
+                bottomSheetView.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+                    val selectDate = "${year}년 ${month + 1}월 ${dayOfMonth}일"
+                    val monthStr = if(month+1 < 10) "0${month+1}"
+                    else "${month+1}"
+                    val dayStr = if(dayOfMonth < 10) "0${dayOfMonth}"
+                    else "$dayOfMonth"
+                    val startDateFormat = "$year-$monthStr-$dayStr"
+                    binding.tvStartDay.setText(selectDate)
 
-                        //TODO viewModel startDate 값 설정
-                        viewModel.startDate = binding.tvStartDay.text.toString()
-                        btnNext()
-                    }
+                    //TODO viewModel startDate 값 설정
+                    viewModel.startDate = startDateFormat
+                    btnNext()
+                }
             }
 
             val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-            binding.clRepeatCycle.setOnClickListener {
-                bottomSheetDialog2.show()
-
-                bottomSheetView2.btnNext.setOnClickListener {
-                    if(bottomSheetView2.etCustom.text.isNotEmpty()){
-                        binding.tvRepeatCycle.text = "${bottomSheetView2.etCustom.text}일"
-                        bottomSheetView2.tvCustomCaption.setText("${bottomSheetView2.etCustom.text}일마다 반복합니다.")
-                    }
-                    inputMethodManager.hideSoftInputFromWindow(bottomSheetView2.root.windowToken,0)
-                    bottomSheetDialog2.dismiss()
-                    btnNext()
-                }
-
-                bottomSheetDialog2.setOnDismissListener {
-//                    bottomSheetView2.etCustom.setText("")
-                }
-            }
+            //TODO 반복 주기 임시 제거
+//            binding.clRepeatCycle.setOnClickListener {
+//                bottomSheetDialog2.show()
+//
+//                bottomSheetView2.btnNext.setOnClickListener {
+//                    if(bottomSheetView2.etCustom.text.isNotEmpty()){
+//                        binding.tvRepeatCycle.text = "${bottomSheetView2.etCustom.text}일"
+//                        bottomSheetView2.tvCustomCaption.setText("${bottomSheetView2.etCustom.text}일마다 반복합니다.")
+//                    }
+//                    inputMethodManager.hideSoftInputFromWindow(bottomSheetView2.root.windowToken,0)
+//                    bottomSheetDialog2.dismiss()
+//                    btnNext()
+//                }
+//
+//                bottomSheetDialog2.setOnDismissListener {
+////                    bottomSheetView2.etCustom.setText("")
+//                }
+//            }
 
             myMedicine?.let {
                 if (myMedicine.alarms.isNotEmpty()) {
@@ -244,11 +257,12 @@ class CycleFragment : Fragment() {
     private fun btnNext(){
         val isMedicineGroup = binding.etMedicineGroup.text.isNotEmpty()
         val isStartDay = binding.tvStartDay.text.isNotEmpty()
-        val isRepeatCycle = binding.tvRepeatCycle.text.isNotEmpty()
+        //TODO 반복주기 임시 제거
+//        val isRepeatCycle = binding.tvRepeatCycle.text.isNotEmpty()
         val isCycleAlarmAdd = binding.tvCycleAlarmAdd.text.isNotEmpty()
 
         binding.apply {
-            if(isMedicineGroup && isStartDay && isRepeatCycle && isCycleAlarmAdd){
+            if(isMedicineGroup && isStartDay && isCycleAlarmAdd){
                 btnNext.isEnabled = true
                 btnNext.setBackgroundResource(R.color.green)
                 btnNext.setTextColor(Color.WHITE)
@@ -278,13 +292,14 @@ class CycleFragment : Fragment() {
                         Log.d("takeViewModel","${viewModel.alarms}")
                     }
 
-                    val repeatCycle = tvRepeatCycle.text.toString()
+                    //TODO 반복 주기 임시 제거
+//                    val repeatCycle = tvRepeatCycle.text.toString()
                     val selectDate = tvStartDay.text.toString()
                     val dateFormat = dateFormatText(selectDate)
                     val startDate = dateFormat
                     Log.d("startDate","${startDate}")
 
-                    setAlarmForAllItems(repeatCycle,startDate)
+                    setAlarmForAllItems(startDate)
 
                     parentFragmentManager.beginTransaction()
                         .remove(this@CycleFragment)
@@ -308,7 +323,8 @@ class CycleFragment : Fragment() {
         }
     }
 
-    private fun setAlarmForAllItems(repeatType:String, startDate : Long) {
+    //TODO 반복 주기 임시 제거 repeatType:String
+    private fun setAlarmForAllItems(startDate : Long) {
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
         val alarmList = adapter.getAlarmList()
 
@@ -317,9 +333,17 @@ class CycleFragment : Fragment() {
             Log.d("requestCode","${alarm.requestCode}")
             val intent = Intent(requireContext(), AlarmReceiver::class.java)
 
+            val calendar = Calendar.getInstance().apply {
+                timeInMillis = alarm.timeInMillis
+            }
+            val alarmHour = calendar.get(Calendar.HOUR_OF_DAY)
+            val alarmMinute = calendar.get(Calendar.MINUTE)
+
             intent.putExtra("NOTIFICATION_ID", alarm.requestCode)
             intent.putExtra("NOTIFICATION_TITLE","${binding.etMedicineGroup.text}")
             intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
+            intent.putExtra("Hour",alarmHour)
+            intent.putExtra("Minute",alarmMinute)
 
             val pendingIntent = PendingIntent.getBroadcast(
                 context, alarm.requestCode, intent, PendingIntent.FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
@@ -337,8 +361,11 @@ class CycleFragment : Fragment() {
 
                     Log.d("AlarmTest", "Adjusted Time In Millis: $adjustedTimeInMillis")
 
-                    //반복 주기에 따른 알람 설정 추가
-                    scheduleNextAlarm(repeatType, alarmManager, pendingIntent, adjustedTimeInMillis)
+                    val alarmClock = AlarmManager.AlarmClockInfo(adjustedTimeInMillis, pendingIntent)
+                    alarmManager.setAlarmClock(alarmClock, pendingIntent)
+
+                    //TODO 반복 주기에 따른 알람 설정 추가 제거
+//                    scheduleNextAlarm(repeatType, alarmManager, pendingIntent, adjustedTimeInMillis)
 
                 } catch (e: SecurityException) {
                     Toast.makeText(context, "알림 설정에 실패했습니다. 권한을 확인해주세요.", Toast.LENGTH_SHORT).show()
@@ -373,31 +400,29 @@ class CycleFragment : Fragment() {
         return calendar.timeInMillis // 밀리초 단위로 반환
     }
 
-    private fun scheduleNextAlarm(repeatType: String, alarmManager: AlarmManager, pendingIntent: PendingIntent, currentTimeMillis: Long) {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = currentTimeMillis
-
-        val repeatInterval: Long
-        Log.d("AlarmDebug", "Repeat Type: $repeatType")
-
-        when (repeatType) {
-            "1일", "2일", "3일", "4일", "5일", "6일", "7일" -> {
-                // 일 단위 반복
-                repeatInterval = repeatType.replace("일", "").toLong()
-                Log.d("AlarmDebug2", "Repeat Type: $repeatInterval")
-                alarmManager.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    repeatInterval * AlarmManager.INTERVAL_DAY,
-                    pendingIntent
-                )
-            }
-        }
-
-        // 반복되는 알람 설정
-        val nextAlarmClock = AlarmManager.AlarmClockInfo(calendar.timeInMillis, pendingIntent)
-        alarmManager.setAlarmClock(nextAlarmClock, pendingIntent)
-    }
+    //TODO 반복 주기 임시 제거
+//    private fun scheduleNextAlarm(repeatType: String, alarmManager: AlarmManager, pendingIntent: PendingIntent, currentTimeMillis: Long) {
+//        val calendar = Calendar.getInstance()
+//        calendar.timeInMillis = currentTimeMillis
+//
+//        val repeatInterval: Long
+//        Log.d("AlarmDebug", "Repeat Type: $repeatType")
+//
+//        when (repeatType) {
+//            "1일", "2일", "3일", "4일", "5일", "6일", "7일" -> {
+//                // 일 단위 반복
+//                repeatInterval = repeatType.replace("일", "").toLong()
+//                Log.d("AlarmDebug2", "Repeat Type: $repeatInterval")
+//                alarmManager.setRepeating(
+//                    AlarmManager.RTC_WAKEUP,
+//                    calendar.timeInMillis,
+//                    repeatInterval * AlarmManager.INTERVAL_DAY,
+//                    pendingIntent
+//                )
+//            }
+//        }
+//
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
