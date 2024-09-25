@@ -71,54 +71,54 @@ class SearchHistoryFragment : Fragment() {
 
         //TODO 클릭한 약 만큼 아이템을 뿌리든 뭘하든 리스트 만들어서 보여줘야함
 
-        binding.apply {
-            historyAdapter = SearchRecyclerAdapter(object : SearchRecyclerAdapter.ClickListener{
-                override fun onItemClick(item: Medicine) {
-                    val bottomSheetView = BottomsheetSearchDetailBinding.inflate(layoutInflater)
-                    val bottomSheetDialog = BottomSheetDialog(requireContext())
-                    with(bottomSheetView) {
-                        Glide.with(root).load(item.imageUrl ?: R.drawable.logo_big)
-                            .into(detailIvMedicine)
-                        detailTvName.text = item.name
-                        detailTvEnterprise.text = item.enterprise
-                        detailTvEffect.text = item.effect
-                        detailTvInstructions.text = item.instructions
-                        detailTvWarning.text = item.warning
-                        detailTvCaution.text = item.caution
-                        detailTvInteraction.text = item.interaction
-                        detailTvSideEffect.text = item.sideEffect
-                        detailTvStoringMethod.text = item.storingMethod
-                    }
-                    historyViewModel.saveMedicineHistory(item)
-                    bottomSheetDialog.setContentView(bottomSheetView.root)
-                    bottomSheetDialog.show()
-                }
-
-                override fun isMedicineChecked(item: Medicine): Boolean {
-                    val result = mainViewModel.isMyMedicine(item.id!!)
-                    Log.d(TAG,"${item.id}: $result")
-                    return result
-                }
-
-                override fun setMedicineChecked(item: Medicine, isChecked: Boolean) {
-                    val hasIt = mainViewModel.isMyMedicine(item.id!!)
-                    Log.d(TAG,"Do I have item:${item.id}? :$hasIt")
-                    if(hasIt) {
-                        Toast.makeText(requireContext(), "이미 복용 중인 약입니다.", Toast.LENGTH_SHORT).show()
-                    } else {
-                        MainNavigation.addFragment(
-                            TakeAddFragment.newInstance(item), FragmentTag.TakeAddFragment
-                        )
-                    }
-                }
-            })
-            medicineList.adapter = historyAdapter
-            medicineList.itemAnimator = null
-            historyViewModel.medicineHistory.observe(viewLifecycleOwner){
-                if(it.isNotEmpty()) Log.d(TAG, "Class: ${it[0]::class.simpleName}")
-                historyAdapter.submitList(it)
-            }
-        }
+//        binding.apply {
+//            historyAdapter = SearchRecyclerAdapter(object : SearchRecyclerAdapter.ClickListener{
+//                override fun onItemClick(item: Medicine) {
+//                    val bottomSheetView = BottomsheetSearchDetailBinding.inflate(layoutInflater)
+//                    val bottomSheetDialog = BottomSheetDialog(requireContext())
+//                    with(bottomSheetView) {
+//                        Glide.with(root).load(item.imageUrl ?: R.drawable.logo_big)
+//                            .into(detailIvMedicine)
+//                        detailTvName.text = item.name
+//                        detailTvEnterprise.text = item.enterprise
+//                        detailTvEffect.text = item.effect
+//                        detailTvInstructions.text = item.instructions
+//                        detailTvWarning.text = item.warning
+//                        detailTvCaution.text = item.caution
+//                        detailTvInteraction.text = item.interaction
+//                        detailTvSideEffect.text = item.sideEffect
+//                        detailTvStoringMethod.text = item.storingMethod
+//                    }
+//                    historyViewModel.saveMedicineHistory(item)
+//                    bottomSheetDialog.setContentView(bottomSheetView.root)
+//                    bottomSheetDialog.show()
+//                }
+//
+//                override fun isMedicineChecked(item: Medicine): Boolean {
+//                    val result = mainViewModel.isMyMedicine(item.id!!)
+//                    Log.d(TAG,"${item.id}: $result")
+//                    return result
+//                }
+//
+//                override fun setMedicineChecked(item: Medicine, isChecked: Boolean) {
+//                    val hasIt = mainViewModel.isMyMedicine(item.id!!)
+//                    Log.d(TAG,"Do I have item:${item.id}? :$hasIt")
+//                    if(hasIt) {
+//                        Toast.makeText(requireContext(), "이미 복용 중인 약입니다.", Toast.LENGTH_SHORT).show()
+//                    } else {
+//                        MainNavigation.addFragment(
+//                            TakeAddFragment.newInstance(item), FragmentTag.TakeAddFragment
+//                        )
+//                    }
+//                }
+//            })
+//            medicineList.adapter = historyAdapter
+//            medicineList.itemAnimator = null
+//            historyViewModel.medicineHistory.observe(viewLifecycleOwner){
+//                if(it.isNotEmpty()) Log.d(TAG, "Class: ${it[0]::class.simpleName}")
+//                historyAdapter.submitList(it)
+//            }
+//        }
 
         return root
     }
@@ -155,11 +155,11 @@ class SearchHistoryFragment : Fragment() {
                 })
             }
         }
-
-        historyViewModel.medicineHistory.observe(viewLifecycleOwner){
-            if(it.isNotEmpty()) Log.d(TAG, "Class: ${it[0]::class.simpleName}")
-            historyAdapter.submitList(it)
-        }
+//
+//        historyViewModel.medicineHistory.observe(viewLifecycleOwner){
+//            if(it.isNotEmpty()) Log.d(TAG, "Class: ${it[0]::class.simpleName}")
+//            historyAdapter.submitList(it)
+//        }
 
     }
 
