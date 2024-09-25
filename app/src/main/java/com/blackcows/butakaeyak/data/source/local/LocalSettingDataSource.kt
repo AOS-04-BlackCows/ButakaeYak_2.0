@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import com.blackcows.butakaeyak.data.source.local.LocalUtilsDataSource.Companion
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -22,10 +24,22 @@ class LocalSettingDataSource @Inject constructor(
     private val editor = sharedPreferences.edit()
 
     fun saveAlarms(alarms: List<String>) {
-        editor.putStringSet(ALARMS, alarms.toSet()).apply()
+        val gson = Gson()
+        val jsonString = gson.toJson(alarms)
+
+        editor.putString(ALARMS, jsonString).apply()
     }
 
     fun getAlarms(): List<String> {
-        return sharedPreferences.getStringSet(ALARMS, setOf())?.toList() ?: listOf()
+        val json = kotlin.runCatching {
+            sharedPreferences.getString(ALARMS, "")
+        }.getOrElse {
+            return listOf()
+        }
+
+        val gson = Gson()
+        val type = object : TypeToken<List<String>>() {}.type
+
+        return gson.fromJson(json, type) ?: listOf()
     }
 }
