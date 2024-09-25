@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.textrecognition
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blackcows.butakaeyak.ui.textrecognition.data.Message
@@ -23,9 +24,11 @@ class OCRViewModel : ViewModel() {
                 val aiResponse =
                     GPTResponse(response.choices?.get(0)?.message?.content ?: "약 이름 없음")
                 _uiState.value = GPTResultUIState.Success(aiResponse)
+                Log.d("medicineNameList", "OCRViewModel   GPTResponse ${GPTResponse(response.choices?.get(0)?.message?.content ?: "약 이름 없음")}")
             } catch (e: Exception) {
                 _uiState.value = GPTResultUIState.Error(e.message ?: "AI 분석 실패")
             }
+
         }
     }
 }
