@@ -40,9 +40,6 @@ class MedicineGroupRepositoryImpl @Inject constructor(
                 val medicines = group.medicineIdList?.map {
                     medicineDetailDataSource.searchMedicinesWithId(it)[0]
                 }
-//                val daysWeek = group.daysOfWeeks?.map {
-//                    WeekDayUtils.fromKorean(it)
-//                }
 
                 val daysWeek = mutableListOf<WeekDay>()
                 group.daysOfWeeks?.forEach {
