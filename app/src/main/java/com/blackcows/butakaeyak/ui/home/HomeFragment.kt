@@ -111,16 +111,14 @@ class HomeFragment : Fragment(), View.OnClickListener {
         1. 아이템의 출력은 alarm의 갯수만큼
         2. 아이템의 정렬 순서도 alarm으로
 
-        TODO MedicineGroupRepositoryImpl 에 getMedicineGroup 이 어떤식으로 데이터를 불러오는지 파악해야 submitList가 가능함. 체크필요
         */
 
         todayMedicineGroupRvAdapter = HomeTodayMedicineRvAdapter (object : HomeTodayMedicineRvAdapter.ClickListener {
-            override fun onFavoriteClick(item: MedicineGroup, position: Int) {
-//                TODO("Not yet implemented")
+            override fun onTodayMedicineClick(item: HomeRvGroup, position: Int) {
+                // TODO 알람 그룹 클릭시 그룹 상세를 보여주는 화면으로 이동
             }
-
-            override fun onCallClick(item: MedicineGroup) {
-//                TODO("Not yet implemented")
+            override fun onAlarmClick(item: HomeRvGroup, position: Int) {
+                // TODO 여기서 선택된 아이템 내용에 따라 알람 등록 해제 등 기능이 실행되어야함.
             }
         })
         binding.homeRvTodayMedicineGroup.run {
