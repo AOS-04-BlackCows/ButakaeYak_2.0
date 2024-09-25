@@ -1,16 +1,19 @@
 package com.blackcows.butakaeyak.ui.user
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.TextView
+import android.widget.TimePicker
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.DialogMealTimeBinding
-import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import io.ktor.client.content.LocalFileContent
+import java.util.Locale
 
 @AndroidEntryPoint
 class MealTimeBottomSheet : BottomSheetDialogFragment() {
@@ -73,24 +76,56 @@ class MealTimeBottomSheet : BottomSheetDialogFragment() {
         val setDinner = binding.cvDinnerTime
 
         setBreakfast.setOnClickListener {
-            showTimePickerDialog(binding.breakfastTimeTextView)
+            showTimePickerDialog(binding.breakfastTimeTextView,"08:00")
         }
 
         setLunch.setOnClickListener {
-            showTimePickerDialog(binding.lunchTimeTextView)
+            showTimePickerDialog(binding.lunchTimeTextView,"13:00")
         }
 
         setDinner.setOnClickListener {
-            showTimePickerDialog(binding.dinnerTimeTextView)
+            showTimePickerDialog(binding.dinnerTimeTextView,"18:00")
         }
 
         return builder
     }
 
-    private fun showTimePickerDialog(textView: TextView) {
-        val timePickerDialog = TimePickerDialog(requireContext(), textView)
-        timePickerDialog.show()
+    private fun showTimePickerDialog(textView: TextView, defaultTime: String) {
+        val inflater = LayoutInflater.from(requireContext())
+        val dialogView: View = inflater.inflate(R.layout.dialog_timepicker, null)
 
-        Log.d(TAG, "TimePickerDialog : ${textView.text}")
+        val timePicker = dialogView.findViewById<TimePicker>(R.id.customTimePicker)
+        val btnSave = dialogView.findViewById<View>(R.id.btn_save)
+        val btnCancel = dialogView.findViewById<View>(R.id.btn_cancel)
+
+
+        // 기본 시간 설정
+        val timeParts = defaultTime.split(":")
+        val defaultHour = timeParts[0].toIntOrNull() ?: 0
+        val defaultMinute = timeParts[1].toIntOrNull() ?: 0
+
+        timePicker.hour = defaultHour
+        timePicker.minute = defaultMinute
+
+        timePicker.setIs24HourView(true)
+
+        // 다이얼로그 생성
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        //저장 버튼 클릭 이벤트
+        btnSave.setOnClickListener {
+            val selectedHour = timePicker.hour
+            val selectedMinute = timePicker.minute
+            textView.text = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute)
+            dialog.dismiss() // 다이얼로그 닫기
+        }
+        // 취소 버튼 클릭 이벤트
+        btnCancel.setOnClickListener {
+            dialog.dismiss() // 다이얼로그 닫기
+        }
+
+        dialog.show()
     }
 }
