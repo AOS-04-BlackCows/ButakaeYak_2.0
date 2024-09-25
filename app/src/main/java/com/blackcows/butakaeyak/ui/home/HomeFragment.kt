@@ -163,6 +163,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
             todayMedicineGroupRvAdapter.submitList(homeRvGroups.sortedBy { it.alarmTime }.take(2))
         }
+
+        userViewModel.user.observe(viewLifecycleOwner) {
+            val userId = it?.id ?: "guest"
+            homeViewModel.getTodayMedicine(userId)
+        }
     }
 
     // 상단 리싸이클러 뷰에 들어갈 데이터를 새로 만든 후 갱신
