@@ -55,6 +55,7 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/round_rect_500_12dp"
         android:translationZ="4dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/btn_add_medicine_group"
         app:layout_constraintEnd_toEndOf="parent">
 

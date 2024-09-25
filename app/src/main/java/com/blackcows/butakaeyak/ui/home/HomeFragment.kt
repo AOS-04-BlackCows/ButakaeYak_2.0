@@ -29,6 +29,7 @@ import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import io.ktor.util.date.WeekDay
+import kotlinx.coroutines.delay
 import java.time.LocalDate
 
 
@@ -41,6 +42,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     lateinit var fab_open: Animation
     lateinit var fab_close: Animation
+    lateinit var fab_close_no_delay: Animation
     var openFlag = false
 
     private val homeViewModel: HomeViewModel by activityViewModels()
@@ -79,14 +81,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
         //애니메이션 변수
         fab_open = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open)
         fab_close = AnimationUtils.loadAnimation(requireContext(),R.anim.fab_close)
-
-        //초기 애니메이션은 닫혀있는 애니메이션
-        binding.btnAddMedicineContainer.startAnimation(fab_close)
+        fab_close_no_delay = AnimationUtils.loadAnimation(requireContext(),R.anim.fab_close_no_delay)
 
         binding.btnAddMedicineGroup.setOnClickListener(this)
         binding.btnAddMedicineContainer.setOnClickListener(this)
 
-        binding.btnAddMedicineContainer.isClickable = false
         fragmentInit()
         //
 //        fragList = arrayListOf(FragmentControl(), FragmentState(), FragmentPolicy())
@@ -186,9 +185,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View){
         when(v.id){
             R.id.btn_add_medicine_group -> anim()
-            R.id.btn_add_medicine_container ->{
-                anim()
-            }
+            R.id.btn_add_medicine_container -> anim()
         }
     }
 
@@ -197,12 +194,18 @@ class HomeFragment : Fragment(), View.OnClickListener {
             // Fab이 눌려있을때 닫는 애니메이션
             binding.btnAddMedicineContainer.startAnimation(fab_close)
             binding.btnAddMedicineContainer.isClickable = false
+            binding.btnAddMedicine1.isClickable = false
+            binding.btnAddMedicine2.isClickable = false
             openFlag = false
+            binding.btnAddMedicineContainer.visibility = View.GONE
         } else {
             // Fab이 눌리지 않았을 때 여는 애니메이션
             binding.btnAddMedicineContainer.startAnimation(fab_open)
             binding.btnAddMedicineContainer.isClickable = true
+            binding.btnAddMedicine1.isClickable = true
+            binding.btnAddMedicine2.isClickable = true
             openFlag = true
+            binding.btnAddMedicineContainer.visibility = View.VISIBLE
         }
     }
 
@@ -218,13 +221,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
         // 직접 등록
         binding.btnAddMedicine1.setOnClickListener{
             MainNavigation.addFragment(TakeAddFragment(), FragmentTag.TakeAddFragment)
-            anim()
         }
         // 사진 등록
         binding.btnAddMedicine2.setOnClickListener{
-//            startActivity(Intent(requireActivity(), OCRActivity::class.java))
             MainNavigation.addFragment(OcrFragment(), FragmentTag.OCRFragment)
-            anim()
         }
     }
 
@@ -233,9 +233,18 @@ class HomeFragment : Fragment(), View.OnClickListener {
         _binding = null
     }
 
+    override fun onPause() {
+        super.onPause()
+        // Fab이 눌려있을때 닫는 애니메이션
+        binding.btnAddMedicineContainer.startAnimation(fab_close)
+        binding.btnAddMedicineContainer.isClickable = false
+        binding.btnAddMedicine1.isClickable = false
+        binding.btnAddMedicine2.isClickable = false
+        openFlag = false
+    }
     override fun onResume() {
         super.onResume()
-
+        binding.btnAddMedicineContainer.visibility = View.GONE
         homeViewModel.getTodayMedicine(userViewModel.user.value?.id ?: "guest")
     }
 }
