@@ -3,6 +3,8 @@ package com.blackcows.butakaeyak.data.source.local
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.blackcows.butakaeyak.data.models.AutoLoginData
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -22,6 +24,22 @@ class LocalUtilsDataSource @Inject constructor(
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(APP_SHARED_PREFS, Activity.MODE_PRIVATE)
     private val editor = sharedPreferences.edit()
 
+    private val encryptedPreferences by lazy {
+        val masterKeyAlias = MasterKey
+            .Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+
+        EncryptedSharedPreferences.create(
+            context,
+            LOGIN_DATA,
+            masterKeyAlias,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    }
+
     fun isSignIn(): Boolean {
         return sharedPreferences.getBoolean(IS_LOGIN, false)
     }
@@ -32,18 +50,19 @@ class LocalUtilsDataSource @Inject constructor(
     fun saveAutoLoginData(loginData: AutoLoginData) {
         val gson = Gson()
         val json = gson.toJson(loginData)
-        editor.putString(LOGIN_DATA, json).apply()
+
+        encryptedPreferences.edit().putString(LOGIN_DATA, json).apply()
     }
 
     fun getAutoLoginData(): AutoLoginData? {
-        return sharedPreferences.getString(LOGIN_DATA, null)?.let {
+        return encryptedPreferences.getString(LOGIN_DATA, null)?.let {
             val gson = Gson()
             gson.fromJson(it, AutoLoginData::class.java)
         }
     }
 
     fun deleteAutoLoginData() {
-        editor.remove(LOGIN_DATA).apply()
+        encryptedPreferences.edit().remove(LOGIN_DATA).apply()
     }
 
 
