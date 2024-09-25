@@ -73,15 +73,26 @@ class ScheduleFragment : Fragment() {
                 }
             }
         }
+    }
 
-        //initProfiles()
+    override fun onResume() {
+        super.onResume()
+
+        initProfiles()
     }
 
     private fun initProfiles() {
-        val myScheduleProfile = if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
-            scheduleViewModel.getFriendProfile(userViewModel.user.value!!.id)
+        val myScheduleProfile: ScheduleProfile
+        if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
+            scheduleViewModel.getFriendProfile(id)
             return
-        } else ScheduleProfile("", "나", "")
+        } else {
+            myScheduleProfile = ScheduleProfile("", "나", "")
+        }
+
+        Log.d("ScheduleFragment", "replace on initProfiles.")
+
+        profileRvAdapter.submitList(listOf(myScheduleProfile))
 
         val detailFragment = ScheduleDetailFragment.newInstance(myScheduleProfile.userId, true)
         parentFragmentManager.beginTransaction()
@@ -93,24 +104,15 @@ class ScheduleFragment : Fragment() {
         userViewModel.user.observe(viewLifecycleOwner) { user ->
             Log.d("UserViewModel", "ScheduleFragment: user is null? :${user==null}")
 
-            if(user == null) {
-                initProfiles()
-            } else {
+            if(user != null) {
                 curScheduleProfileId = user.id
-                binding.loginGuideCl.visibility = View.GONE
-                //scheduleViewModel.getFriendProfile(user.id)
-
-                initProfiles()
+            } else {
+                curScheduleProfileId = ""
             }
         }
 
         scheduleViewModel.scheduleProfile.observe(viewLifecycleOwner) { friendsProfiles ->
-            Log.d("ScheduleFragment", "check userNull?")
-
-            Log.d("ScheduleFragment", "fragment: size is ${scheduleViewModel.scheduleProfile.value!!.size}")
-
-
-            val myScheduleProfile = if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
+           val myScheduleProfile = if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
                 ScheduleProfile(id, name, profileUrl!!)
             } else ScheduleProfile("", "나", "")
 
@@ -121,6 +123,11 @@ class ScheduleFragment : Fragment() {
             }
 
             profileRvAdapter.submitList(list)
+
+            val detailFragment = ScheduleDetailFragment.newInstance(myScheduleProfile.userId, true)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.schedule_container_view, detailFragment)
+                .commit()
         }
     }
 }

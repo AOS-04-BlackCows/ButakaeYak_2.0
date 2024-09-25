@@ -155,6 +155,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
             return false
         }
         var medicineGroupList: MutableList<HomeRvGroup> = mutableListOf()
+
+        // 상단 리싸이클러 뷰에 들어갈 데이터를 새로 만든 후 갱신
         fun medicineGroupConverter (list: List<MedicineGroup>): List<HomeRvGroup> {
             medicineGroupList = mutableListOf()
             for (i in list) {
@@ -166,11 +168,18 @@ class HomeFragment : Fragment(), View.OnClickListener {
             medicineGroupList.sortBy { it.alarmTime }
             return medicineGroupList
         }
+        medicineGroupConverter(mockUpMedicineGroup)
+        todayMedicineGroupRvAdapter.submitList(medicineGroupList.take(2))
         binding.homeAlarmViewMore.setOnClickListener {
             Log.d("$TAG 1", "medicineGroupConverter(mockUpMedicineGroup) = $mockUpMedicineGroup")
             Log.d("$TAG 2", "medicineGroupConverter(mockUpMedicineGroup) = ${medicineGroupConverter(mockUpMedicineGroup)}")
-            medicineGroupConverter(mockUpMedicineGroup)
-            todayMedicineGroupRvAdapter.submitList(medicineGroupList)
+            if (todayMedicineGroupRvAdapter.currentList.size == 2) {
+                todayMedicineGroupRvAdapter.submitList(medicineGroupList)
+                binding.homeAlarmViewMore.setText(R.string.view_close)
+            } else {
+                todayMedicineGroupRvAdapter.submitList(medicineGroupList.take(2))
+                binding.homeAlarmViewMore.setText(R.string.view_more)
+            }
         }
         Log.d(TAG,"mainViewModel.getMyMedicineList() = ${mainViewModel.myMedicines.value}")
 

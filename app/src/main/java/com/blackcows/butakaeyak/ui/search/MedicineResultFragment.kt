@@ -37,7 +37,6 @@ class MedicineResultFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
 
     private var columnCount = 1 //컬럼 갯수 = 1 리니어
-    private var touch_logs = mutableListOf<Medicine>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +73,6 @@ class MedicineResultFragment : Fragment() {
         binding.apply {
             medicineAdapter = SearchRecyclerAdapter(object : SearchRecyclerAdapter.ClickListener{
                 override fun onItemClick(item: Medicine) {
-                    touch_logs.add(item)
                     val bottomSheetView = BottomsheetSearchDetailBinding.inflate(layoutInflater)
                     val bottomSheetDialog = BottomSheetDialog(requireContext())
                     with(bottomSheetView){
@@ -89,14 +87,10 @@ class MedicineResultFragment : Fragment() {
                         detailTvSideEffect.text = item.sideEffect
                         detailTvStoringMethod.text = item.storingMethod
                     }
-                    //TODO 클릭한 약 정보 검색 기록으로 넘겨야 함...
+                    searchViewModel.saveMedicineHistory(item)
                     bottomSheetDialog.setContentView(bottomSheetView.root)
                     bottomSheetDialog.show()
 
-//                    MainNavigation.addFragment(
-//                        SearchDetailFragment.newInstance(item),
-//                        FragmentTag.SearchDetailFragmentInSearch
-//                    )
                     Log.d(TAG,"${item.id}, ${item.name} ")
                 }
                 override fun isMedicineChecked(item: Medicine) : Boolean {
