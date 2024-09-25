@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.schedule.recycler
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -32,6 +33,7 @@ class ProfileRvAdapter(
             nameTv.text = item.name
 
             binding.root.setOnClickListener {
+                Log.d("ScheduleFragment", "recycler click!")
                 onProfileClick(item.userId)
             }
         }

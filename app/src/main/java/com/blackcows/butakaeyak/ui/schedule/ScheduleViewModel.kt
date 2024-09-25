@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.schedule
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -96,9 +97,8 @@ class ScheduleViewModel @Inject constructor(
     fun clearScheduleProfiles() {
         viewModelScope.launch {
             _uiState.value = ScheduleUiState.Loading
-
             _scheduleProfile.value = listOf()
-
+            Log.d("ScheduleFragment", "viewModel: size is ${_scheduleProfile.value!!.size}")
             _uiState.value = ScheduleUiState.Success
         }
     }

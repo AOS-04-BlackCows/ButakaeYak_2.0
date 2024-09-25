@@ -43,7 +43,7 @@ class SignInFragment : Fragment() {
                 when(it) {
                     is LoginUiState.Success -> {
                         // 로그인 성공하면 마이페이지로 이동!
-                        Toast.makeText(requireContext(), "login: 로그인 성공", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "로그인 성공", Toast.LENGTH_SHORT).show()
                         MainNavigation.popCurrentFragment()
                         MainNavigation.disableLoadingBar()
                     }
@@ -53,12 +53,12 @@ class SignInFragment : Fragment() {
                     }
 
                     is LoginUiState.UnKnownUserData -> {
-                        Toast.makeText(requireContext(), "login: 언노운", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(requireContext(), "login: 언노운", Toast.LENGTH_SHORT).show()
                         MainNavigation.disableLoadingBar()
                     }
 
                     is LoginUiState.Failure -> {
-                        Toast.makeText(requireContext(), "login: 로그인 실패...", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "로그인 실패", Toast.LENGTH_SHORT).show()
                         MainNavigation.disableLoadingBar()
                     }
 

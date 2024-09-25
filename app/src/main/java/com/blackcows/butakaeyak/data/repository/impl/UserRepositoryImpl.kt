@@ -62,7 +62,7 @@ class UserRepositoryImpl @Inject constructor(
             val isDuplicated = userDataSource.isDuplicatedId(userRequest.loginId!!)
 
             if(isDuplicated) {
-                SignUpResult.LoginIdDuplicate
+                SignUpResult.LoginIdDuplicate(userRequest.kakaoId!!.toString())
             } else {
                 SignUpResult.Success(userDataSource.saveUser(userRequest))
             }
@@ -126,9 +126,15 @@ class UserRepositoryImpl @Inject constructor(
                 return if(loginResult == null) {
                     SignUpResult.KakaoSignUpFail
                 } else {
-                    SignUpResult.Success(
-                        userDataSource.saveUser(loginResult)
-                    )
+                    //중복체크
+                    val isDuplicated = userDataSource.isDuplicatedId(loginResult.kakaoId!!.toString())
+                    if(isDuplicated) {
+                        SignUpResult.LoginIdDuplicate(loginResult.kakaoId.toString())
+                    } else {
+                        SignUpResult.Success(
+                            userDataSource.saveUser(loginResult)
+                        )
+                    }
                 }
             }
         }
@@ -167,6 +173,15 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun deleteAccount(user: User) {
         runCatching {
             userDataSource.deleteAccount(user)
+        }.onFailure {
+            Log.w(TAG, "deleteAccount failed) msg: ${it.message}")
+            println("deleteAccount failed) msg: ${it.message}")
+        }
+    }
+
+    override suspend fun deleteAccount(id: String) {
+        runCatching {
+            userDataSource.deleteAccount(id)
         }.onFailure {
             Log.w(TAG, "deleteAccount failed) msg: ${it.message}")
             println("deleteAccount failed) msg: ${it.message}")

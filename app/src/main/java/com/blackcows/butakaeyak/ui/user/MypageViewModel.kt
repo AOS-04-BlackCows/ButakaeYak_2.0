@@ -15,7 +15,7 @@ class MypageViewModel @Inject constructor(
     fun saveDefaultAlarms(alarms: List<String>) {
         localSettingRepository.saveDefaultAlarms(alarms)
     }
-    fun getDefaultAlarms() {
-        localSettingRepository.getDefaultAlarms()
+    fun getDefaultAlarms() : List<String> {
+        return localSettingRepository.getDefaultAlarms()
     }
 }
