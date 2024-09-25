@@ -3,6 +3,7 @@ package com.blackcows.butakaeyak.ui.search.adapter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -10,13 +11,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.blackcows.butakaeyak.data.models.Medicine
-import com.blackcows.butakaeyak.databinding.FragmentSearchHistoryBinding
-import com.blackcows.butakaeyak.databinding.ItemResultsBinding
-import com.blackcows.butakaeyak.ui.search.data.ListItem
+import com.blackcows.butakaeyak.databinding.ItemHistorysBinding
 import com.bumptech.glide.Glide
 
-private const val TAG = "SearchRecyclerAdapter"
-class SearchRecyclerAdapter(private val clickListener: ClickListener) :
+private const val TAG = "HistoryRecyclerAdapter"
+class HistoryRecyclerAdapter(private val clickListener: ClickListener) :
     ListAdapter<Medicine, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
@@ -49,7 +48,7 @@ class SearchRecyclerAdapter(private val clickListener: ClickListener) :
         return when (viewType) {
             TYPE_MEDICINE -> {
                 val medicineBinding =
-                    ItemResultsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                    ItemHistorysBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 MedicineResultHolder(medicineBinding)
             }
 //            TYPE_FEED -> {}
@@ -68,25 +67,23 @@ class SearchRecyclerAdapter(private val clickListener: ClickListener) :
         }
     }
 
-    inner class MedicineResultHolder(medicineView: ItemResultsBinding) :
+    inner class MedicineResultHolder(medicineView: ItemHistorysBinding) :
         RecyclerView.ViewHolder(medicineView.root) {
         private val ivMedicine: ImageView = medicineView.ivMedicine
         private val tvMedicineName: TextView = medicineView.tvMedicineName
         private val tvMedicineType: TextView = medicineView.tvMedicineType
-        private val ivMyMedicine: ImageView = medicineView.ivMyMedicine
+        private val cbMyMedicine: CheckBox = medicineView.cbMyMedicine
         private val loMedicineInfo: ConstraintLayout = medicineView.loMedicineInfo
 
         fun bind(medicineItem: Medicine) {
             val isSaved = clickListener.isMedicineChecked(medicineItem)
             Log.d("HomeRecyclerView", "Name: ${medicineItem.name}, $isSaved")
-            
+
             with(medicineItem) {
 
                 if(imageUrl?.isNotEmpty() == true) {
                     Glide.with(itemView).load(imageUrl).into(ivMedicine)
                 }
-
-                Log.d(TAG, "ivMyMedicine.isEnabled: ${ivMyMedicine.isEnabled}")
 
                 tvMedicineName.text = name
                 tvMedicineType.text = effect
@@ -94,18 +91,22 @@ class SearchRecyclerAdapter(private val clickListener: ClickListener) :
                     clickListener.onItemClick(medicineItem)
                     Log.d(TAG, "${name}")
                 }
-                ivMyMedicine.setOnClickListener {
-                    Log.d(TAG, "click!")
-                    clickListener.setMedicineChecked(medicineItem, true)
-                    Log.d(TAG,"${name}")
-                    //TODO NameFragment로 약 이름 넘기기
+                cbMyMedicine.setOnCheckedChangeListener { buttonView, isChecked ->
+                    Log.d(TAG, "cbMyMedicine.isChecked: ${cbMyMedicine.isChecked}")
                 }
+//                    .setOnClickListener {
+//                    Log.d(TAG, "click!")
+//                    //clickListener.onMyMedicineClick(medicineItem,isChecked)
+//                    clickListener.setMedicineChecked(medicineItem, true)
+//                    Log.d(TAG, "${name}")
+//                    //TODO NameFragment로 약 이름 넘기기
+//                }
             }
         }
     }
-
     interface ClickListener{
         fun onItemClick(item: Medicine)
+        fun onItemlLongClick(item: Medicine)
         fun isMedicineChecked(item: Medicine) : Boolean
         fun setMedicineChecked(item: Medicine, isChecked:Boolean)
     }
