@@ -367,9 +367,6 @@ class CycleFragment : Fragment() {
                     val alarmClock = AlarmManager.AlarmClockInfo(adjustedTimeInMillis, pendingIntent)
                     alarmManager.setAlarmClock(alarmClock, pendingIntent)
 
-                    //TODO 반복 주기에 따른 알람 설정 추가 제거
-//                    scheduleNextAlarm(repeatType, alarmManager, pendingIntent, adjustedTimeInMillis)
-
                 } catch (e: SecurityException) {
                     Toast.makeText(context, "알림 설정에 실패했습니다. 권한을 확인해주세요.", Toast.LENGTH_SHORT).show()
                 }
