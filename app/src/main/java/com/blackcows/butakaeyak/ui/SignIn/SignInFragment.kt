@@ -37,6 +37,8 @@ class SignInFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        MainNavigation.hideBottomNavigation(true)
+
         lifecycleScope.launch {
             userViewModel.loginUiState.collectLatest {
                 Log.d("SignInFragment: Login", it.toString())
@@ -76,5 +78,11 @@ class SignInFragment : Fragment() {
         binding.ivBack.setOnClickListener {
             MainNavigation.popCurrentFragment()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        MainNavigation.hideBottomNavigation(false)
+        _binding = null
     }
 }
