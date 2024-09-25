@@ -52,6 +52,7 @@ class ScheduleViewModel @Inject constructor(
     fun changeToTimeToGroup(): List<TimeToGroup> {
         val alarmMap = mutableMapOf<String, MutableList<MedicineGroup>>()
         val groups = dateToMedicineGroup.value!!
+
         groups.forEach {
             it.alarms.forEach { alarm ->
                 alarmMap.getOrPut(alarm) { mutableListOf() }.add(it)

@@ -31,7 +31,7 @@ class TimeGroupRvAdapter(
         fun bind(item: MedicineGroup) {
             with(binding) {
                 groupNameTv.text = item.name
-                medicineNumTv.text = "약 ${item.medicines.size}개"
+                medicineNumTv.text = "약 ${item.medicines.size + item.customNameList.size}개"
 
                 val timeToTaken = "${LocalDate.now()} $alarm"
                 if(item.hasTaken.contains(timeToTaken)){
