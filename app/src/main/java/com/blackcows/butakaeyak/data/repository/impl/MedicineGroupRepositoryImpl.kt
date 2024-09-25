@@ -28,7 +28,7 @@ class MedicineGroupRepositoryImpl @Inject constructor(
     }
 
     private val medicineGroupDataSource
-    = if(localUtilsRepository.isSignIn()) remoteMedicineGroupDataSource
+        get() = if(localUtilsRepository.isSignIn()) remoteMedicineGroupDataSource
         else localMedicineGroupDataSource
 
 

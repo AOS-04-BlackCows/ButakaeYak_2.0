@@ -20,7 +20,7 @@ class MyPharmacyRepositoryImpl @Inject constructor(
     }
 
     private val myPharmacyDataSource
-    = if(localUtilsDataSource.isSignIn()) remoteMyPharmacyDataSource
+        get() = if(localUtilsDataSource.isSignIn()) remoteMyPharmacyDataSource
     else localMyPharmacyDataSource
 
     override suspend fun getMyFavorites(userId: String): List<MyPharmacy> {
