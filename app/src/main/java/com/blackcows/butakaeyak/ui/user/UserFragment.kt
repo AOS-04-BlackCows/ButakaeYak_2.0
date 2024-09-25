@@ -118,7 +118,7 @@ class UserFragment : Fragment() {
                 }
                 Glide.with(this)
                     .load(user.profileUrl ?: R.drawable.account_circle)
-                    .apply(RequestOptions.bitmapTransform(RoundedCorners(90)))
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners(40)))
                     .placeholder(R.drawable.account_circle) // 기본 이미지
                     .into(binding.ivProfile)
 
