@@ -108,4 +108,56 @@ class MedicineGroupRepositoryImpl @Inject constructor(
             Log.w(TAG, "notifyTaken failed) msg: ${it.message}")
         }.getOrDefault(medicineGroup)
     }
+
+    override suspend fun notifyTaken(groupId: String, taken: Boolean, takenTime: String): MedicineGroup? {
+        return kotlin.runCatching {
+            val format = "${LocalDate.now()} $takenTime"
+
+            val groupResponse = medicineGroupDataSource.getMedicineGroupById(groupId) ?: return null
+
+            val medicines = groupResponse.medicineIdList?.map {
+                medicineDetailDataSource.searchMedicinesWithId(it)[0]
+            }
+
+            val daysWeek = mutableListOf<WeekDay>()
+            groupResponse?.daysOfWeeks?.forEach {
+                if(it.isNotEmpty()) {
+                    daysWeek.add(WeekDayUtils.fromKorean(it))
+                }
+            }
+
+            val group = MedicineGroup(
+                id = groupResponse.id!!,
+                name = groupResponse.name!!,
+                userId = groupResponse.userId!!,
+                medicines = medicines!!,
+                customNameList = groupResponse.customNameList ?: listOf(),
+                imageUrlList = groupResponse.imageUrlList ?: listOf(),
+                startedAt = LocalDate.parse(groupResponse.startedAt),
+                finishedAt = LocalDate.parse(groupResponse.finishedAt),
+                daysOfWeeks = daysWeek ?: listOf(),
+                alarms = groupResponse.alarms ?: listOf(),
+                hasTaken = groupResponse.hasTaken ?: listOf()
+            )
+            val takenGroup
+                    = if(taken) {
+                group.copy(
+                    hasTaken = group.hasTaken.toMutableList().apply { add(format) }
+                )
+            } else {
+                val removedList = group.hasTaken.toMutableList()
+                removedList.removeIf { it == format }
+
+                group.copy(
+                    hasTaken = removedList
+                )
+            }
+
+            medicineGroupDataSource.updateGroup(takenGroup)
+
+            takenGroup
+        }.onFailure {
+            Log.w(TAG, "notifyTaken failed) msg: ${it.message}")
+        }.getOrDefault(null)
+    }
 }

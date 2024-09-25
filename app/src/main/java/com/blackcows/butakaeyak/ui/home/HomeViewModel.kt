@@ -7,6 +7,8 @@ import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.data.repository.impl.MedicineGroupRepositoryImpl
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.schedule.ScheduleUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,6 +27,13 @@ class HomeViewModel @Inject constructor (
     fun getTodayMedicine (user: String) {
         viewModelScope.launch {
             _medicineGroup.value = medicineGroupRepository.getMyGroups(user)
+        }
+    }
+    fun checkTakenMedicineGroup(groupId: String, taken: Boolean, alarm: String) {
+        viewModelScope.launch {
+            MainNavigation.showLoadingBar()
+            medicineGroupRepository.notifyTaken(groupId, taken, alarm)
+            MainNavigation.disableLoadingBar()
         }
     }
     // 가족 데이터 불러오기

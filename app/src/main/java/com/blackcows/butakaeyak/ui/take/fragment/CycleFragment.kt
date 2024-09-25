@@ -261,6 +261,8 @@ class CycleFragment : Fragment() {
 //        val isRepeatCycle = binding.tvRepeatCycle.text.isNotEmpty()
         val isCycleAlarmAdd = binding.tvCycleAlarmAdd.text.isNotEmpty()
 
+
+
         binding.apply {
             if(isMedicineGroup && isStartDay && isCycleAlarmAdd){
                 btnNext.isEnabled = true
@@ -274,6 +276,10 @@ class CycleFragment : Fragment() {
                     //TODO viewModel 약 그룹이랑 끝나는 날짜 값 설정
                     viewModel.groupName = nameGroup
                     viewModel.finishDate = finishDate
+                    viewModel.alarms = adapter.getAlarmList().map {
+                        it.timeText!!
+                    }
+
 
                     val userId = userViewModel.user.value?.id ?: ""
 

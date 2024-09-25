@@ -36,7 +36,6 @@ class HomeTodayMedicineRvAdapter(private val clickListener: ClickListener): List
                     clickListener.onTodayMedicineClick(item, position)
                 }
                 btnHomeMedicineCheck.setOnClickListener {
-                    clickListener.onAlarmClick(item, position)
                     btnHomeMedicineCheck.isSelected = !btnHomeMedicineCheck.isSelected
                     if (btnHomeMedicineCheck.isSelected) {
                         // 먹었음
@@ -47,6 +46,8 @@ class HomeTodayMedicineRvAdapter(private val clickListener: ClickListener): List
                         btnHomeMedicineCheck.text = "안먹음"
                         btnHomeMedicineCheck.setTextColor(binding.root.context.resources.getColor(R.color.black))
                     }
+
+                    clickListener.onAlarmClick(item, position, btnHomeMedicineCheck.isSelected)
                 }
             }
         }
@@ -65,7 +66,7 @@ class HomeTodayMedicineRvAdapter(private val clickListener: ClickListener): List
 
     interface ClickListener {
         fun onTodayMedicineClick(item: HomeRvGroup, position: Int)
-        fun onAlarmClick(item: HomeRvGroup, position: Int)
+        fun onAlarmClick(item: HomeRvGroup, position: Int, isSelected: Boolean)
     }
 
 }
