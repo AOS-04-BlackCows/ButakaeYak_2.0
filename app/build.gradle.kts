@@ -225,4 +225,9 @@ dependencies {
     // viewPager2 Indicator
     implementation("com.tbuonomo:dotsindicator:5.0")
     implementation("com.vanniktech:android-image-cropper:4.5.0")
+
+
+    //EncryptedSharedPreferences
+    implementation("androidx.security:security-crypto-ktx:1.1.0-alpha03")
+
 }
