@@ -35,12 +35,12 @@ class TimeGroupRvAdapter(
 
                 val timeToTaken = "${LocalDate.now()} $alarm"
                 if(item.hasTaken.contains(timeToTaken)){
-                    takenCb.isChecked = true
+                    takenCb.isSelected = true
 
                     Log.d("ScheduleFragment: TimeGroupRvAdapter", "timeToTaken: $timeToTaken")
                     Log.d("ScheduleFragment: TimeGroupRvAdapter", "hasTaken: ${item.hasTaken.joinToString()}")
 
-                    Log.d("ScheduleFragment: TimeGroupRvAdapter", "isChecked: ${takenCb.isChecked}")
+                    Log.d("ScheduleFragment: TimeGroupRvAdapter", "isSelected: ${takenCb.isSelected}")
                     Log.d("ScheduleFragment: TimeGroupRvAdapter", "------------------------------------------------------------")
 
                 }
@@ -51,10 +51,10 @@ class TimeGroupRvAdapter(
                 }
 
                 takenCb.setOnClickListener {
-                    takenCb.isChecked = !takenCb.isChecked
-                    onCheckClick(item, takenCb.isChecked, alarm)
+                    takenCb.isSelected = !takenCb.isSelected
+                    onCheckClick(item, takenCb.isSelected, alarm)
 
-                    Log.d("ScheduleFragment: TimeGroupRvAdapter", "isChecked click: ${takenCb.isChecked}")
+                    Log.d("ScheduleFragment: TimeGroupRvAdapter", "isSelected click: ${takenCb.isSelected}")
                 }
 
                 modifyBtn.setOnClickListener {

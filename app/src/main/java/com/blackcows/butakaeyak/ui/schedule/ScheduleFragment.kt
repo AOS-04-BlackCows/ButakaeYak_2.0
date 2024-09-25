@@ -74,7 +74,7 @@ class ScheduleFragment : Fragment() {
             }
         }
 
-        //initProfiles()
+        initProfiles()
     }
 
     private fun initProfiles() {
