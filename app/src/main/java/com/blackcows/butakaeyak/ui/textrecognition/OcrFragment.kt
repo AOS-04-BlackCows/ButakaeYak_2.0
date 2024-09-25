@@ -163,32 +163,32 @@ class OcrFragment : Fragment(), View.OnClickListener {
             medicineList?.clear()
             ocrViewModel.fetchAiAnalysisResult(texts.text)
             ocrViewModel.uiState.collect{uiState ->
-                binding.textViewOcrResult.text = when(uiState){
-                    is GPTResultUIState.Loading -> "약 이름 찾는중...🧐"
-                    is GPTResultUIState.Success -> uiState.response.gptMessage.trim()
-                    is GPTResultUIState.Error -> uiState.errorMessage
-                }
                 when(uiState){
-                    is GPTResultUIState.Loading -> binding.lodingProgress.visibility = View.VISIBLE
+                    is GPTResultUIState.Loading -> {
+                        binding.textViewOcrResult.text = "약 이름 찾는중...🧐"
+                        binding.lodingProgress.visibility = View.VISIBLE
+                    }
+
                     is GPTResultUIState.Success -> {
-                        Log.d(TAG, "약이름 찾기후${uiState.response.gptMessage.trim()}")
+                        Log.d(TAG, "약이름 찾기후  ${uiState.response.gptMessage.trim()}")
 
                         if (uiState.response.gptMessage.trim().equals("약 이름 없음")){
                             binding.textViewOcrResult.text = "약 이름이 없는 사진이에요...😥\n 다시 촬영해 주세요"
                         }else{
+                            binding.textViewOcrResult.text = uiState.response.gptMessage.trim()
                             medicineList = uiState.response.gptMessage.split(", ").toMutableList()
+                            Log.d("medicineNameList", "OCR프레그먼트 ${medicineList.toString()}, uiState.response.gptMessage: ${uiState.response.gptMessage.trim()}")
                             medicineList.let {
                                 takeAddViewModel.saveNames(it?: mutableListOf())
                             }
                             MainNavigation.popCurrentFragment()
                             MainNavigation.addFragment(TakeAddFragment(), FragmentTag.TakeAddFragment)
-                            Log.d(TAG, "뮤터블 리스트에 넣은 후${uiState.response.gptMessage.trim()}\n medicineList size:${medicineList?.size}\nmedicineList first:${medicineList?.first()}")
                         }
                         binding.lodingProgress.visibility = View.GONE
                     }
                     is GPTResultUIState.Error -> {
                         binding.lodingProgress.visibility = View.GONE
-                        uiState.errorMessage
+                        binding.textViewOcrResult.text = uiState.errorMessage
                     }
                 }
             }

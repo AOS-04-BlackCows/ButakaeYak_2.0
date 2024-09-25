@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.take
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -66,9 +67,11 @@ class TakeAddViewModel @Inject constructor(
     }
 
     fun saveNames(medicines: MutableList<String>){
+        Log.d("saveNames medicineNameList","medicineNameList Data: ${medicineNameList}, medicines: ${medicines}")
         medicineNameList.addAll(medicines)
     }
     fun loadNames(): List<TakeAddMedicine> {
+        Log.d("loadNames medicineNameList","medicineNameList Data: ${medicineNameList}")
         return medicineNameList.map {
             TakeAddMedicine(
                 imageUrl = "medicine_type_1",
@@ -92,5 +95,7 @@ class TakeAddViewModel @Inject constructor(
         hasTaken = listOf()
         daysOfWeeks = listOf()
         medicineIdList = listOf()
+
+        medicineNameList.clear()
     }
 }
