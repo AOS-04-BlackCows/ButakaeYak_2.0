@@ -28,6 +28,7 @@ import com.blackcows.butakaeyak.databinding.BottomsheetMapDetailBinding
 import com.blackcows.butakaeyak.databinding.BottomsheetMapListBinding
 import com.blackcows.butakaeyak.databinding.FragmentMapBinding
 import com.blackcows.butakaeyak.ui.map.adapter.PharmacyListRvAdapter
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
@@ -84,6 +85,8 @@ class MapFragment : Fragment() {
         // 키해쉬 발급 ( 디버그 )
          val keyHash = Utility.getKeyHash(requireContext())
          Log.d(TAG, "keyHash : $keyHash")
+
+        MainNavigation.hideBottomNavigation(true)
 
 
 
@@ -493,6 +496,13 @@ class MapFragment : Fragment() {
         locationManager.removeUpdates(locationListener)
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        MainNavigation.hideBottomNavigation(false)
+        _binding = null
+    }
 
 }
 
