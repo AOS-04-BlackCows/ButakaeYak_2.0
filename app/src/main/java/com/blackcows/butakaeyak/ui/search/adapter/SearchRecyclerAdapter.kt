@@ -25,10 +25,6 @@ class SearchRecyclerAdapter(private val clickListener: ClickListener) :
                 return when {
                     oldItem is Medicine && newItem is Medicine ->
                         oldItem.id == newItem.id
-
-//                    oldItem is ListItem.FeedItem && newItem is ListItem.FeedItem ->
-//                        oldItem.name == newItem.name
-
                     else -> false
                 }
             }
@@ -45,7 +41,6 @@ class SearchRecyclerAdapter(private val clickListener: ClickListener) :
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is Medicine -> TYPE_MEDICINE
-//            is ListItem.FeedItem -> TYPE_FEED
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -113,9 +108,6 @@ class SearchRecyclerAdapter(private val clickListener: ClickListener) :
 
     inner class SearchHistoryHolder(searchHistory: FragmentSearchHistoryBinding) :
         RecyclerView.ViewHolder(searchHistory.root) {
-//        val feedthumb: ImageView = binding.feedIvThumb
-//        val feedname: TextView = binding.feedTvName
-//        val feedwriter: TextView = binding.feedTvWriter
 
         fun bind(medicineitem: ListItem.FeedItem) {
             when (medicineitem) {
@@ -125,6 +117,7 @@ class SearchRecyclerAdapter(private val clickListener: ClickListener) :
     }
     interface ClickListener{
         fun onItemClick(item: Medicine)
+//        fun onItemlLongClick(item: Medicine)
         fun isMedicineChecked(item: Medicine) : Boolean
         fun setMedicineChecked(item: Medicine, isChecked:Boolean)
 //        fun onMyMedicineClick(item: Medicine,needAdd :Boolean)

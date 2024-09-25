@@ -31,7 +31,7 @@ class SearchViewModel @Inject constructor(
     private val _queryHistory = MutableLiveData<List<String>>(listOf())
     val queryHistory get() = _queryHistory
 
-    private val _medicineHistory = MutableLiveData<List<MedicineDetail>>(listOf())
+    private val _medicineHistory = MutableLiveData<List<Medicine>>(listOf())
     val medicineHistory get() = _medicineHistory
 
     private val _text = MutableLiveData<String>().apply {
@@ -68,11 +68,13 @@ class SearchViewModel @Inject constructor(
 
     fun getMedicineHistory(){
         val idList = searchHistoryRepository.getMedicineDetailHistory()
+        Log.d(TAG, "id :${idList.size.toString()}")
         viewModelScope.launch {
             val list = idList.mapNotNull {
                 medicineRepository.searchMedicineById(it)
             }
             _medicineResult.value = list
+            Log.d(TAG, "list :${list.size.toString()}")
         }
     }
     fun saveMedicineHistory(medicine: Medicine) {
