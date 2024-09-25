@@ -57,6 +57,7 @@ class MealTimeBottomSheet : BottomSheetDialogFragment() {
             }
 
             Log.d(TAG, "Alarms to save : $list")
+
             mypageViewModel.saveDefaultAlarms(list)
             dialog?.dismiss()
         }

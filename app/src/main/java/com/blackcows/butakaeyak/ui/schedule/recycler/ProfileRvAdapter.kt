@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.schedule.recycler
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -23,10 +24,16 @@ class ProfileRvAdapter(
 ) {
     inner class ProfileViewHolder(private val binding: ScheduleProfileItemBinding): ViewHolder(binding.root) {
         fun bind(item: ScheduleProfile) = with(binding) {
-            Glide.with(itemView).load(item.profileUrl).into(profileIv)
+            if(item.profileUrl.isEmpty()) {
+                profileIv.setImageResource(R.drawable.round_rect_500)
+            }else {
+                Glide.with(itemView).load(item.profileUrl).into(profileIv)
+            }
+
             nameTv.text = item.name
 
             binding.root.setOnClickListener {
+                Log.d("ScheduleFragment", "recycler click!")
                 onProfileClick(item.userId)
             }
         }

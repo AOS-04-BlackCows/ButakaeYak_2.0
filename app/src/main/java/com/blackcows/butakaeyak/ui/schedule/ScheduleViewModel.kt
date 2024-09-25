@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.schedule
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -40,6 +41,8 @@ class ScheduleViewModel @Inject constructor(
             _dateToMedicineGroup.value =  allGroups.filter {
                 it.startedAt <= date && it.finishedAt >= date
             }
+            //TODO: Test용 Mock Data
+            //_dateToMedicineGroup.value = ScheduleMockData.medicineGroups
 
             _uiState.value = ScheduleUiState.Success
         }
@@ -87,6 +90,15 @@ class ScheduleViewModel @Inject constructor(
                 userRepository.getProfileAndName(friendId)
             }
 
+            _uiState.value = ScheduleUiState.Success
+        }
+    }
+
+    fun clearScheduleProfiles() {
+        viewModelScope.launch {
+            _uiState.value = ScheduleUiState.Loading
+            _scheduleProfile.value = listOf()
+            Log.d("ScheduleFragment", "viewModel: size is ${_scheduleProfile.value!!.size}")
             _uiState.value = ScheduleUiState.Success
         }
     }

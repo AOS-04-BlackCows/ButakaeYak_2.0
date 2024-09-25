@@ -14,6 +14,7 @@ class GetMedicinesNameUseCase @Inject constructor(
     {
         val result = medicineRepository.searchMedicinesByName(name)
         searchHistoryRepository.saveQueryHistory(name)
+
         return result
     }
 }

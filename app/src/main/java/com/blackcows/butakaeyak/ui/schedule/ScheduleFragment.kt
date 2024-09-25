@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.R
@@ -14,7 +15,6 @@ import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentScheduleBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.note.recycler.NoteRvDecoration
-import com.blackcows.butakaeyak.ui.schedule.recycler.FriendViewPager
 import com.blackcows.butakaeyak.ui.schedule.recycler.ProfileRvAdapter
 import com.blackcows.butakaeyak.ui.schedule.recycler.ProfileRvDecoration
 import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleProfile
@@ -29,22 +29,22 @@ class ScheduleFragment : Fragment() {
     private val scheduleViewModel: ScheduleViewModel by activityViewModels()
     private val userViewModel: UserViewModel by activityViewModels()
 
-    private val myId by lazy {
-        userViewModel.user.value!!.id
-    }
     private var curScheduleProfileId = ""
 
     private val profileRvAdapter = ProfileRvAdapter() { userId ->
-        if(curScheduleProfileId == userId) {
-            return@ProfileRvAdapter
-        }
-
         curScheduleProfileId = userId
+        val isMine = if(userViewModel.user.value == null) true
+                    else if(userViewModel.user.value!!.id == userId) true
+                    else false
 
-        viewPagerAdapter.getFragment(binding.scheduleDetailViewPager, curScheduleProfileId)
+        Log.d("ScheduleFragment", "click!")
+
+        val detailFragment = ScheduleDetailFragment.newInstance(userId, isMine)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.schedule_container_view, detailFragment)
+            .commit()
     }
 
-    private lateinit var viewPagerAdapter: FriendViewPager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,15 +59,6 @@ class ScheduleFragment : Fragment() {
 
         setObserver()
 
-        if(userViewModel.user.value == null) {
-            binding.loginGuideCl.visibility = View.VISIBLE
-            return
-        } else {
-            binding.loginGuideCl.visibility = View.GONE
-        }
-
-        curScheduleProfileId = myId
-
         with(binding) {
             profileRv.run {
                 adapter = profileRvAdapter
@@ -75,50 +66,61 @@ class ScheduleFragment : Fragment() {
             }
 
             profileAddBtn.setOnClickListener {
-                //TODO: open the friend dialog.
-                //  and if scheduleProfile is changed, call the method: scheduleViewModel.getFriends(userId)
+                if(userViewModel.user.value == null) {
+                    Toast.makeText(requireContext(), "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "나중에 추가될 서비스입니다!", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
-
-        initFriendsViewPager()
+        //initProfiles()
     }
 
-    private fun initFriendsViewPager() {
-        viewPagerAdapter = FriendViewPager(requireActivity())
-        binding.scheduleDetailViewPager.adapter = viewPagerAdapter
+    private fun initProfiles() {
+        val myScheduleProfile = if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
+            scheduleViewModel.getFriendProfile(userViewModel.user.value!!.id)
+            return
+        } else ScheduleProfile("", "나", "")
 
-        scheduleViewModel.getFriendProfile(userViewModel.user.value!!.id)
+        val detailFragment = ScheduleDetailFragment.newInstance(myScheduleProfile.userId, true)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.schedule_container_view, detailFragment)
+            .commit()
     }
 
     private fun setObserver() {
-
         userViewModel.user.observe(viewLifecycleOwner) { user ->
             Log.d("UserViewModel", "ScheduleFragment: user is null? :${user==null}")
+
             if(user == null) {
-                binding.loginGuideCl.visibility = View.VISIBLE
+                initProfiles()
             } else {
+                curScheduleProfileId = user.id
                 binding.loginGuideCl.visibility = View.GONE
+                //scheduleViewModel.getFriendProfile(user.id)
+
+                initProfiles()
             }
         }
 
         scheduleViewModel.scheduleProfile.observe(viewLifecycleOwner) { friendsProfiles ->
-            if(userViewModel.user.value == null) return@observe
+            Log.d("ScheduleFragment", "check userNull?")
 
-            val myScheduleProfile = with(userViewModel.user.value!!) {
+            Log.d("ScheduleFragment", "fragment: size is ${scheduleViewModel.scheduleProfile.value!!.size}")
+
+
+            val myScheduleProfile = if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
                 ScheduleProfile(id, name, profileUrl!!)
-            }
+            } else ScheduleProfile("", "나", "")
+
+            Log.d("ScheduleFragment", "make myScheduleProfile")
 
             val list = mutableListOf(myScheduleProfile).apply {
                 addAll(friendsProfiles)
             }
 
             profileRvAdapter.submitList(list)
-
-            Log.d("ScheduleFragment", "size: ${profileRvAdapter.currentList.size}")
-
-            viewPagerAdapter.setScheduleProfiles(list)
-            viewPagerAdapter.getFragment(binding.scheduleDetailViewPager, myScheduleProfile)
         }
     }
 }

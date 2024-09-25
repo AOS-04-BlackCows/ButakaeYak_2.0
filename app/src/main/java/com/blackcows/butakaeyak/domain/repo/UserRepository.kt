@@ -16,6 +16,7 @@ interface UserRepository {
 
     suspend fun logout(): Boolean
     suspend fun deleteAccount(user: User)
+    suspend fun deleteAccount(id: String)
 
     suspend fun setProfile(user: User, bitmap: Bitmap): User
     suspend fun setProfile(user: User, url: String): User

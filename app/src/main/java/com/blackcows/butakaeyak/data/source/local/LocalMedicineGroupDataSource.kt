@@ -3,9 +3,8 @@ package com.blackcows.butakaeyak.data.source.local
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
-import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.blackcows.butakaeyak.data.models.MedicineGroup
+import com.blackcows.butakaeyak.data.models.MedicineGroupRequest
 import com.blackcows.butakaeyak.data.models.MedicineGroupResponse
 import com.blackcows.butakaeyak.data.source.link.MedicineGroupDataSource
 import com.google.gson.Gson
@@ -29,8 +28,9 @@ class LocalMedicineGroupDataSource @Inject constructor(
 
 
     override suspend fun getMedicineGroupById(groupId: String): MedicineGroupResponse? {
-        //TODO: local에선 필요없는 기능.
-        return null
+        return getMedicineGroups("").firstOrNull {
+            it.id == groupId
+        }
     }
 
     override suspend fun getMedicineGroups(userId: String): List<MedicineGroupResponse> {
@@ -49,9 +49,11 @@ class LocalMedicineGroupDataSource @Inject constructor(
         editor.putString(MEDICINE_DETAIL, json).apply()
     }
 
-    override suspend fun addSingleGroup(group: MedicineGroup) {
+    override suspend fun addSingleGroup(request: MedicineGroupRequest) {
         val list = getMedicineGroups("0").toMutableList()
-        list.add(group.toResponse())
+
+        val randomId = getRandomStringId()
+        list.add(request.toResponse(randomId))
         saveMedicineGroup(list)
     }
 
@@ -76,5 +78,12 @@ class LocalMedicineGroupDataSource @Inject constructor(
         list.add(takenGroup.toResponse())
 
         saveMedicineGroup(list)
+    }
+
+    private fun getRandomStringId(): String {
+        val charset = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        return (1..20)
+            .map { charset.random() }
+            .joinToString("")
     }
 }

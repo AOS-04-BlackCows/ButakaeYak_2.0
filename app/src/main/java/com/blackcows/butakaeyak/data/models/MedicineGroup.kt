@@ -57,7 +57,21 @@ data class MedicineGroupRequest(
     val daysOfWeeks: List<String>,
     val alarms: List<String>,
     val hasTaken: List<String>
-)
+) {
+    fun toResponse(id: String) = MedicineGroupResponse(
+        id = id,
+        name = name,
+        userId = userId,
+        medicineIdList = medicineIdList,
+        customNameList = customNameList,
+        imageUrlList = imageUrlList,
+        startedAt = startedAt.toString(),
+        finishedAt = finishedAt.toString(),
+        daysOfWeeks = daysOfWeeks,
+        alarms = alarms,
+        hasTaken = hasTaken
+    )
+}
 
 data class MedicineGroupResponse(
     val id: String? = null,

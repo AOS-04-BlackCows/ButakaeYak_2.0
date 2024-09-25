@@ -4,7 +4,7 @@ import com.blackcows.butakaeyak.data.models.User
 
 sealed class SignUpResult {
     data class Success(val user: User) : SignUpResult()
-    data object LoginIdDuplicate : SignUpResult()
+    data class LoginIdDuplicate(val kakaoId: String) : SignUpResult()
     data object  KakaoSignUpFail: SignUpResult()
     data object Failure : SignUpResult()
 }

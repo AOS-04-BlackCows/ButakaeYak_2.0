@@ -7,13 +7,13 @@
     android:paddingVertical="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_medicine_form"
+        android:id="@+id/rv_cl_medicine_form"
         android:layout_width="75dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical">
 
         <ImageButton
-            android:id="@+id/btn_medicine_form"
+            android:id="@+id/rv_btn_medicine_form"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:background="@drawable/medicine_type_1"
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="16dp"
         android:layout_weight="1"
         android:background="@drawable/user_tv_stroke_green_radius_12dp"
         android:hint="@string/hint_medicine_name"
@@ -55,7 +55,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="16dp"
         android:background="@drawable/ic_minus" />
 
 </LinearLayout>

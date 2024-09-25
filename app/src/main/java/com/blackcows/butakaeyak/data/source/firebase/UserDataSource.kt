@@ -64,11 +64,19 @@ class UserDataSource @Inject constructor(
     }
 
     suspend fun isDuplicatedId(id: String): Boolean {
-        val result = db.collection(USER_COLLECTION)
-                .whereEqualTo(LOGIN_ID, id)
+        val idResult = db.collection(USER_COLLECTION)
+                .whereEqualTo(LOGIN_ID, id.toLong())
                 .get().await().toObjectsWithId<User>().getOrNull(0)
 
-        return (result != null)
+        val kakaoResult = db.collection(USER_COLLECTION)
+            .whereEqualTo(KAKAO_ID, id.toLong())
+            .get().await().toObjectsWithId<User>().getOrNull(0)
+
+        Log.d("UserViewModel", "id: ${id}")
+        val result = (idResult != null) || (kakaoResult != null)
+        Log.d("UserViewModel", "hasIt? ${result}")
+
+        return (idResult != null) || (kakaoResult != null)
     }
 
     suspend fun getUserWithKakaoId(id: Long): User? {
@@ -104,6 +112,12 @@ class UserDataSource @Inject constructor(
     suspend fun deleteAccount(user: User) {
         db.collection(USER_COLLECTION)
             .document(user.id)
+            .delete().await()
+    }
+
+    suspend fun deleteAccount(id: String) {
+        db.collection(USER_COLLECTION)
+            .document(id)
             .delete().await()
     }
 }
