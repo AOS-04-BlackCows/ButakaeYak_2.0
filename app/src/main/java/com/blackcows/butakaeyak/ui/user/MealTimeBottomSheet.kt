@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import android.widget.TimePicker
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.DialogMealTimeBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
