@@ -12,7 +12,7 @@ import android.widget.TextView
 import android.widget.TimePicker
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.R
-import com.blackcows.butakaeyak.databinding.DialogMealTimeBinding
+import com.blackcows.butakaeyak.databinding.BottomsheetMealTimeBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
@@ -22,7 +22,7 @@ class MealTimeBottomSheet : BottomSheetDialogFragment() {
 
     private val TAG = "MealTimeBottomSheet"
 
-    private var _binding: DialogMealTimeBinding? = null
+    private var _binding: BottomsheetMealTimeBinding? = null
     private val binding get() = _binding!!
 
     private val mypageViewModel: MypageViewModel by activityViewModels()
@@ -31,7 +31,7 @@ class MealTimeBottomSheet : BottomSheetDialogFragment() {
         val builder = super.onCreateDialog(savedInstanceState)
 
         // 커스텀 레이아웃을 인플레이트
-        _binding = DialogMealTimeBinding.inflate(requireActivity().layoutInflater)
+        _binding = BottomsheetMealTimeBinding.inflate(requireActivity().layoutInflater)
         builder.setContentView(binding.root)
 
         // viewModel에서 저장된 알람 시간 가져오기
@@ -55,7 +55,7 @@ class MealTimeBottomSheet : BottomSheetDialogFragment() {
 
 
         // 확인 버튼
-        binding.btnMealSave.setOnClickListener {
+        binding.btnSave.setOnClickListener {
             val list = mutableListOf<String>().apply {
                 add(binding.breakfastTimeTextView.text.toString())
                 add(binding.lunchTimeTextView.text.toString())
@@ -69,7 +69,7 @@ class MealTimeBottomSheet : BottomSheetDialogFragment() {
         }
 
         //취소 버튼
-        binding.btnMealCancel.setOnClickListener {
+        binding.btnCancel.setOnClickListener {
             dialog?.dismiss()
         }
 
