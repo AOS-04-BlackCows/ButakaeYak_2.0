@@ -12,6 +12,7 @@ import com.blackcows.butakaeyak.data.source.local.LocalMedicineGroupDataSource
 import com.blackcows.butakaeyak.data.source.local.LocalUtilsDataSource
 import com.blackcows.butakaeyak.domain.repo.LocalUtilsRepository
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
+import io.ktor.util.date.WeekDay
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -33,12 +34,21 @@ class MedicineGroupRepositoryImpl @Inject constructor(
 
     override suspend fun getMyGroups(userId: String): List<MedicineGroup> {
         return kotlin.runCatching {
+            Log.d(TAG, "isSignIn: ${localUtilsRepository.isSignIn()}")
             medicineGroupDataSource.getMedicineGroups(userId).map { group ->
+                Log.d(TAG, "group name: ${group.name}")
                 val medicines = group.medicineIdList?.map {
                     medicineDetailDataSource.searchMedicinesWithId(it)[0]
                 }
-                val daysWeek = group.daysOfWeeks?.map {
-                    WeekDayUtils.fromKorean(it)
+//                val daysWeek = group.daysOfWeeks?.map {
+//                    WeekDayUtils.fromKorean(it)
+//                }
+
+                val daysWeek = mutableListOf<WeekDay>()
+                group.daysOfWeeks?.forEach {
+                    if(it.isNotEmpty()) {
+                        daysWeek.add(WeekDayUtils.fromKorean(it))
+                    }
                 }
 
                 MedicineGroup(
@@ -53,7 +63,6 @@ class MedicineGroupRepositoryImpl @Inject constructor(
                     daysOfWeeks = daysWeek ?: listOf(),
                     alarms = group.alarms ?: listOf(),
                     hasTaken = group.hasTaken ?: listOf()
-
                 )
             }
         }.onFailure {

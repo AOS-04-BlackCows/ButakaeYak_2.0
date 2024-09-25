@@ -38,6 +38,7 @@ class ScheduleViewModel @Inject constructor(
             _uiState.value = ScheduleUiState.Loading
 
             val allGroups = medicineGroupRepository.getMyGroups(userId)
+            Log.d("ScheduleViewModel", "allGroup size: ${allGroups.size}")
             _dateToMedicineGroup.value =  allGroups.filter {
                 it.startedAt <= date && it.finishedAt >= date
             }

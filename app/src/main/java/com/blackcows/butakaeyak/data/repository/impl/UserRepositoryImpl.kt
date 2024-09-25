@@ -137,16 +137,7 @@ class UserRepositoryImpl @Inject constructor(
                     }
                 }
             }
-        }
-//            .onSuccess {
-//            if(it is SignUpResult.Success) {
-//                val userData = it.user
-//                loginWithKakaoId(userData.kakaoId!!)
-//            } else {
-//                Log.w(TAG, "trySignUpWithKakao Succeed but SignUpResult is not Success")
-//            }
-//        }
-            .onFailure {
+        }.onFailure {
             Log.w(TAG, "trySignUpWithKakao failed) msg: ${it.message}")
         }.getOrDefault(SignUpResult.Failure)
     }
@@ -165,6 +156,7 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
 
+        localUtilsDataSource.setSignIn(false)
         localUtilsDataSource.deleteAutoLoginData()
 
         return result

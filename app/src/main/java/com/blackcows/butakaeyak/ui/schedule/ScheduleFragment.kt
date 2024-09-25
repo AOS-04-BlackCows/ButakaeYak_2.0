@@ -93,15 +93,12 @@ class ScheduleFragment : Fragment() {
         userViewModel.user.observe(viewLifecycleOwner) { user ->
             Log.d("UserViewModel", "ScheduleFragment: user is null? :${user==null}")
 
-            if(user == null) {
-                initProfiles()
-            } else {
+            if(user != null) {
                 curScheduleProfileId = user.id
                 binding.loginGuideCl.visibility = View.GONE
-                //scheduleViewModel.getFriendProfile(user.id)
-
-                initProfiles()
             }
+
+            initProfiles()
         }
 
         scheduleViewModel.scheduleProfile.observe(viewLifecycleOwner) { friendsProfiles ->
