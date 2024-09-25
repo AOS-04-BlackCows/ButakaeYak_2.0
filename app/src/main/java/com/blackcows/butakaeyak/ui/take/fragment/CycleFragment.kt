@@ -339,6 +339,9 @@ class CycleFragment : Fragment() {
             val alarmHour = calendar.get(Calendar.HOUR_OF_DAY)
             val alarmMinute = calendar.get(Calendar.MINUTE)
 
+            Log.d("alarmHour_Cycle",alarmHour.toString())
+            Log.d("alarmMinute_Cycle",alarmMinute.toString())
+
             intent.putExtra("NOTIFICATION_ID", alarm.requestCode)
             intent.putExtra("NOTIFICATION_TITLE","${binding.etMedicineGroup.text}")
             intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
