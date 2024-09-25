@@ -12,7 +12,7 @@
         android:id="@+id/iv_medicine"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/icon_logo"
+        android:src="@drawable/logo_big"
         android:layout_marginStart="40dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
