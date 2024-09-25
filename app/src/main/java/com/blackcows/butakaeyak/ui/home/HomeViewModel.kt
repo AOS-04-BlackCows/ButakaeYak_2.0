@@ -26,13 +26,15 @@ class HomeViewModel @Inject constructor (
     // 오늘 복용할 약 불러오기
     fun getTodayMedicine (user: String) {
         viewModelScope.launch {
+            _medicineGroup.value = listOf()
             _medicineGroup.value = medicineGroupRepository.getMyGroups(user)
         }
     }
-    fun checkTakenMedicineGroup(groupId: String, taken: Boolean, alarm: String) {
+    fun checkTakenMedicineGroup(userId: String, groupId: String, taken: Boolean, alarm: String) {
         viewModelScope.launch {
             MainNavigation.showLoadingBar()
             medicineGroupRepository.notifyTaken(groupId, taken, alarm)
+            getTodayMedicine(userId)
             MainNavigation.disableLoadingBar()
         }
     }

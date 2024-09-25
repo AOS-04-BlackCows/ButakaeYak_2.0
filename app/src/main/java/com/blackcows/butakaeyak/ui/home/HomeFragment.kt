@@ -104,7 +104,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 // TODO 알람 그룹 클릭시 그룹 상세를 보여주는 화면으로 이동 - > 나중에 추가!
             }
             override fun onAlarmClick(item: HomeRvGroup, position: Int, isSelected: Boolean) {
-                homeViewModel.checkTakenMedicineGroup(item.groupId, isSelected, item.alarmTime)
+                val userId= userViewModel.user.value?.id ?: "guest"
+                homeViewModel.checkTakenMedicineGroup(userId, item.groupId, isSelected, item.alarmTime)
             }
         })
         binding.homeRvTodayMedicineGroup.run {
@@ -114,9 +115,30 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
         // 아직 데이터가 안들어옴
         homeViewModel.getTodayMedicine(userViewModel.user.value?.id?: "guest")
+
+        binding.homeAlarmViewMore.setOnClickListener {
+            val fullList = medicineGroupConverter(homeViewModel.medicineGroup.value!!)
+
+            if(fullList.size < 2) return@setOnClickListener
+
+            if (todayMedicineGroupRvAdapter.currentList.size == 2) {
+                todayMedicineGroupRvAdapter.submitList(fullList)
+                binding.homeAlarmViewMore.setText(R.string.view_close)
+            } else {
+                todayMedicineGroupRvAdapter.submitList(fullList.take(2))
+                binding.homeAlarmViewMore.setText(R.string.view_more)
+            }
+        }
+        Log.d(TAG,"mainViewModel.getMyMedicineList() = ${mainViewModel.myMedicines.value}")
+
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         homeViewModel.medicineGroup.observe(viewLifecycleOwner) {
-            Log.d(TAG,"homeViewModel.medicineGroup.value = ${homeViewModel.medicineGroup.value}")
-            homeViewModel.medicineGroup.value
+            Log.d(TAG, "homeViewModel.medicineGroup.value = $it")
 
             val homeRvGroups = mutableListOf<HomeRvGroup>()
             val alarmMap = mutableMapOf<String, MutableList<MedicineGroup>>()
@@ -139,54 +161,26 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     )
                 }
             }
-            todayMedicineGroupRvAdapter.submitList(homeRvGroups)
+
+            todayMedicineGroupRvAdapter.submitList(homeRvGroups.sortedBy { it.alarmTime }.take(2))
         }
-        val mockUpMedicineGroup = listOf(
-            MedicineGroup("0001","그룹 1","1",listOf<MedicineDetail>(MedicineDetail("","","","","","","",""),MedicineDetail("","","","","","","","")),listOf("커스텀 약","커스텀 약"),listOf(), LocalDate.now(), LocalDate.now(),listOf(WeekDay.SUNDAY,WeekDay.MONDAY),listOf("07:50", "12:50"),listOf<String>()),
-            MedicineGroup("0002","그룹 2","2",listOf<MedicineDetail>(MedicineDetail("","","","","","","",""),MedicineDetail("","","","","","","","")),listOf(),listOf(), LocalDate.now(), LocalDate.now(),listOf(WeekDay.SUNDAY,WeekDay.MONDAY),listOf("01:10", "04:10"),listOf<String>()),
-            MedicineGroup("0003","그룹 3","3",listOf<MedicineDetail>(MedicineDetail("","","","","","","",""),MedicineDetail("","","","","","","","")),listOf("커스텀 약1","커스텀 약2"),listOf(), LocalDate.now(), LocalDate.now(),listOf(WeekDay.SUNDAY,WeekDay.MONDAY),listOf("11:59", "14:59"),listOf<String>())
-        )
-        // 고려사항 정리
-        // 이럴떄 groupId && alarmTime 이 같은게 있다면 true
-        // tokenTime 체커
-//        val alarms: List<String> format: "10:30", "12:40"
-//        val hasTaken: List<String> format: "2024-09-12 10:30", "2024-09-12 10:30"
-
-        // 상단 리싸이클러 뷰에 들어갈 데이터를 새로 만든 후 갱신
-        fun medicineGroupConverter (list: List<MedicineGroup>): List<HomeRvGroup> {
-            val medicineGroupList = mutableListOf<HomeRvGroup>()
-
-            for (i in list) {
-                for (j in i.alarms) {
-                    val hasTakenFormat = "${LocalDate.now()} $j"
-                    medicineGroupList += HomeRvGroup(i.id, j, i.name, i.hasTaken.contains(hasTakenFormat))
-                }
-            }
-
-            medicineGroupList.sortBy { it.alarmTime }
-            return medicineGroupList
-        }
-
-
-        //medicineGroupConverter(mockUpMedicineGroup)
-        todayMedicineGroupRvAdapter.submitList(medicineGroupConverter(homeViewModel.medicineGroup.value!!).take(2))
-        binding.homeAlarmViewMore.setOnClickListener {
-            val fullList = medicineGroupConverter(homeViewModel.medicineGroup.value!!)
-
-            if(fullList.size < 2) return@setOnClickListener
-
-            if (todayMedicineGroupRvAdapter.currentList.size == 2) {
-                todayMedicineGroupRvAdapter.submitList(fullList)
-                binding.homeAlarmViewMore.setText(R.string.view_close)
-            } else {
-                todayMedicineGroupRvAdapter.submitList(fullList.take(2))
-                binding.homeAlarmViewMore.setText(R.string.view_more)
-            }
-        }
-        Log.d(TAG,"mainViewModel.getMyMedicineList() = ${mainViewModel.myMedicines.value}")
-
-        return root
     }
+
+    // 상단 리싸이클러 뷰에 들어갈 데이터를 새로 만든 후 갱신
+    private fun medicineGroupConverter (list: List<MedicineGroup>): List<HomeRvGroup> {
+        val medicineGroupList = mutableListOf<HomeRvGroup>()
+
+        for (i in list) {
+            for (j in i.alarms) {
+                val hasTakenFormat = "${LocalDate.now()} $j"
+                medicineGroupList += HomeRvGroup(i.id, j, i.name, i.hasTaken.contains(hasTakenFormat))
+            }
+        }
+
+        medicineGroupList.sortBy { it.alarmTime }
+        return medicineGroupList
+    }
+
 
     //클릭된 버튼에 의해 프래그먼트를 변경
     override fun onClick(v: View){
@@ -241,5 +235,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
+
+        homeViewModel.getTodayMedicine(userViewModel.user.value?.id ?: "guest")
     }
 }

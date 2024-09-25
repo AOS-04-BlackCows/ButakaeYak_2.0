@@ -32,6 +32,18 @@ class HomeTodayMedicineRvAdapter(private val clickListener: ClickListener): List
             with(binding) {
                 tvHomeTodayMedicineTime.text = item.alarmTime
                 tvHomeTodayMedicineGroupName.text = item.groupName
+
+                btnHomeMedicineCheck.isSelected = item.isHasTakenTime
+                if (btnHomeMedicineCheck.isSelected) {
+                    // 먹었음
+                    btnHomeMedicineCheck.text = "먹음"
+                    btnHomeMedicineCheck.setTextColor(Color.WHITE)
+                } else {
+                    // 안먹음
+                    btnHomeMedicineCheck.text = "안먹음"
+                    btnHomeMedicineCheck.setTextColor(binding.root.context.resources.getColor(R.color.black))
+                }
+
                 layoutTodayMedicine.setOnClickListener {
                     clickListener.onTodayMedicineClick(item, position)
                 }
