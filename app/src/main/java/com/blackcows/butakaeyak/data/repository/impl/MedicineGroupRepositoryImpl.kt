@@ -35,6 +35,7 @@ class MedicineGroupRepositoryImpl @Inject constructor(
     override suspend fun getMyGroups(userId: String): List<MedicineGroup> {
         return kotlin.runCatching {
             Log.d(TAG, "isSignIn: ${localUtilsRepository.isSignIn()}")
+            Log.d(TAG, "userId: ${userId}")
             medicineGroupDataSource.getMedicineGroups(userId).map { group ->
                 Log.d(TAG, "group name: ${group.name}")
                 val medicines = group.medicineIdList?.map {
