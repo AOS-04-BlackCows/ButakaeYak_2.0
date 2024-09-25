@@ -299,7 +299,7 @@ class CycleFragment : Fragment() {
                     val startDate = dateFormat
                     Log.d("startDate","${startDate}")
 
-                    setAlarmForAllItems(startDate)
+//                    setAlarmForAllItems(startDate)
 
                     parentFragmentManager.beginTransaction()
                         .remove(this@CycleFragment)
@@ -324,61 +324,62 @@ class CycleFragment : Fragment() {
     }
 
     //TODO 반복 주기 임시 제거 repeatType:String
-    private fun setAlarmForAllItems(startDate : Long) {
-        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-        val alarmList = adapter.getAlarmList()
-
-        for (alarm in alarmList) {
-            Log.d("timeInMillis","${alarm.timeInMillis}")
-            Log.d("requestCode","${alarm.requestCode}")
-            val intent = Intent(requireContext(), AlarmReceiver::class.java)
-
-            val calendar = Calendar.getInstance().apply {
-                timeInMillis = alarm.timeInMillis
-            }
-            val alarmHour = calendar.get(Calendar.HOUR_OF_DAY)
-            val alarmMinute = calendar.get(Calendar.MINUTE)
-
-            Log.d("alarmHour_Cycle",alarmHour.toString())
-            Log.d("alarmMinute_Cycle",alarmMinute.toString())
-
-            intent.putExtra("NOTIFICATION_ID", alarm.requestCode)
-            intent.putExtra("NOTIFICATION_TITLE","${binding.etMedicineGroup.text}")
-            intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
-            intent.putExtra("Hour",alarmHour)
-            intent.putExtra("Minute",alarmMinute)
-
-            val pendingIntent = PendingIntent.getBroadcast(
-                context, alarm.requestCode, intent, PendingIntent.FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
-            )
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                // Android 12 이상에서 정확한 알람 설정
-
-                Log.d("buildTest", "okay")
-                if (alarmManager?.canScheduleExactAlarms() == true){
-                try {
-                    val alarmTime = alarm.timeInMillis
-                    //선택한 날짜 + 알람 설정한 시간 더하는 변수
-                    val adjustedTimeInMillis = startDate + (alarmTime % (24 * 60 * 60 * 1000)) + (9 * 60 * 60 * 1000)
-
-                    Log.d("AlarmTest", "Adjusted Time In Millis: $adjustedTimeInMillis")
-
-                    val alarmClock = AlarmManager.AlarmClockInfo(adjustedTimeInMillis, pendingIntent)
-                    alarmManager.setAlarmClock(alarmClock, pendingIntent)
-
-                } catch (e: SecurityException) {
-                    Toast.makeText(context, "알림 설정에 실패했습니다. 권한을 확인해주세요.", Toast.LENGTH_SHORT).show()
-                }
-            }
-            }
-            else{
-                Log.d("alarmTest","if문 false뜸")
-            }
-        }
-
-        Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
-    }
+    //TODO 알람 임의로 중단
+//    private fun setAlarmForAllItems(startDate : Long) {
+//        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+//        val alarmList = adapter.getAlarmList()
+//
+//        for (alarm in alarmList) {
+//            Log.d("timeInMillis","${alarm.timeInMillis}")
+//            Log.d("requestCode","${alarm.requestCode}")
+//            val intent = Intent(requireContext(), AlarmReceiver::class.java)
+//
+//            val calendar = Calendar.getInstance().apply {
+//                timeInMillis = alarm.timeInMillis
+//            }
+//            val alarmHour = calendar.get(Calendar.HOUR_OF_DAY)
+//            val alarmMinute = calendar.get(Calendar.MINUTE)
+//
+//            Log.d("alarmHour_Cycle",alarmHour.toString())
+//            Log.d("alarmMinute_Cycle",alarmMinute.toString())
+//
+//            intent.putExtra("NOTIFICATION_ID", alarm.requestCode)
+//            intent.putExtra("NOTIFICATION_TITLE","${binding.etMedicineGroup.text}")
+//            intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
+//            intent.putExtra("Hour",alarmHour)
+//            intent.putExtra("Minute",alarmMinute)
+//
+//            val pendingIntent = PendingIntent.getBroadcast(
+//                context, alarm.requestCode, intent, PendingIntent.FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
+//            )
+//
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//                // Android 12 이상에서 정확한 알람 설정
+//
+//                Log.d("buildTest", "okay")
+//                if (alarmManager?.canScheduleExactAlarms() == true){
+//                try {
+//                    val alarmTime = alarm.timeInMillis
+//                    //선택한 날짜 + 알람 설정한 시간 더하는 변수
+//                    val adjustedTimeInMillis = startDate + (alarmTime % (24 * 60 * 60 * 1000)) + (9 * 60 * 60 * 1000)
+//
+//                    Log.d("AlarmTest", "Adjusted Time In Millis: $adjustedTimeInMillis")
+//
+//                    val alarmClock = AlarmManager.AlarmClockInfo(adjustedTimeInMillis, pendingIntent)
+//                    alarmManager.setAlarmClock(alarmClock, pendingIntent)
+//
+//                } catch (e: SecurityException) {
+//                    Toast.makeText(context, "알림 설정에 실패했습니다. 권한을 확인해주세요.", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//            }
+//            else{
+//                Log.d("alarmTest","if문 false뜸")
+//            }
+//        }
+//
+//        Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
+//    }
 
     //년,월,일 추출하는 메소드
     fun dateFormatText(dateText: String): Long {
