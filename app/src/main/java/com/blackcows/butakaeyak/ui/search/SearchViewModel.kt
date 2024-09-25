@@ -73,7 +73,7 @@ class SearchViewModel @Inject constructor(
             val list = idList.mapNotNull {
                 medicineRepository.searchMedicineById(it)
             }
-            _medicineResult.value = list
+            _medicineHistory.value = list
             Log.d(TAG, "list :${list.size.toString()}")
         }
     }
