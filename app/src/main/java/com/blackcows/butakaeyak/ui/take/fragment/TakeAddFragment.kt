@@ -16,6 +16,7 @@ import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentTakeAddBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.take.TakeAddViewModel
 
 class TakeAddFragment : Fragment() {
 
@@ -25,6 +26,8 @@ class TakeAddFragment : Fragment() {
 
     //viewPager 설정
     private var viewPager : ViewPager2? = null
+
+    private val takeAddViewModel: TakeAddViewModel by activityViewModels()
 
     //bundle에서 medicine 가져오기
 //    private val medicine: Medicine? by lazy {
@@ -82,6 +85,8 @@ class TakeAddFragment : Fragment() {
         super.onDestroyView()
         Log.d("TakeAddFragment", "OnDestroyView")
         MainNavigation.hideBottomNavigation(false)
+        takeAddViewModel.clearAll()
+
         _binding = null
     }
 

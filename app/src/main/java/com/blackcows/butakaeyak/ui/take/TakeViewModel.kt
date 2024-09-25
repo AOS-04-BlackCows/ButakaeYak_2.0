@@ -80,4 +80,17 @@ class TakeAddViewModel @Inject constructor(
     fun getDefaultAlarms(): List<String> {
         return localSettingRepository.getDefaultAlarms()
     }
+
+    fun clearAll() {
+        groupName = null
+        customNameList = null
+        imageUrlList = null
+        startDate = null
+        finishDate= null
+        alarms  = null
+
+        hasTaken = listOf()
+        daysOfWeeks = listOf()
+        medicineIdList = listOf()
+    }
 }
