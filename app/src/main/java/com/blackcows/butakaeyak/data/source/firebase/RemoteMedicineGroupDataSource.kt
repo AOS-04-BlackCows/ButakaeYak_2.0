@@ -43,6 +43,8 @@ class RemoteMedicineGroupDataSource @Inject constructor(
     }
 
     override suspend fun getMedicineGroups(userId: String): List<MedicineGroupResponse> {
+        Log.d(TAG, "getMedicineGroups called by $userId")
+
         return db.collection(MEDICINE_GROUP_COLLECTION)
             .whereEqualTo(USER_ID, userId)
             .get().await().toObjectsWithId<MedicineGroupResponse>()

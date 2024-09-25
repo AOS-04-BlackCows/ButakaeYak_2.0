@@ -135,10 +135,15 @@ class CycleFragment : Fragment() {
                 bottomSheetDialog.show()
                     bottomSheetView.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
                         val selectDate = "${year}년 ${month + 1}월 ${dayOfMonth}일"
+                        val monthStr = if(month+1 < 10) "0${month+1}"
+                                        else "${month+1}"
+                        val dayStr = if(dayOfMonth < 10) "0${dayOfMonth}"
+                                        else "$dayOfMonth"
+                        val startDateFormat = "$year-$monthStr-$dayStr"
                         binding.tvStartDay.setText(selectDate)
 
                         //TODO viewModel startDate 값 설정
-                        viewModel.startDate = binding.tvStartDay.text.toString()
+                        viewModel.startDate = startDateFormat
                         btnNext()
                     }
             }
