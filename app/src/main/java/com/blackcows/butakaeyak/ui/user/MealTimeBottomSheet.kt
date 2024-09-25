@@ -3,7 +3,6 @@ package com.blackcows.butakaeyak.ui.user
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.text.Layout
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,10 +11,8 @@ import android.widget.TimePicker
 import androidx.fragment.app.viewModels
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.DialogMealTimeBinding
-import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import io.ktor.client.content.LocalFileContent
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -26,7 +23,7 @@ class MealTimeBottomSheet : BottomSheetDialogFragment() {
     private var _binding: DialogMealTimeBinding? = null
     private val binding get() = _binding!!
 
-    private val mypageViewModel: MypageViewModel by viewModels()
+    private val mypageViewModel: MypageViewModel by activityViewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = super.onCreateDialog(savedInstanceState)
@@ -37,7 +34,7 @@ class MealTimeBottomSheet : BottomSheetDialogFragment() {
 
         // viewModel에서 저장된 알람 시간 가져오기
         val getAlarms = mypageViewModel.getDefaultAlarms()
-        Log.d(TAG, "getAlarms ${getAlarms}")
+        Log.d(TAG, "getAlarms ${getAlarms.joinToString()}")
         if (getAlarms.isNotEmpty()) {
             Log.d(
                 TAG,

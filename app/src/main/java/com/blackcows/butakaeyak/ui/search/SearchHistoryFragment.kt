@@ -14,11 +14,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
+import com.blackcows.butakaeyak.databinding.BottomsheetSearchDetailBinding
 import com.blackcows.butakaeyak.databinding.FragmentSearchBinding
 import com.blackcows.butakaeyak.databinding.FragmentSearchHistoryBinding
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.search.adapter.SearchRecyclerAdapter
+import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
+import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 
@@ -29,7 +36,8 @@ class SearchHistoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val historyViewModel: SearchViewModel by activityViewModels()
-
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private lateinit var historyAdapter : SearchRecyclerAdapter
 
     private var columnCount = 1 //컬럼 갯수 = 1
 
@@ -49,8 +57,6 @@ class SearchHistoryFragment : Fragment() {
         _binding = FragmentSearchHistoryBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        fragmentInit()
-
         binding.searchHistoryDelete.setOnClickListener {
             binding.searchHistoryChipgroup.removeAllViews()
             historyViewModel.removeQueryHistory()
@@ -65,6 +71,55 @@ class SearchHistoryFragment : Fragment() {
 
         //TODO 클릭한 약 만큼 아이템을 뿌리든 뭘하든 리스트 만들어서 보여줘야함
 
+//        binding.apply {
+//            historyAdapter = SearchRecyclerAdapter(object : SearchRecyclerAdapter.ClickListener{
+//                override fun onItemClick(item: Medicine) {
+//                    val bottomSheetView = BottomsheetSearchDetailBinding.inflate(layoutInflater)
+//                    val bottomSheetDialog = BottomSheetDialog(requireContext())
+//                    with(bottomSheetView) {
+//                        Glide.with(root).load(item.imageUrl ?: R.drawable.logo_big)
+//                            .into(detailIvMedicine)
+//                        detailTvName.text = item.name
+//                        detailTvEnterprise.text = item.enterprise
+//                        detailTvEffect.text = item.effect
+//                        detailTvInstructions.text = item.instructions
+//                        detailTvWarning.text = item.warning
+//                        detailTvCaution.text = item.caution
+//                        detailTvInteraction.text = item.interaction
+//                        detailTvSideEffect.text = item.sideEffect
+//                        detailTvStoringMethod.text = item.storingMethod
+//                    }
+//                    historyViewModel.saveMedicineHistory(item)
+//                    bottomSheetDialog.setContentView(bottomSheetView.root)
+//                    bottomSheetDialog.show()
+//                }
+//
+//                override fun isMedicineChecked(item: Medicine): Boolean {
+//                    val result = mainViewModel.isMyMedicine(item.id!!)
+//                    Log.d(TAG,"${item.id}: $result")
+//                    return result
+//                }
+//
+//                override fun setMedicineChecked(item: Medicine, isChecked: Boolean) {
+//                    val hasIt = mainViewModel.isMyMedicine(item.id!!)
+//                    Log.d(TAG,"Do I have item:${item.id}? :$hasIt")
+//                    if(hasIt) {
+//                        Toast.makeText(requireContext(), "이미 복용 중인 약입니다.", Toast.LENGTH_SHORT).show()
+//                    } else {
+//                        MainNavigation.addFragment(
+//                            TakeAddFragment.newInstance(item), FragmentTag.TakeAddFragment
+//                        )
+//                    }
+//                }
+//            })
+//            medicineList.adapter = historyAdapter
+//            medicineList.itemAnimator = null
+//            historyViewModel.medicineHistory.observe(viewLifecycleOwner){
+//                if(it.isNotEmpty()) Log.d(TAG, "Class: ${it[0]::class.simpleName}")
+//                historyAdapter.submitList(it)
+//            }
+//        }
+
         return root
     }
 
@@ -77,11 +132,11 @@ class SearchHistoryFragment : Fragment() {
         super.onResume()
         historyViewModel.getQueryHistory()
         historyViewModel.getMedicineHistory()
-        Log.d(TAG,"히스토리 onResume ${historyViewModel.queryHistory.value.toString()}")
-
         val queryHistory = historyViewModel.queryHistory
-        Log.d(TAG,queryHistory.value!!.size.toString())
         val medicineHistory = historyViewModel.medicineHistory
+        Log.d(TAG,medicineHistory.value!!.size.toString())
+
+        Log.d(TAG,"히스토리 onResume ${medicineHistory.value.toString()}")
 
         if (queryHistory.value?.isNotEmpty() == true){
             binding.searchHistoryChipgroup.removeAllViews()
@@ -92,7 +147,6 @@ class SearchHistoryFragment : Fragment() {
                     setChipDrawable(ChipDrawable.createFromAttributes(context,null,0,R.style.CustomChipStyle))
                     setOnClickListener {
                         historyViewModel.setSelectedChip(this.text.toString())
-
                     }
                     setOnCloseIconClickListener {
                         binding.searchHistoryChipgroup.removeView(this)
@@ -101,11 +155,12 @@ class SearchHistoryFragment : Fragment() {
                 })
             }
         }
-    }
+//
+//        historyViewModel.medicineHistory.observe(viewLifecycleOwner){
+//            if(it.isNotEmpty()) Log.d(TAG, "Class: ${it[0]::class.simpleName}")
+//            historyAdapter.submitList(it)
+//        }
 
-    private fun fragmentInit () {
-        historyViewModel.getQueryHistory()
-        historyViewModel.getMedicineHistory()
     }
 
     companion object {

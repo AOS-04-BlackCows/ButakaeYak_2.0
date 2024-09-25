@@ -89,6 +89,7 @@
 
     <!-- Map -->
     <string name="view_more">더 불러오기</string>
+    <string name="view_close">닫기</string>
     <string name="map_research">현 위치에서 재검색</string>
 
     <!-- Name -->

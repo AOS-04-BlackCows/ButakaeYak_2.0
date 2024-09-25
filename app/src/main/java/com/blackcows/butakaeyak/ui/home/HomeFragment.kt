@@ -25,7 +25,6 @@ import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.search.SearchFragment
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
-import com.blackcows.butakaeyak.ui.textrecognition.OCRActivity
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import io.ktor.util.date.WeekDay
@@ -111,16 +110,14 @@ class HomeFragment : Fragment(), View.OnClickListener {
         1. 아이템의 출력은 alarm의 갯수만큼
         2. 아이템의 정렬 순서도 alarm으로
 
-        TODO MedicineGroupRepositoryImpl 에 getMedicineGroup 이 어떤식으로 데이터를 불러오는지 파악해야 submitList가 가능함. 체크필요
         */
 
         todayMedicineGroupRvAdapter = HomeTodayMedicineRvAdapter (object : HomeTodayMedicineRvAdapter.ClickListener {
-            override fun onFavoriteClick(item: MedicineGroup, position: Int) {
-//                TODO("Not yet implemented")
+            override fun onTodayMedicineClick(item: HomeRvGroup, position: Int) {
+                // TODO 알람 그룹 클릭시 그룹 상세를 보여주는 화면으로 이동
             }
-
-            override fun onCallClick(item: MedicineGroup) {
-//                TODO("Not yet implemented")
+            override fun onAlarmClick(item: HomeRvGroup, position: Int) {
+                // TODO 여기서 선택된 아이템 내용에 따라 알람 등록 해제 등 기능이 실행되어야함.
             }
         })
         binding.homeRvTodayMedicineGroup.run {
@@ -155,6 +152,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
             return false
         }
         var medicineGroupList: MutableList<HomeRvGroup> = mutableListOf()
+
+        // 상단 리싸이클러 뷰에 들어갈 데이터를 새로 만든 후 갱신
         fun medicineGroupConverter (list: List<MedicineGroup>): List<HomeRvGroup> {
             medicineGroupList = mutableListOf()
             for (i in list) {
@@ -166,11 +165,18 @@ class HomeFragment : Fragment(), View.OnClickListener {
             medicineGroupList.sortBy { it.alarmTime }
             return medicineGroupList
         }
+        medicineGroupConverter(mockUpMedicineGroup)
+        todayMedicineGroupRvAdapter.submitList(medicineGroupList.take(2))
         binding.homeAlarmViewMore.setOnClickListener {
             Log.d("$TAG 1", "medicineGroupConverter(mockUpMedicineGroup) = $mockUpMedicineGroup")
             Log.d("$TAG 2", "medicineGroupConverter(mockUpMedicineGroup) = ${medicineGroupConverter(mockUpMedicineGroup)}")
-            medicineGroupConverter(mockUpMedicineGroup)
-            todayMedicineGroupRvAdapter.submitList(medicineGroupList)
+            if (todayMedicineGroupRvAdapter.currentList.size == 2) {
+                todayMedicineGroupRvAdapter.submitList(medicineGroupList)
+                binding.homeAlarmViewMore.setText(R.string.view_close)
+            } else {
+                todayMedicineGroupRvAdapter.submitList(medicineGroupList.take(2))
+                binding.homeAlarmViewMore.setText(R.string.view_more)
+            }
         }
         Log.d(TAG,"mainViewModel.getMyMedicineList() = ${mainViewModel.myMedicines.value}")
 

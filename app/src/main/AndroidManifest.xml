@@ -36,13 +36,6 @@
             android:name="com.canhub.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"
             />
-        <activity
-            android:name=".ui.textrecognition.OCRActivity"
-            android:exported="false" />
-
-
-
-
 
         <receiver
             android:name=".ui.take.AlarmReceiver"
