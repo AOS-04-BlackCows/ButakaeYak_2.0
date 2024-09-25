@@ -33,6 +33,7 @@ import com.blackcows.butakaeyak.data.models.MedicineGroupResponse
 import com.blackcows.butakaeyak.databinding.BottomsheetCalendarBinding
 import com.blackcows.butakaeyak.databinding.BottomsheetRepeatCycleBinding
 import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
+import com.blackcows.butakaeyak.ui.home.HomeViewModel
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.AlarmReceiver
@@ -62,6 +63,7 @@ class CycleFragment : Fragment() {
     private val viewModel: TakeAddViewModel by activityViewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     private val userViewModel: UserViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     private lateinit var bottomSheetView: BottomsheetCalendarBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
@@ -298,6 +300,8 @@ class CycleFragment : Fragment() {
                         Log.d("takeViewModel","${viewModel.alarms}")
                     }
 
+                    Toast.makeText(requireContext(),"알람이 설정되었습니다.",Toast.LENGTH_SHORT).show()
+
                     //TODO 반복 주기 임시 제거
 //                    val repeatCycle = tvRepeatCycle.text.toString()
                     val selectDate = tvStartDay.text.toString()
@@ -316,6 +320,8 @@ class CycleFragment : Fragment() {
                             it.timeText!!
                         }
                     )
+
+                    homeViewModel.getTodayMedicine(userId)
 
                     newMyMedicine?.let { it1 -> mainViewModel.addToMyMedicineList(it1) }
                     MainNavigation.popCurrentFragment()

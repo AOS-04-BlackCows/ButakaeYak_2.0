@@ -2,6 +2,8 @@ package com.blackcows.butakaeyak.ui.user
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -113,6 +115,8 @@ class MealTimeBottomSheet : BottomSheetDialogFragment() {
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         //저장 버튼 클릭 이벤트
         btnSave.setOnClickListener {

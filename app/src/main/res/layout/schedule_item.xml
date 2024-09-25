@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
 
         android:text="13:00"
-        style="@style/subtitle"
+        style="@style/medium_b"
         />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
 
         android:text="약 그룹 이름"
-        style="@style/subtitle"
+        style="@style/subtitle_b"
 
         android:maxEms="5"
         android:ellipsize="end"
@@ -50,6 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
 
         android:text="5"
+        android:textSize="18sp"
         style="@style/subtitle_gray"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
