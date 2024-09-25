@@ -38,7 +38,6 @@ class HomeViewModel @Inject constructor (
         viewModelScope.launch {
             MainNavigation.showLoadingBar()
             medicineGroupRepository.notifyTaken(groupId, taken, alarm)
-            getTodayMedicine(userId)
             MainNavigation.disableLoadingBar()
         }
     }
