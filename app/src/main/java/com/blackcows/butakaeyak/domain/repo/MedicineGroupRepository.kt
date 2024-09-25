@@ -8,5 +8,7 @@ interface MedicineGroupRepository {
 
     suspend fun saveNewGroup(medicineGroupRequest: MedicineGroupRequest)
     suspend fun removeGroup(medicineGroup: MedicineGroup)
+
     suspend fun notifyTaken(medicineGroup: MedicineGroup, taken: Boolean, takenTime: String): MedicineGroup
+    suspend fun notifyTaken(groupId: String, taken: Boolean, takenTime: String): MedicineGroup?
 }

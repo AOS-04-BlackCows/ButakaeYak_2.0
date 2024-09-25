@@ -40,9 +40,9 @@ class TakeAddViewModel @Inject constructor(
     var alarms : List<String>? = null
 //    var hasTaken: List<String>? = null
 
-    var hasTaken: List<String> = listOf("","")
-    var daysOfWeeks: List<String> = listOf("","")
-    var medicineIdList: List<String> = listOf("","")
+    var hasTaken: List<String> = listOf()
+    var daysOfWeeks: List<String> = listOf()
+    var medicineIdList: List<String> = listOf()
 
 //    TODO createNewMedicineGroupRequest
     fun createNewMedicineGroupRequest(userId:String,onFailed:() -> (Unit)):MedicineGroupRequest?{

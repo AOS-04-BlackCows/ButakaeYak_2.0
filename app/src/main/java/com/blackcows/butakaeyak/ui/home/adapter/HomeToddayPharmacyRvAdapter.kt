@@ -32,11 +32,22 @@ class HomeTodayMedicineRvAdapter(private val clickListener: ClickListener): List
             with(binding) {
                 tvHomeTodayMedicineTime.text = item.alarmTime
                 tvHomeTodayMedicineGroupName.text = item.groupName
+
+                btnHomeMedicineCheck.isSelected = item.isHasTakenTime
+                if (btnHomeMedicineCheck.isSelected) {
+                    // 먹었음
+                    btnHomeMedicineCheck.text = "먹음"
+                    btnHomeMedicineCheck.setTextColor(Color.WHITE)
+                } else {
+                    // 안먹음
+                    btnHomeMedicineCheck.text = "안먹음"
+                    btnHomeMedicineCheck.setTextColor(binding.root.context.resources.getColor(R.color.black))
+                }
+
                 layoutTodayMedicine.setOnClickListener {
                     clickListener.onTodayMedicineClick(item, position)
                 }
                 btnHomeMedicineCheck.setOnClickListener {
-                    clickListener.onAlarmClick(item, position)
                     btnHomeMedicineCheck.isSelected = !btnHomeMedicineCheck.isSelected
                     if (btnHomeMedicineCheck.isSelected) {
                         // 먹었음
@@ -47,6 +58,8 @@ class HomeTodayMedicineRvAdapter(private val clickListener: ClickListener): List
                         btnHomeMedicineCheck.text = "안먹음"
                         btnHomeMedicineCheck.setTextColor(binding.root.context.resources.getColor(R.color.black))
                     }
+
+                    clickListener.onAlarmClick(item, position, btnHomeMedicineCheck.isSelected)
                 }
             }
         }
@@ -65,7 +78,7 @@ class HomeTodayMedicineRvAdapter(private val clickListener: ClickListener): List
 
     interface ClickListener {
         fun onTodayMedicineClick(item: HomeRvGroup, position: Int)
-        fun onAlarmClick(item: HomeRvGroup, position: Int)
+        fun onAlarmClick(item: HomeRvGroup, position: Int, isSelected: Boolean)
     }
 
 }

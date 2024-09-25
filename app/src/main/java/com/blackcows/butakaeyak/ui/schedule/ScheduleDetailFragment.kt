@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -111,7 +112,7 @@ class ScheduleDetailFragment : Fragment() {
 
         scheduleViewModel.dateToMedicineGroup.observe(viewLifecycleOwner) {
             Log.d("ScheduleFragment", "detail size: ${it.size}")
-            scheduleRvAdapter.submitList(scheduleViewModel.changeToTimeToGroup())
+            scheduleRvAdapter.submitList(scheduleViewModel.changeToTimeToGroup().sortedBy { it.alarm })
             Log.d("ScheduleFragment", "detail curlist: ${scheduleRvAdapter.currentList.size}")
         }
     }
@@ -154,6 +155,7 @@ class ScheduleDetailFragment : Fragment() {
         medicineGroupBottomSheet.modifyBtn.setOnClickListener {
             //TODO: takeAddViewModel.selectedGroup = selectedGroup
             //  MainNavigation.addFragment(TakeAddFragment(), FragmentTag.TakeAddFragmentInSchedule)
+            Toast.makeText(requireContext(), "삭제 후 다시 만들어주세요. 얼른 업데이트하겠습니다.", Toast.LENGTH_SHORT).show()
         }
         medicineGroupBottomSheet.removeBtn.setOnClickListener {
             removeDialog.show()

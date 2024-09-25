@@ -69,6 +69,9 @@ class ScheduleViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = ScheduleUiState.Loading
             medicineGroupRepository.removeGroup(medicineGroup)
+            _dateToMedicineGroup.value = _dateToMedicineGroup.value!!.toMutableList().filter {
+                it.id != medicineGroup.id
+            }
             _uiState.value = ScheduleUiState.Success
         }
     }
