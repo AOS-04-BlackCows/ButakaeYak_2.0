@@ -339,6 +339,9 @@ class CycleFragment : Fragment() {
             val alarmHour = calendar.get(Calendar.HOUR_OF_DAY)
             val alarmMinute = calendar.get(Calendar.MINUTE)
 
+            Log.d("alarmHour_Cycle",alarmHour.toString())
+            Log.d("alarmMinute_Cycle",alarmMinute.toString())
+
             intent.putExtra("NOTIFICATION_ID", alarm.requestCode)
             intent.putExtra("NOTIFICATION_TITLE","${binding.etMedicineGroup.text}")
             intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
@@ -363,9 +366,6 @@ class CycleFragment : Fragment() {
 
                     val alarmClock = AlarmManager.AlarmClockInfo(adjustedTimeInMillis, pendingIntent)
                     alarmManager.setAlarmClock(alarmClock, pendingIntent)
-
-                    //TODO 반복 주기에 따른 알람 설정 추가 제거
-//                    scheduleNextAlarm(repeatType, alarmManager, pendingIntent, adjustedTimeInMillis)
 
                 } catch (e: SecurityException) {
                     Toast.makeText(context, "알림 설정에 실패했습니다. 권한을 확인해주세요.", Toast.LENGTH_SHORT).show()
