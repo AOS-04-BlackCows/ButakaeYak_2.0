@@ -66,8 +66,13 @@ class UserFragment : Fragment() {
 
         // 아침/점심/저녁 시간 설정
         binding.cvSetTime.setOnClickListener {
-            val mealTimeBottomSheet = MealTimeBottomSheet()
-            mealTimeBottomSheet.show(childFragmentManager, "MealTimeDialog")
+            //로그인 되어 있으면 시간 설정 / 안되어 있으면 Toast 메시지를 띄움
+            if (userViewModel.user.value != null) {
+                val mealTimeBottomSheet = MealTimeBottomSheet()
+                mealTimeBottomSheet.show(childFragmentManager, "MealTimeDialog")
+            } else {
+                Toast.makeText(requireContext(), "로그인이 필요합니다.", Toast.LENGTH_LONG).show()
+            }
         }
 
         // 로그아웃 콜백 구현
