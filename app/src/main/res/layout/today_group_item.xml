@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:background="@drawable/round_white_radius12"
-    android:elevation="5dp"
+    android:elevation="2dp"
     android:padding="18dp">
 
     <ToggleButton
@@ -18,10 +18,10 @@
 
         android:drawablePadding="0dp"
 
+        android:stateListAnimator="@null"
+
         android:textOff=" "
-
         android:textOn=" "
-
         app:layout_constraintEnd_toStartOf="@+id/group_name_tv"
         app:layout_constraintHorizontal_bias="0."
         app:layout_constraintHorizontal_chainStyle="packed"
