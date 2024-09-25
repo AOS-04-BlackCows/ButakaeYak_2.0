@@ -15,6 +15,10 @@ class OCRViewModel : ViewModel() {
     val uiState: StateFlow<GPTResultUIState> = _uiState
     private val ocrRepository : OCRRepository = OCRRepository()
 
+    fun setInit() {
+        _uiState.value = GPTResultUIState.Init
+    }
+
     fun fetchAiAnalysisResult(detail: String) {
         viewModelScope.launch {
             _uiState.value = GPTResultUIState.Loading

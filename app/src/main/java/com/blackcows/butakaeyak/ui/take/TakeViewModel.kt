@@ -69,6 +69,7 @@ class TakeAddViewModel @Inject constructor(
     fun saveNames(medicines: MutableList<String>){
         Log.d("saveNames medicineNameList","medicineNameList Data: ${medicineNameList}, medicines: ${medicines}")
         medicineNameList.addAll(medicines)
+
     }
     fun loadNames(): List<TakeAddMedicine> {
         Log.d("loadNames medicineNameList","medicineNameList Data: ${medicineNameList}")

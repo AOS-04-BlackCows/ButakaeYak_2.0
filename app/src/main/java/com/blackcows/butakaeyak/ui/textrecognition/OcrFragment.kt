@@ -88,13 +88,13 @@ class OcrFragment : Fragment(), View.OnClickListener {
             }
         }
 
-    private var medicineList: MutableList<String>? = mutableListOf()
+    private var medicineList: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {//arguments가 비지 않았을때 let동작
-            medicineList = it.getStringArrayList(ARG_PARAM1)
+            medicineList = it.getStringArrayList(ARG_PARAM1)?.toMutableList() ?: mutableListOf()
         }
     }
 
@@ -176,11 +176,11 @@ class OcrFragment : Fragment(), View.OnClickListener {
                             binding.textViewOcrResult.text = "약 이름이 없는 사진이에요...😥\n 다시 촬영해 주세요"
                         }else{
                             binding.textViewOcrResult.text = uiState.response.gptMessage.trim()
-                            medicineList = uiState.response.gptMessage.split(", ").toMutableList()
                             Log.d("medicineNameList", "OCR프레그먼트 ${medicineList.toString()}, uiState.response.gptMessage: ${uiState.response.gptMessage.trim()}")
-                            medicineList.let {
-                                takeAddViewModel.saveNames(it?: mutableListOf())
-                            }
+
+                            takeAddViewModel.saveNames(uiState.response.gptMessage.split(", ").toMutableList())
+                            ocrViewModel.setInit()
+
                             MainNavigation.popCurrentFragment()
                             MainNavigation.addFragment(TakeAddFragment(), FragmentTag.TakeAddFragment)
                         }
@@ -189,6 +189,10 @@ class OcrFragment : Fragment(), View.OnClickListener {
                     is GPTResultUIState.Error -> {
                         binding.lodingProgress.visibility = View.GONE
                         binding.textViewOcrResult.text = uiState.errorMessage
+                    }
+
+                    is GPTResultUIState.Init -> {
+
                     }
                 }
             }
