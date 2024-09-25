@@ -166,8 +166,8 @@ class ScheduleDetailFragment : Fragment() {
         calenderBottomSheetDialog = BottomSheetDialog(requireContext())
         calenderBottomSheetDialog.setContentView(calenderBottomSheet.root)
         calenderBottomSheet.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            val monthStr = if(month < 10) "0${month+1}"
-                            else month.toString()
+            val monthStr = if(month+1 < 10) "0${month+1}"
+                            else (month+1).toString()
             val dayOfMonthStr = if(dayOfMonth < 10) "0$dayOfMonth"
                             else dayOfMonth.toString()
 
