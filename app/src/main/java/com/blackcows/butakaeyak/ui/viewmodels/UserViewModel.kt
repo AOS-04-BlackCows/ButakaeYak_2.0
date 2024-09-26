@@ -14,6 +14,7 @@ import com.blackcows.butakaeyak.ui.state.LoginUiState
 import com.blackcows.butakaeyak.ui.state.SignUpUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
@@ -126,10 +127,11 @@ class UserViewModel @Inject constructor(
 
     fun logout(onFinished: () -> Unit) {
         viewModelScope.launch {
+            delay(2000)
             _user.value = null
-            _loginUiState.value = LoginUiState.Init
             userRepository.logout()
             onFinished()
+            _loginUiState.value = LoginUiState.Init
         }
     }
 
