@@ -25,6 +25,7 @@ class SignInFragment : Fragment() {
 
     private val userViewModel: UserViewModel by activityViewModels()
 
+    private var needShowLoadingBar = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,15 +70,28 @@ class SignInFragment : Fragment() {
             }
         }
 
-
-
-
         binding.ivKakaoLogin.setOnClickListener {
             userViewModel.signUpWithKakaoAndLogin()
+            needShowLoadingBar = true
         }
         binding.ivBack.setOnClickListener {
             MainNavigation.popCurrentFragment()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("SignInFragment", "OnResume")
+
+        if(needShowLoadingBar) {
+            MainNavigation.showLoadingBar()
+            needShowLoadingBar = false
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("SignInFragment", "onPause")
     }
 
     override fun onDestroy() {
