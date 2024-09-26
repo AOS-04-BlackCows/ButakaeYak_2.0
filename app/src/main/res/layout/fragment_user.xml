@@ -234,7 +234,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_set_time"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
         app:cardBackgroundColor="@color/white"
@@ -281,8 +281,9 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_services"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="2dp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="12dp"
         app:cardElevation="2dp"
@@ -327,8 +328,9 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_open_API"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="2dp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="12dp"
         app:cardElevation="2dp"
@@ -373,8 +375,9 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_version"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="2dp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="12dp"
         app:cardElevation="2dp"
@@ -422,8 +425,9 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_logout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="2dp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="12dp"
         app:cardElevation="2dp"
