@@ -124,7 +124,7 @@
 
                 <EditText
                     android:id="@+id/et_medicine_name"
-                    style="@style/medium"
+                    style="@style/body"
                     android:layout_width="226dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center_vertical"
