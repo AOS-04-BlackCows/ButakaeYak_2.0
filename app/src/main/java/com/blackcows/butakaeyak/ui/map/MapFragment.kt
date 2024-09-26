@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -69,6 +70,15 @@ class MapFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var pharmacyListRvAdapter : PharmacyListRvAdapter
 
+    private val onBackPressed = {
+        parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.move_enter, R.anim.move_exit)
+            .remove(this)
+            .commit()
+
+        MainNavigation.popCurrentFragment()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -76,6 +86,13 @@ class MapFragment : Fragment() {
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                Log.d("NameFragment", "Back Pressed!")
+                onBackPressed()
+            }
+        })
 
         return root
     }
@@ -89,6 +106,9 @@ class MapFragment : Fragment() {
         MainNavigation.hideBottomNavigation(true)
 
 
+        binding.btnBack.setOnClickListener {
+            MainNavigation.popCurrentFragment()
+        }
 
         bottomSheetDetailView = BottomsheetMapDetailBinding.inflate(layoutInflater)
         bottomSheetDetailDialog = BottomSheetDialog(requireContext())
