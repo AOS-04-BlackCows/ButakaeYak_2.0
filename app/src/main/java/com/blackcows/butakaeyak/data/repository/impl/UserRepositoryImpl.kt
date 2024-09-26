@@ -34,7 +34,6 @@ class UserRepositoryImpl @Inject constructor(
 
     companion object {
         private const val TAG = "UserRepositoryImpl"
-
     }
 
     override suspend fun loginWithId(id: String, pwd: String): LoginResult {
@@ -75,10 +74,15 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun trySignUpWithKakao(): SignUpResult {
         return kotlin.runCatching {
             val result = suspendCoroutine<Pair<OAuthToken?, Throwable?>> { continuation ->
+
+                Log.d(TAG, "can I use kakaoTalk?: ${UserApiClient.instance.isKakaoTalkLoginAvailable(context)}")
+
                 if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
                     // 카카오톡 로그인
                     UserApiClient.instance.loginWithKakaoTalk(context) { token, e ->
                         // 사용자 취소
+                        Log.d(TAG, "loginWithKakaoTalk: hasToken ${token != null}, error: ${e?.message ?: "없음"}")
+
                         if (e != null) {
                             if (e is ClientError && e.reason == ClientErrorCause.Cancelled) {
                                 return@loginWithKakaoTalk

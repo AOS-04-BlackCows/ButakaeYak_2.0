@@ -8,10 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Friend
 import com.blackcows.butakaeyak.data.models.Medicine
+import com.blackcows.butakaeyak.data.models.User
 import com.blackcows.butakaeyak.databinding.FragmentScheduleBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.note.recycler.NoteRvDecoration
@@ -44,6 +47,9 @@ class ScheduleFragment : Fragment() {
             .replace(R.id.schedule_container_view, detailFragment)
             .commit()
     }
+
+    private lateinit var userObserver: Observer<User?>
+    private lateinit var scheduleObserver: Observer<List<ScheduleProfile>>
 
 
     override fun onCreateView(
@@ -81,6 +87,11 @@ class ScheduleFragment : Fragment() {
         initProfiles()
     }
 
+    override fun onPause() {
+        super.onPause()
+        detachObserver()
+    }
+
     private fun initProfiles() {
         val myScheduleProfile: ScheduleProfile
         if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
@@ -101,18 +112,14 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun setObserver() {
-        userViewModel.user.observe(viewLifecycleOwner) { user ->
+        userObserver = Observer { user ->
             Log.d("UserViewModel", "ScheduleFragment: user is null? :${user==null}")
-
-            if(user != null) {
-                curScheduleProfileId = user.id
-            } else {
-                curScheduleProfileId = ""
-            }
+            curScheduleProfileId = user?.id ?: ""
         }
+        userViewModel.user.observe(viewLifecycleOwner, userObserver)
 
-        scheduleViewModel.scheduleProfile.observe(viewLifecycleOwner) { friendsProfiles ->
-           val myScheduleProfile = if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
+        scheduleObserver = Observer { friendsProfiles ->
+            val myScheduleProfile = if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
                 ScheduleProfile(id, name, profileUrl!!)
             } else ScheduleProfile("", "나", "")
 
@@ -129,5 +136,12 @@ class ScheduleFragment : Fragment() {
                 .replace(R.id.schedule_container_view, detailFragment)
                 .commit()
         }
+        scheduleViewModel.scheduleProfile.observe(viewLifecycleOwner, scheduleObserver)
+
+    }
+
+    private fun detachObserver() {
+        scheduleViewModel.scheduleProfile.removeObserver(scheduleObserver)
+        //userViewModel.user.removeObserver(userObserver)
     }
 }
