@@ -25,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
 
-            android:src="@color/gray"
+            android:src="@color/back_500"
             />
 
     </androidx.cardview.widget.CardView>

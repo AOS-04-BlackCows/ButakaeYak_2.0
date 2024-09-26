@@ -25,7 +25,7 @@ class ProfileRvAdapter(
     inner class ProfileViewHolder(private val binding: ScheduleProfileItemBinding): ViewHolder(binding.root) {
         fun bind(item: ScheduleProfile) = with(binding) {
             if(item.profileUrl.isEmpty()) {
-                profileIv.setImageResource(R.drawable.round_rect_500)
+                profileIv.setImageResource(R.color.back_500)
             }else {
                 Glide.with(itemView).load(item.profileUrl).into(profileIv)
             }
