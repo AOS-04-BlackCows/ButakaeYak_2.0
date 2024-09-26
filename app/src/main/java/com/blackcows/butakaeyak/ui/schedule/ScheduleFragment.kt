@@ -84,6 +84,7 @@ class ScheduleFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        setObserver()
         initProfiles()
     }
 
