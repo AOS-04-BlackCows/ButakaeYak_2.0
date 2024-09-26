@@ -139,29 +139,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         homeViewModel.medicineGroup.observe(viewLifecycleOwner) {
             Log.d(TAG, "homeViewModel.medicineGroup.value = $it")
 
-            val homeRvGroups = mutableListOf<HomeRvGroup>()
-            val alarmMap = mutableMapOf<String, MutableList<MedicineGroup>>()
-            it.forEach { group ->
-                group.alarms.forEach { alarm ->
-                    alarmMap.getOrPut(alarm) { mutableListOf() }.add(group)
-                }
-            }
-            it.forEach { group ->
-                group.alarms.forEach { alarm ->
-                    val todayTakenFormat = "${LocalDate.now()} $alarm"
-                    val isTaken = group.hasTaken.contains(todayTakenFormat)
-                    homeRvGroups.add(
-                        HomeRvGroup(
-                            groupId = group.id,
-                            alarmTime = alarm,
-                            groupName = group.name,
-                            isHasTakenTime = isTaken
-                        )
-                    )
-                }
-            }
-
-            todayMedicineGroupRvAdapter.submitList(homeRvGroups.sortedBy { it.alarmTime }.take(2))
+            todayMedicineGroupRvAdapter.submitList(medicineGroupConverter(it).take(2))
         }
 
         userViewModel.user.observe(viewLifecycleOwner) {
@@ -181,8 +159,13 @@ class HomeFragment : Fragment(), View.OnClickListener {
             }
         }
 
-        medicineGroupList.sortBy { it.alarmTime }
-        return medicineGroupList
+        val sorted = medicineGroupList.sortedWith(compareBy<HomeRvGroup> { it.alarmTime }.thenBy { it.groupName })
+
+        sorted.forEach {
+            Log.d("HomeFragment: medicineGroupConverter", "${it.alarmTime} ${it.groupName}")
+        }
+
+        return sorted
     }
 
 

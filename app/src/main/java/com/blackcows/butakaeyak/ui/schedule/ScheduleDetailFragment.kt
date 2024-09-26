@@ -113,6 +113,7 @@ class ScheduleDetailFragment : Fragment() {
         scheduleViewModel.dateToMedicineGroup.observe(viewLifecycleOwner) {
             Log.d("ScheduleFragment", "detail size: ${it.size}")
             scheduleRvAdapter.submitList(scheduleViewModel.changeToTimeToGroup().sortedBy { it.alarm })
+
             Log.d("ScheduleFragment", "detail curlist: ${scheduleRvAdapter.currentList.size}")
         }
     }
