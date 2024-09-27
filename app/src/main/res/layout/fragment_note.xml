@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.note.NoteFragment">
+    tools:context=".ui.note.NoteFragment"
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header_public"
@@ -52,6 +53,10 @@
 
         app:layout_constraintTop_toBottomOf="@id/header_public"
         app:layout_constraintStart_toStartOf="parent"
+
+        android:background="@color/white"
+        app:tabTextColor="@color/black"
+        app:tabSelectedTextColor="@color/back_700"
         />
 
     <androidx.viewpager2.widget.ViewPager2

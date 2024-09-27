@@ -163,5 +163,6 @@
     <string name="selectApiDataDetailView">
         의약품 제품 허가정보 [https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15095677]
     </string>
+    <string name="no_medicine_group">등록된 약이 없습니다!</string>
 
 </resources>

@@ -2,6 +2,13 @@ package com.blackcows.butakaeyak
 
 import com.blackcows.butakaeyak.data.models.Friend
 import com.blackcows.butakaeyak.data.toMap
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -35,5 +42,14 @@ class ExampleUnitTest {
         val toLocalDate = LocalDate.parse(str)
 
         println(toLocalDate)
+    }
+
+    @Test
+    fun coroutineTest() = runBlocking {
+        val job = GlobalScope.launch {
+            delay(1000L)
+            println("World!")
+        }
+        println("Hello,")
     }
 }

@@ -59,11 +59,14 @@ class ScheduleViewModel @Inject constructor(
             }
         }
 
-        return alarmMap.map {
+        val notSortedList = alarmMap.map {
+            val sortedByName = it.value.sortedBy { it.name }
             TimeToGroup(
-                alarm = it.key, groups = it.value
+                alarm = it.key, groups = sortedByName
             )
         }
+
+        return notSortedList.sortedBy { it.alarm }
     }
 
     fun removeMedicineGroup(medicineGroup: MedicineGroup) {
