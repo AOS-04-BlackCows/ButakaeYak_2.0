@@ -11,11 +11,14 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.state.LoginUiState
+import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
+import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment.Companion
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +27,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private val REQUEST_CODE_PERMISSIONS = 10
     private val REQUIRED_PERMISSIONS =
         mutableListOf (
             Manifest.permission.CAMERA,
@@ -53,7 +57,12 @@ class MainActivity : AppCompatActivity() {
         // GPS 권한 체크 후 없을 시 요청
         checkPermissionForLocation()
         //카메라 권한 체크 후 없을 시 요청
-        allPermissionsGranted()
+        if(!allPermissionsGranted()){
+            ActivityCompat.requestPermissions(this,
+                REQUIRED_PERMISSIONS,
+                REQUEST_CODE_PERMISSIONS
+            )
+        }
 
         KakaoSdk.init(this, BuildConfig.NATIVE_APP_KEY)
 
