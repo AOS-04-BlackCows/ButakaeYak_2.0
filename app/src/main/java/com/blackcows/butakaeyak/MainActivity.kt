@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak
 
 import android.Manifest
+import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -16,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.navigation.TabTag
 import com.blackcows.butakaeyak.ui.state.LoginUiState
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment.Companion
@@ -43,6 +45,8 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
 
     private val userViewModel: UserViewModel by viewModels()
+
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +99,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        checkFirstLaunch()
     }
 
     override fun onResume() {
@@ -149,6 +154,26 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "onRequestPermissionsResult() _ 권한 허용 거부")
 //                Toast.makeText(this, "권한이 없어 해당 기능을 실행할 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun checkFirstLaunch() {
+        if(mainViewModel.isFirstLaunch()) {
+            mainViewModel.setDefaultAlarm()
+
+            val dialog
+            = AlertDialog.Builder(this)
+                .setTitle("기본 복용 시간을 설정해주세요.")
+                .setPositiveButton("설정하러 가기") { dialog, _ ->
+                    MainNavigation.toOtherTab(TabTag.User)
+                    dialog.dismiss()
+                }.setNeutralButton("나중에 하기") { dialog, _ ->
+                    dialog.dismiss()
+                }
+
+            dialog.show()
+
+            mainViewModel.setFirstLaunchFalse()
         }
     }
 }

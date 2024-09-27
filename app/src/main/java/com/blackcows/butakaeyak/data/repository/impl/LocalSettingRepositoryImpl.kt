@@ -15,4 +15,12 @@ class LocalSettingRepositoryImpl @Inject constructor(
         return localSettingDataSource.getAlarms()
     }
 
+    override fun isFirstLaunch(): Boolean {
+        return localSettingDataSource.isFirstLaunch()
+    }
+
+    override fun setFirstLaunchFalse() {
+        localSettingDataSource.setIsFirstFalse()
+    }
+
 }

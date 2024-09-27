@@ -1,13 +1,11 @@
 package com.blackcows.butakaeyak
 
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.blackcows.butakaeyak.domain.repo.LocalRepository
+import com.blackcows.butakaeyak.domain.repo.LocalSettingRepository
 import com.blackcows.butakaeyak.domain.repo.PharmacyRepository
-import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,7 +13,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val localRepository: LocalRepository,
-    private val pharmacyRepository: PharmacyRepository
+    private val pharmacyRepository: PharmacyRepository,
+    private val localSettingRepository: LocalSettingRepository
 ): ViewModel() {
     private val _pharmacies = MutableLiveData<Set<KakaoPlacePharmacy>>(setOf())
     val pharmacies get() = _pharmacies
@@ -82,4 +81,16 @@ class MainViewModel @Inject constructor(
         return localRepository.isMyMedicine(id)
     }
 
+
+    fun isFirstLaunch(): Boolean {
+        return localSettingRepository.isFirstLaunch()
+    }
+    fun setFirstLaunchFalse() {
+        localSettingRepository.setFirstLaunchFalse()
+    }
+    fun setDefaultAlarm() {
+        localSettingRepository.saveDefaultAlarms(
+            listOf("08:00", "13:00", "18:00")
+        )
+    }
 }

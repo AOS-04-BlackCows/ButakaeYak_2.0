@@ -18,10 +18,18 @@ class LocalSettingDataSource @Inject constructor(
         private const val SETTING_PREFS = "BUAKAEYAK_SETTING"
 
         private const val ALARMS = "ALARMS"
+        private const val IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH"
     }
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(SETTING_PREFS, Activity.MODE_PRIVATE)
     private val editor = sharedPreferences.edit()
+
+    fun isFirstLaunch(): Boolean {
+        return sharedPreferences.getBoolean(IS_FIRST_LAUNCH, true)
+    }
+    fun setIsFirstFalse() {
+        editor.putBoolean(IS_FIRST_LAUNCH, false).apply()
+    }
 
     fun saveAlarms(alarms: List<String>) {
         val gson = Gson()

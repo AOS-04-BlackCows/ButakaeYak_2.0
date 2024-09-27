@@ -82,6 +82,16 @@ object MainNavigation {
     fun toOtherTab(tabTag: TabTag) {
         currentTab = tabTag
         binding.viewPager.currentItem = tabTag.index
+
+        val menuId =
+            when(tabTag) {
+                TabTag.Home -> R.id.navigation_home
+                TabTag.Schedule -> R.id.navigation_schedule
+                TabTag.Note -> R.id.navigation_note
+                TabTag.User -> R.id.navigation_user
+            }
+
+        binding.bottomMenuBar.selectedItemId = menuId
     }
 
     //-------------------------------------------------------------------------------------------------------------
