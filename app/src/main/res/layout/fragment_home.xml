@@ -177,6 +177,25 @@
                     tools:listitem="@layout/item_home_today_medicine_group" />
 
                 <TextView
+                    android:id="@+id/no_tdoay_medicine_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    app:layout_constraintTop_toBottomOf="@id/textView3"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="5dp"
+
+                    android:text="@string/no_medicine_group"
+                    style="@style/body_gray"
+
+                    android:visibility="gone"
+                    />
+
+                <TextView
                     android:id="@+id/home_alarm_view_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

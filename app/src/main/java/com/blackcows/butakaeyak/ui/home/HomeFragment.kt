@@ -54,6 +54,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private lateinit var todayMedicineGroupRvAdapter : HomeTodayMedicineRvAdapter
 //    private val item : MyMedicine? = null
 
+    private var isSpread: Boolean = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,19 +66,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
         mainViewModel.pharmacies.observe(viewLifecycleOwner) {
             Log.d("UserFragment", "pharmacies size: ${it.size}")
         }
-        // MockUp Data
-        /*
-        뷰페이저 제거
-        val mockUpMedicineGroup = listOf(
-            MedicineGroup("0001","그룹 1","1",listOf<MedicineDetail>(MedicineDetail("","","","","","","",""),MedicineDetail("","","","","","","","")),listOf("커스텀 약","커스텀 약"),listOf(), LocalDate.now(), LocalDate.now(),listOf(WeekDay.SUNDAY,WeekDay.MONDAY),listOf("07:50", "12:50"),listOf<String>()),
-            MedicineGroup("0002","그룹 2","2",listOf<MedicineDetail>(MedicineDetail("","","","","","","",""),MedicineDetail("","","","","","","","")),listOf(),listOf(), LocalDate.now(), LocalDate.now(),listOf(WeekDay.SUNDAY,WeekDay.MONDAY),listOf("01:10", "04:10"),listOf<String>()),
-            MedicineGroup("0003","그룹 3","3",listOf<MedicineDetail>(MedicineDetail("","","","","","","",""),MedicineDetail("","","","","","","","")),listOf("커스텀 약1","커스텀 약2"),listOf(), LocalDate.now(), LocalDate.now(),listOf(WeekDay.SUNDAY,WeekDay.MONDAY),listOf("11:59", "14:59"),listOf<String>())
-        )
-        homeViewPagerAdapter.submitList(mockUpMedicineGroup)
-        binding.vpTodayMedicine.adapter = homeViewPagerAdapter
-        val dotsIndicator = binding.dotsIndicator
-        dotsIndicator.attachTo(binding.vpTodayMedicine)
-        */
 
         //애니메이션 변수
         fab_open = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open)
@@ -87,16 +76,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
         binding.btnAddMedicineContainer.setOnClickListener(this)
 
         fragmentInit()
-        //
-//        fragList = arrayListOf(FragmentControl(), FragmentState(), FragmentPolicy())
-//
-//        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-
-        /* 고려사항 정리
-        1. 아이템의 출력은 alarm의 갯수만큼
-        2. 아이템의 정렬 순서도 alarm으로
-
-        */
 
         todayMedicineGroupRvAdapter = HomeTodayMedicineRvAdapter (object : HomeTodayMedicineRvAdapter.ClickListener {
             override fun onTodayMedicineClick(item: HomeRvGroup, position: Int) {
@@ -118,9 +97,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
         binding.homeAlarmViewMore.setOnClickListener {
             val fullList = medicineGroupConverter(homeViewModel.medicineGroup.value!!)
 
-            if(fullList.size < 2) return@setOnClickListener
+            isSpread = !isSpread
 
-            if (todayMedicineGroupRvAdapter.currentList.size == 2) {
+            if(isSpread) {
                 todayMedicineGroupRvAdapter.submitList(fullList)
                 binding.homeAlarmViewMore.setText(R.string.view_close)
             } else {
@@ -128,7 +107,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 binding.homeAlarmViewMore.setText(R.string.view_more)
             }
         }
-        Log.d(TAG,"mainViewModel.getMyMedicineList() = ${mainViewModel.myMedicines.value}")
 
         return root
     }
@@ -139,7 +117,21 @@ class HomeFragment : Fragment(), View.OnClickListener {
         homeViewModel.medicineGroup.observe(viewLifecycleOwner) {
             Log.d(TAG, "homeViewModel.medicineGroup.value = $it")
 
-            todayMedicineGroupRvAdapter.submitList(medicineGroupConverter(it).take(2))
+            val items = medicineGroupConverter(it)
+
+            binding.homeAlarmViewMore.visibility =
+                if(items.size <= 2) View.GONE
+                else View.VISIBLE
+
+            binding.noTdoayMedicineTv.visibility =
+                if(items.isEmpty())  View.VISIBLE
+                else View.GONE
+
+            if(isSpread) {
+                todayMedicineGroupRvAdapter.submitList(items)
+            } else {
+                todayMedicineGroupRvAdapter.submitList(items.take(2))
+            }
         }
 
         userViewModel.user.observe(viewLifecycleOwner) {
@@ -159,13 +151,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
             }
         }
 
-        val sorted = medicineGroupList.sortedWith(compareBy<HomeRvGroup> { it.alarmTime }.thenBy { it.groupName })
-
-        sorted.forEach {
-            Log.d("HomeFragment: medicineGroupConverter", "${it.alarmTime} ${it.groupName}")
-        }
-
-        return sorted
+        return medicineGroupList
+            .sortedWith(
+                compareBy<HomeRvGroup> { it.alarmTime }.thenBy { it.groupName }
+            )
     }
 
 
