@@ -39,6 +39,11 @@ android {
         //testInstrumentationRunner = "dagger.hilt.android.testing.HiltTestRunner"
         testInstrumentationRunner = "com.blackcows.butakaeyak.HiltTestRunner"
 
+        ndk {
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")  // riscv64를 제외하고 필요한 아키텍처만 선택
+            abiFilters.removeIf { it == "riscv64" }
+        }
+
 
         buildConfigField(
             "String",
