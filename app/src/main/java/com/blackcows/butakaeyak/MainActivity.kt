@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {//카메라 권한 관련
-        ContextCompat.checkSelfPermission(this@MainActivity, it) == PackageManager.PERMISSION_GRANTED
+        this.checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -152,7 +152,13 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 Log.d(TAG, "onRequestPermissionsResult() _ 권한 허용 거부")
-//                Toast.makeText(this, "권한이 없어 해당 기능을 실행할 수 없습니다.", Toast.LENGTH_SHORT).show()
+                requestPermissions(
+                    mutableListOf(Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.CAMERA,).apply {
+                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                            add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        }
+                    }.toTypedArray(), REQUEST_PERMISSION_LOCATION)
             }
         }
     }
