@@ -1,4 +1,4 @@
-package com.blackcows.butakaeyak.ui.take.fragment
+package com.blackcows.butakaeyak.ui.user
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

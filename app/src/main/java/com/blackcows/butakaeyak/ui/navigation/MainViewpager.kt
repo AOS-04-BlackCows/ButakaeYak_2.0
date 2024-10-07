@@ -8,7 +8,6 @@ import com.blackcows.butakaeyak.ui.search.SearchFragment
 import com.blackcows.butakaeyak.ui.map.MapFragment
 import com.blackcows.butakaeyak.ui.note.NoteFragment
 import com.blackcows.butakaeyak.ui.schedule.ScheduleFragment
-import com.blackcows.butakaeyak.ui.take.fragment.TakeFragment
 import com.blackcows.butakaeyak.ui.user.UserFragment
 
 class MainViewpager(fragmentActivity: FragmentActivity): FragmentStateAdapter(fragmentActivity) {

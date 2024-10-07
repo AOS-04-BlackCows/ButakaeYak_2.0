@@ -10,11 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentUserBinding
-import com.blackcows.butakaeyak.ui.SignIn.SignInFragment
+import com.blackcows.butakaeyak.ui.sign_in.SignInFragment
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.fragment.OpenAPIFragment
-import com.blackcows.butakaeyak.ui.take.fragment.TermsFragment
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners

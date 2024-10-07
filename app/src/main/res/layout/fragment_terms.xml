@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/white"
-    tools:context=".ui.take.fragment.TermsFragment">
+    tools:context=".ui.user.TermsFragment">
 
     <ImageView
         android:id="@+id/iv_back"

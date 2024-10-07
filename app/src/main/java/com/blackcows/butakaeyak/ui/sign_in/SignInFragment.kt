@@ -1,4 +1,4 @@
-package com.blackcows.butakaeyak.ui.SignIn
+package com.blackcows.butakaeyak.ui.sign_in
 
 import android.os.Bundle
 import android.util.Log
