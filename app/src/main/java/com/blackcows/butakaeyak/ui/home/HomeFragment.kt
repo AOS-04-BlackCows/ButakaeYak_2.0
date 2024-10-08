@@ -134,6 +134,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
             }
         }
 
+        //TODO: UserViewModel 바꿔야 함...
         userViewModel.user.observe(viewLifecycleOwner) {
             val userId = it?.id ?: "guest"
             homeViewModel.getTodayMedicine(userId)

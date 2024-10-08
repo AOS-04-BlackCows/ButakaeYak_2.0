@@ -7,17 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentNoteDateBinding
 import com.blackcows.butakaeyak.ui.note.recycler.NoteItemRvAdapter
 import com.blackcows.butakaeyak.ui.note.recycler.NoteRvDecoration
+import com.blackcows.butakaeyak.ui.viewmodels.MemoViewModel
 
 
 class NoteDateFragment : Fragment() {
     private var _binding: FragmentNoteDateBinding? = null
     private val binding get() = _binding!!
 
-    private val noteViewModel: NoteViewModel by activityViewModels()
+    private val memoViewModel: MemoViewModel by activityViewModels()
     private val noteRvAdapter = NoteItemRvAdapter()
 
     override fun onCreateView(
@@ -37,8 +37,8 @@ class NoteDateFragment : Fragment() {
             addItemDecoration(NoteRvDecoration.getLinearDecoSimpleItem())
         }
 
-        noteViewModel.memos.observe(viewLifecycleOwner) {
-            noteRvAdapter.submitList(noteViewModel.getDateMemos())
+        memoViewModel.memos.observe(viewLifecycleOwner) {
+            noteRvAdapter.submitList(memoViewModel.getDateMemos())
         }
     }
 }

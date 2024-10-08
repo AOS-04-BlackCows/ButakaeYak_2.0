@@ -113,6 +113,7 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun setObserver() {
+        //TODO: UserViewModel 바꿔야 함...
         userObserver = Observer { user ->
             Log.d("UserViewModel", "ScheduleFragment: user is null? :${user==null}")
             curScheduleProfileId = user?.id ?: ""
