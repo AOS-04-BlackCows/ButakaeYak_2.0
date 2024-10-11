@@ -1,6 +1,6 @@
-package com.blackcows.butakaeyak.ui.textrecognition.data
+package com.blackcows.butakaeyak.data.models
 
-import com.blackcows.butakaeyak.ui.textrecognition.AI_MODEL
+import com.blackcows.butakaeyak.data.retrofit.service.AI_MODEL
 import com.google.gson.annotations.SerializedName
 
 data class OCRRequest(

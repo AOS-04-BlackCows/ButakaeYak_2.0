@@ -1,6 +1,8 @@
 package com.blackcows.butakaeyak.ui.textrecognition.data
 
-import com.blackcows.butakaeyak.ui.textrecognition.OCRRetrofitClient
+import com.blackcows.butakaeyak.data.models.OCRRequest
+import com.blackcows.butakaeyak.data.models.OCRResponse
+import com.blackcows.butakaeyak.data.retrofit.OCRRetrofitClient
 
 class OCRRepository {
     suspend fun createChatCompletion(request: OCRRequest): OCRResponse {

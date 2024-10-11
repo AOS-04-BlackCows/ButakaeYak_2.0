@@ -1,5 +1,6 @@
-package com.blackcows.butakaeyak.ui.textrecognition
+package com.blackcows.butakaeyak.data.retrofit
 
+import com.blackcows.butakaeyak.data.retrofit.service.OCRTextRecApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

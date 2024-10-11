@@ -3,9 +3,9 @@ package com.blackcows.butakaeyak.ui.textrecognition
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blackcows.butakaeyak.ui.textrecognition.data.Message
+import com.blackcows.butakaeyak.data.models.Message
 import com.blackcows.butakaeyak.ui.textrecognition.data.OCRRepository
-import com.blackcows.butakaeyak.ui.textrecognition.data.OCRRequest
+import com.blackcows.butakaeyak.data.models.OCRRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
