@@ -18,6 +18,7 @@ import com.blackcows.butakaeyak.databinding.FragmentScheduleDetailBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.note.recycler.NoteRvDecoration
 import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleRvAdapter
+import com.blackcows.butakaeyak.ui.viewmodels.MedicineGroupViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -29,7 +30,7 @@ class ScheduleDetailFragment : Fragment() {
     private var _binding: FragmentScheduleDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val scheduleViewModel: ScheduleViewModel by activityViewModels()
+    private val medicineGroupViewModel: MedicineGroupViewModel by activityViewModels()
 
     private lateinit var calenderBottomSheet: BottomsheetCalendarBinding
     private lateinit var calenderBottomSheetDialog: BottomSheetDialog
@@ -38,13 +39,17 @@ class ScheduleDetailFragment : Fragment() {
         Log.d("ScheduleFragment", "detail: userId: ${arguments?.getString(FRIEND_ID_DATA)!!}")
         arguments?.getString(FRIEND_ID_DATA)!!
     }
-    private val isMine by lazy {
-        Log.d("ScheduleFragment", "detail: userId: ${arguments?.getString(FRIEND_ID_DATA)!!}")
-        arguments?.getBoolean(IS_MINE)!!
-    }
 
     private var selectedMedicineGroup: MedicineGroup? = null
     private lateinit var scheduleRvAdapter: ScheduleRvAdapter
+
+    private var date = LocalDate.now()
+        set(value) {
+            val onDateGroup = medicineGroupViewModel.getDateToMedicineGroup(userId, value)
+
+            binding.dateTv.text = date.toString().replace("-", ".")
+            scheduleRvAdapter.submitList(medicineGroupViewModel.changeToTimeToGroup())
+        }
 
 
     override fun onCreateView(
@@ -58,25 +63,6 @@ class ScheduleDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch {
-            scheduleViewModel.uiState.collectLatest {
-                when(it) {
-                    is ScheduleUiState.Loading -> {
-                        MainNavigation.showLoadingBar()
-                    }
-
-                    is ScheduleUiState.Success -> {
-                        MainNavigation.disableLoadingBar()
-                    }
-
-                    is ScheduleUiState.Init -> {
-
-                    }
-                }
-            }
-        }
-
-        //initMedicineGroupBottomSheet()
         initCalendarBottomSheet()
 
         with(binding) {
@@ -84,15 +70,7 @@ class ScheduleDetailFragment : Fragment() {
 
             dateTv.text = today.toString().replace("-", ".")
 
-            scheduleRvAdapter = ScheduleRvAdapter(!isMine, object: ScheduleRvAdapter.ClickListener {
-                override fun onModifyClick(medicineGroup: MedicineGroup) {
-                    selectedMedicineGroup = medicineGroup
-                    //medicineGroupBottomSheetDialog.show()
-                }
-                override fun onCheckClick(medicineGroup: MedicineGroup, taken: Boolean, alarm: String) {
-                    scheduleViewModel.checkTakenMedicineGroup(medicineGroup, taken, alarm)
-                }
-            })
+            scheduleRvAdapter = ScheduleRvAdapter(true)
 
             todayAlarmRv.run {
                 adapter = scheduleRvAdapter
@@ -105,13 +83,10 @@ class ScheduleDetailFragment : Fragment() {
             }
         }
 
-        scheduleViewModel.getDateToMedicineGroup(userId, LocalDate.now())
+        medicineGroupViewModel.getDateToMedicineGroup(userId, LocalDate.now())
 
-        scheduleViewModel.dateToMedicineGroup.observe(viewLifecycleOwner) {
-            Log.d("ScheduleFragment", "detail size: ${it.size}")
-            scheduleRvAdapter.submitList(scheduleViewModel.changeToTimeToGroup().sortedBy { it.alarm })
-
-            Log.d("ScheduleFragment", "detail curlist: ${scheduleRvAdapter.currentList.size}")
+        medicineGroupViewModel.dateToMedicineGroup.observe(viewLifecycleOwner) {
+            scheduleRvAdapter.submitList(medicineGroupViewModel.changeToTimeToGroup().sortedBy { it.alarm })
         }
     }
 
@@ -122,14 +97,12 @@ class ScheduleDetailFragment : Fragment() {
 
     companion object {
         private const val FRIEND_ID_DATA = "FRIEND_ID_DATA"
-        private const val IS_MINE = "IS_MINE"
 
         @JvmStatic
-        fun newInstance(friendId: String, isMine: Boolean) =
+        fun newInstance(friendId: String) =
             ScheduleDetailFragment().apply {
                 arguments = Bundle().apply {
                     putString(FRIEND_ID_DATA, friendId)
-                    putBoolean(IS_MINE, isMine)
                 }
             }
     }
@@ -144,11 +117,7 @@ class ScheduleDetailFragment : Fragment() {
             val dayOfMonthStr = if(dayOfMonth < 10) "0$dayOfMonth"
                             else dayOfMonth.toString()
 
-            val date = LocalDate.parse("$year-$monthStr-$dayOfMonthStr")
-            scheduleViewModel.getDateToMedicineGroup(userId, date)
-
-            binding.dateTv.text = date.toString().replace("-", ".")
-
+            date = LocalDate.parse("$year-$monthStr-$dayOfMonthStr")
             calenderBottomSheetDialog.dismiss()
         }
     }

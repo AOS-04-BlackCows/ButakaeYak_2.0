@@ -42,4 +42,8 @@ class MemoViewModel @Inject constructor(
             )
         }
     }
+
+    fun clearMemos() {
+        _memos.value = listOf()
+    }
 }

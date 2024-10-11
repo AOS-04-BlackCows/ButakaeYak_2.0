@@ -14,7 +14,7 @@ import com.blackcows.butakaeyak.ui.schedule.TimeToGroup
 
 class ScheduleRvAdapter(
     private val isDisabled: Boolean,
-    private val clickListener: ClickListener,
+    private val clickListener: ClickListener? = null,
 ): ListAdapter<TimeToGroup, ScheduleRvAdapter.TimeToGroupViewHolder>(
     object: DiffUtil.ItemCallback<TimeToGroup>() {
         override fun areItemsTheSame(oldItem: TimeToGroup, newItem: TimeToGroup): Boolean {
@@ -27,11 +27,11 @@ class ScheduleRvAdapter(
 ) {
     inner class TimeToGroupViewHolder(private val binding: ScheduleItemBinding): ViewHolder(binding.root) {
         fun bind(item: TimeToGroup) {
-            val onTakingCheck: (MedicineGroup, Boolean, String) -> Unit = { group, isTaken, alarm ->
-                clickListener.onCheckClick(group, isTaken, alarm)
+            val onTakingCheck: (MedicineGroup, Boolean, String) -> Unit = { group, isTaken, takenFormat ->
+                clickListener?.onCheckClick(group, isTaken, takenFormat)
             }
             val onModify: (MedicineGroup) -> Unit = { group ->
-                clickListener.onModifyClick(group)
+                clickListener?.onModifyClick(group)
             }
             val timeGroupRvAdapter = TimeGroupRvAdapter(item.alarm, isDisabled, onModify, onTakingCheck)
             with(binding) {

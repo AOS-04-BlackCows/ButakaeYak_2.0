@@ -33,7 +33,6 @@ import com.blackcows.butakaeyak.data.models.MedicineGroupResponse
 import com.blackcows.butakaeyak.databinding.BottomsheetCalendarBinding
 import com.blackcows.butakaeyak.databinding.BottomsheetRepeatCycleBinding
 import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
-import com.blackcows.butakaeyak.ui.home.HomeViewModel
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.AlarmReceiver
@@ -42,6 +41,7 @@ import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
+import com.blackcows.butakaeyak.ui.viewmodels.MyGroupViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.time.LocalDate
@@ -63,7 +63,7 @@ class CycleFragment : Fragment() {
     private val viewModel: TakeAddViewModel by activityViewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     private val userViewModel: UserViewModel by activityViewModels()
-    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val myGroupViewModel: MyGroupViewModel by activityViewModels()
 
     private lateinit var bottomSheetView: BottomsheetCalendarBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
@@ -290,7 +290,7 @@ class CycleFragment : Fragment() {
                         Log.d("groupCycle","failed createNewMedicine")
                     }
                     if(groupCycle != null) {
-                        viewModel.saveGroup(groupCycle)
+                        myGroupViewModel.saveGroup(groupCycle)
 
                         Log.d("takeViewModel","${viewModel.groupName}")
                         Log.d("takeViewModel","${viewModel.customNameList}")
@@ -320,8 +320,6 @@ class CycleFragment : Fragment() {
                             it.timeText!!
                         }
                     )
-
-                    homeViewModel.getTodayMedicine(userId)
 
                     newMyMedicine?.let { it1 -> mainViewModel.addToMyMedicineList(it1) }
                     MainNavigation.popCurrentFragment()

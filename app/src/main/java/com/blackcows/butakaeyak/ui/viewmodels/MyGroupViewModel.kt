@@ -3,11 +3,12 @@ package com.blackcows.butakaeyak.ui.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.data.models.MedicineGroup
+import com.blackcows.butakaeyak.data.models.MedicineGroupRequest
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
-import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.schedule.TimeToGroup
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -26,11 +27,24 @@ class MyGroupViewModel @Inject constructor(
         }
     }
 
+    fun getGroupsOnDay(date: LocalDate): List<MedicineGroup> {
+        return _myMedicineGroup.value!!.filter {
+            it.startedAt <= date && it.finishedAt >= date
+        }
+    }
+
     // 오늘 복용할 약 불러오기
     fun getTodayMedicineGroups (): List<MedicineGroup> {
         val date = LocalDate.now()
         return _myMedicineGroup.value!!.filter {
             it.startedAt <= date && it.finishedAt >= date
+        }
+    }
+
+    fun saveGroup (newGroup : MedicineGroupRequest) {
+        viewModelScope.launch {
+            medicineGroupRepository.saveNewGroup(newGroup)
+            getAllMedicineGroups(newGroup.userId)
         }
     }
 
@@ -52,6 +66,10 @@ class MyGroupViewModel @Inject constructor(
             medicineGroupRepository.notifyTaken(groupId, taken, consumeFormat)
         }
     }
+    fun checkTakenMedicineGroup(medicineGroup: MedicineGroup, taken: Boolean, consumeFormat: String) {
+        checkTakenMedicineGroup(medicineGroup.id, taken, consumeFormat)
+    }
+
 
     fun removeMedicineGroup(medicineGroup: MedicineGroup) {
         viewModelScope.launch {
@@ -61,5 +79,24 @@ class MyGroupViewModel @Inject constructor(
 
             medicineGroupRepository.removeGroup(medicineGroup)
         }
+    }
+
+    fun changeToTimeToGroup(list: List<MedicineGroup>): List<TimeToGroup> {
+        val alarmMap = mutableMapOf<String, MutableList<MedicineGroup>>()
+
+        list.forEach {
+            it.alarms.forEach { alarm ->
+                alarmMap.getOrPut(alarm) { mutableListOf() }.add(it)
+            }
+        }
+
+        val notSortedList = alarmMap.map {
+            val sortedByName = it.value.sortedBy { it.name }
+            TimeToGroup(
+                alarm = it.key, groups = sortedByName
+            )
+        }
+
+        return notSortedList.sortedBy { it.alarm }
     }
 }
