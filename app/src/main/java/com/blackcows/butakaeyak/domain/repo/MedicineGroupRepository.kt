@@ -10,5 +10,5 @@ interface MedicineGroupRepository {
     suspend fun removeGroup(medicineGroup: MedicineGroup)
 
     suspend fun notifyTaken(medicineGroup: MedicineGroup, taken: Boolean, takenTime: String): MedicineGroup
-    suspend fun notifyTaken(groupId: String, taken: Boolean, takenTime: String): MedicineGroup?
+    suspend fun notifyTaken(groupId: String, taken: Boolean, takenFormat: String): MedicineGroup?
 }

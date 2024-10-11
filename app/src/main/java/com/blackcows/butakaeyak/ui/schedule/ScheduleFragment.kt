@@ -21,21 +21,21 @@ import com.blackcows.butakaeyak.ui.note.recycler.NoteRvDecoration
 import com.blackcows.butakaeyak.ui.schedule.recycler.ProfileRvAdapter
 import com.blackcows.butakaeyak.ui.schedule.recycler.ProfileRvDecoration
 import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleProfile
-import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleRvAdapter
-import com.blackcows.butakaeyak.ui.take.fragment.CycleFragment
+import com.blackcows.butakaeyak.ui.viewmodels.FriendViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
+import java.time.LocalDate
 
 class ScheduleFragment : Fragment() {
     private var _binding: FragmentScheduleBinding? = null
     private val binding get() = _binding!!
 
-    private val scheduleViewModel: ScheduleViewModel by activityViewModels()
     private val userViewModel: UserViewModel by activityViewModels()
+    private val friendViewModel: FriendViewModel by activityViewModels()
 
-    private var curScheduleProfileId = ""
+    private var selectedProfileId = ""
 
     private val profileRvAdapter = ProfileRvAdapter() { userId ->
-        curScheduleProfileId = userId
+        selectedProfileId = userId
         val isMine = if(userViewModel.user.value == null) true
                     else if(userViewModel.user.value!!.id == userId) true
                     else false
@@ -48,8 +48,28 @@ class ScheduleFragment : Fragment() {
             .commit()
     }
 
-    private lateinit var userObserver: Observer<User?>
-    private lateinit var scheduleObserver: Observer<List<ScheduleProfile>>
+    private val profilesObserver = Observer<List<ScheduleProfile>> { profiles ->
+        val myScheduleProfile = if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
+            ScheduleProfile(id, name, profileUrl!!)
+        } else ScheduleProfile("", "나", "")
+
+        Log.d("ScheduleFragment", "make myScheduleProfile: ${lifecycle.currentState}")
+
+
+        val list = mutableListOf(myScheduleProfile).apply {
+            addAll(profiles)
+        }
+
+        profileRvAdapter.submitList(list)
+
+        // when a selected profile is removed, show my profile.
+        if(!profiles.any { it.userId == selectedProfileId }) {
+            val detailFragment = ScheduleDetailFragment.newInstance(myScheduleProfile.userId, true)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.schedule_container_view, detailFragment)
+                .commit()
+        }
+    }
 
 
     override fun onCreateView(
@@ -81,69 +101,22 @@ class ScheduleFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
 
         setObserver()
-        initProfiles()
     }
 
-    override fun onPause() {
-        super.onPause()
-        detachObserver()
-    }
+    override fun onStop() {
+        super.onStop()
 
-    private fun initProfiles() {
-        val myScheduleProfile: ScheduleProfile
-        if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
-            scheduleViewModel.getFriendProfile(id)
-            return
-        } else {
-            myScheduleProfile = ScheduleProfile("", "나", "")
-        }
-
-        Log.d("ScheduleFragment", "replace on initProfiles.")
-
-        profileRvAdapter.submitList(listOf(myScheduleProfile))
-
-        val detailFragment = ScheduleDetailFragment.newInstance(myScheduleProfile.userId, true)
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.schedule_container_view, detailFragment)
-            .commit()
+        removeObserver()
     }
 
     private fun setObserver() {
-        //TODO: UserViewModel 바꿔야 함...
-        userObserver = Observer { user ->
-            Log.d("UserViewModel", "ScheduleFragment: user is null? :${user==null}")
-            curScheduleProfileId = user?.id ?: ""
-        }
-        userViewModel.user.observe(viewLifecycleOwner, userObserver)
-
-        scheduleObserver = Observer { friendsProfiles ->
-            val myScheduleProfile = if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
-                ScheduleProfile(id, name, profileUrl!!)
-            } else ScheduleProfile("", "나", "")
-
-            Log.d("ScheduleFragment", "make myScheduleProfile")
-
-            val list = mutableListOf(myScheduleProfile).apply {
-                addAll(friendsProfiles)
-            }
-
-            profileRvAdapter.submitList(list)
-
-            val detailFragment = ScheduleDetailFragment.newInstance(myScheduleProfile.userId, true)
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.schedule_container_view, detailFragment)
-                .commit()
-        }
-        scheduleViewModel.scheduleProfile.observe(viewLifecycleOwner, scheduleObserver)
-
+        friendViewModel.friendProfiles.observe(viewLifecycleOwner, profilesObserver)
     }
-
-    private fun detachObserver() {
-        scheduleViewModel.scheduleProfile.removeObserver(scheduleObserver)
-        //userViewModel.user.removeObserver(userObserver)
+    private fun removeObserver() {
+        friendViewModel.friendProfiles.removeObserver(profilesObserver)
     }
 }

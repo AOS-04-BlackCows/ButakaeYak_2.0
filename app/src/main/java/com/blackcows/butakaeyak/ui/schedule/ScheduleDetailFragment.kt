@@ -31,9 +31,6 @@ class ScheduleDetailFragment : Fragment() {
 
     private val scheduleViewModel: ScheduleViewModel by activityViewModels()
 
-    private lateinit var medicineGroupBottomSheet: BottomsheetMedicineGroupBinding
-    private lateinit var medicineGroupBottomSheetDialog: BottomSheetDialog
-
     private lateinit var calenderBottomSheet: BottomsheetCalendarBinding
     private lateinit var calenderBottomSheetDialog: BottomSheetDialog
 
@@ -79,7 +76,7 @@ class ScheduleDetailFragment : Fragment() {
             }
         }
 
-        initMedicineGroupBottomSheet()
+        //initMedicineGroupBottomSheet()
         initCalendarBottomSheet()
 
         with(binding) {
@@ -90,7 +87,7 @@ class ScheduleDetailFragment : Fragment() {
             scheduleRvAdapter = ScheduleRvAdapter(!isMine, object: ScheduleRvAdapter.ClickListener {
                 override fun onModifyClick(medicineGroup: MedicineGroup) {
                     selectedMedicineGroup = medicineGroup
-                    medicineGroupBottomSheetDialog.show()
+                    //medicineGroupBottomSheetDialog.show()
                 }
                 override fun onCheckClick(medicineGroup: MedicineGroup, taken: Boolean, alarm: String) {
                     scheduleViewModel.checkTakenMedicineGroup(medicineGroup, taken, alarm)
@@ -137,31 +134,6 @@ class ScheduleDetailFragment : Fragment() {
             }
     }
 
-    private fun initMedicineGroupBottomSheet() {
-        val removeDialog
-                = AlertDialog.Builder(requireContext())
-            .setTitle("정말로 지우시겠습니까?")
-            .setPositiveButton("네") { dialog, _ ->
-                scheduleViewModel.removeMedicineGroup(selectedMedicineGroup!!)
-                selectedMedicineGroup = null
-                dialog.dismiss()
-            }.setNegativeButton("아니요") { dialog, _ ->
-                dialog.dismiss()
-            }.setOnDismissListener { medicineGroupBottomSheetDialog.dismiss() }
-
-        medicineGroupBottomSheet = BottomsheetMedicineGroupBinding.inflate(layoutInflater)
-        medicineGroupBottomSheetDialog = BottomSheetDialog(requireContext())
-        medicineGroupBottomSheetDialog.setContentView(medicineGroupBottomSheet.root)
-
-        medicineGroupBottomSheet.modifyBtn.setOnClickListener {
-            //TODO: takeAddViewModel.selectedGroup = selectedGroup
-            //  MainNavigation.addFragment(TakeAddFragment(), FragmentTag.TakeAddFragmentInSchedule)
-            Toast.makeText(requireContext(), "삭제 후 다시 만들어주세요. 얼른 업데이트하겠습니다.", Toast.LENGTH_SHORT).show()
-        }
-        medicineGroupBottomSheet.removeBtn.setOnClickListener {
-            removeDialog.show()
-        }
-    }
     private fun initCalendarBottomSheet() {
         calenderBottomSheet = BottomsheetCalendarBinding.inflate(layoutInflater)
         calenderBottomSheetDialog = BottomSheetDialog(requireContext())

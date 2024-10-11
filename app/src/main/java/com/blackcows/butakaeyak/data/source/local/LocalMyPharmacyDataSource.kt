@@ -7,8 +7,6 @@ import android.util.Log
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.blackcows.butakaeyak.data.models.MyPharmacy
 import com.blackcows.butakaeyak.data.source.link.MyPharmacyDataSource
-import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
-import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext

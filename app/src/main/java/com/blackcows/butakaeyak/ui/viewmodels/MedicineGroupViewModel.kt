@@ -54,19 +54,4 @@ class MedicineGroupViewModel @Inject constructor(
 
         return notSortedList.sortedBy { it.alarm }
     }
-
-    fun removeMedicineGroup(medicineGroup: MedicineGroup) {
-        viewModelScope.launch {
-            medicineGroupRepository.removeGroup(medicineGroup)
-            _dateToMedicineGroup.value = _dateToMedicineGroup.value!!.toMutableList().filter {
-                it.id != medicineGroup.id
-            }
-        }
-    }
-
-    fun checkTakenMedicineGroup(medicineGroup: MedicineGroup, taken: Boolean, alarm: String) {
-        viewModelScope.launch {
-            medicineGroupRepository.notifyTaken(medicineGroup, taken, alarm)
-        }
-    }
 }
