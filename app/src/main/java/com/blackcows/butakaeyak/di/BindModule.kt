@@ -15,6 +15,7 @@ import com.blackcows.butakaeyak.data.repository.impl.MedicineInfoRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.MedicineRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.MemoRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.MyPharmacyRepositoryImpl
+import com.blackcows.butakaeyak.data.repository.impl.OCRRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.PharmacyRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.SearchHistoryRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.UserRepositoryImpl
@@ -25,6 +26,7 @@ import com.blackcows.butakaeyak.domain.repo.LocalUtilsRepository
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
 import com.blackcows.butakaeyak.domain.repo.MemoRepository
 import com.blackcows.butakaeyak.domain.repo.MyPharmacyRepository
+import com.blackcows.butakaeyak.domain.repo.OCRRepository
 import com.blackcows.butakaeyak.domain.repo.PharmacyRepository
 import com.blackcows.butakaeyak.domain.repo.SearchHistoryRepository
 import com.blackcows.butakaeyak.domain.repo.UserRepository
@@ -91,4 +93,8 @@ abstract class BindModule {
 
     @Binds
     abstract fun provideLocalSettingRepository(imp: LocalSettingRepositoryImpl): LocalSettingRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideOcrRepository(impl: OCRRepositoryImpl) : OCRRepository
 }

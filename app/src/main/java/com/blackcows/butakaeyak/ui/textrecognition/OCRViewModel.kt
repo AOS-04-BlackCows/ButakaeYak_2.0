@@ -4,16 +4,20 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blackcows.butakaeyak.data.models.Message
-import com.blackcows.butakaeyak.ui.textrecognition.data.OCRRepository
 import com.blackcows.butakaeyak.data.models.OCRRequest
+import com.blackcows.butakaeyak.domain.repo.OCRRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class OCRViewModel : ViewModel() {
+@HiltViewModel
+class OCRViewModel @Inject constructor(
+    private val ocrRepository: OCRRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow<GPTResultUIState>(GPTResultUIState.Loading)
     val uiState: StateFlow<GPTResultUIState> = _uiState
-    private val ocrRepository : OCRRepository = OCRRepository()
 
     fun setInit() {
         _uiState.value = GPTResultUIState.Init
