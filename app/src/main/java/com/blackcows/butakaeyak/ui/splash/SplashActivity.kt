@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.ActivitySplashBinding
 import kotlinx.coroutines.GlobalScope
@@ -28,7 +29,7 @@ class SplashActivity : AppCompatActivity() {
 
         GlobalScope.launch {
             delay(2000L)
-            val intent = Intent(this@SplashActivity,LoadingActivity::class.java)
+            val intent = Intent(this@SplashActivity, MainActivity::class.java)
             startActivity(intent)
             overridePendingTransition(R.anim.alpha,R.anim.none)
             finish()

@@ -46,9 +46,6 @@
             android:value="d4ce3a86b1d0a8895e9eccdf9fb16fc4"/>
 
         <activity
-            android:name=".ui.splash.LoadingActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true" >
             <intent-filter>
