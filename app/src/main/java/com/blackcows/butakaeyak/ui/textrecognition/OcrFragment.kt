@@ -18,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
@@ -203,51 +204,23 @@ class OcrFragment : Fragment(), View.OnClickListener {
         // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
 
-        // Create time stamped name and MediaStore entry.
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.KOREA)
-            .format(System.currentTimeMillis())
-
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/butakaeyak")
-            }
-        }
-
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(requireContext().contentResolver,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues)
-            .build()
-
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
+        // 캡처 후 메모리 내에서 이미지로 바로 처리
         imageCapture.takePicture(
-            outputOptions,
             ContextCompat.getMainExecutor(requireContext()),
-            object : ImageCapture.OnImageSavedCallback {
-                //TODO 사진 저장 로직 삭제 필요
-                override fun onError(exc: ImageCaptureException) {
-                    Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
-                }
-                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
+            object : ImageCapture.OnImageCapturedCallback() {
+                override fun onCaptureSuccess(imageProxy: ImageProxy) {
+                    // ImageProxy를 Bitmap으로 변환하여 텍스트 인식 처리
+                    val bitmap = imageProxy.toBitmap()
+                    imageProxy.close()
 
-                    output.savedUri?.let { uri ->
-                        try {
-                            // 저장된 이미지의 URI로부터 InputImage 생성
-                            val image = InputImage.fromFilePath(requireActivity(), uri)
-                            // 텍스트 인식 시작
-                            runTextRecognition(image)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            Toast.makeText(requireContext(), "Failed to load image", Toast.LENGTH_SHORT).show()
-                        }
-                    }
+                    // Bitmap을 InputImage로 변환 후 텍스트 인식
+                    val inputImage = InputImage.fromBitmap(bitmap, 0)
+                    runTextRecognition(inputImage)
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    Log.e(TAG, "Photo capture failed: ${exception.message}", exception)
+                    exception.printStackTrace()
                 }
             }
         )
