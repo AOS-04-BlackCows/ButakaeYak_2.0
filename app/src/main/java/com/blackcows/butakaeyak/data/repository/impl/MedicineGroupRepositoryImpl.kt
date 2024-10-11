@@ -81,31 +81,31 @@ class MedicineGroupRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun notifyTaken(medicineGroup: MedicineGroup, taken: Boolean, takenTime: String): MedicineGroup {
-        return kotlin.runCatching {
-            val format = "${LocalDate.now()} $takenTime"
-
-            val takenGroup
-            = if(taken) {
-                medicineGroup.copy(
-                    hasTaken = medicineGroup.hasTaken.toMutableList().apply { add(format) }
-                )
-            } else {
-                val removedList = medicineGroup.hasTaken.toMutableList()
-                removedList.removeIf { it == format }
-
-                medicineGroup.copy(
-                    hasTaken = removedList
-                )
-            }
-
-            medicineGroupDataSource.updateGroup(takenGroup)
-
-            takenGroup
-        }.onFailure {
-            Log.w(TAG, "notifyTaken failed) msg: ${it.message}")
-        }.getOrDefault(medicineGroup)
-    }
+//    override suspend fun notifyTaken(medicineGroup: MedicineGroup, taken: Boolean, takenTime: String): MedicineGroup {
+//        return kotlin.runCatching {
+//            val format = "${LocalDate.now()} $takenTime"
+//
+//            val takenGroup
+//            = if(taken) {
+//                medicineGroup.copy(
+//                    hasTaken = medicineGroup.hasTaken.toMutableList().apply { add(format) }
+//                )
+//            } else {
+//                val removedList = medicineGroup.hasTaken.toMutableList()
+//                removedList.removeIf { it == format }
+//
+//                medicineGroup.copy(
+//                    hasTaken = removedList
+//                )
+//            }
+//
+//            medicineGroupDataSource.updateGroup(takenGroup)
+//
+//            takenGroup
+//        }.onFailure {
+//            Log.w(TAG, "notifyTaken failed) msg: ${it.message}")
+//        }.getOrDefault(medicineGroup)
+//    }
 
     override suspend fun notifyTaken(groupId: String, taken: Boolean, takenFormat: String): MedicineGroup? {
         return kotlin.runCatching {

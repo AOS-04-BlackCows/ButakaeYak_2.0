@@ -60,12 +60,6 @@ class TakeAddViewModel @Inject constructor(
         }
     }
 
-    fun saveGroup (newGroup : MedicineGroupRequest) {
-        viewModelScope.launch {
-            medicineGroupRepository.saveNewGroup(newGroup)
-        }
-    }
-
     fun saveNames(medicines: MutableList<String>){
         Log.d("saveNames medicineNameList","medicineNameList Data: ${medicineNameList}, medicines: ${medicines}")
         medicineNameList.addAll(medicines)

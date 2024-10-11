@@ -116,6 +116,7 @@ object MainNavigation {
         val viewPager = binding.viewPager
         val viewPagerAdapter = MainViewpager(activity)
         viewPager.adapter = viewPagerAdapter
+        viewPager.offscreenPageLimit = 2
 
         viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -183,6 +184,8 @@ object MainNavigation {
         val callback = object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 Log.d(TAG, "Back Pressed!")
+                if(binding.loadingView.visibility == View.VISIBLE) return
+
                 val curStack = fragmentStack[currentTab]!!
                 if(curStack.size == 0) {
                     if(currentTab == TabTag.Home) {

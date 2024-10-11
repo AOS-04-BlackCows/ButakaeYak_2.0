@@ -27,6 +27,7 @@ import com.blackcows.butakaeyak.ui.schedule.TimeToGroup
 import com.blackcows.butakaeyak.ui.search.SearchFragment
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
+import com.blackcows.butakaeyak.ui.viewmodels.MyGroupViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import io.ktor.util.date.WeekDay
 import kotlinx.coroutines.delay
@@ -45,9 +46,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
     lateinit var fab_close_no_delay: Animation
     var openFlag = false
 
-    private val homeViewModel: HomeViewModel by activityViewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     private val userViewModel: UserViewModel by activityViewModels()
+    private val myGroupViewModel: MyGroupViewModel by activityViewModels()
+
     //binding 설정
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -82,8 +84,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 // TODO 알람 그룹 클릭시 그룹 상세를 보여주는 화면으로 이동 - > 나중에 추가!
             }
             override fun onAlarmClick(item: HomeRvGroup, position: Int, isSelected: Boolean) {
-                val userId= userViewModel.user.value?.id ?: "guest"
-                homeViewModel.checkTakenMedicineGroup(userId, item.groupId, isSelected, item.alarmTime)
+                val consumeFormat = "${LocalDate.now()} ${item.alarmTime}"
+                myGroupViewModel.checkTakenMedicineGroup(item.groupId, isSelected, consumeFormat)
             }
         })
         binding.homeRvTodayMedicineGroup.run {
@@ -91,11 +93,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
             adapter = todayMedicineGroupRvAdapter
             itemAnimator = null
         }
-        // 아직 데이터가 안들어옴
-        homeViewModel.getTodayMedicine(userViewModel.user.value?.id?: "guest")
 
         binding.homeAlarmViewMore.setOnClickListener {
-            val fullList = medicineGroupConverter(homeViewModel.medicineGroup.value!!)
+            val fullList = medicineGroupConverter(myGroupViewModel.myMedicineGroup.value!!)
 
             isSpread = !isSpread
 
@@ -114,10 +114,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        homeViewModel.medicineGroup.observe(viewLifecycleOwner) {
-            Log.d(TAG, "homeViewModel.medicineGroup.value = $it")
-
-            val items = medicineGroupConverter(it)
+        myGroupViewModel.myMedicineGroup.observe(viewLifecycleOwner) {
+            val items = medicineGroupConverter(myGroupViewModel.getTodayMedicineGroups())
 
             binding.homeAlarmViewMore.visibility =
                 if(items.size <= 2) View.GONE
@@ -132,12 +130,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
             } else {
                 todayMedicineGroupRvAdapter.submitList(items.take(2))
             }
-        }
-
-        //TODO: UserViewModel 바꿔야 함...
-        userViewModel.user.observe(viewLifecycleOwner) {
-            val userId = it?.id ?: "guest"
-            homeViewModel.getTodayMedicine(userId)
         }
     }
 
@@ -221,8 +213,5 @@ class HomeFragment : Fragment(), View.OnClickListener {
         openFlag = false
         binding.btnAddMedicineContainer.visibility = View.GONE
     }
-    override fun onResume() {
-        super.onResume()
-        homeViewModel.getTodayMedicine(userViewModel.user.value?.id ?: "guest")
-    }
+
 }

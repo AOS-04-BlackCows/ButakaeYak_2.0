@@ -40,9 +40,9 @@ class ScheduleFragment : Fragment() {
                     else if(userViewModel.user.value!!.id == userId) true
                     else false
 
-        Log.d("ScheduleFragment", "click!")
+        val detailFragment = if(isMine)  MyScheduleDetailFragment()
+                            else ScheduleDetailFragment.newInstance(userId)
 
-        val detailFragment = ScheduleDetailFragment.newInstance(userId, isMine)
         parentFragmentManager.beginTransaction()
             .replace(R.id.schedule_container_view, detailFragment)
             .commit()
@@ -53,8 +53,7 @@ class ScheduleFragment : Fragment() {
             ScheduleProfile(id, name, profileUrl!!)
         } else ScheduleProfile("", "나", "")
 
-        Log.d("ScheduleFragment", "make myScheduleProfile: ${lifecycle.currentState}")
-
+        Log.d("ScheduleFragment", "Cur State: ${lifecycle.currentState}")
 
         val list = mutableListOf(myScheduleProfile).apply {
             addAll(profiles)
@@ -64,9 +63,8 @@ class ScheduleFragment : Fragment() {
 
         // when a selected profile is removed, show my profile.
         if(!profiles.any { it.userId == selectedProfileId }) {
-            val detailFragment = ScheduleDetailFragment.newInstance(myScheduleProfile.userId, true)
             parentFragmentManager.beginTransaction()
-                .replace(R.id.schedule_container_view, detailFragment)
+                .replace(R.id.schedule_container_view, MyScheduleDetailFragment())
                 .commit()
         }
     }

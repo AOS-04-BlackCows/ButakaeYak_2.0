@@ -202,6 +202,9 @@ class MainActivity : AppCompatActivity() {
             if(it != null) {
                 friendViewModel.getFriendProfile(it.id)
                 memoViewModel.getAllMemos(it.id)
+            } else {
+                friendViewModel.clearScheduleProfiles()
+                memoViewModel.clearMemos()
             }
 
             myGroupViewModel.getAllMedicineGroups(it?.id ?: "")
