@@ -11,7 +11,6 @@ import com.blackcows.butakaeyak.data.source.local.LocalUtilsDataSource
 import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.domain.result.LoginResult
 import com.blackcows.butakaeyak.domain.result.SignUpResult
-import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleProfile
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.auth.model.OAuthToken

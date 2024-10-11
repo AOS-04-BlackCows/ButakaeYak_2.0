@@ -5,12 +5,9 @@ import com.blackcows.butakaeyak.data.WeekDayUtils
 import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.data.models.MedicineGroupRequest
 import com.blackcows.butakaeyak.data.source.api.MedicineInfoDataSource
-import com.blackcows.butakaeyak.data.source.firebase.MemoDataSource
 import com.blackcows.butakaeyak.data.source.firebase.RemoteMedicineGroupDataSource
-import com.blackcows.butakaeyak.data.source.link.MedicineGroupDataSource
 import com.blackcows.butakaeyak.data.source.local.LocalMedicineGroupDataSource
 import com.blackcows.butakaeyak.data.source.local.LocalUtilsDataSource
-import com.blackcows.butakaeyak.domain.repo.LocalUtilsRepository
 import com.blackcows.butakaeyak.domain.repo.MedicineGroupRepository
 import io.ktor.util.date.WeekDay
 import java.time.LocalDate
@@ -110,10 +107,8 @@ class MedicineGroupRepositoryImpl @Inject constructor(
         }.getOrDefault(medicineGroup)
     }
 
-    override suspend fun notifyTaken(groupId: String, taken: Boolean, takenTime: String): MedicineGroup? {
+    override suspend fun notifyTaken(groupId: String, taken: Boolean, takenFormat: String): MedicineGroup? {
         return kotlin.runCatching {
-            val format = "${LocalDate.now()} $takenTime"
-
             val groupResponse = medicineGroupDataSource.getMedicineGroupById(groupId) ?: return null
 
             val medicines = groupResponse.medicineIdList?.map {
@@ -121,7 +116,7 @@ class MedicineGroupRepositoryImpl @Inject constructor(
             }
 
             val daysWeek = mutableListOf<WeekDay>()
-            groupResponse?.daysOfWeeks?.forEach {
+            groupResponse.daysOfWeeks?.forEach {
                 if(it.isNotEmpty()) {
                     daysWeek.add(WeekDayUtils.fromKorean(it))
                 }
@@ -143,11 +138,11 @@ class MedicineGroupRepositoryImpl @Inject constructor(
             val takenGroup
                     = if(taken) {
                 group.copy(
-                    hasTaken = group.hasTaken.toMutableList().apply { add(format) }
+                    hasTaken = group.hasTaken.toMutableList().apply { add(takenFormat) }
                 )
             } else {
                 val removedList = group.hasTaken.toMutableList()
-                removedList.removeIf { it == format }
+                removedList.removeIf { it == takenFormat }
 
                 group.copy(
                     hasTaken = removedList

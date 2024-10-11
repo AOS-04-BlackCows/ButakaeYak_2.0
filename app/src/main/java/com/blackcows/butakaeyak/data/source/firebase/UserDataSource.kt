@@ -6,7 +6,6 @@ import com.blackcows.butakaeyak.data.models.UserRequest
 import com.blackcows.butakaeyak.data.toMap
 import com.blackcows.butakaeyak.data.toObjectWithId
 import com.blackcows.butakaeyak.data.toObjectsWithId
-import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.CoroutineScope

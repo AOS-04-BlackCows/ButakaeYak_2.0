@@ -65,7 +65,11 @@ class SignInFragment : Fragment() {
                         MainNavigation.disableLoadingBar()
                     }
 
-                    else -> { MainNavigation.disableLoadingBar() }
+                    else -> {
+                        Log.d("SignInFragment", "LoginUiState else -> ${it.toString()}")
+                        needShowLoadingBar = false
+                        Toast.makeText(requireContext(), "로그인 실패", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -82,7 +86,7 @@ class SignInFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Log.d("SignInFragment", "OnResume")
-
+        Log.d("SignInFragment", "OnResume: needShowLoadingBar: $needShowLoadingBar")
         if(needShowLoadingBar) {
             MainNavigation.showLoadingBar()
             needShowLoadingBar = false

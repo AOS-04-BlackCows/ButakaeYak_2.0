@@ -7,11 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
-import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentNoteBinding
-import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleProfile
+import com.blackcows.butakaeyak.ui.viewmodels.MemoViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -20,7 +18,7 @@ class NoteFragment : Fragment() {
     private var _binding: FragmentNoteBinding? = null
     private val binding get() = _binding!!
 
-    private val noteViewModel: NoteViewModel by activityViewModels()
+    private val memoViewModel: MemoViewModel by activityViewModels()
     private val userViewModel: UserViewModel by activityViewModels()
 
     override fun onCreateView(

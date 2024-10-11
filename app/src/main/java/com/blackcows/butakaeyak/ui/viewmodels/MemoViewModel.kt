@@ -1,4 +1,4 @@
-package com.blackcows.butakaeyak.ui.note
+package com.blackcows.butakaeyak.ui.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,13 +11,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NoteViewModel @Inject constructor(
+class MemoViewModel @Inject constructor(
     private val memoRepository: MemoRepository
 ): ViewModel() {
     private val _memos = MutableLiveData<List<Memo>>(listOf())
     val memos  get() = _memos
 
-    fun initMemos(userId: String) {
+    fun getAllMemos(userId: String) {
         viewModelScope.launch {
             _memos.value = memoRepository.getMemosByUserId(userId)
         }

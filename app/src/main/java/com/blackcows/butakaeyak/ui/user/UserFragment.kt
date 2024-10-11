@@ -98,6 +98,7 @@ class UserFragment : Fragment() {
     }
 
     private fun setObserver() {
+        //TODO: user observer
         userViewModel.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 with(binding) {

@@ -21,11 +21,16 @@ import com.blackcows.butakaeyak.ui.navigation.TabTag
 import com.blackcows.butakaeyak.ui.state.LoginUiState
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment.Companion
+import com.blackcows.butakaeyak.ui.viewmodels.FriendViewModel
+import com.blackcows.butakaeyak.ui.viewmodels.MedicineGroupViewModel
+import com.blackcows.butakaeyak.ui.viewmodels.MemoViewModel
+import com.blackcows.butakaeyak.ui.viewmodels.MyGroupViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -45,6 +50,9 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
 
     private val userViewModel: UserViewModel by viewModels()
+    private val friendViewModel: FriendViewModel by viewModels()
+    private val memoViewModel: MemoViewModel by viewModels()
+    private val myGroupViewModel: MyGroupViewModel by viewModels()
 
     private val mainViewModel: MainViewModel by viewModels()
 
@@ -98,14 +106,20 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         checkFirstLaunch()
+        setUserObserver()
+
+        userViewModel.autoLogin()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        myGroupViewModel.getAllMedicineGroups(userViewModel.user.value?.id ?: "")
     }
 
     override fun onResume() {
         super.onResume()
-
-        userViewModel.autoLogin()
     }
 
     //TODO 알림 설정
@@ -180,6 +194,17 @@ class MainActivity : AppCompatActivity() {
             dialog.show()
 
             mainViewModel.setFirstLaunchFalse()
+        }
+    }
+
+    private fun setUserObserver() {
+        userViewModel.user.observe(this) {
+            if(it != null) {
+                friendViewModel.getFriendProfile(it.id)
+                memoViewModel.getAllMemos(it.id)
+            }
+
+            myGroupViewModel.getAllMedicineGroups(it?.id ?: "")
         }
     }
 }
