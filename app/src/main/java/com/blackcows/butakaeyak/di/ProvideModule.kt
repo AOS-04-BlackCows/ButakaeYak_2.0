@@ -7,12 +7,12 @@ import com.blackcows.butakaeyak.data.retrofit.service.DrugApiService
 import com.blackcows.butakaeyak.data.retrofit.service.KakaoApiService
 import com.blackcows.butakaeyak.data.retrofit.RetrofitClient
 import com.blackcows.butakaeyak.data.retrofit.service.MedicineInfoService
+import com.blackcows.butakaeyak.data.retrofit.service.OCRTextRecApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
@@ -47,5 +47,11 @@ class ProvideModule {
     @ViewModelScoped
     fun provideMedicineInfoApiService() : MedicineInfoService {
         return RetrofitClient.getInstance(ApiBaseUrl.MedicineInfoUrl).create(MedicineInfoService::class.java)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideGPTService() : OCRTextRecApiService {
+        return RetrofitClient.getInstance(ApiBaseUrl.GptUrl).create(OCRTextRecApiService::class.java)
     }
 }

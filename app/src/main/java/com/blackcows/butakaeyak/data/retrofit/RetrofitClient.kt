@@ -1,11 +1,8 @@
 package com.blackcows.butakaeyak.data.retrofit
 
-import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.data.retrofit.interceptors.KakaoInterceptor
 import com.blackcows.butakaeyak.data.retrofit.interceptors.MedicineInterceptor
 import com.google.gson.GsonBuilder
-import com.tickaroo.tikxml.TikXml
-import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -57,7 +54,7 @@ object RetrofitClient {
                     )
                     .build()
             }
-            ApiBaseUrl.GPTUrl->{
+            ApiBaseUrl.GptUrl->{
                 OkHttpClient().newBuilder()
                     .addInterceptor(
                         HttpLoggingInterceptor().apply {
