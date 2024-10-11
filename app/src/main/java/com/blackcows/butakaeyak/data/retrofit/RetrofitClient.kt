@@ -1,15 +1,13 @@
 package com.blackcows.butakaeyak.data.retrofit
 
-import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.data.retrofit.interceptors.KakaoInterceptor
 import com.blackcows.butakaeyak.data.retrofit.interceptors.MedicineInterceptor
 import com.google.gson.GsonBuilder
-import com.tickaroo.tikxml.TikXml
-import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
     private val retrofitInstances = mutableMapOf<ApiBaseUrl, Retrofit>()
@@ -56,8 +54,17 @@ object RetrofitClient {
                     )
                     .build()
             }
-            ApiBaseUrl.GPTUrl->{
-                OkHttpClient().newBuilder().build()
+            ApiBaseUrl.GptUrl->{
+                OkHttpClient().newBuilder()
+                    .addInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BODY
+                        }
+                    )
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .build()
             }
             else -> {
                 OkHttpClient().newBuilder().build()

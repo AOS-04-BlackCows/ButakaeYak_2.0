@@ -1,8 +1,8 @@
-package com.blackcows.butakaeyak.ui.textrecognition
+package com.blackcows.butakaeyak.data.retrofit.service
 
 import com.blackcows.butakaeyak.BuildConfig
-import com.blackcows.butakaeyak.ui.textrecognition.data.OCRRequest
-import com.blackcows.butakaeyak.ui.textrecognition.data.OCRResponse
+import com.blackcows.butakaeyak.data.models.OCRRequest
+import com.blackcows.butakaeyak.data.models.OCRResponse
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
