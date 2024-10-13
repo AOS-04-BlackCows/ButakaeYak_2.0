@@ -72,73 +72,38 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun trySignUpWithKakao(): SignUpResult {
         return kotlin.runCatching {
-            val result = suspendCoroutine<Pair<OAuthToken?, Throwable?>> { continuation ->
-
-                Log.d(TAG, "can I use kakaoTalk?: ${UserApiClient.instance.isKakaoTalkLoginAvailable(context)}")
-
-                if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
-                    // 카카오톡 로그인
-                    UserApiClient.instance.loginWithKakaoTalk(context) { token, e ->
-                        // 사용자 취소
-                        Log.d(TAG, "loginWithKakaoTalk: hasToken ${token != null}, error: ${e?.message ?: "없음"}")
-
-                        if (e != null) {
-                            if (e is ClientError && e.reason == ClientErrorCause.Cancelled) {
-                                return@loginWithKakaoTalk
-                            }
-                            // 로그인 실패 -> 이메일 로그인
-                            UserApiClient.instance.loginWithKakaoAccount(context) { token, e ->
-                                continuation.resume(Pair(token, e))
-                            }
-                        } else if (token != null) {
-                            continuation.resume(Pair(token, null))
-                        }
-                    }
-                } else {
-                    // 카카오 이메일 로그인
-                    UserApiClient.instance.loginWithKakaoAccount(context) { token, e ->
-                        continuation.resume(Pair(token, e))
+            val loginResult = suspendCoroutine<UserRequest?> {
+                UserApiClient.instance.me { user, error ->
+                    if(user != null) {
+                        it.resume(
+                            UserRequest(
+                                name = user.kakaoAccount!!.profile!!.nickname!!,
+                                loginId = null,
+                                pwd = null,
+                                profileUrl = user.kakaoAccount!!.profile!!.profileImageUrl!!,
+                                kakaoId = user.id!!,
+                                naverId = null,
+                                googleId = null,
+                                deviceToken = null
+                            )
+                        )
+                    } else {
+                        it.resume(null)
                     }
                 }
             }
 
-            if(result.second != null) {
-                Log.w(TAG, "trySignUpWithKakao: Kakako.GetToken returns error) msg: ${result.second!!.message}")
-                return SignUpResult.KakaoSignUpFail
+            return if(loginResult == null) {
+                SignUpResult.KakaoSignUpFail
             } else {
-                val loginResult = suspendCoroutine<UserRequest?> {
-                    UserApiClient.instance.me { user, error ->
-                        if(user != null) {
-                            it.resume(
-                                UserRequest(
-                                    name = user.kakaoAccount!!.profile!!.nickname!!,
-                                    loginId = null,
-                                    pwd = null,
-                                    profileUrl = user.kakaoAccount!!.profile!!.profileImageUrl!!,
-                                    kakaoId = user.id!!,
-                                    naverId = null,
-                                    googleId = null,
-                                    deviceToken = null
-                                )
-                            )
-                        } else {
-                            it.resume(null)
-                        }
-                    }
-                }
-
-                return if(loginResult == null) {
-                    SignUpResult.KakaoSignUpFail
+                //중복체크
+                val isDuplicated = userDataSource.isDuplicatedId(loginResult.kakaoId!!.toString())
+                if(isDuplicated) {
+                    SignUpResult.LoginIdDuplicate(loginResult.kakaoId.toString())
                 } else {
-                    //중복체크
-                    val isDuplicated = userDataSource.isDuplicatedId(loginResult.kakaoId!!.toString())
-                    if(isDuplicated) {
-                        SignUpResult.LoginIdDuplicate(loginResult.kakaoId.toString())
-                    } else {
-                        SignUpResult.Success(
-                            userDataSource.saveUser(loginResult)
-                        )
-                    }
+                    SignUpResult.Success(
+                        userDataSource.saveUser(loginResult)
+                    )
                 }
             }
         }.onFailure {

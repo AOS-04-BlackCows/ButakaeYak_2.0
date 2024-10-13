@@ -75,7 +75,7 @@ class SignInFragment : Fragment() {
         }
 
         binding.ivKakaoLogin.setOnClickListener {
-            userViewModel.signUpWithKakaoAndLogin()
+            userViewModel.signUpWithKakaoAndLogin(requireContext())
             needShowLoadingBar = true
         }
         binding.ivBack.setOnClickListener {
