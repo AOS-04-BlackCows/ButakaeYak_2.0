@@ -68,7 +68,7 @@ class SignInFragment : Fragment() {
                     else -> {
                         Log.d("SignInFragment", "LoginUiState else -> ${it.toString()}")
                         needShowLoadingBar = false
-                        Toast.makeText(requireContext(), "로그인 실패", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(requireContext(), "로그인 실패", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

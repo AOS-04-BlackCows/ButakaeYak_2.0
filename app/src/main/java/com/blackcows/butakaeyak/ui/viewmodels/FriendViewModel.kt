@@ -26,7 +26,7 @@ class FriendViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<ScheduleUiState>(ScheduleUiState.Init)
     val uiState = _uiState.asStateFlow()
 
-    fun getFriendProfile(userId: String) {
+    fun getAllFriendProfiles(userId: String) {
         viewModelScope.launch {
             _friendProfiles.value = friendRepository.getMyFriends(userId).map {
                 val friendId = if(userId != it.proposer) it.proposer

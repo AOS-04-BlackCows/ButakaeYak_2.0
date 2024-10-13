@@ -43,13 +43,13 @@ class UserViewModel @Inject constructor(
             _loginUiState.value = LoginUiState.Loading
 
             val data = localUtilsRepository.getAutoLoginData()
+
             val result =
                 if(data == null) LoginResult.Failure
                 else {
                     if(data.isKakao) userRepository.loginWithKakaoId(data.kakaoId.toLong())
                     else userRepository.loginWithId(data.loginId, data.pwd)
                 }
-
 
             when(result) {
                 is LoginResult.Success -> {
@@ -63,6 +63,8 @@ class UserViewModel @Inject constructor(
                     _loginUiState.value = LoginUiState.NotFoundAutoLoginData
                 }
             }
+
+            _loginUiState.value = LoginUiState.Init
         }
     }
 
