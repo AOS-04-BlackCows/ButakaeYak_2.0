@@ -13,16 +13,12 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.navigation.TabTag
 import com.blackcows.butakaeyak.ui.state.LoginUiState
-import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
-import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment.Companion
 import com.blackcows.butakaeyak.ui.viewmodels.FriendViewModel
-import com.blackcows.butakaeyak.ui.viewmodels.MedicineGroupViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.MemoViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.MyGroupViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
@@ -30,7 +26,6 @@ import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -118,10 +113,6 @@ class MainActivity : AppCompatActivity() {
         myGroupViewModel.getAllMedicineGroups(userViewModel.user.value?.id ?: "")
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     //TODO 알림 설정
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -199,8 +190,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUserObserver() {
         userViewModel.user.observe(this) {
+            Log.d("MainActivity", "user observer: ${it?.id ?: "guest"}")
+
             if(it != null) {
-                friendViewModel.getFriendProfile(it.id)
+                friendViewModel.getAllFriendProfiles(it.id)
                 memoViewModel.getAllMemos(it.id)
             } else {
                 friendViewModel.clearScheduleProfiles()

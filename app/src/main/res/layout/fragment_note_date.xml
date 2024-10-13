@@ -27,20 +27,7 @@
         tools:listitem="@layout/note_item"
         />
 
-    <ImageView
-        android:id="@+id/add_image_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-
-        android:src="@drawable/add_memo"
-        android:translationZ="4dp"
-        />
 
 
 

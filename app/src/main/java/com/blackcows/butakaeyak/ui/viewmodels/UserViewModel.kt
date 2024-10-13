@@ -1,17 +1,23 @@
 package com.blackcows.butakaeyak.ui.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blackcows.butakaeyak.data.models.AutoLoginData
 import com.blackcows.butakaeyak.data.models.User
+import com.blackcows.butakaeyak.data.models.UserRequest
 import com.blackcows.butakaeyak.domain.repo.LocalUtilsRepository
 import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.domain.result.LoginResult
 import com.blackcows.butakaeyak.domain.result.SignUpResult
 import com.blackcows.butakaeyak.ui.state.LoginUiState
 import com.blackcows.butakaeyak.ui.state.SignUpUiState
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -43,13 +49,13 @@ class UserViewModel @Inject constructor(
             _loginUiState.value = LoginUiState.Loading
 
             val data = localUtilsRepository.getAutoLoginData()
+
             val result =
                 if(data == null) LoginResult.Failure
                 else {
                     if(data.isKakao) userRepository.loginWithKakaoId(data.kakaoId.toLong())
                     else userRepository.loginWithId(data.loginId, data.pwd)
                 }
-
 
             when(result) {
                 is LoginResult.Success -> {
@@ -63,13 +69,51 @@ class UserViewModel @Inject constructor(
                     _loginUiState.value = LoginUiState.NotFoundAutoLoginData
                 }
             }
+
+            _loginUiState.value = LoginUiState.Init
         }
     }
 
     // 카카오 로그인에 사용
-    fun signUpWithKakaoAndLogin() {
+    fun signUpWithKakaoAndLogin(context: Context) {
         _loginUiState.value = LoginUiState.Loading
         viewModelScope.launch {
+            val result = suspendCoroutine<Pair<OAuthToken?, Throwable?>> { continuation ->
+
+                Log.d("UserViewModel", "can I use kakaoTalk?: ${UserApiClient.instance.isKakaoTalkLoginAvailable(context)}")
+
+                if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
+                    // 카카오톡 로그인
+                    UserApiClient.instance.loginWithKakaoTalk(context) { token, e ->
+                        // 사용자 취소
+                        Log.d("UserViewModel", "loginWithKakaoTalk: hasToken ${token != null}, error: ${e?.message ?: "없음"}")
+
+                        if (e != null) {
+                            if (e is ClientError && e.reason == ClientErrorCause.Cancelled) {
+                                return@loginWithKakaoTalk
+                            }
+                            // 로그인 실패 -> 이메일 로그인
+                            UserApiClient.instance.loginWithKakaoAccount(context) { token, e ->
+                                continuation.resume(Pair(token, e))
+                            }
+                        } else if (token != null) {
+                            continuation.resume(Pair(token, null))
+                        }
+                    }
+                } else {
+                    // 카카오 이메일 로그인
+                    UserApiClient.instance.loginWithKakaoAccount(context) { token, e ->
+                        continuation.resume(Pair(token, e))
+                    }
+                }
+            }
+
+            if(result.second != null) {
+                Log.w("UserViewModel", "trySignUpWithKakao: Kakako.GetToken returns error) msg: ${result.second!!.message}")
+                _signUpUiState.value = SignUpUiState.KakaoSignUpFail
+                return@launch
+            }
+
             val signUpResult = userRepository.trySignUpWithKakao()
             Log.d("UserViewModel", signUpResult.toString())
             when(signUpResult) {
