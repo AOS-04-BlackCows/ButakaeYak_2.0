@@ -13,6 +13,8 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.splashscreen.SplashScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
@@ -51,9 +53,12 @@ class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
 
+    //TODO SplashScreen
+    private val splashScreen : SplashScreen by lazy { installSplashScreen() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        splashScreen
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

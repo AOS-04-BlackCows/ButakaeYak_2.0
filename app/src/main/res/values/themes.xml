@@ -16,7 +16,7 @@
         <item name="chipStyle">@drawable/selector_key_button</item>
 
         <!--디폴트 스플래시 화면 없애는 코드-->
-        <item name="android:windowIsTranslucent">true</item>
+<!--        <item name="android:windowIsTranslucent">false</item>-->
 
     </style>
     <style name="AppBottomSheetDialogTheme"
@@ -27,5 +27,20 @@
     <style name="AppModalStyle"
         parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bottom_sheet_white_20</item>
+    </style>
+
+    <!--Splash 화면-->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        //스플래쉬의 바탕화면을 말한다.
+
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icon_logo</item>
+        //스플래쉬에 들어갈 아이콘을 지정한다. mipmap으로 해야 깨지지 않는다.
+
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        //duration을 지정한다. 나는 1초
+
+        <item name="postSplashScreenTheme">@style/Theme.YacTong</item>
+        //스플래쉬의 테마를 지정한다. 나는 노액션바
     </style>
 </resources>
