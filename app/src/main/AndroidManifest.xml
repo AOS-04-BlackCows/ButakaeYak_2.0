@@ -20,6 +20,9 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
 
+    <!--AlarmService 권한추가 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
 
     <application
         android:name=".di.HiltApplication"
@@ -39,9 +42,9 @@
 
         <service
             android:name=".ui.take.AlarmService"
-            android:permission="android.permission.FOREGROUND_SERVICE"
+            android:exported="false"
             android:foregroundServiceType="dataSync"
-            android:exported="false"/>
+            tools:ignore="ForegroundServicePermission" />
 
         <receiver
             android:name=".ui.take.AlarmReceiver"

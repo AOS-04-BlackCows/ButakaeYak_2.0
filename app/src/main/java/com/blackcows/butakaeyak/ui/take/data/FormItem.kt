@@ -16,8 +16,9 @@ data class NameItem(val aImage : Bitmap, val aText : String):Parcelable
 
 data class NameAdapterItem(val aImage : Int)
 
+@Parcelize
 data class AlarmItem(
     var timeText: String? = null,
     var timeInMillis: Long = 0L,
     val requestCode: Int = (System.currentTimeMillis() % Integer.MAX_VALUE).toInt()
-)
+) : Parcelable

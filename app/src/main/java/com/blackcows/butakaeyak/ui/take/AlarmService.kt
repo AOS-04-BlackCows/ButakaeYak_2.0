@@ -1,9 +1,12 @@
 package com.blackcows.butakaeyak.ui.take
 
 import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.icu.util.Calendar
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -18,6 +21,9 @@ class AlarmService : Service() {
     private lateinit var runnable: Runnable
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+        startForeground(1, createNotification())
+
         // 알람 시간과 제목을 인텐트에서 가져옴
         val alarmTimeList = intent?.getSerializableExtra("ALARM_LIST") as? List<AlarmItem>
         val startDate = intent?.getLongExtra("START_DATE", System.currentTimeMillis())
@@ -26,8 +32,6 @@ class AlarmService : Service() {
             startDate?.let { scheduleAlarm(alarm, it) }
         }
 
-        // Foreground로 실행해야 앱 종료 후에도 유지됨
-        startForeground(1, createNotification())
         return START_STICKY
     }
 
@@ -80,11 +84,28 @@ class AlarmService : Service() {
 
     private fun createNotification(): Notification {
         val notificationChannelId = "alarm_service_channel"
-        val notification = NotificationCompat.Builder(this, notificationChannelId)
+
+        // Android 8.0 이상에서는 Notification Channel 생성 필수
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                notificationChannelId,
+                "Alarm Service Channel",
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = "약 복용 알람 서비스 채널"
+            }
+
+            val manager = getSystemService(NotificationManager::class.java)
+            manager?.createNotificationChannel(channel)
+        }
+
+        // 알림 생성
+        return NotificationCompat.Builder(this, notificationChannelId)
             .setContentTitle("약 복용 알람")
-            .setSmallIcon(R.drawable.icon_logo)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentText("알람이 설정되었습니다.")
+            .setSmallIcon(R.drawable.icon_logo)  // 유효한 아이콘 설정
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)  // 중요도 설정
             .build()
-        return notification
     }
+
 }
