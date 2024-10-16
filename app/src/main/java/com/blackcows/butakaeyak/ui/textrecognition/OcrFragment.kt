@@ -110,7 +110,7 @@ class OcrFragment : Fragment(), View.OnClickListener {
         if (allPermissionsGranted()) {
             startCamera()
         } else {
-            ActivityCompat.requestPermissions(requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+            MainNavigation.popCurrentFragment()
         }
         binding.takePhotoBtn.setOnClickListener {
             takePhoto()
