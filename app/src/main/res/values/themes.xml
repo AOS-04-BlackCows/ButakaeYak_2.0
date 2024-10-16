@@ -34,7 +34,7 @@
         <item name="windowSplashScreenBackground">@color/white</item>
         //스플래쉬의 바탕화면을 말한다.
 
-        <item name="windowSplashScreenAnimatedIcon">@drawable/icon_logo</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_butakaeyak_foreground</item>
         //스플래쉬에 들어갈 아이콘을 지정한다. mipmap으로 해야 깨지지 않는다.
 
         <item name="windowSplashScreenAnimationDuration">1000</item>

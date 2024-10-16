@@ -37,6 +37,12 @@
             android:theme="@style/Base.Theme.AppCompat"
             />
 
+        <service
+            android:name=".ui.take.AlarmService"
+            android:permission="android.permission.FOREGROUND_SERVICE"
+            android:foregroundServiceType="dataSync"
+            android:exported="false"/>
+
         <receiver
             android:name=".ui.take.AlarmReceiver"
             android:exported="false" />
