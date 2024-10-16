@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak.ui.home
 
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,6 +13,8 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.HomeRvGroup
@@ -20,11 +23,13 @@ import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.databinding.FragmentHomeBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeTodayMedicineRvAdapter
 import com.blackcows.butakaeyak.ui.home.adapter.HomeViewPagerAdapter
+import com.blackcows.butakaeyak.ui.home.adapter.KnockBannerRvAdapter
 import com.blackcows.butakaeyak.ui.map.MapFragment
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.schedule.TimeToGroup
 import com.blackcows.butakaeyak.ui.search.SearchFragment
+import com.blackcows.butakaeyak.ui.take.adapter.TakeRvDecorator
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
 import com.blackcows.butakaeyak.ui.viewmodels.MyGroupViewModel
@@ -36,10 +41,6 @@ import java.time.LocalDate
 
 private const val TAG = "HomeFragment"
 class HomeFragment : Fragment(), View.OnClickListener {
-
-    companion object {
-        fun newInstance() = HomeFragment()
-    }
 
     lateinit var fab_open: Animation
     lateinit var fab_close: Animation
@@ -54,6 +55,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var todayMedicineGroupRvAdapter : HomeTodayMedicineRvAdapter
+    private val knockBannerRvAdapter: KnockBannerRvAdapter by lazy {
+        KnockBannerRvAdapter {
+            //TODO: FCM 부리기
+        }
+    }
 //    private val item : MyMedicine? = null
 
     private var isSpread: Boolean = false
@@ -113,6 +119,15 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        with(binding.knockBannerRv) {
+            adapter = knockBannerRvAdapter
+            addItemDecoration(object : ItemDecoration() {
+                override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                    outRect.set(0,0,12,0)
+                }
+            })
+        }
 
         myGroupViewModel.myMedicineGroup.observe(viewLifecycleOwner) {
             val items = medicineGroupConverter(myGroupViewModel.getTodayMedicineGroups())

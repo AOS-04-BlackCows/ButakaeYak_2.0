@@ -220,6 +220,7 @@
                 />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/knock_banner_rv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
