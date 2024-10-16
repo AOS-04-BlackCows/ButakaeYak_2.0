@@ -100,6 +100,12 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="caption_white">
+        <item name="fontFamily">@font/pretendard</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 <!-- 칩 관련 스타일   -->
 
     <style name="CustomChipStyle" parent="Widget.MaterialComponents.Chip.Action">
