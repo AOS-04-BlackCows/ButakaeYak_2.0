@@ -56,8 +56,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private val binding get() = _binding!!
     private lateinit var todayMedicineGroupRvAdapter : HomeTodayMedicineRvAdapter
     private val knockBannerRvAdapter: KnockBannerRvAdapter by lazy {
-        KnockBannerRvAdapter {
+        KnockBannerRvAdapter { banner ->
             //TODO: FCM 부리기
+
         }
     }
 //    private val item : MyMedicine? = null

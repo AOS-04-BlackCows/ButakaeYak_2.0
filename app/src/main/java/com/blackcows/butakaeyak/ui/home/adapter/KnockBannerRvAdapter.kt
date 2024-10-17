@@ -12,6 +12,7 @@ data class KnockBanner(
     val name: String,
     val profileUrl: String,
     val uid: String,
+    val deviceToken: String
 )
 
 class KnockBannerRvAdapter(
