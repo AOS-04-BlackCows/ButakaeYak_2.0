@@ -26,9 +26,7 @@ import kotlin.coroutines.suspendCoroutine
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
     private val localUtilsDataSource: LocalUtilsDataSource,
-    private val imageDataSource: ImageDataSource,
-    @ApplicationContext
-    private val context: Context
+    private val imageDataSource: ImageDataSource
 ) : UserRepository {
 
     companion object {
@@ -178,6 +176,8 @@ class UserRepositoryImpl @Inject constructor(
         val newOne = user.copy(
             deviceToken = token
         )
+
+        Log.d("Firebase", "${user.name}'s Token is Updated: ${token}")
 
         return userDataSource.updateUser(newOne)
     }

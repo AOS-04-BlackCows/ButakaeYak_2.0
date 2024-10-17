@@ -36,6 +36,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -56,9 +57,6 @@ abstract class BindModule {
     @ViewModelScoped
     abstract fun provideKakaoRepository(impl: KakaoMapRepositoryImpl): KakaoMapRepository
 
-    @Binds
-    @ViewModelScoped
-    abstract fun provideUserRepository(impl: UserRepositoryImpl): UserRepository
 
     @Binds
     @ViewModelScoped
@@ -67,9 +65,6 @@ abstract class BindModule {
     @Binds
     abstract fun provideFriendRepository(impl: FriendRepositoryImpl): FriendRepository
 
-    @Binds
-    @ViewModelScoped
-    abstract fun provideLocalUtilsRepository(impl: LocalUtilsRepositoryImpl): LocalUtilsRepository
 
     @Binds
     @ViewModelScoped

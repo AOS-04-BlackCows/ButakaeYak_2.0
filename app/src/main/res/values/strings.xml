@@ -165,5 +165,6 @@
     </string>
     <string name="no_medicine_group">등록된 약이 없습니다!</string>
     <string name="knock_text">노크하기</string>
+    <string name="default_notification_channel_id">fcm_channel</string>
 
 </resources>
