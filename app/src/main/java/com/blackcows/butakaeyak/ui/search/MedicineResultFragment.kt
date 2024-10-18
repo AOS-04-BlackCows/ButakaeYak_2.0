@@ -102,8 +102,6 @@ class MedicineResultFragment : Fragment() {
         }
     }
 
-
-
     companion object {
         const val TAB_NAME = "결과 화면"
     }
