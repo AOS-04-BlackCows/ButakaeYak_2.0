@@ -34,6 +34,9 @@ import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
 import com.blackcows.butakaeyak.ui.viewmodels.MyGroupViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessageCreator
+import com.google.firebase.messaging.messaging
 import io.ktor.util.date.WeekDay
 import kotlinx.coroutines.delay
 import java.time.LocalDate
@@ -58,7 +61,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private val knockBannerRvAdapter: KnockBannerRvAdapter by lazy {
         KnockBannerRvAdapter { banner ->
             //TODO: FCM 부리기
-
+            //FirebaseMessaging.getInstance().send()
         }
     }
 //    private val item : MyMedicine? = null

@@ -13,8 +13,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.splashscreen.SplashScreen
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
@@ -24,10 +22,15 @@ import com.blackcows.butakaeyak.ui.viewmodels.FriendViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.MemoViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.MyGroupViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
+import com.google.firebase.functions.FirebaseFunctions
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -54,11 +57,11 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels()
 
     //TODO SplashScreen
-    private val splashScreen : SplashScreen by lazy { installSplashScreen() }
+    //private val splashScreen : SplashScreen by lazy { installSplashScreen() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        splashScreen
+        //splashScreen
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -163,14 +166,27 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Log.d(TAG, "onRequestPermissionsResult() _ 권한 허용 거부")
                 requestPermissions(
-                    mutableListOf(Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.CAMERA,).apply {
+                    mutableListOf(
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.CAMERA,
+                    ).apply {
                         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
                             add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         }
                     }.toTypedArray(), REQUEST_PERMISSION_LOCATION)
             }
         }
+
+
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val result=  FirebaseFunctions.getInstance()
+//                .getHttpsCallable("test")
+//                .call()
+//                .await()
+//
+//            Log.d("FirebaseFunctions",result.toString())
+//        }
+
     }
 
     private fun checkFirstLaunch() {
