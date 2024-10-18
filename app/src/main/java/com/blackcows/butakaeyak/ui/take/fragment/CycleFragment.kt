@@ -36,6 +36,7 @@ import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.AlarmReceiver
+import com.blackcows.butakaeyak.ui.take.AlarmService
 import com.blackcows.butakaeyak.ui.take.TakeAddViewModel
 import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
@@ -159,25 +160,6 @@ class CycleFragment : Fragment() {
 
             val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-            //TODO 반복 주기 임시 제거
-//            binding.clRepeatCycle.setOnClickListener {
-//                bottomSheetDialog2.show()
-//
-//                bottomSheetView2.btnNext.setOnClickListener {
-//                    if(bottomSheetView2.etCustom.text.isNotEmpty()){
-//                        binding.tvRepeatCycle.text = "${bottomSheetView2.etCustom.text}일"
-//                        bottomSheetView2.tvCustomCaption.setText("${bottomSheetView2.etCustom.text}일마다 반복합니다.")
-//                    }
-//                    inputMethodManager.hideSoftInputFromWindow(bottomSheetView2.root.windowToken,0)
-//                    bottomSheetDialog2.dismiss()
-//                    btnNext()
-//                }
-//
-//                bottomSheetDialog2.setOnDismissListener {
-////                    bottomSheetView2.etCustom.setText("")
-//                }
-//            }
-
             myMedicine?.let {
                 if (myMedicine.alarms.isNotEmpty()) {
                     alarmList.clear() // 기존 알람 리스트 초기화
@@ -259,11 +241,7 @@ class CycleFragment : Fragment() {
     private fun btnNext(){
         val isMedicineGroup = binding.etMedicineGroup.text.isNotEmpty()
         val isStartDay = binding.tvStartDay.text.isNotEmpty()
-        //TODO 반복주기 임시 제거
-//        val isRepeatCycle = binding.tvRepeatCycle.text.isNotEmpty()
         val isCycleAlarmAdd = binding.tvCycleAlarmAdd.text.isNotEmpty()
-
-
 
         binding.apply {
             if(isMedicineGroup && isStartDay && isCycleAlarmAdd){
@@ -281,7 +259,6 @@ class CycleFragment : Fragment() {
                     viewModel.alarms = adapter.getAlarmList().map {
                         it.timeText!!
                     }
-
 
                     val userId = userViewModel.user.value?.id ?: ""
 
@@ -309,7 +286,7 @@ class CycleFragment : Fragment() {
                     val startDate = dateFormat
                     Log.d("startDate","${startDate}")
 
-//                    setAlarmForAllItems(startDate)
+                    startAlarmService(startDate)
 
                     parentFragmentManager.beginTransaction()
                         .remove(this@CycleFragment)
@@ -333,63 +310,22 @@ class CycleFragment : Fragment() {
         }
     }
 
-    //TODO 반복 주기 임시 제거 repeatType:String
-    //TODO 알람 임의로 중단
-//    private fun setAlarmForAllItems(startDate : Long) {
-//        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-//        val alarmList = adapter.getAlarmList()
-//
-//        for (alarm in alarmList) {
-//            Log.d("timeInMillis","${alarm.timeInMillis}")
-//            Log.d("requestCode","${alarm.requestCode}")
-//            val intent = Intent(requireContext(), AlarmReceiver::class.java)
-//
-//            val calendar = Calendar.getInstance().apply {
-//                timeInMillis = alarm.timeInMillis
-//            }
-//            val alarmHour = calendar.get(Calendar.HOUR_OF_DAY)
-//            val alarmMinute = calendar.get(Calendar.MINUTE)
-//
-//            Log.d("alarmHour_Cycle",alarmHour.toString())
-//            Log.d("alarmMinute_Cycle",alarmMinute.toString())
-//
-//            intent.putExtra("NOTIFICATION_ID", alarm.requestCode)
-//            intent.putExtra("NOTIFICATION_TITLE","${binding.etMedicineGroup.text}")
-//            intent.putExtra("NOTIFICATION_CONTENT","약 먹을 시간입니다.")
-//            intent.putExtra("Hour",alarmHour)
-//            intent.putExtra("Minute",alarmMinute)
-//
-//            val pendingIntent = PendingIntent.getBroadcast(
-//                context, alarm.requestCode, intent, PendingIntent.FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
-//            )
-//
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//                // Android 12 이상에서 정확한 알람 설정
-//
-//                Log.d("buildTest", "okay")
-//                if (alarmManager?.canScheduleExactAlarms() == true){
-//                try {
-//                    val alarmTime = alarm.timeInMillis
-//                    //선택한 날짜 + 알람 설정한 시간 더하는 변수
-//                    val adjustedTimeInMillis = startDate + (alarmTime % (24 * 60 * 60 * 1000)) + (9 * 60 * 60 * 1000)
-//
-//                    Log.d("AlarmTest", "Adjusted Time In Millis: $adjustedTimeInMillis")
-//
-//                    val alarmClock = AlarmManager.AlarmClockInfo(adjustedTimeInMillis, pendingIntent)
-//                    alarmManager.setAlarmClock(alarmClock, pendingIntent)
-//
-//                } catch (e: SecurityException) {
-//                    Toast.makeText(context, "알림 설정에 실패했습니다. 권한을 확인해주세요.", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//            }
-//            else{
-//                Log.d("alarmTest","if문 false뜸")
-//            }
-//        }
-//
-//        Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
-//    }
+    private fun startAlarmService(startDate: Long) {
+        val alarmList = adapter.getAlarmList()
+
+        val intent = Intent(requireContext(), AlarmService::class.java).apply {
+            putExtra("ALARM_LIST", ArrayList(alarmList))
+            putExtra("START_DATE", startDate)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            requireContext().startForegroundService(intent) // Foreground Service로 실행
+        } else {
+            requireContext().startService(intent) // 일반 Service로 실행
+        }
+
+        Toast.makeText(context, "알림 서비스가 시작되었습니다.", Toast.LENGTH_SHORT).show()
+    }
 
     //년,월,일 추출하는 메소드
     fun dateFormatText(dateText: String): Long {
@@ -410,30 +346,6 @@ class CycleFragment : Fragment() {
 
         return calendar.timeInMillis // 밀리초 단위로 반환
     }
-
-    //TODO 반복 주기 임시 제거
-//    private fun scheduleNextAlarm(repeatType: String, alarmManager: AlarmManager, pendingIntent: PendingIntent, currentTimeMillis: Long) {
-//        val calendar = Calendar.getInstance()
-//        calendar.timeInMillis = currentTimeMillis
-//
-//        val repeatInterval: Long
-//        Log.d("AlarmDebug", "Repeat Type: $repeatType")
-//
-//        when (repeatType) {
-//            "1일", "2일", "3일", "4일", "5일", "6일", "7일" -> {
-//                // 일 단위 반복
-//                repeatInterval = repeatType.replace("일", "").toLong()
-//                Log.d("AlarmDebug2", "Repeat Type: $repeatInterval")
-//                alarmManager.setRepeating(
-//                    AlarmManager.RTC_WAKEUP,
-//                    calendar.timeInMillis,
-//                    repeatInterval * AlarmManager.INTERVAL_DAY,
-//                    pendingIntent
-//                )
-//            }
-//        }
-//
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
