@@ -34,16 +34,6 @@ import kotlinx.coroutines.tasks.await
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val REQUEST_CODE_PERMISSIONS = 10
-    private val REQUIRED_PERMISSIONS =
-        mutableListOf (
-            Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO
-        ).apply {
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            }
-        }.toTypedArray()
 
     private lateinit var binding: ActivityMainBinding
     private val REQUEST_PERMISSION_LOCATION = 10
@@ -71,13 +61,6 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
         // GPS 권한 체크 후 없을 시 요청
         checkPermissionForLocation()
-        //카메라 권한 체크 후 없을 시 요청
-        if(!allPermissionsGranted()){
-            ActivityCompat.requestPermissions(this,
-                REQUIRED_PERMISSIONS,
-                REQUEST_CODE_PERMISSIONS
-            )
-        }
 
         KakaoSdk.init(this, BuildConfig.NATIVE_APP_KEY)
 
@@ -153,27 +136,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {//카메라 권한 관련
-        this.checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_PERMISSION_LOCATION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 권한이 승인 gn tlfgod
-
+                // 권한이 승인
+                Log.d(TAG, "onRequestPermissionsResult() _ 권한 허용 완료")
             } else {
                 Log.d(TAG, "onRequestPermissionsResult() _ 권한 허용 거부")
-                requestPermissions(
-                    mutableListOf(
-                        Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.CAMERA,
-                    ).apply {
-                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                            add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        }
-                    }.toTypedArray(), REQUEST_PERMISSION_LOCATION)
             }
         }
 

@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
@@ -18,12 +17,6 @@ class SearchDetailFragment () : Fragment(){
     // 뷰 바인딩 정의
     private var _binding: DialogSearchDetailBinding? = null
     private val binding get() = _binding!!
-
-    private val onBackPressedCallback = object: OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-
-        }
-    }
 
     //bundle에서 medicine 가져오기
     private val medicine: Medicine by lazy {
@@ -49,8 +42,6 @@ class SearchDetailFragment () : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         with(binding) {
             Glide.with(root).load(medicine.imageUrl?: R.drawable.logo_big).into(binding.detailIvMedicine)
 
@@ -73,8 +64,6 @@ class SearchDetailFragment () : Fragment(){
                 MainNavigation.popCurrentFragment()
             }
         }
-
-
     }
 
     override fun onDestroyView() {
