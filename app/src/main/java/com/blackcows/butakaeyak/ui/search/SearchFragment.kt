@@ -26,20 +26,11 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private var columnCount = 2 //컬럼 갯수 = 2 그리드
-
     private lateinit var viewPager: ViewPager2
 
     private val searchViewModel: SearchViewModel by activityViewModels()
 
     private var imm : InputMethodManager? =null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,7 +45,6 @@ class SearchFragment : Fragment() {
         searchViewModel.text.observe(viewLifecycleOwner) {
             viewpager.currentItem
         }
-
         return root
     }
 
@@ -115,17 +105,6 @@ class SearchFragment : Fragment() {
             }
         }
 
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        Log.d("HomeFragment", "onPause")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("HomeFragment", "onResume")
     }
 
     override fun onDestroyView() {
