@@ -26,14 +26,9 @@ class SearchHistoryFragment : Fragment() {
     private val historyViewModel: SearchViewModel by activityViewModels()
     private lateinit var historyAdapter : HistoryRecyclerAdapter
 
-    private var columnCount = 1 //컬럼 갯수 = 1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
     }
 
     override fun onCreateView(
@@ -43,18 +38,24 @@ class SearchHistoryFragment : Fragment() {
     ): View? {
         _binding = FragmentSearchHistoryBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val medicineHistory = historyViewModel.medicineHistory
 
-        binding.searchHistoryDelete.setOnClickListener {
-            historyViewModel.removeQueryHistory()
-            binding.searchHistoryChipgroup.removeAllViews()
-        }
-        binding.medicineHistoryDelete.setOnClickListener {
-            historyViewModel.removeMedicineHistory()
-            historyAdapter.submitList(listOf())
-        }
-
         binding.apply {
+            searchHistoryDelete.setOnClickListener {
+                historyViewModel.removeQueryHistory()
+                binding.searchHistoryChipgroup.removeAllViews()
+            }
+            medicineHistoryDelete.setOnClickListener {
+                historyViewModel.removeMedicineHistory()
+                historyAdapter.submitList(listOf())
+            }
+
             historyAdapter = HistoryRecyclerAdapter(object : HistoryRecyclerAdapter.ClickListener{
                 override fun onItemClick(item: Medicine) {
                     val bottomSheetView = BottomsheetSearchDetailBinding.inflate(layoutInflater)
@@ -83,10 +84,7 @@ class SearchHistoryFragment : Fragment() {
                 historyAdapter.submitList(it)
             }
             medicineList.itemAnimator = null
-
         }
-
-        return root
     }
 
     override fun onDestroyView() {
@@ -119,16 +117,6 @@ class SearchHistoryFragment : Fragment() {
     }
 
     companion object {
-
-        const val ARG_COLUMN_COUNT = "column-count"
         const val TAB_NAME = "검색 기록"
-
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            SearchHistoryFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
     }
 }

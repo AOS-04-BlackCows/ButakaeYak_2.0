@@ -24,7 +24,7 @@ import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-private const val TAG = "약 결과"
+private const val TAG = "MedicineResultFragment_Log"
 class MedicineResultFragment : Fragment() {
     //binding 설정
     private var _binding: FragmentMedicineResultBinding? = null
@@ -36,39 +36,22 @@ class MedicineResultFragment : Fragment() {
     private val searchViewModel: SearchViewModel by activityViewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
 
-    private var columnCount = 1 //컬럼 갯수 = 1 리니어
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMedicineResultBinding.inflate(inflater, container, false)
         val root = binding.root
-
-        // Set the adapter
-        if (root is RecyclerView) {
-            with(root) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
-            }
-        }
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //더미 데이터
-//        val dataSource = DataSource.getDataSoures().getMedicineList()
 
         binding.apply {
             medicineAdapter = SearchRecyclerAdapter(object : SearchRecyclerAdapter.ClickListener{
@@ -111,27 +94,15 @@ class MedicineResultFragment : Fragment() {
                 }
             })
             resultlist.adapter = medicineAdapter
-            resultlist.itemAnimator = null
             searchViewModel.medicineResult.observe(viewLifecycleOwner){
                 if(it.isNotEmpty()) Log.d(TAG, "Class: ${it[0]::class.simpleName}")
                 medicineAdapter.submitList(it)
             }
+            resultlist.itemAnimator = null
         }
     }
 
-
-
     companion object {
-        const val ARG_COLUMN_COUNT = "column-count"
         const val TAB_NAME = "결과 화면"
-        const val TOUCH_LOGS = "touch_logs"
-
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            MedicineResultFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
     }
 }
