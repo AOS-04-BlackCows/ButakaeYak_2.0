@@ -76,6 +76,12 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="body_white">
+        <item name="fontFamily">@font/pretendard</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="body_gray">
         <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/gray</item>
@@ -91,6 +97,12 @@
     <style name="caption_gray">
         <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="caption_white">
+        <item name="fontFamily">@font/pretendard</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">12sp</item>
     </style>
 

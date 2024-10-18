@@ -212,6 +212,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")     //인증
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation("com.google.firebase:firebase-functions:19.0.2")
 
 
     //Algoria
