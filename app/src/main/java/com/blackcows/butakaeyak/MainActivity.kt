@@ -43,12 +43,8 @@ class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
 
-    //TODO SplashScreen
-    private val splashScreen : SplashScreen by lazy { installSplashScreen() }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        splashScreen
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
