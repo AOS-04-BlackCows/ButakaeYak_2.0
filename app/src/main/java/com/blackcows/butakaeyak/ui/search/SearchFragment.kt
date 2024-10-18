@@ -27,9 +27,8 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewPager: ViewPager2
-
+    //viewModel 설정
     private val searchViewModel: SearchViewModel by activityViewModels()
-
     private var imm : InputMethodManager? =null
 
     override fun onCreateView(
@@ -37,7 +36,6 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         val root: View = binding.root
         imm =  requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -55,29 +53,32 @@ class SearchFragment : Fragment() {
 
         initUiState()
 
-        viewPager = binding.searchVp
-        binding.searchVp.adapter = SearchViewPager(this@SearchFragment)
+        binding.apply {
+            viewPager = searchVp
+            searchVp.adapter = SearchViewPager(this@SearchFragment)
 
-        searchViewModel.selectedCip.observe(viewLifecycleOwner){
-            binding.searchEtSearchtext.setText(it)
-            searchQuery()
-        }
-
-        TabLayoutMediator(binding.searchLoTab, binding.searchVp) { tab, position ->
-            tab.text = SearchViewPager(this).pageTag[position]
-        }.attach()
-
-        binding.searchBtnSearch.setOnClickListener {
-            searchQuery()
-        }
-        binding.searchEtSearchtext.setOnEditorActionListener { v, actionId, event ->
-            Log.d(TAG, "keyCode: ${actionId} -- ${EditorInfo.IME_ACTION_DONE} ")
-            if(actionId == EditorInfo.IME_ACTION_DONE){
+            searchViewModel.selectedCip.observe(viewLifecycleOwner){
+                searchEtSearchtext.setText(it)
                 searchQuery()
             }
-            true
+
+            TabLayoutMediator(searchLoTab, searchVp) { tab, position ->
+                tab.text = SearchViewPager(this@SearchFragment).pageTag[position]
+            }.attach()
+
+            searchBtnSearch.setOnClickListener {
+                searchQuery()
+            }
+            searchEtSearchtext.setOnEditorActionListener { v, actionId, event ->
+                Log.d(TAG, "keyCode: ${actionId} -- ${EditorInfo.IME_ACTION_DONE} ")
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    searchQuery()
+                }
+                true
+            }
         }
     }
+
     private fun searchQuery(){
         val query = binding.searchEtSearchtext.text.toString()
         if(query.isNotEmpty()){
@@ -109,24 +110,7 @@ class SearchFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-
         MainNavigation.hideBottomNavigation(false)
-
         _binding = null
     }
-
-    companion object {
-
-        const val ARG_COLUMN_COUNT = "column-count"
-        const val TAB_NAME = "검색 기록"
-
-        @JvmStatic
-        fun newInstance(columnCount: Int,) =
-            SearchFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
-    }
-
 }

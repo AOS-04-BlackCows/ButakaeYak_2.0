@@ -24,7 +24,7 @@ import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-private const val TAG = "약 결과"
+private const val TAG = "MedicineResultFragment_Log"
 class MedicineResultFragment : Fragment() {
     //binding 설정
     private var _binding: FragmentMedicineResultBinding? = null
