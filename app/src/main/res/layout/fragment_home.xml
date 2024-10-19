@@ -222,9 +222,10 @@
             <TextView
                 android:id="@+id/knock_guide_tv"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="150dp"
 
-                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="13dp"
+                android:layout_marginHorizontal="22dp"
 
                 android:text="@string/need_login_text"
                 style="@style/body_gray"
