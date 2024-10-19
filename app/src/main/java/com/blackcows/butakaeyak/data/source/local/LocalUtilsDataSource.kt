@@ -7,6 +7,7 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.blackcows.butakaeyak.data.models.AutoLoginData
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -17,8 +18,11 @@ class LocalUtilsDataSource @Inject constructor(
         private const val TAG = "LocalUtilsDataSource"
 
         private const val APP_SHARED_PREFS = "BUAKAEYAK"
+
         private const val LOGIN_DATA = "LOGIN_DATA"
         private const val IS_LOGIN = "IS_LOGIN"
+
+        private const val KNOCK_HISTORY = "KNOCK_HISTORY"
     }
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(APP_SHARED_PREFS, Activity.MODE_PRIVATE)
@@ -63,6 +67,26 @@ class LocalUtilsDataSource @Inject constructor(
 
     fun deleteAutoLoginData() {
         encryptedPreferences.edit().remove(LOGIN_DATA).apply()
+    }
+
+    fun getKnockHistory(): Map<String, Long> {
+        val json = sharedPreferences.getString(KNOCK_HISTORY, null)
+        return if(json == null) mutableMapOf()
+        else {
+            val type= object : TypeToken<Map<String?, Long?>?>() {}.getType()
+            Gson().fromJson(json, type)
+        }
+    }
+
+    fun saveKnockHistory(friendId: String, time: Long): Map<String, Long> {
+        val histories = getKnockHistory().toMutableMap()
+        histories[friendId] = time
+
+        val gson = Gson()
+        val json = gson.toJson(histories)
+
+        sharedPreferences.edit().putString(KNOCK_HISTORY, json).apply()
+        return histories
     }
 
 

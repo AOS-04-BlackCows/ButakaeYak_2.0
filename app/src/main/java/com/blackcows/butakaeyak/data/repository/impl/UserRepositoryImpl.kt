@@ -26,9 +26,7 @@ import kotlin.coroutines.suspendCoroutine
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
     private val localUtilsDataSource: LocalUtilsDataSource,
-    private val imageDataSource: ImageDataSource,
-    @ApplicationContext
-    private val context: Context
+    private val imageDataSource: ImageDataSource
 ) : UserRepository {
 
     companion object {
@@ -179,15 +177,20 @@ class UserRepositoryImpl @Inject constructor(
             deviceToken = token
         )
 
+        Log.d("Firebase", "${user.name}'s Token is Updated: ${token}")
+
         return userDataSource.updateUser(newOne)
     }
 
     override suspend fun getProfileAndName(userId: String): ScheduleProfile {
         val imageUrl = imageDataSource.getHttpUrl(userId)
-        val name = userDataSource.getUserWithId(userId)!!.name
+
+        val user = userDataSource.getUserWithId(userId)!!
+        val name = user.name
+        val token = user.deviceToken!!
 
         return ScheduleProfile(
-            userId, name, imageUrl
+            userId, name, imageUrl, token
         )
     }
 }

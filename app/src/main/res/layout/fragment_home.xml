@@ -208,6 +208,50 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="16dp"
+                android:paddingHorizontal="16dp"
+
+                android:text="@string/knock_text"
+                style="@style/medium_b"
+                />
+
+            <TextView
+                android:id="@+id/knock_guide_tv"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+
+                android:layout_marginTop="13dp"
+                android:layout_marginHorizontal="22dp"
+
+                android:text="@string/need_login_text"
+                style="@style/body_gray"
+
+                android:gravity="center"
+                android:background="@drawable/round_white_radius12_outlined"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/knock_banner_rv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="13dp"
+                android:layout_marginHorizontal="22dp"
+
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
+
+                tools:listitem="@layout/knock_banner_item"
+                tools:itemCount="4"
+                >
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <TextView
                 android:id="@+id/textView6"
                 style="@style/medium_b"
                 android:layout_width="wrap_content"

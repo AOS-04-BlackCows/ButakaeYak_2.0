@@ -9,4 +9,6 @@ sealed class ApiBaseUrl(val url: String) {
     data object PharmacyListInfoUrl: ApiBaseUrl("http://apis.data.go.kr/B552657/")
     data object MedicineInfoUrl: ApiBaseUrl("http://apis.data.go.kr/1471000/DrugPrdtPrmsnInfoService06/")
     data object GptUrl: ApiBaseUrl("https://api.openai.com/v1/")
+
+    data object FcmUrl: ApiBaseUrl("https://fcm.googleapis.com/v1/projects/yaktong-6651a/")
 }

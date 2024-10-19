@@ -50,8 +50,8 @@ class ScheduleFragment : Fragment() {
 
     private val profilesObserver = Observer<List<ScheduleProfile>> { profiles ->
         val myScheduleProfile = if(userViewModel.user.value != null) with(userViewModel.user.value!!) {
-            ScheduleProfile(id, name, profileUrl!!)
-        } else ScheduleProfile("", "나", "")
+            ScheduleProfile(id, name, profileUrl!!, deviceToken!!)
+        } else ScheduleProfile("", "나", "", "")
 
         Log.d("ScheduleFragment", "Cur State: ${lifecycle.currentState}")
 

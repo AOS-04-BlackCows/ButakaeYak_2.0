@@ -3,6 +3,7 @@ package com.blackcows.butakaeyak.ui.home
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +19,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.HomeRvGroup
@@ -26,29 +29,37 @@ import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.databinding.FragmentHomeBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeTodayMedicineRvAdapter
 import com.blackcows.butakaeyak.ui.home.adapter.HomeViewPagerAdapter
+import com.blackcows.butakaeyak.ui.home.adapter.KnockBanner
+import com.blackcows.butakaeyak.ui.home.adapter.KnockBannerRvAdapter
 import com.blackcows.butakaeyak.ui.map.MapFragment
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.schedule.TimeToGroup
 import com.blackcows.butakaeyak.ui.search.SearchFragment
+import com.blackcows.butakaeyak.ui.take.adapter.TakeRvDecorator
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment.Companion
+import com.blackcows.butakaeyak.ui.viewmodels.FriendViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.MyGroupViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
+import com.google.firebase.functions.FirebaseFunctions
 import dagger.hilt.android.scopes.ViewModelScoped
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessageCreator
+import com.google.firebase.messaging.messaging
 import io.ktor.util.date.WeekDay
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import kotlin.coroutines.suspendCoroutine
 
 
 private const val TAG = "HomeFragment"
 class HomeFragment : Fragment(), View.OnClickListener {
-
-    companion object {
-        fun newInstance() = HomeFragment()
-    }
 
     lateinit var fab_open: Animation
     lateinit var fab_close: Animation
@@ -57,12 +68,22 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     private val mainViewModel: MainViewModel by activityViewModels()
     private val userViewModel: UserViewModel by activityViewModels()
+    private val friendViewModel: FriendViewModel by activityViewModels()
     private val myGroupViewModel: MyGroupViewModel by activityViewModels()
 
     //binding 설정
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var todayMedicineGroupRvAdapter : HomeTodayMedicineRvAdapter
+    private val knockBannerRvAdapter: KnockBannerRvAdapter by lazy {
+        KnockBannerRvAdapter { banner ->
+            //TODO: 버튼 비활성화도 좋을듯
+            val didKnock = friendViewModel.knockToFriend(userViewModel.user.value!!.id, banner.uid, banner.deviceToken)
+            if(!didKnock) {
+                Toast.makeText(requireContext(), "이미 노크를 했어요! 나중에 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 //    private val item : MyMedicine? = null
 
     private var isSpread: Boolean = false
@@ -134,6 +155,15 @@ class HomeFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        with(binding.knockBannerRv) {
+            adapter = knockBannerRvAdapter
+            addItemDecoration(object : ItemDecoration() {
+                override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                    outRect.set(0,0,12,0)
+                }
+            })
+        }
+
         myGroupViewModel.myMedicineGroup.observe(viewLifecycleOwner) {
             val items = medicineGroupConverter(myGroupViewModel.getTodayMedicineGroups())
 
@@ -150,6 +180,43 @@ class HomeFragment : Fragment(), View.OnClickListener {
             } else {
                 todayMedicineGroupRvAdapter.submitList(items.take(2))
             }
+        }
+
+        userViewModel.user.observe(viewLifecycleOwner) {
+            if(it == null) {
+                binding.knockBannerRv.visibility = View.GONE
+
+                binding.knockGuideTv.text = resources.getString(R.string.need_login_text)
+                binding.knockGuideTv.visibility = View.VISIBLE
+
+                knockBannerRvAdapter.submitList(listOf())
+            }
+        }
+
+        friendViewModel.friendProfiles.observe(viewLifecycleOwner) {
+            if(it.isEmpty()) {
+                binding.knockBannerRv.visibility = View.GONE
+
+                binding.knockGuideTv.text = resources.getString(R.string.no_friend_text)
+                binding.knockGuideTv.visibility = View.VISIBLE
+
+                knockBannerRvAdapter.submitList(listOf())
+                return@observe
+            }
+
+            binding.knockBannerRv.visibility = View.VISIBLE
+            binding.knockGuideTv.visibility = View.GONE
+
+            knockBannerRvAdapter.submitList(
+                it.map { profile ->
+                    KnockBanner(
+                        name = profile.name,
+                        profileUrl = profile.profileUrl,
+                        uid = profile.userId,
+                        deviceToken = profile.deviceToken
+                    )
+                }
+            )
         }
     }
 

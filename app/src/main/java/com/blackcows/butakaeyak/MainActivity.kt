@@ -13,8 +13,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.splashscreen.SplashScreen
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
@@ -24,10 +22,16 @@ import com.blackcows.butakaeyak.ui.viewmodels.FriendViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.MemoViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.MyGroupViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
+import com.google.firebase.functions.FirebaseFunctions
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.net.URL
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -45,6 +49,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
