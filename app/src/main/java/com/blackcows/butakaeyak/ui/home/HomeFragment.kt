@@ -3,6 +3,7 @@ package com.blackcows.butakaeyak.ui.home
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -28,6 +29,7 @@ import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.databinding.FragmentHomeBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeTodayMedicineRvAdapter
 import com.blackcows.butakaeyak.ui.home.adapter.HomeViewPagerAdapter
+import com.blackcows.butakaeyak.ui.home.adapter.KnockBanner
 import com.blackcows.butakaeyak.ui.home.adapter.KnockBannerRvAdapter
 import com.blackcows.butakaeyak.ui.map.MapFragment
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
@@ -38,14 +40,20 @@ import com.blackcows.butakaeyak.ui.take.adapter.TakeRvDecorator
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment.Companion
+import com.blackcows.butakaeyak.ui.viewmodels.FriendViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.MyGroupViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
+import com.google.firebase.functions.FirebaseFunctions
 import dagger.hilt.android.scopes.ViewModelScoped
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.RemoteMessageCreator
 import com.google.firebase.messaging.messaging
 import io.ktor.util.date.WeekDay
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import kotlin.coroutines.suspendCoroutine
 
@@ -60,6 +68,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     private val mainViewModel: MainViewModel by activityViewModels()
     private val userViewModel: UserViewModel by activityViewModels()
+    private val friendViewModel: FriendViewModel by activityViewModels()
     private val myGroupViewModel: MyGroupViewModel by activityViewModels()
 
     //binding 설정
@@ -68,8 +77,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private lateinit var todayMedicineGroupRvAdapter : HomeTodayMedicineRvAdapter
     private val knockBannerRvAdapter: KnockBannerRvAdapter by lazy {
         KnockBannerRvAdapter { banner ->
-            //TODO: FCM 부리기
-            //FirebaseMessaging.getInstance().send()
+            //TODO: 버튼 비활성화도 좋을듯
+            val didKnock = friendViewModel.knockToFriend(userViewModel.user.value!!.id, banner.uid, banner.deviceToken)
+            if(!didKnock) {
+                Toast.makeText(requireContext(), "이미 노크를 했어요! 나중에 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 //    private val item : MyMedicine? = null
@@ -168,6 +180,43 @@ class HomeFragment : Fragment(), View.OnClickListener {
             } else {
                 todayMedicineGroupRvAdapter.submitList(items.take(2))
             }
+        }
+
+        userViewModel.user.observe(viewLifecycleOwner) {
+            if(it == null) {
+                binding.knockBannerRv.visibility = View.GONE
+
+                binding.knockGuideTv.text = resources.getString(R.string.need_login_text)
+                binding.knockGuideTv.visibility = View.VISIBLE
+
+                knockBannerRvAdapter.submitList(listOf())
+            }
+        }
+
+        friendViewModel.friendProfiles.observe(viewLifecycleOwner) {
+            if(it.isEmpty()) {
+                binding.knockBannerRv.visibility = View.GONE
+
+                binding.knockGuideTv.text = resources.getString(R.string.no_friend_text)
+                binding.knockGuideTv.visibility = View.VISIBLE
+
+                knockBannerRvAdapter.submitList(listOf())
+                return@observe
+            }
+
+            binding.knockBannerRv.visibility = View.VISIBLE
+            binding.knockGuideTv.visibility = View.GONE
+
+            knockBannerRvAdapter.submitList(
+                it.map { profile ->
+                    KnockBanner(
+                        name = profile.name,
+                        profileUrl = profile.profileUrl,
+                        uid = profile.userId,
+                        deviceToken = profile.deviceToken
+                    )
+                }
+            )
         }
     }
 

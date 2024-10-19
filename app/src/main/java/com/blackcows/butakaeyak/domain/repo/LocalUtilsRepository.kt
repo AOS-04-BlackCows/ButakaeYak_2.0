@@ -8,4 +8,7 @@ interface LocalUtilsRepository {
     fun saveAutoLoginData(data: AutoLoginData)
     fun getAutoLoginData(): AutoLoginData?
     fun removeAutoLoginData()
+
+    fun getKnockHistory(): Map<String, Long>
+    fun saveKnockHistory(friendId: String, time: Long): Map<String, Long>
 }

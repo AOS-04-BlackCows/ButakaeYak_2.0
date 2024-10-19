@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.net.URL
 
 
 @AndroidEntryPoint
@@ -146,17 +147,6 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "onRequestPermissionsResult() _ 권한 허용 거부")
             }
         }
-
-
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val result=  FirebaseFunctions.getInstance()
-//                .getHttpsCallable("test")
-//                .call()
-//                .await()
-//
-//            Log.d("FirebaseFunctions",result.toString())
-//        }
-
     }
 
     private fun checkFirstLaunch() {

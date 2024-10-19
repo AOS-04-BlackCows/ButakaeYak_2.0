@@ -25,4 +25,12 @@ class LocalUtilsRepositoryImpl @Inject constructor(
     override fun removeAutoLoginData() {
         localUtilsDataSource.deleteAutoLoginData()
     }
+
+    override fun getKnockHistory(): Map<String, Long> {
+        return localUtilsDataSource.getKnockHistory()
+    }
+
+    override fun saveKnockHistory(friendId: String, time: Long): Map<String, Long> {
+        return localUtilsDataSource.saveKnockHistory(friendId, time)
+    }
 }

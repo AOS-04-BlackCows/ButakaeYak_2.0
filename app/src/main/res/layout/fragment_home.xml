@@ -219,6 +219,20 @@
                 style="@style/medium_b"
                 />
 
+            <TextView
+                android:id="@+id/knock_guide_tv"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+
+                android:layout_marginHorizontal="12dp"
+
+                android:text="@string/need_login_text"
+                style="@style/body_gray"
+
+                android:gravity="center"
+                android:background="@drawable/round_white_radius12_outlined"
+                />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/knock_banner_rv"
                 android:layout_width="wrap_content"
