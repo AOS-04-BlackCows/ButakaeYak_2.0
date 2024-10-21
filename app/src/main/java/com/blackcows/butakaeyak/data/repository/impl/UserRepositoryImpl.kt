@@ -183,7 +183,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getProfileAndName(userId: String): ScheduleProfile {
-        val imageUrl = imageDataSource.getHttpUrl(userId)
+        val imageUrl = ""//imageDataSource.getHttpUrl(userId)
 
         val user = userDataSource.getUserWithId(userId)!!
         val name = user.name

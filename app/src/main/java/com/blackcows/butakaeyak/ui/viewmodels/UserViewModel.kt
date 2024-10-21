@@ -148,7 +148,6 @@ class UserViewModel @Inject constructor(
             Log.d("UserViewModel: Login", result.toString())
             when(result) {
                 is LoginResult.Success -> {
-                    _user.value = result.user
                     localUtilsRepository.saveAutoLoginData(
                         AutoLoginData(
                             isKakao = true,
@@ -161,7 +160,7 @@ class UserViewModel @Inject constructor(
 
                     Log.d("UserViewModel", "User name is ${user.value!!.name}")
 
-                    userRepository.registerDeviceToken(user.value!!)
+                    _user.value = userRepository.registerDeviceToken(result.user!!)
                 }
                 is LoginResult.UnknownAccount -> {
                     _loginUiState.value = LoginUiState.UnKnownUserData

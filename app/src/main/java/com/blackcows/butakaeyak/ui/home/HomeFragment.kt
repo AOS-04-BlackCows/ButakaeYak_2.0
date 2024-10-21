@@ -79,8 +79,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
         KnockBannerRvAdapter { banner ->
             //TODO: 버튼 비활성화도 좋을듯
             val didKnock = friendViewModel.knockToFriend(userViewModel.user.value!!.id, banner.uid, banner.deviceToken)
-            if(!didKnock) {
-                Toast.makeText(requireContext(), "이미 노크를 했어요! 나중에 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+            if(didKnock) {
+                Toast.makeText(requireContext(), "이미 노크를 했어요!\n 나중에 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
             }
         }
     }
