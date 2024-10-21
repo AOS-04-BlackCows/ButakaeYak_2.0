@@ -158,9 +158,7 @@ class UserViewModel @Inject constructor(
                     )
                     _loginUiState.value = LoginUiState.Success
 
-                    Log.d("UserViewModel", "User name is ${user.value!!.name}")
-
-                    _user.value = userRepository.registerDeviceToken(result.user!!)
+                    _user.value = userRepository.registerDeviceToken(result.user)
                 }
                 is LoginResult.UnknownAccount -> {
                     _loginUiState.value = LoginUiState.UnKnownUserData

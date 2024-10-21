@@ -113,12 +113,17 @@ class MainActivity : AppCompatActivity() {
             val name = "Alarm Channel"
             val descriptionText = "Channel for Alarm Manager"
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel("alarm_channel", name, importance).apply {
+
+            val alarmChannel = NotificationChannel("alarm_channel", name, importance).apply {
                 description = descriptionText
             }
+            val fcmChannel = NotificationChannel(getString(R.string.default_notification_channel_id), name, importance)
+
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+
+            notificationManager.createNotificationChannel(alarmChannel)
+            notificationManager.createNotificationChannel(fcmChannel)
         }
     }
 
