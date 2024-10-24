@@ -80,7 +80,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
             .setAutoCancel(true)
             .setContentTitle("부탁해약")
             .setContentText("${from}님이 노크하셨어요!")
-            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setSmallIcon(R.drawable.icon_logo)
             .setContentIntent(pendingIntent)
 
 
