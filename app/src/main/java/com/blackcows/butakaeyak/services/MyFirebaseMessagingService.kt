@@ -42,13 +42,13 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
         if (message.data.isNotEmpty()) {
             val data = message.data
             Log.d(TAG, "Message data payload: ${message.data}")
-            showNotification(data["sender"] ?: "unknown")
-        }
 
-        // Check if message contains a notification payload.
-        message.notification?.let {
-            Log.d(TAG, "Message Notification Body: ${it.body}")
-            //showNotification(it.body?: "unknown")
+            data["sender"]?.let {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val nickname = localUtilsRepository.getNickname(it) ?: userRepository.getProfileAndName(it).name
+                    showNotification(nickname)
+                }
+            }
         }
     }
 
@@ -78,8 +78,8 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         val builder = NotificationCompat.Builder(this, channelId)
             .setAutoCancel(true)
-            .setContentTitle("${from}님이 노크하셨어요!")
-            .setContentText("얼른 드셔요.")
+            .setContentTitle("부탁해약")
+            .setContentText("${from}님이 노크하셨어요!")
             .setSmallIcon(R.drawable.ic_launcher_background)
             .setContentIntent(pendingIntent)
 
