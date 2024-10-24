@@ -183,6 +183,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getProfileAndName(userId: String): ScheduleProfile {
+        //TODO: 403 Error 뜸
         val imageUrl = ""//imageDataSource.getHttpUrl(userId)
 
         val user = userDataSource.getUserWithId(userId)!!
@@ -190,7 +191,7 @@ class UserRepositoryImpl @Inject constructor(
         val token = user.deviceToken!!
 
         return ScheduleProfile(
-            userId, name, imageUrl, token
+            userId, name, "", imageUrl, token
         )
     }
 }

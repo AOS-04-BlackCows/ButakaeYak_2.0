@@ -38,7 +38,12 @@ class FriendViewModel @Inject constructor(
             _friendProfiles.value = friendRepository.getMyFriends(userId).map {
                 val friendId = if(userId != it.proposer) it.proposer
                 else it.receiver
-                userRepository.getProfileAndName(friendId)
+                val nickname = localUtilsRepository.getNickname(friendId)
+
+                val profile = userRepository.getProfileAndName(friendId)
+                profile.copy(
+                    nickname = nickname ?: profile.nickname
+                )
             }
         }
     }
