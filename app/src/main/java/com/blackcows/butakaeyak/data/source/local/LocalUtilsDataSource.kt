@@ -23,6 +23,8 @@ class LocalUtilsDataSource @Inject constructor(
         private const val IS_LOGIN = "IS_LOGIN"
 
         private const val KNOCK_HISTORY = "KNOCK_HISTORY"
+
+        private const val NICKNAME = "NICKNAME"
     }
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(APP_SHARED_PREFS, Activity.MODE_PRIVATE)
@@ -73,7 +75,7 @@ class LocalUtilsDataSource @Inject constructor(
         val json = sharedPreferences.getString(KNOCK_HISTORY, null)
         return if(json == null) mutableMapOf()
         else {
-            val type= object : TypeToken<Map<String?, Long?>?>() {}.getType()
+            val type= object : TypeToken<Map<String?, Long?>?>() {}.type
             Gson().fromJson(json, type)
         }
     }
@@ -87,6 +89,33 @@ class LocalUtilsDataSource @Inject constructor(
 
         sharedPreferences.edit().putString(KNOCK_HISTORY, json).apply()
         return histories
+    }
+
+    fun saveNickname(userId: String, nickname: String) {
+        val json = sharedPreferences.getString(NICKNAME, "")
+
+        val map = if(json.isNullOrEmpty()) {
+            mutableMapOf()
+        } else {
+            val type= object : TypeToken<Map<String?, String?>?>() {}.type
+            Gson().fromJson<Map<String?, String?>?>(json, type).toMutableMap()
+        }
+
+        map[userId] = nickname
+        editor.putString(NICKNAME, Gson().toJson(map)).apply()
+    }
+
+    fun getNickname(userId: String): String? {
+        val str = sharedPreferences.getString(NICKNAME, null)
+
+        val json = sharedPreferences.getString(NICKNAME, null)
+        return if(json == null) null
+        else {
+            val type= object : TypeToken<Map<String?, String?>?>() {}.type
+            val map = Gson().fromJson<Map<String?, String?>?>(json, type)
+
+            map[userId]
+        }
     }
 
 

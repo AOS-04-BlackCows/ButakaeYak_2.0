@@ -213,6 +213,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-messaging-ktx")
     implementation("com.google.firebase:firebase-functions:19.0.2")
+    implementation("com.google.firebase:firebase-appcheck-playintegrity:16.1.1")
 
 
     //Algoria

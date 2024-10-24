@@ -11,4 +11,7 @@ interface LocalUtilsRepository {
 
     fun getKnockHistory(): Map<String, Long>
     fun saveKnockHistory(friendId: String, time: Long): Map<String, Long>
+
+    fun setNickname(userId: String, nickname: String)
+    fun getNickname(userId: String): String?
 }

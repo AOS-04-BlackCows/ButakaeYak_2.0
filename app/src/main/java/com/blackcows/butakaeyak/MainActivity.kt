@@ -22,6 +22,9 @@ import com.blackcows.butakaeyak.ui.viewmodels.FriendViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.MemoViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.MyGroupViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
+import com.google.firebase.FirebaseApp
+import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.functions.FirebaseFunctions
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         MainNavigation.initialize(this, binding)
+        initializeFirebase()
 
         //TODO 알림 설정
         createNotificationChannel()
@@ -93,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         checkFirstLaunch()
         setUserObserver()
 
+
         userViewModel.autoLogin()
     }
 
@@ -108,12 +113,17 @@ class MainActivity : AppCompatActivity() {
             val name = "Alarm Channel"
             val descriptionText = "Channel for Alarm Manager"
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel("alarm_channel", name, importance).apply {
+
+            val alarmChannel = NotificationChannel("alarm_channel", name, importance).apply {
                 description = descriptionText
             }
+            val fcmChannel = NotificationChannel(getString(R.string.default_notification_channel_id), name, importance)
+
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+
+            notificationManager.createNotificationChannel(alarmChannel)
+            notificationManager.createNotificationChannel(fcmChannel)
         }
     }
 
@@ -164,6 +174,17 @@ class MainActivity : AppCompatActivity() {
 
             mainViewModel.setFirstLaunchFalse()
         }
+    }
+
+    private fun initializeFirebase() {
+        FirebaseApp.initializeApp(this)
+
+        val firebaseAppCheck = FirebaseAppCheck.getInstance()
+
+        // Play Integrity 또는 SafetyNet provider를 선택하여 설치
+        firebaseAppCheck.installAppCheckProviderFactory(
+            PlayIntegrityAppCheckProviderFactory.getInstance() // 또는 SafetyNetAppCheckProviderFactory.getInstance()
+        )
     }
 
     private fun setUserObserver() {

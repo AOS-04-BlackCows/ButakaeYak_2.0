@@ -33,4 +33,12 @@ class LocalUtilsRepositoryImpl @Inject constructor(
     override fun saveKnockHistory(friendId: String, time: Long): Map<String, Long> {
         return localUtilsDataSource.saveKnockHistory(friendId, time)
     }
+
+    override fun setNickname(userId: String, nickname: String) {
+        localUtilsDataSource.saveNickname(userId, nickname)
+    }
+
+    override fun getNickname(userId: String): String? {
+        return localUtilsDataSource.getNickname(userId)
+    }
 }
