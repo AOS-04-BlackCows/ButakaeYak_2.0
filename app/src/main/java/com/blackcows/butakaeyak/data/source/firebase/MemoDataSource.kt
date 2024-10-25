@@ -21,7 +21,7 @@ class MemoDataSource @Inject constructor(
 
 ) {
     companion object {
-        private const val TAG = "UserSource"
+        private const val TAG = "MemoDataSource"
         private const val MEMO_COLLECTION = "memos"
 
         private const val USER_ID = "userId"

@@ -43,8 +43,8 @@ class NoteItemRvAdapter(
     inner class GroupMemoViewHolder(private val binding: NoteItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RecyclerItem.GroupMemos) {
             with(binding){
-                titleTv.text = item.group.name
-                dateTv.text = item.group.startedAt.toString().replace("-", ".")
+                titleTv.text = item.group?.name ?: "그룹 없음"
+                dateTv.text = item.group?.startedAt.toString().replace("-", ".")
                 noteNumTv.text = item.memos.size.toString()
             }
         }

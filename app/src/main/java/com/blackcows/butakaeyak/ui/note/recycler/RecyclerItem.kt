@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 sealed class RecyclerItem {
     data class GroupMemos(
-        val group: MedicineGroup,
+        val group: MedicineGroup?,
         val memos: List<Memo>
     ): RecyclerItem()
 

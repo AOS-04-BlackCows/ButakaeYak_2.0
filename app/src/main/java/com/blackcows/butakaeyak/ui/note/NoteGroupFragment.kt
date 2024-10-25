@@ -1,6 +1,7 @@
 package com.blackcows.butakaeyak.ui.note
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +37,8 @@ class NoteGroupFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(NoteRvDecoration.getLinearDecoSimpleItem())
         }
+
+        Log.d("Memo", "총 ${memoViewModel.memos.value?.size ?: 0}개")
 
         memoViewModel.memos.observe(viewLifecycleOwner) {
             noteRvAdapter.submitList(memoViewModel.getGroupMemos())

@@ -7,20 +7,20 @@ data class Memo(
     @Expose(serialize = false)
     val id: String,
     val userId: String,
-    val group: MedicineGroup,
+    val group: MedicineGroup?,
     val content: String,
     val createdAt: LocalDate,
     val updatedAt: LocalDate
 ) {
     fun toRequest()
         = MemoRequest(
-            userId, group.id, content, createdAt.toString(), updatedAt.toString()
+            userId, group?.id, content, createdAt.toString(), updatedAt.toString()
         )
 }
 
 data class MemoRequest(
     val userId: String,
-    val groupId: String,
+    val groupId: String?,
     val content: String,
     val createdAt: String,
     val updatedAt: String
@@ -42,6 +42,17 @@ data class MemoResponse(
             createdAt = LocalDate.parse(this.createdAt),
             updatedAt = LocalDate.parse(this.updatedAt)
         )
+    }
+    fun toMemo(): Memo {
+        return Memo(
+            id = this.id,
+            userId = this.userId,
+            group = null,
+            content = this.content,
+            createdAt = LocalDate.parse(this.createdAt),
+            updatedAt = LocalDate.parse(this.updatedAt)
+        )
+
     }
 
     fun toRequest() = MemoRequest(
