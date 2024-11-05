@@ -2,6 +2,7 @@ package com.blackcows.butakaeyak.ui.friend.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -52,6 +53,7 @@ class FriendRecyclerAdapter(private val clickListener: ClickListener) :
 
     inner class FriendListHolder(friendView : ItemFriendlistBinding) :
         RecyclerView.ViewHolder(friendView.root){
-        private val ivName:
+        private val tvKakaoName: TextView = friendView.kakaoName
+        private val ButakaeyakNikename: TextView = friendView.butakaeyakNikename
     }
 }
