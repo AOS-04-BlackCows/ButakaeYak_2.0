@@ -16,11 +16,14 @@ import com.blackcows.butakaeyak.data.models.Friend
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.data.models.User
 import com.blackcows.butakaeyak.databinding.FragmentScheduleBinding
+import com.blackcows.butakaeyak.ui.friend.FriendFragment
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.note.recycler.NoteRvDecoration
 import com.blackcows.butakaeyak.ui.schedule.recycler.ProfileRvAdapter
 import com.blackcows.butakaeyak.ui.schedule.recycler.ProfileRvDecoration
 import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleProfile
+import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.blackcows.butakaeyak.ui.viewmodels.FriendViewModel
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import java.time.LocalDate
@@ -93,7 +96,8 @@ class ScheduleFragment : Fragment() {
                 if(userViewModel.user.value == null) {
                     Toast.makeText(requireContext(), "로그인이 필요한 서비스입니다.", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(requireContext(), "나중에 추가될 서비스입니다!", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(requireContext(), "나중에 추가될 서비스입니다!", Toast.LENGTH_SHORT).show()
+                    MainNavigation.addFragment(FriendFragment(), FragmentTag.FriendFragmentInAdd)
                 }
             }
         }
