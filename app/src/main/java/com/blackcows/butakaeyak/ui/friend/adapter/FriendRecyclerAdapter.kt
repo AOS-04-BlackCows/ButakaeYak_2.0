@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.blackcows.butakaeyak.data.models.Friend
 import com.blackcows.butakaeyak.databinding.ItemFriendlistBinding
-import com.blackcows.butakaeyak.ui.search.adapter.SearchRecyclerAdapter.ClickListener
 
 
 class FriendRecyclerAdapter(private val clickListener: ClickListener) :
@@ -55,5 +54,16 @@ class FriendRecyclerAdapter(private val clickListener: ClickListener) :
         RecyclerView.ViewHolder(friendView.root){
         private val tvKakaoName: TextView = friendView.kakaoName
         private val ButakaeyakNikename: TextView = friendView.butakaeyakNikename
+
+        fun bind(friendItem: Friend) {
+            val isSaved = clickListener.isfriendChecked(friendItem)
+            with(friendItem){
+
+            }
+        }
+    }
+
+    interface ClickListener{
+        fun isfriendChecked(item : Friend)
     }
 }
