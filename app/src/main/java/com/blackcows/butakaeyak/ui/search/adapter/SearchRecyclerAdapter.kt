@@ -64,7 +64,7 @@ class SearchRecyclerAdapter(private val clickListener: ClickListener) :
 //                is ListItem.FeedItem -> (holder as FeedHolder).bind(item)
             }
         }.onFailure { exception ->
-            Log.e("VideoListAdapter", "Exception! ${exception.message}")
+            Log.e("SearchRecyclerAdapter", "Exception! ${exception.message}")
         }
     }
 

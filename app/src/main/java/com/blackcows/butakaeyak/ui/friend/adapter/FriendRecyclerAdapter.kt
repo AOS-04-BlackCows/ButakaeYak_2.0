@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.friend.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -47,18 +48,26 @@ class FriendRecyclerAdapter(private val clickListener: ClickListener) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        runCatching {
+            when(val item = getItem(position)){
+                is Friend -> (holder as FriendListHolder).bind(item)
+            }
+        }.onFailure {
+            exception ->
+            Log.e("FriendRecyclerAdapter", "Exception! ${exception.message}")
+        }
     }
 
     inner class FriendListHolder(friendView : ItemFriendlistBinding) :
         RecyclerView.ViewHolder(friendView.root){
         private val tvKakaoName: TextView = friendView.kakaoName
-        private val ButakaeyakNikename: TextView = friendView.butakaeyakNikename
+        private val tvNikename: TextView = friendView.butakaeyakNikename
 
         fun bind(friendItem: Friend) {
             val isSaved = clickListener.isfriendChecked(friendItem)
             with(friendItem){
-
+                tvKakaoName.text = id
+                tvNikename.text = proposer
             }
         }
     }
