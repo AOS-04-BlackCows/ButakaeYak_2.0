@@ -43,7 +43,7 @@ class FriendFragment : Fragment() {
         binding.apply {
             friendAdapter = FriendRecyclerAdapter(object : FriendRecyclerAdapter.ClickListener{
                 override fun isfriendChecked(item: Friend) {
-                    Toast.makeText(requireContext(),"${item.id}, ${item.proposer}", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(requireContext(),"${item.id}, ${item.proposer}", Toast.LENGTH_SHORT).show()
                 }
             })
             friendRecyclerView.adapter = friendAdapter
