@@ -73,7 +73,7 @@ class RemoteMedicineGroupDataSource @Inject constructor(
     override suspend fun updateGroup(takenGroup: MedicineGroup) {
         if(getMedicineGroupById(takenGroup.id) == null) {
             Log.w(TAG, NOT_REGISTERED_MEDICINE_GROUP.message!!)
-            return
+            throw NOT_REGISTERED_MEDICINE_GROUP
         }
 
         db.collection(MEDICINE_GROUP_COLLECTION)
