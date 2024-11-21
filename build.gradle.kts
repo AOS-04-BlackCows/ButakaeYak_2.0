@@ -1,3 +1,5 @@
+import java.net.URI
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     alias(libs.plugins.android.application) apply false
@@ -10,6 +12,7 @@ buildscript {
     repositories {
         // Add the following line:
         google()  // Google's Maven repository
+        maven("https://devrepo.kakao.com/nexus/content/groups/public/")
     }
 
     dependencies {
