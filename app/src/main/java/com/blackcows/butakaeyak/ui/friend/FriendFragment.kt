@@ -7,11 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.transition.Visibility
+import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Friend
+import com.blackcows.butakaeyak.databinding.BottomsheetFriendDetailBinding
 import com.blackcows.butakaeyak.databinding.FragmentFriendBinding
 import com.blackcows.butakaeyak.ui.friend.adapter.FriendRecyclerAdapter
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.viewmodels.FriendViewModel
+import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class FriendFragment : Fragment() {
@@ -42,10 +47,36 @@ class FriendFragment : Fragment() {
 
         binding.apply {
             friendAdapter = FriendRecyclerAdapter(object : FriendRecyclerAdapter.ClickListener{
-                override fun isfriendChecked(item: Friend) {
-//                    Toast.makeText(requireContext(),"${item.id}, ${item.proposer}", Toast.LENGTH_SHORT).show()
+                override fun friendDilete(item: Friend) {
+                    val bottomSheetView = BottomsheetFriendDetailBinding.inflate(layoutInflater)
+                    val bottomSheetDialog = BottomSheetDialog(requireContext())
+                    with(bottomSheetView){
+//                        Glide.with(root).load(item.imageUrl?: R.drawable.logo_big).into()
+                        bottomSheetTitle.text = "친구를 삭제 하시겠습니까?"
+                        deleteCheck.visibility = view.visibility
+                        kakaoName.text = item.proposer
+                    }
+                    bottomSheetDialog.setContentView(bottomSheetView.root)
+                    bottomSheetDialog.show()
                 }
             })
+
+            addNotification.setOnClickListener {
+                val bottomSheetView = BottomsheetFriendDetailBinding.inflate(layoutInflater)
+                val bottomSheetDialog = BottomSheetDialog(requireContext())
+                with(bottomSheetView){
+//                        Glide.with(root).load(item.imageUrl?: R.drawable.logo_big).into()
+                    bottomSheetTitle.text = "받은 친구 요청"
+                    requestListView.visibility = view.visibility
+                    requestList.adapter = friendAdapter
+                    friendAdapter.submitList(friendListDump)
+                    friendAdapter.getItemViewType(1)
+                }
+                bottomSheetDialog.setContentView(bottomSheetView.root)
+                bottomSheetDialog.show()
+
+            }
+
             friendRecyclerView.adapter = friendAdapter
             friendAdapter.submitList(friendListDump)
             friendAdapter.getItemViewType(0)
