@@ -3,11 +3,13 @@ package com.blackcows.butakaeyak.ui.friend.adapter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.blackcows.butakaeyak.data.models.Friend
+import com.blackcows.butakaeyak.databinding.ItemFriendManagementBinding
 import com.blackcows.butakaeyak.databinding.ItemFriendlistBinding
 
 
@@ -30,6 +32,8 @@ class FriendRecyclerAdapter(private val clickListener: ClickListener) :
             }
 
             private const val TYPE_FRIEND = 0
+            private const val TYPE_MENAGEMENT = 1
+            private const val TYPE_REQUEST = 2
         }
 
     override fun getItemViewType(position: Int): Int {
@@ -42,6 +46,11 @@ class FriendRecyclerAdapter(private val clickListener: ClickListener) :
                 val friendBinding =
                     ItemFriendlistBinding.inflate(LayoutInflater.from(parent.context),parent,false)
                 FriendListHolder(friendBinding)
+            }
+            TYPE_MENAGEMENT -> {
+                val friendBinding =
+                    ItemFriendManagementBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+                FriendManagementHolder(friendBinding)
             }
             else -> throw IllegalArgumentException("Invalid view type")
         }
@@ -61,18 +70,34 @@ class FriendRecyclerAdapter(private val clickListener: ClickListener) :
     inner class FriendListHolder(friendView : ItemFriendlistBinding) :
         RecyclerView.ViewHolder(friendView.root){
         private val tvKakaoName: TextView = friendView.kakaoName
-        private val tvNikename: TextView = friendView.butakaeyakNikename
+        private val btnDelete: ImageView = friendView.deleteButton
+//        private val tvNikename: TextView = friendView.butakaeyakNikename
 
         fun bind(friendItem: Friend) {
-            val isSaved = clickListener.isfriendChecked(friendItem)
             with(friendItem){
                 tvKakaoName.text = id
-                tvNikename.text = proposer
+                btnDelete.setOnClickListener {
+                    clickListener.friendDilete(friendItem)
+                }
+//                tvNikename.text = proposer
+            }
+        }
+    }
+
+    inner class FriendManagementHolder(friendView : ItemFriendManagementBinding) :
+        RecyclerView.ViewHolder(friendView.root){
+        private val tvKakaoName: TextView = friendView.kakaoName
+//        private val tvNikename: TextView = friendView.butakaeyakNikename
+
+        fun bind(friendItem: Friend) {
+            with(friendItem){
+                tvKakaoName.text = id
+//                tvNikename.text = proposer
             }
         }
     }
 
     interface ClickListener{
-        fun isfriendChecked(item : Friend)
+        fun friendDilete(item : Friend)
     }
 }
